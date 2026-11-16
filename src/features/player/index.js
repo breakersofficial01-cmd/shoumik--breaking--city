@@ -3,11 +3,19 @@
 // this file). Numbers: data/player.json.
 //
 // Events sent:  player:spawned { x, z }   district:entered { district }
+// Punches, dancing, outfits and animation requests live in ./actions.js (events listed there).
 //
 // Movement is relative to the camera: stick up = away from the camera.
+//
+// The model comes from the asset registry as `model.player`: a small factory object
+// { create(outfit) } that builds the code-made Shoumik (src/entities/shoumik/). His face
+// photo is `texture.shoumik.face`, prepared from `image.shoumik.face`.
 
-import { debugLine } from '../../core/debug.js';
-import { buildShoumikPlaceholder, HumanoidAnimator } from '../../entities/shoumikPlaceholder.js';
+import { debugLine, log } from '../../core/debug.js';
+import { ShoumikModel } from '../../entities/shoumik/model.js';
+import { makeFaceTexture } from '../../entities/shoumik/faceTexture.js';
+import { Animator } from '../../entities/people/animator.js';
+import { PlayerActions } from './actions.js';
 
 const wrapAngle = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 
@@ -15,6 +23,7 @@ let game = null;
 let cfg = null;
 let model = null;
 let animator = null;
+let actions = null;
 let lastDistrict = null;
 
 /** Live player state shared through game.player. */
@@ -25,7 +34,9 @@ const state = {
   speed: 0,            // ground speed, m/s
   grounded: true,
   mode: 'onFoot',      // 'driving' etc. in later sessions
-  model: null,
+  model: null,         // THREE.Group
+  action: null,        // name of the animation he is doing (punch, dance…) or null
+  outfit: null,        // id from data/outfits.json
 };
 
 function spawnPoint() {
@@ -51,12 +62,29 @@ export default {
   async init(g) {
     game = g;
     cfg = g.config.get('player');
-    g.assets.registerDefault('model.player', () => buildShoumikPlaceholder(cfg.model));
-    await g.assets.load('model.player');
-    model = g.assets.instance('model.player');
-    animator = new HumanoidAnimator(model);
-    g.scene.add(model);
-    state.model = model;
+    // Face photo → small feathered texture (falls back to a plain beard/skin head).
+    g.assets.registerDefault('texture.shoumik.face', async () => {
+      try {
+        return makeFaceTexture(await g.assets.load('image.shoumik.face'), { ...cfg.model.face, skin: cfg.model.skin });
+      } catch (err) {
+        log.warn('face texture not available', err.message);
+        return null;
+      }
+    });
+    g.assets.registerDefault('model.player', async () => {
+      const face = await g.assets.load('texture.shoumik.face');
+      return { create: (outfit) => new ShoumikModel(cfg.model, outfit, face) };
+    });
+    const factory = await g.assets.load('model.player');
+    animator = new Animator(null, { crossAfter: cfg.animation.idleCrossAfterSeconds, runAt: cfg.animation.runAtSpeed });
+    actions = new PlayerActions(g, cfg, state, animator, { setOutfit: (o) => model.setOutfit(o) });
+    const outfit = actions.startOutfit();
+    model = factory.create(outfit);
+    animator.dims = model.dims;
+    state.outfit = outfit.id;
+    state.model = model.group;
+    g.scene.add(model.group);
+    log.info(`Shoumik: ${Math.round(model.triangles)} triangles, outfit ${outfit.id}`);
 
     // Continue from the saved spot if it is still a free place, else the spawn point.
     const saved = g.save.data.player;
@@ -73,9 +101,12 @@ export default {
     g.events.emit('player:spawned', { x: state.position.x, z: state.position.z });
   },
 
-  syncModel() {
-    model.position.set(state.position.x, state.position.y, state.position.z);
-    model.rotation.y = state.heading;
+  /** Animate and place the model. */
+  syncModel(dt = 0) {
+    const p = state.position;
+    const ground = game.world.heightAt(p.x, p.z);
+    const pose = animator.update(dt, { speed: state.speed, grounded: state.grounded, vy: state.velocity.y });
+    model.update(p.x, p.y, p.z, state.heading, pose, ground);
   },
 
   update(dt) {
@@ -87,7 +118,9 @@ export default {
     // 1) Wanted speed from stick / keys, relative to the camera.
     const mx = input.move.x;
     const my = input.move.y;
-    const amount = Math.min(1, Math.hypot(mx, my));
+    let amount = Math.min(1, Math.hypot(mx, my));
+    actions.update(dt, input, amount > 0.01);
+    if (actions.locked) amount = 0;
     let wantX = 0, wantZ = 0;
     if (amount > 0.01) {
       const f = cameraRig.forward();
@@ -95,7 +128,7 @@ export default {
       const dx = f.x * my + r.x * mx;
       const dz = f.z * my + r.z * mx;
       const len = Math.hypot(dx, dz) || 1;
-      const top = input.held.sprint ? cfg.sprintSpeed : amount < cfg.walkStickThreshold ? cfg.walkSpeed : cfg.runSpeed;
+      const top = (input.held.sprint ? cfg.sprintSpeed : amount < cfg.walkStickThreshold ? cfg.walkSpeed : cfg.runSpeed) * actions.moveFactor;
       wantX = (dx / len) * top;
       wantZ = (dz / len) * top;
       // Turn to face where he is going.
@@ -116,12 +149,14 @@ export default {
     pos.x += vel.x * dt;
     pos.z += vel.z * dt;
     world.collision.resolveCircle(pos, cfg.radius);
+    if (world.collision.resolveDynamic(pos, cfg.radius, state)) world.collision.resolveCircle(pos, cfg.radius);
     state.speed = dt > 0 ? Math.hypot(pos.x - beforeX, pos.z - beforeZ) / dt : 0;
 
     // 4) Jump + gravity; follow the ground (kerbs) smoothly.
     const ground = world.heightAt(pos.x, pos.z);
     if (state.grounded) {
-      if (input.pressed.jump) {
+      if (input.pressed.jump && !actions.locked) {
+        animator.stop();
         vel.y = cfg.jumpSpeed;
         state.grounded = false;
       } else {
@@ -138,8 +173,7 @@ export default {
       }
     }
 
-    this.syncModel();
-    animator.update(dt, { speed: state.speed, grounded: state.grounded, height: Math.max(0, pos.y - ground) });
+    this.syncModel(dt);
 
     // 5) Tell everyone when he walks into another district.
     const district = world.districtAt(pos.x, pos.z);
@@ -151,8 +185,9 @@ export default {
   },
 
   dispose() {
-    if (model) game.scene.remove(model);
+    actions?.dispose();
+    model?.dispose();
     game.player = null;
-    model = animator = null;
+    model = animator = actions = null;
   },
 };

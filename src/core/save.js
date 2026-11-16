@@ -13,12 +13,14 @@
 import { events } from './events.js';
 import { log } from './debug.js';
 
-export const SAVE_VERSION = 1;
+export const SAVE_VERSION = 2;
 
 /** MIGRATIONS[n] upgrades a save from version n to n+1. */
 const MIGRATIONS = {
   // Version 0 = pre-release test saves that only had { cash }.
   0: (old) => ({ ...defaults({ startCash: old.cash ?? 500 }), cash: old.cash ?? 500 }),
+  // Version 2 (Session 2) added the outfit Shoumik is wearing.
+  1: (old) => ({ ...old, outfit: null }),
 };
 
 function defaults({ startCash = 500 } = {}) {
@@ -28,6 +30,7 @@ function defaults({ startCash = 500 } = {}) {
     updatedAt: Date.now(),
     cash: startCash,
     player: null,                     // { x, z, heading } once the player has moved
+    outfit: null,                     // id from data/outfits.json (null = the default outfit)
     settings: { quality: null, language: null, blood: true },
     lessons: {},                      // lessonId -> result (Session 5)
     owned: { vehicles: [], homes: [], weapons: [], outfits: [] },

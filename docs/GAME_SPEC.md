@@ -4,7 +4,7 @@ What the game is and what exists **right now**. Updated at the end of every sess
 Rules live in `/CLAUDE.md`; the build plan in `docs/SESSIONS.md`; how the code is organised
 in `docs/HANDOFF.md`.
 
-Status: **Session 1 of 8 done** (engine, city, foundations).
+Status: **Session 2 of 8 done** (engine, city, foundations, Shoumik, people).
 
 ---
 
@@ -17,7 +17,7 @@ A free-roam, Vice-City-flavoured open world set in a compressed Dhaka, made for
 
 Money only comes from answering lesson questions. YouTube links open outside the game.
 
-## 2. What you can do today (after Session 1)
+## 2. What you can do today (after Session 2)
 - Open the game → loading screen → "শুরু করতে ট্যাপ করুন" → you are Shoumik on a street corner
   in Shahbag at sunset.
 - Walk, run, sprint and jump around the whole city. Buildings, poles, trees, lake edges and
@@ -26,9 +26,14 @@ Money only comes from answering lesson questions. YouTube links open outside the
 - HUD: Shoumik's portrait, cash (starts at **৳৫০০**), 5 empty wanted stars, a rotating
   minimap, and the district name when you enter a new district.
 - Gear button → graphics quality কম / মাঝারি / বেশি.
-- Progress (cash, position, quality) saves itself every 30 seconds and when you leave.
+- Punch with আঘাত / mouse click. People fall, run, shout — and some hit back.
+- Stand still and Shoumik folds his arms (his signature pose).
+- Gear button → পোশাক: change between his 5 outfits.
+- Find a hangout spot (TSC is one block east of the start, in the park) and press ঢোকো / E
+  to dance with the crowd.
+- Progress (cash, position, quality, outfit) saves itself every 30 seconds and when you leave.
 
-Not in yet: real Shoumik model, people, vehicles, landmarks, posters, classes, shops, crime,
+Not in yet: vehicles, landmarks, posters, classes, shops, crime,
 police, day/night, sound. See `docs/SESSIONS.md`.
 
 ## 3. The city
@@ -79,11 +84,38 @@ will replace ordinary blocks using the same "areas" mechanism.
   blank coloured signboards, balconies, roof stair rooms, black water tanks, poles with
   sagging wire bundles, wires zig-zagging across Old Dhaka lanes.
 
-## 5. Player (placeholder)
-Blocky Shoumik with the right colours and proportions from `docs/CHARACTER.md` (stocky, black
-quiff, beard, maroon tee, khaki chinos, white sneakers, black watch on the left wrist).
-Numbers in `data/player.json`: walk 1.9, run 4.6, sprint 8.2 m/s, jump 5.4 m/s.
-Session 2 replaces the model; the movement code stays.
+## 5. Shoumik
+Low-poly model made in code from `docs/CHARACTER.md`: stocky, round face with his photo as a
+small face texture, black quiff, full beard, black watch on the left wrist. About 2,000
+triangles. Movement numbers in `data/player.json`: walk 1.9, run 4.6, sprint 8.2 m/s, jump
+5.4 m/s.
+
+| Outfit id | What | Unlocked |
+|---|---|---|
+| `casual_maroon` (default) | maroon oversized tee, khaki chinos, white sneakers | yes |
+| `panjabi_navy` | navy panjabi, maroon cuffs, white pajama | yes |
+| `panjabi_grey` | grey printed panjabi, black-and-white collar | yes |
+| `doctor` | white apron, light shirt, stethoscope | yes |
+| `polo_black` | black polo, cream-striped collar and sleeves | yes |
+
+All are unlocked for now (`data/outfits.json → unlocked`); the clothes shop (Session 5) can
+lock and sell them.
+
+Animations (shared with every pedestrian): idle, arms-crossed idle, walk, run, jump, fall,
+punch, melee swing, aim, shoot, enter/exit vehicle, sit, dance, knocked down, cower, shout,
+hit, clap. Guns, melee weapons and vehicles that use them arrive in Sessions 3 and 6.
+
+## 5b. People
+- **Pedestrians**: lungi, panjabi, shirt-pant, office wear, saree, salwar kameez, hijab,
+  hawkers, rickshaw pullers, students, Gen-Z streetwear. Mix and crowd size per district in
+  `data/pedestrians.json` (Old Dhaka and Motijheel are the busiest). 16 / 28 / 40 people around
+  you on Low / Medium / High. All adults.
+- **Behaviour**: walk sidewalks, wait and cross at corners, pause, make way for Shoumik. When
+  somebody is hit nearby they run, cower or shout (Bangla speech bubbles). Brave ones fight
+  back (3 punches to drop them).
+- **Hangout spots** (`data/hotspots.json`): TSC (park, 8 dancers), Dhanmondi lakeside,
+  Hatirjheel, Gulshan café. Dance mat, boombox, neon posts, Gen-Z dancers in time with the
+  beat. Shoumik can join. No sexual content, no romance.
 
 ## 6. Controls
 | Action | Phone | Computer |
@@ -92,7 +124,9 @@ Session 2 replaces the model; the movement code stays.
 | Camera | drag on the right side | click the game, then move the mouse (Esc frees it) |
 | Sprint | দৌড় | Shift |
 | Jump | লাফ | Space |
-| Attack / Enter / Weapon / Horn | আঘাত / ঢোকো / অস্ত্র / হর্ন (buttons exist, used from Session 3+) | click / E / Q / H |
+| Punch | আঘাত | click (after clicking into the game) |
+| Dance at a hangout spot | ঢোকো | E |
+| Weapon / Horn | অস্ত্র / হর্ন (used from Session 3+) | Q / H |
 
 Phones must be in landscape; in portrait a "rotate your phone" screen shows and the game
 pauses.
@@ -114,12 +148,13 @@ Target: 30+ fps on a mid-range Android (4 GB RAM), landscape, Chrome.
 | মাঝারি (medium, default) | 1.25× | 300 m | |
 | বেশি (high) | 2× | 430 m | smooth edges (after reload) |
 
-Measured in the headless test: 30–75 draw calls, 50–190k triangles in view (Old Dhaka is the
+With people (Session 2) the headless test shows 54 draw calls / 43k triangles on Low and
+96 / 143k on High at the start corner. Before people, measured in the headless test: 30–75 draw calls, 50–190k triangles in view (Old Dhaka is the
 heaviest), about 9,700 collision boxes, whole-city layout generated in ~25 ms, a chunk meshed
 in ~3 ms on a desktop CPU. Real-phone numbers still need to be measured by the owner.
 
 ## 9. Save
-`localStorage["breakingCity.save"]`, version 1: cash, player position, settings (quality,
+`localStorage["breakingCity.save"]`, version 2: cash, player position, outfit, settings (quality,
 language, blood), plus empty slots for lessons, owned items, stats and flags. Migrations in
 `src/core/save.js`. Unreadable saves are backed up to `breakingCity.save.broken`.
 
@@ -127,4 +162,5 @@ language, blood), plus empty slots for lessons, owned items, stats and flags. Mi
 - Lessons: `data/lessons.json`, loaded and validated by the Content Service. One test lesson
   (`bio-bone-cartilage-01`, 3 Bangla questions). Google Sheet adapter is written and tested
   but switched off (`source.type: "local"`).
+- Hangout spots: `data/hotspots.json`, also loaded and validated by the Content Service.
 - Everything else that is tunable: `data/*.json` (each file starts with a `_comment`).

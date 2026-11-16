@@ -6,6 +6,7 @@
 //   game.cameraRig    (ChaseCamera: setTarget, forward(), right())
 //   game.events, game.config, game.save, game.economy, game.content, game.assets
 //   game.player       (set by the player feature: { position, heading, speed, ... })
+//   game.crowd        (shared instanced pedestrian renderer, made by acquireCrowd(game))
 //   game.ui           (the #ui element: put HUD / overlays here)
 //   game.setPaused(reason, bool), game.setQuality(name)
 
@@ -33,6 +34,7 @@ export class Game {
     this.content = content;
     this.assets = assets;
     this.player = null;
+    this.crowd = null;
     this.features = null;
     this.pauseReasons = new Set();
     this.running = false;
@@ -152,6 +154,7 @@ export class Game {
     this.input.update();
     this.cameraRig.addLook(this.input.look.x, this.input.look.y);
     this.features.update(dt);
+    this.crowd?.update();            // shared pedestrian renderer (src/entities/people/crowd.js)
     this.cameraRig.update(dt);
     this.world.update(dt, this.player?.position || this.camera.position);
     this.renderer.render(this.scene, this.camera);

@@ -65,3 +65,25 @@ See `posters/README.md` (created in Session 4).
 ## 3. Everything else
 Prices, vehicles, weapons, places, text: `data/*.json`. Each file has a `_comment` field
 explaining it.
+
+## Hangout spots (dance spots) — `data/hotspots.json`
+Each row in `hotspots` is one spot where young adults dance to a boombox:
+
+| Field | Meaning |
+|---|---|
+| `id` | short unique name, e.g. `tsc` |
+| `name` | `{ "en": "...", "bn": "..." }` |
+| `col`, `row` | which city block (see the map in `docs/GAME_SPEC.md`; col 0 = west, row 0 = north) |
+| `side` | which edge of that block: `N`, `S`, `E` or `W` |
+| `along` | 0–1, how far along that edge |
+| `inset` | metres in from the kerb (0.75 = on the sidewalk edge, 6 = inside a park) |
+| `rows`, `dancers` | lines of dancers (1–3) and how many people (1–12) |
+| `bpm` | speed of the music (70–150) |
+| `active` | `false` hides the spot |
+
+Bad rows are skipped and reported in the debug log, like lessons. Who dances and how loud the
+music is are in `settings` in the same file.
+
+## Shoumik's outfits — `data/outfits.json`
+Change colours freely (hex codes). `style` must be one of `tee`, `polo`, `panjabi`, `doctor`.
+`"unlocked": false` hides an outfit until it is owned (shop comes in Session 5).

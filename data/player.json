@@ -1,6 +1,10 @@
 {
-  "_comment": "Shoumik's movement numbers (metres, seconds) and the placeholder model colours (from docs/CHARACTER.md). spawn = which road crossing he starts at (col/row of the grid, see data/world.json).",
-  "spawn": { "col": 3, "row": 10, "heading": 2.36 },
+  "_comment": "Shoumik's movement numbers (metres, seconds), body colours (from docs/CHARACTER.md), animation timings and what his fists do. Clothes are in data/outfits.json. spawn = which road crossing he starts at (col/row of the grid, see data/world.json).",
+  "spawn": {
+    "col": 3,
+    "row": 10,
+    "heading": 2.36
+  },
   "radius": 0.38,
   "walkSpeed": 1.9,
   "runSpeed": 4.6,
@@ -13,13 +17,69 @@
   "gravity": 16,
   "stepSmooth": 14,
   "model": {
+    "_comment": "Body colours and proportions. torsoWidthScale 1.15 = stocky. face = how the photo texture (assets/shoumik/face.png) is used: size in pixels (small = PS2 look), feather = how wide the soft edge is (0-1), toneMatch = how strongly the photo's skin tone is pulled towards 'skin' (0-1), brightness = extra lightening, cheekWidth = share of the image width between the two cheeks, chinY = how far down the image the chin is (0-1). Change the last two if the photo is replaced.",
     "skin": "#C08B68",
+    "skinShadow": "#9C6A4C",
     "hair": "#141010",
+    "hairHighlight": "#2A2222",
     "beard": "#1A1513",
-    "tee": "#7E1C24",
-    "pants": "#C9B79C",
-    "shoes": "#EDEDED",
     "watch": "#0c0c0c",
-    "torsoWidthScale": 1.15
+    "watchFace": "#2a3038",
+    "torsoWidthScale": 1.15,
+    "heightScale": 0.97,
+    "shadowRadius": 0.48,
+    "shadowOpacity": 0.32,
+    "face": {
+      "size": 128,
+      "feather": 0.16,
+      "toneMatch": 0.4,
+      "brightness": 1.08,
+      "cheekWidth": 0.77,
+      "chinY": 0.925
+    }
+  },
+  "animation": {
+    "_comment": "idleCrossAfterSeconds = how long he stands still before folding his arms (signature pose). runAtSpeed = speed (m/s) at which the run animation is at full stretch.",
+    "idleCrossAfterSeconds": 3.5,
+    "runAtSpeed": 5.2
+  },
+  "actions": {
+    "_comment": "punch: duration of the swing, hitAt = seconds into the swing when it lands, range in metres, arcDegrees = how wide in front of him it reaches, moveFactor = how much he can still move while punching. hit = what happens when somebody punches him. lockMovement = animations during which the stick does nothing; cancelOnMove = animations that stop when the stick is pushed.",
+    "punch": {
+      "duration": 0.42,
+      "hitAt": 0.15,
+      "range": 1.45,
+      "arcDegrees": 110,
+      "moveFactor": 0.35,
+      "power": 1
+    },
+    "hit": {
+      "knockback": 3.2,
+      "duration": 0.4
+    },
+    "lockMovement": [
+      "enterVehicle",
+      "exitVehicle",
+      "sit",
+      "down",
+      "cower"
+    ],
+    "cancelOnMove": [
+      "dance",
+      "clap"
+    ]
+  },
+  "debugAnimKeys": {
+    "_comment": "Only with ?debug=1: number keys play an animation on Shoumik so every animation can be checked.",
+    "Digit1": "punch",
+    "Digit2": "melee",
+    "Digit3": "aim",
+    "Digit4": "shoot",
+    "Digit5": "enterVehicle",
+    "Digit6": "exitVehicle",
+    "Digit7": "dance",
+    "Digit8": "down",
+    "Digit9": "cower",
+    "Digit0": "shout"
   }
 }

@@ -329,6 +329,43 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 .panel-note { margin: 12px 0 14px; font-size: 14px; line-height: 1.45; opacity: 0.85; }
 .panel-close { width: 100%; padding: 10px; border: 2px solid var(--ink); border-radius: 10px; background: var(--gold); color: var(--ink); font-size: 18px; font-weight: 700; }
 
+/* outfit picker in the settings panel */
+.panel-row-stack { flex-direction: column; align-items: stretch; margin-bottom: 14px; }
+.choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.choices button { padding: 8px 12px; border: 2px solid var(--ink); border-radius: 10px; background: rgba(255, 255, 255, 0.1); font-size: 16px; font-weight: 600; }
+.choices button.active { background: var(--pink); color: #fff; }
+
+/* ------------------------------------------------------------ hints and speech bubbles */
+.hud-prompt {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--safe-bottom) + 18px);
+  transform: translateX(-50%);
+  padding: 7px 16px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: rgba(20, 12, 40, 0.78);
+  color: var(--gold);
+  font-size: 18px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+#ped-bubbles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.ped-bubble {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 3px 10px;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  will-change: transform;
+}
+
 /* ------------------------------------------------------------ debug (?debug=1) */
 #debug-panel {
   position: fixed;

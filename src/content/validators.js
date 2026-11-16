@@ -102,3 +102,44 @@ export function validateLessons(raw) {
 
   return { items, defaults, skipped };
 }
+
+const SIDES = ['N', 'S', 'E', 'W'];
+
+/**
+ * Validate hangout spots (shape of data/hotspots.json).
+ * @param {{settings?:object, hotspots?:any[]}} raw
+ */
+export function validateHotspots(raw) {
+  const skipped = [];
+  const items = [];
+  const list = Array.isArray(raw?.hotspots) ? raw.hotspots : [];
+  if (!Array.isArray(raw?.hotspots)) skipped.push({ id: '(file)', reason: '"hotspots" list is missing' });
+  const seen = new Set();
+  const num = (v, fallback, min, max) => (Number.isFinite(Number(v)) ? Math.min(max, Math.max(min, Number(v))) : fallback);
+
+  list.forEach((h, i) => {
+    const label = isText(h?.id) ? h.id : `hotspot #${i + 1}`;
+    const skip = (reason) => skipped.push({ id: label, reason });
+    if (!h || typeof h !== 'object') return skip('not an object');
+    if (!isText(h.id)) return skip('id is empty');
+    if (seen.has(h.id)) return skip('duplicate id');
+    if (!Number.isInteger(h.col) || !Number.isInteger(h.row) || h.col < 0 || h.row < 0) return skip('col and row must be whole numbers');
+    const side = isText(h.side) ? h.side.trim().toUpperCase() : '';
+    if (!SIDES.includes(side)) return skip('side must be N, S, E or W');
+    seen.add(h.id);
+    items.push({
+      id: h.id.trim(),
+      name: h.name && typeof h.name === 'object' ? h.name : { en: h.id, bn: h.id },
+      col: h.col,
+      row: h.row,
+      side,
+      along: num(h.along, 0.5, 0.05, 0.95),
+      inset: num(h.inset, 0.75, 0.4, 30),
+      rows: Math.round(num(h.rows, 1, 1, 3)),
+      dancers: Math.round(num(h.dancers, 6, 1, 12)),
+      bpm: num(h.bpm, 112, 70, 150),
+      active: h.active !== false,
+    });
+  });
+  return { items, defaults: raw?.settings || {}, skipped };
+}

@@ -1,0 +1,22 @@
+{
+  "_comment": "Gen-Z hangout spots where stylish young adults dance to a boombox (all adults, no sexual content). Loaded through the Content Service like lessons. Each spot sits on one side of a city block: col/row = the block in the city grid (see docs/GAME_SPEC.md), side = N/S/E/W edge of that block, along = 0..1 position along that edge, inset = metres in from the kerb, rows = lines of dancers, dancers = how many, bpm = music speed. active:false hides a spot. settings: activeDistance = dancers appear when the player is this close; joinRadius = how close Shoumik must be to join; audio.volume 0-1, audio.hearDistance in metres; dancerArchetypes = who dances (names from data/pedestrians.json, with weights); clapChance = share of dancers who just clap along.",
+  "source": { "type": "local" },
+  "settings": {
+    "activeDistance": 95,
+    "joinRadius": 5.5,
+    "spacing": 1.35,
+    "rowGap": 1.4,
+    "clapChance": 0.2,
+    "moveChangeBeats": [8, 24],
+    "matColors": ["#ff4d6d", "#00f5d4", "#fee440", "#9b5de5"],
+    "neonHeight": 2.2,
+    "audio": { "volume": 0.3, "hearDistance": 48 },
+    "dancerArchetypes": { "genz_oversized": 3, "genz_jacket": 3, "genz_tee_girl": 3, "genz_jacket_boy": 2 }
+  },
+  "hotspots": [
+    { "id": "tsc", "name": { "en": "TSC hangout", "bn": "টিএসসি আড্ডা" }, "col": 4, "row": 10, "side": "W", "along": 0.3, "inset": 6, "rows": 2, "dancers": 8, "bpm": 118, "active": true },
+    { "id": "dhanmondi-lakeside", "name": { "en": "Dhanmondi lakeside", "bn": "ধানমন্ডি লেকের পাড়" }, "col": 1, "row": 5, "side": "E", "along": 0.5, "inset": 0.75, "rows": 1, "dancers": 6, "bpm": 104, "active": true },
+    { "id": "hatirjheel", "name": { "en": "Hatirjheel", "bn": "হাতিরঝিল" }, "col": 10, "row": 5, "side": "S", "along": 0.5, "inset": 0.75, "rows": 1, "dancers": 7, "bpm": 124, "active": true },
+    { "id": "gulshan-cafe", "name": { "en": "Gulshan café", "bn": "গুলশান ক্যাফে" }, "col": 9, "row": 2, "side": "S", "along": 0.35, "inset": 0.75, "rows": 1, "dancers": 6, "bpm": 110, "active": true }
+  ]
+}

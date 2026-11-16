@@ -1,9 +1,10 @@
 // Feature: settings (first small version). A gear button opens a panel where the player
-// picks graphics quality Low / Medium / High. Session 7 adds the rest (sound, language,
+// picks graphics quality Low / Medium / High and Shoumik's outfit (sends outfit:set { id };
+// the player feature answers with outfit:changed). Session 7 adds the rest (sound, language,
 // control size, Blood On/Off, reset save) to this same folder.
 // The game is paused while the panel is open.
 
-import { t, applyStrings } from '../../ui/i18n.js';
+import { t, applyStrings, pickName } from '../../ui/i18n.js';
 
 let game = null;
 let button = null;
@@ -15,6 +16,9 @@ const GEAR = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"
 function markActive() {
   panel.querySelectorAll('[data-quality]').forEach((b) => {
     b.classList.toggle('active', b.dataset.quality === game.qualityName);
+  });
+  panel.querySelectorAll('[data-outfit]').forEach((b) => {
+    b.classList.toggle('active', b.dataset.outfit === game.player?.outfit);
   });
 }
 
@@ -44,6 +48,8 @@ export default {
     g.ui.appendChild(button);
 
     const levels = Object.keys(g.config.get('quality').levels);
+    const owned = g.save.data.owned.outfits;
+    const outfits = g.config.get('outfits').outfits.filter((o) => o.unlocked === true || owned.includes(o.id));
     panel = document.createElement('div');
     panel.id = 'settings-panel';
     panel.className = 'overlay';
@@ -58,22 +64,36 @@ export default {
           </div>
         </div>
         <p class="panel-note" data-i18n="settings.qualityNote"></p>
+        <div class="panel-row panel-row-stack">
+          <span class="panel-label" data-i18n="settings.outfit"></span>
+          <div class="choices">
+            ${outfits.map((o) => `<button type="button" data-outfit="${o.id}"></button>`).join('')}
+          </div>
+        </div>
         <button type="button" class="panel-close" data-i18n="settings.close"></button>
       </div>`;
+    const nameOutfits = () => panel.querySelectorAll('[data-outfit]').forEach((b) => {
+      b.textContent = pickName(outfits.find((o) => o.id === b.dataset.outfit)?.name);
+    });
     applyStrings(panel);
+    nameOutfits();
     button.setAttribute('aria-label', t('settings.title'));
     g.ui.appendChild(panel);
 
     panel.addEventListener('click', (e) => {
       const q = e.target.closest('[data-quality]');
-      if (q) {
+      const o = e.target.closest('[data-outfit]');
+      if (o) {
+        g.events.emit('outfit:set', { id: o.dataset.outfit });
+        markActive();
+      } else if (q) {
         g.setQuality(q.dataset.quality);
         markActive();
       } else if (e.target.closest('.panel-close') || e.target === panel) {
         close();
       }
     });
-    offs = [g.events.on('language:changed', () => applyStrings(panel))];
+    offs = [g.events.on('language:changed', () => { applyStrings(panel); nameOutfits(); })];
   },
 
   update() {},

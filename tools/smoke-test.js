@@ -65,6 +65,9 @@ const server = http.createServer((req, res) => {
     console.log(`player moved ${moved.toFixed(1)} m`);
     console.log((await page.evaluate(() => document.getElementById('debug-panel').textContent)).replace(/\n/g, ' | '));
     if (!(moved > 0.5)) { ok = false; console.log('FAIL: the player did not move'); }
+    const people = await page.evaluate(() => (window.BC.crowd ? window.BC.crowd.people.size : -1));
+    console.log(`people on the street: ${people}`);
+    if (people === 0) { ok = false; console.log('FAIL: no pedestrians were spawned'); }
     if (shotFile) await page.screenshot({ path: shotFile });
   } catch (err) {
     ok = false;

@@ -20,3 +20,15 @@
 - Debug teleport menu (`?debug=1`) listing districts, for faster testing.
 - Sunset reflection streak on the water; crows circling (Session 7 vibe pass).
 - Camera option "fixed follow" for players who dislike the auto-swing.
+
+## Ideas noted during Session 2
+- Pedestrians in the small lanes inside blocks (Old Dhaka), tea-stall groups standing and
+  chatting, people sitting on benches/steps.
+- People avoiding each other; walking in pairs; umbrellas in the rain (Session 7).
+- A small nose/brow bump on Shoumik's head so his profile is less flat; a second, sharper
+  face photo taken straight-on in even light would also help.
+- Proper cloth for long kurtas/sarees (hide the legs under the skirt instead of poking through).
+- Crowd reactions to Shoumik dancing well (clapping circle), a dance mini-game for small tips.
+- Café tables/umbrellas at the Gulshan spot, fairy lights at Hatirjheel (Session 4 landmarks).
+- Loading screen and profile card showing Shoumik in his arms-crossed pose (Session 7).
+- Pedestrian LOD 3: one flat "impostor" card per person beyond ~60 m for even bigger crowds.

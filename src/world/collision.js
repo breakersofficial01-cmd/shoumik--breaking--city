@@ -2,6 +2,10 @@
 //   - resolveCircle(): pushes the player's circle out of walls (he slides along them).
 //   - raycast(): used by the chase camera so it doesn't go inside buildings.
 // Buildings, water edges, poles, trees and the city limits are added once at start.
+//
+// Moving things (pedestrians, later vehicles) are NOT in the grid. They are a small list of
+// circles: collision.dynamic.add({ x, z, r }) — keep the object and move its x/z yourself,
+// collision.dynamic.delete(obj) when it goes away. resolveDynamic() pushes a circle out of them.
 
 export const COLLIDE = {
   SOLID: 1,   // blocks walking
@@ -17,6 +21,32 @@ export class CollisionWorld {
     this.stamp = [];         // de-duplication marks per box
     this.stampId = 0;
     this.hits = [];
+    /** @type {Set<{x:number, z:number, r:number}>} moving circles (people, vehicles) */
+    this.dynamic = new Set();
+  }
+
+  /**
+   * Push a circle out of the moving circles. `self` (if given) is skipped.
+   * @returns {boolean} true if it touched one
+   */
+  resolveDynamic(pos, radius, self = null) {
+    let touched = false;
+    for (const o of this.dynamic) {
+      if (o === self || o.owner === self) continue;
+      const dx = pos.x - o.x, dz = pos.z - o.z;
+      const min = radius + o.r;
+      const d2 = dx * dx + dz * dz;
+      if (d2 >= min * min) continue;
+      const d = Math.sqrt(d2);
+      if (d > 1e-4) {
+        pos.x = o.x + (dx / d) * min;
+        pos.z = o.z + (dz / d) * min;
+      } else {
+        pos.x += min;
+      }
+      touched = true;
+    }
+    return touched;
   }
 
   key(ix, iz) {

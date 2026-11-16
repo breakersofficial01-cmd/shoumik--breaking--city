@@ -17,6 +17,8 @@ import { log } from '../core/debug.js';
 
 const LOADERS = {
   player: () => import('./player/index.js'),
+  pedestrians: () => import('./pedestrians/index.js'),
+  hotspots: () => import('./hotspots/index.js'),
   touchControls: () => import('./touchControls/index.js'),
   hud: () => import('./hud/index.js'),
   minimap: () => import('./minimap/index.js'),

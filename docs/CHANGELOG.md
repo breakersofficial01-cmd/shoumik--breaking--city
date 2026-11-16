@@ -76,3 +76,62 @@ Known issues / rough edges
 - No sound, no day/night, no language button yet (planned sessions).
 
 Next: Session 2 (real Shoumik model and people).
+
+## 2026-11-16 — Session 2: Shoumik and people
+Shoumik is now the real character and the streets are full of people.
+
+Shoumik
+- New low-poly model built in code (about 2,000 triangles, 12 draw calls): stocky build, round
+  face, black quiff, full beard, black watch on the left wrist. His face photo
+  (`assets/shoumik/face.png`) is shrunk to a 128 px PS2-style texture, tone-matched and
+  feathered onto the front of the head. The old placeholder file is gone.
+- Outfit system: `data/outfits.json` with all 5 outfits (`casual_maroon` default,
+  `panjabi_navy`, `panjabi_grey`, `doctor` with stethoscope, `polo_black`). Pick one in
+  Settings (gear) → পোশাক. The choice is saved. No logos.
+- One shared skeleton + animator for him and every pedestrian (`src/entities/people/`):
+  idle, arms-crossed signature idle (after 3.5 s standing), walk, run, jump, fall, punch,
+  melee swing, aim, shoot, enter/exit vehicle, sit, dance (3 moves), knocked down, cower,
+  shout, hit, clap.
+- Attack button / mouse click = punch (left, right, left…). Other features start any
+  animation with the `player:action` event; `?debug=1` + number keys 1–0 previews them.
+
+People
+- Pedestrians (`src/features/pedestrians/`): 16 kinds from `data/pedestrians.json` — lungi,
+  panjabi, shirt-pant, office wear, saree, salwar kameez, hijab, hawkers with a basket on the
+  head, rickshaw pullers with a gamcha, students with backpacks, four Gen-Z streetwear kinds
+  (oversized tees, cargo pants, crop jackets, caps, bucket hats, chains, sneakers). Each
+  district has its own mix and crowd density. All adults.
+- They walk the sidewalks, wait and cross at corners, sometimes stop to look at their phone,
+  step out of Shoumik's way. Punch one: he goes down (and later gets up and runs) or, if he is
+  the brave type, puts his fists up and hits back; people nearby run, cower or shout in
+  Bangla speech bubbles.
+- Performance: one instanced "crowd" draws everybody in ~12 draw calls; a fixed pool of
+  pedestrians is recycled around the player (16 / 28 / 40 by quality); far people are drawn
+  simpler and animate less often.
+- Hangout spots (`src/features/hotspots/`, `data/hotspots.json` through the Content Service):
+  TSC, Dhanmondi lakeside, Hatirjheel, Gulshan café — a neon dance mat, a boombox and Gen-Z
+  dancers moving in time to a placeholder beat (made in code, louder as you get closer).
+  Stand on the spot and press ঢোকো / E to dance with them; move to stop.
+
+Under the hood
+- `CollisionWorld.dynamic` (moving circles), `Game.crowd`, HUD hint line (`prompt:show`),
+  save format v2 (adds `outfit`, migration included), new events (see HANDOFF).
+- New tool `tools/character-shots.js` (close-up screenshots of every outfit/animation);
+  the smoke test now also checks that pedestrians exist.
+
+Tested (headless Chromium): boot with zero console errors on low+touch and high, all 5
+outfits, every animation, pedestrians walking/crossing, punch → knock-down / flee /
+fight-back / calm down again, hotspot dancers, joining the dance, outfit saved.
+**Not tested on a real phone. Sound could not be heard in the test machine.**
+
+Known issues
+- This work sits on top of Session 1, which was on its own branch and had not been merged into `main`; both are now together on this branch.
+- Shoumik's face is a flat photo on a round head: fine from the front, flat from the side.
+- No health yet: pedestrians' punches only shove Shoumik (health comes in Session 6).
+- Pedestrians only use the main sidewalks, not the small lanes inside blocks (Old Dhaka's
+  inner lanes are empty) and they do not avoid each other.
+- Legs can poke through long kurtas/kameez when walking; far people have stiff limbs.
+- Walkers squeeze past the single-row lakeside/café dancers rather than going round.
+- The boombox beat is a simple placeholder; there is no sound on/off switch until Session 7.
+
+Next: Session 3 (vehicles and traffic).

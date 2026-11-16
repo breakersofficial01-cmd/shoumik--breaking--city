@@ -1,0 +1,71 @@
+{
+ "_comment": "Pedestrians. crowd = renderer limits. spawn = where people appear/disappear around the player (metres). behaviour = how they walk and react. palettes = colour lists. archetypes = kinds of people (clothing kinds are listed at the top of src/entities/people/looks.js; heights in metres - everyone is an adult). districts = how busy each district is (density 0-1 of the quality's pedestrian count) and which archetypes walk there (weights; 'default' is used when a district has no entry). shouts = keys in data/strings.json.",
+ "crowd": { "capacity": 72, "farEvery": 3, "shadowRadius": 0.4, "shadowOpacity": 0.28 },
+ "spawn": { "minDistance": 24, "minDistanceInView": 58, "maxDistance": 88, "despawnDistance": 102, "perFrame": 2, "triesPerFrame": 8, "laneOffset": [1.35, 2.45], "collideDistance": 32, "radius": 0.3 },
+ "behaviour": {
+  "_comment": "straight/cross weights at a street corner; waitAtCrossing seconds; pauseChance = chance to stand a while at a corner; flee* = running away; cowerChance / shoutChance when something scary happens nearby; fight* = people who hit back; downSeconds = how long a knocked-down person stays down; stuckSeconds = turn round if blocked this long.",
+  "straightWeight": 3, "crossWeight": 2, "waitAtCrossing": [0.4, 2.2], "pauseChance": 0.12, "pauseSeconds": [2, 6],
+  "dangerRadius": 16, "fleeSpeed": [4.6, 6.2], "fleeSeconds": [5, 9], "cowerChance": 0.14, "cowerSeconds": [2.5, 5], "shoutChance": 0.5,
+  "fightReach": 1.05, "fightPunchEvery": [0.9, 1.5], "fightSeconds": 14, "fightGiveUpDistance": 18, "fightSpeed": 4.4, "fighterHealth": 3, "health": 1, "punchPower": 0.6,
+  "downSeconds": [2.5, 4.5], "stuckSeconds": 1.6, "playerPushRadius": 0.75, "bubbleSeconds": 2.2, "maxBubbles": 4
+ },
+ "palettes": {
+  "skin": ["#C08B68", "#B07A56", "#9C6A4C", "#8A5A3C", "#D2A27E", "#A9744F", "#C69A72"],
+  "hair": ["#141010", "#1c1512", "#231a14", "#0e0c0c", "#3a2a1e", "#5c5852"],
+  "shirt": ["#e8e4da", "#9fb6d4", "#c9d8b6", "#d9c7a0", "#7a8fa6", "#b5565a", "#4f6b5a", "#e3b23c", "#f2f2f2", "#8a6f9e", "#3d5a80"],
+  "tee": ["#f2f2f2", "#1c1c1c", "#e2574c", "#f4c430", "#3aa6b9", "#6a4c93", "#ff8fab", "#2a9d8f"],
+  "office": ["#f4f4f4", "#dfe8f2", "#cfe0ea", "#e9e0f0", "#f3ead6"],
+  "pants": ["#2b2f3a", "#3b3b3b", "#4a4032", "#1f2a44", "#5b5346", "#6b6f76"],
+  "jeans": ["#2f4a6e", "#3d5a80", "#1f2f4a", "#55708f", "#22262e"],
+  "cargo": ["#5a5f3c", "#7a7458", "#2f3136", "#8a7a5a", "#4b4f55"],
+  "lungi": ["#2f5d8a", "#3c7a5a", "#7a2f3c", "#44506b", "#8a7a3a", "#35606a", "#5a4a7a"],
+  "panjabi": ["#f1ece0", "#d9d2c0", "#b8c4b0", "#c9b89a", "#8fa3b8", "#e6dcc6", "#6f7f6a"],
+  "saree": ["#c2185b", "#d84315", "#1565c0", "#2e7d32", "#f9a825", "#6a1b9a", "#00838f", "#ad1457", "#ef6c00"],
+  "kameez": ["#e57399", "#5fa8d3", "#f2b134", "#7fb685", "#b388eb", "#ef8354", "#3d9ca8", "#d1495b"],
+  "salwar": ["#f2efe6", "#2b2f3a", "#e9d8a6", "#f7cad0", "#cfe1e8"],
+  "orna": ["#ffe066", "#f08080", "#f2f2f2", "#90e0ef", "#e0aaff", "#ffb347"],
+  "hijab": ["#2b2f3a", "#6d597a", "#b56576", "#355070", "#e5989b", "#52796f", "#f2e9e4", "#8d99ae"],
+  "street": ["#ff4d6d", "#00f5d4", "#fee440", "#9b5de5", "#f15bb5", "#1c1c1c", "#f2f2f2", "#ff9f1c", "#3a86ff"],
+  "hats": ["#1c1c1c", "#f2f2f2", "#e63946", "#2a9d8f", "#ffbe0b", "#3a86ff"],
+  "shoes": ["#2a2420", "#3b2c22", "#1c1c1c", "#5a3b28"],
+  "sneakers": ["#f2f2f2", "#ff4d6d", "#1c1c1c", "#fee440", "#3a86ff"],
+  "bags": ["#2b2f3a", "#7a2f3c", "#2f5d8a", "#3c7a5a", "#1c1c1c", "#b5651d"],
+  "wares": ["#e63946", "#ffbe0b", "#8ac926", "#ff9f1c", "#f2f2f2"],
+  "gamcha": ["#c1272d", "#a61e22", "#d9483b"],
+  "tie": ["#7a1f2b", "#1f2a44", "#2b2b2b"],
+  "basket": ["#b08a4f"],
+  "chain": ["#d4af37"]
+ },
+ "archetypes": {
+  "lungi_man": { "sex": "m", "top": "shirt_short", "topColors": "shirt", "bottom": "lungi", "bottomColors": "lungi", "head": { "hairShort": 1 }, "shoes": "sandal", "height": [1.58, 1.72], "stride": 0.62, "speed": [0.95, 1.3], "brave": 0.3 },
+  "panjabi_man": { "sex": "m", "top": "panjabi", "topColors": "panjabi", "bottom": "pants", "bottomColors": "salwar", "head": { "hairShort": 1 }, "shoes": "sandal", "height": [1.6, 1.76], "stride": 0.72, "speed": [1.0, 1.35], "brave": 0.2 },
+  "shirt_pant_man": { "sex": "m", "top": "shirt_short", "topColors": "shirt", "bottom": "pants", "bottomColors": "pants", "head": { "hairShort": 1 }, "height": [1.6, 1.78], "stride": 1, "speed": [1.15, 1.6], "brave": 0.3 },
+  "office_man": { "sex": "m", "top": "shirt_long", "topColors": "office", "bottom": "pants", "bottomColors": "pants", "head": { "hairShort": 1 }, "extras": { "tie": 0.6, "bag": 0.5 }, "height": [1.62, 1.8], "stride": 1, "speed": [1.3, 1.7], "brave": 0.15 },
+  "office_woman": { "sex": "f", "top": "kameez", "topColors": "office", "bottom": "salwar", "bottomColors": "pants", "head": { "hairBun": 2, "hairLong": 1, "hijab": 1 }, "headColors": "hijab", "extras": { "bag": 0.5 }, "height": [1.5, 1.66], "stride": 0.72, "speed": [1.15, 1.5], "brave": 0.05 },
+  "saree_woman": { "sex": "f", "top": "blouse", "topColors": "saree", "bottom": "saree", "bottomColors": "saree", "head": { "hairBun": 3, "hairLong": 1 }, "shoes": "sandal", "height": [1.48, 1.62], "stride": 0.55, "speed": [0.85, 1.15], "brave": 0.05 },
+  "kameez_woman": { "sex": "f", "top": "kameez", "topColors": "kameez", "bottom": "salwar", "bottomColors": "salwar", "head": { "hairLong": 3, "hairBun": 1 }, "shoes": "sandal", "height": [1.48, 1.64], "stride": 0.72, "speed": [1.0, 1.35], "brave": 0.05 },
+  "hijab_woman": { "sex": "f", "top": "kameez", "topColors": "kameez", "bottom": "salwar", "bottomColors": "salwar", "head": { "hijab": 1 }, "headColors": "hijab", "shoes": "sandal", "height": [1.48, 1.64], "stride": 0.72, "speed": [1.0, 1.3], "brave": 0.05 },
+  "hawker": { "sex": "m", "top": "vest", "topColors": "shirt", "bottom": "lungi", "bottomColors": "lungi", "head": { "hairShort": 1 }, "extras": { "basket": 1, "gamcha": 0.4 }, "shoes": "sandal", "height": [1.56, 1.7], "stride": 0.6, "speed": [0.8, 1.1], "brave": 0.35 },
+  "rickshaw_puller": { "sex": "m", "top": "vest", "topColors": "shirt", "bottom": "lungi", "bottomColors": "lungi", "head": { "hairShort": 1 }, "extras": { "gamcha": 1 }, "shoes": "sandal", "height": [1.56, 1.7], "build": [0.85, 0.98], "stride": 0.65, "speed": [1.0, 1.4], "brave": 0.5 },
+  "student_boy": { "sex": "m", "top": "shirt_short", "topColors": "office", "bottom": "pants", "bottomColors": "jeans", "head": { "hairShort": 1 }, "extras": { "backpack": 1 }, "height": [1.6, 1.76], "stride": 1, "speed": [1.2, 1.7], "brave": 0.25, "idle": "phone" },
+  "student_girl": { "sex": "f", "top": "kameez", "topColors": "kameez", "bottom": "salwar", "bottomColors": "jeans", "head": { "hairLong": 3, "hijab": 1, "hairBun": 1 }, "headColors": "hijab", "extras": { "backpack": 1 }, "height": [1.5, 1.64], "stride": 0.72, "speed": [1.1, 1.5], "brave": 0.05, "idle": "phone" },
+  "genz_oversized": { "sex": "m", "top": "oversized_tee", "topColors": "street", "bottom": "cargo", "bottomColors": "cargo", "head": { "hairShort": 2, "cap": 2, "bucket": 1 }, "shoeColors": "sneakers", "extras": { "chain": 0.6 }, "height": [1.62, 1.8], "stride": 1, "speed": [1.1, 1.5], "brave": 0.3, "idle": "phone", "genz": true },
+  "genz_jacket": { "sex": "f", "top": "crop_jacket", "topColors": "street", "bottom": "cargo", "bottomColors": "jeans", "head": { "hairLong": 3, "bucket": 1, "cap": 1, "hairBun": 1 }, "shoeColors": "sneakers", "extras": { "chain": 0.5 }, "height": [1.52, 1.68], "stride": 0.95, "speed": [1.1, 1.5], "brave": 0.1, "idle": "phone", "genz": true },
+  "genz_tee_girl": { "sex": "f", "top": "oversized_tee", "topColors": "street", "bottom": "pants", "bottomColors": "jeans", "head": { "hairLong": 3, "bucket": 1, "hairBun": 1 }, "shoeColors": "sneakers", "extras": { "chain": 0.3, "backpack": 0.2 }, "height": [1.52, 1.68], "stride": 0.95, "speed": [1.1, 1.5], "brave": 0.1, "idle": "phone", "genz": true },
+  "genz_jacket_boy": { "sex": "m", "top": "crop_jacket", "topColors": "street", "bottom": "pants", "bottomColors": "jeans", "head": { "hairShort": 2, "cap": 2, "bucket": 1 }, "shoeColors": "sneakers", "extras": { "chain": 0.7 }, "height": [1.64, 1.8], "stride": 1, "speed": [1.1, 1.5], "brave": 0.3, "idle": "phone", "genz": true }
+ },
+ "districts": {
+  "default": { "density": 0.8, "mix": { "shirt_pant_man": 4, "kameez_woman": 2, "hijab_woman": 1, "panjabi_man": 1, "student_boy": 1, "student_girl": 1, "lungi_man": 1, "genz_oversized": 1 } },
+  "old-dhaka": { "density": 1.0, "mix": { "lungi_man": 5, "panjabi_man": 3, "hawker": 3, "rickshaw_puller": 3, "saree_woman": 3, "shirt_pant_man": 2, "hijab_woman": 2, "kameez_woman": 1, "student_boy": 1 } },
+  "shahbag-campus": { "density": 0.95, "mix": { "student_boy": 5, "student_girl": 5, "genz_oversized": 2, "genz_tee_girl": 2, "genz_jacket": 1, "shirt_pant_man": 2, "kameez_woman": 2, "hawker": 1, "panjabi_man": 1, "hijab_woman": 1 } },
+  "motijheel-central": { "density": 1.0, "mix": { "office_man": 6, "office_woman": 3, "shirt_pant_man": 3, "hawker": 2, "rickshaw_puller": 1, "lungi_man": 1, "saree_woman": 1, "hijab_woman": 1 } },
+  "gulshan-banani": { "density": 0.7, "mix": { "office_man": 3, "office_woman": 2, "genz_oversized": 3, "genz_jacket": 3, "genz_tee_girl": 2, "genz_jacket_boy": 2, "shirt_pant_man": 2, "kameez_woman": 1 } },
+  "dhanmondi-hatirjheel": { "density": 0.85, "mix": { "shirt_pant_man": 3, "kameez_woman": 3, "genz_oversized": 2, "genz_jacket": 2, "genz_tee_girl": 2, "student_boy": 2, "student_girl": 2, "saree_woman": 1, "hijab_woman": 1, "panjabi_man": 1 } },
+  "sher-e-bangla-nagar": { "density": 0.5, "mix": { "shirt_pant_man": 3, "office_man": 2, "kameez_woman": 2, "panjabi_man": 1, "hijab_woman": 1, "student_boy": 1, "hawker": 1 } }
+ },
+ "shouts": {
+  "flee": ["ped.shout.flee1", "ped.shout.flee2", "ped.shout.flee3", "ped.shout.flee4"],
+  "angry": ["ped.shout.angry1", "ped.shout.angry2", "ped.shout.angry3"],
+  "pain": ["ped.shout.pain1", "ped.shout.pain2"]
+ }
+}

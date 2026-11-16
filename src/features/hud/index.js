@@ -2,9 +2,10 @@
 // toast. Listens to events only:
 //   cash:changed { cash }      wanted:changed { stars }      district:entered { district }
 //   language:changed
+//   prompt:show { id, key }  /  prompt:hide { id }   a one-line hint at the bottom (e.g. "press to dance")
 // Sends:  profile:open  when the portrait is tapped (the profile card comes in Session 7).
 
-import { formatMoney, pickName } from '../../ui/i18n.js';
+import { formatMoney, pickName, t } from '../../ui/i18n.js';
 
 let game = null;
 let root = null;
@@ -12,6 +13,14 @@ let offs = [];
 let toastTimer = null;
 let stars = 0;
 let lastDistrict = null;
+const prompts = new Map(); // id -> strings key; the newest one is shown
+
+function renderPrompt() {
+  const el = root.querySelector('.hud-prompt');
+  const key = [...prompts.values()].pop();
+  el.hidden = !key;
+  if (key) el.textContent = t(key);
+}
 
 function renderCash() {
   root.querySelector('.hud-cash').textContent = formatMoney(game.economy.getCash());
@@ -53,7 +62,8 @@ export default {
           <div class="hud-stars"></div>
         </div>
       </div>
-      <div class="hud-district"></div>`;
+      <div class="hud-district"></div>
+      <div class="hud-prompt" hidden></div>`;
     g.ui.appendChild(root);
 
     const img = root.querySelector('.hud-portrait img');
@@ -67,7 +77,9 @@ export default {
       g.events.on('cash:changed', renderCash),
       g.events.on('wanted:changed', ({ stars: n }) => { stars = n || 0; renderStars(); }),
       g.events.on('district:entered', ({ district }) => showDistrict(district)),
-      g.events.on('language:changed', () => { renderCash(); if (lastDistrict) showDistrict(lastDistrict); }),
+      g.events.on('language:changed', () => { renderCash(); renderPrompt(); if (lastDistrict) showDistrict(lastDistrict); }),
+      g.events.on('prompt:show', ({ id, key }) => { prompts.delete(id); prompts.set(id, key); renderPrompt(); }),
+      g.events.on('prompt:hide', ({ id }) => { prompts.delete(id); renderPrompt(); }),
       g.events.on('save:reset', renderCash),
     ];
   },
@@ -78,6 +90,7 @@ export default {
     offs.forEach((off) => off());
     offs = [];
     clearTimeout(toastTimer);
+    prompts.clear();
     root?.remove();
     root = null;
   },
