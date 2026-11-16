@@ -1,6 +1,10 @@
 {
   "_comment": "Switch features on/off without code. Each key matches a folder in src/features/. New features are added here.",
   "player": true,
+  "touchControls": true,
+  "hud": true,
+  "minimap": true,
+  "settings": true,
   "vehicles": true,
   "traffic": true,
   "pedestrians": true,

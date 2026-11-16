@@ -1,0 +1,25 @@
+{
+  "_comment": "Shoumik's movement numbers (metres, seconds) and the placeholder model colours (from docs/CHARACTER.md). spawn = which road crossing he starts at (col/row of the grid, see data/world.json).",
+  "spawn": { "col": 3, "row": 10, "heading": 2.36 },
+  "radius": 0.38,
+  "walkSpeed": 1.9,
+  "runSpeed": 4.6,
+  "sprintSpeed": 8.2,
+  "walkStickThreshold": 0.45,
+  "acceleration": 26,
+  "deceleration": 22,
+  "turnSpeed": 11,
+  "jumpSpeed": 5.4,
+  "gravity": 16,
+  "stepSmooth": 14,
+  "model": {
+    "skin": "#C08B68",
+    "hair": "#141010",
+    "beard": "#1A1513",
+    "tee": "#7E1C24",
+    "pants": "#C9B79C",
+    "shoes": "#EDEDED",
+    "watch": "#0c0c0c",
+    "torsoWidthScale": 1.15
+  }
+}

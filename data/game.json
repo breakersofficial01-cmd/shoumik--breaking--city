@@ -1,0 +1,8 @@
+{
+  "_comment": "General game settings. saveKey is the name used in the browser's localStorage. autosaveSeconds = how often progress is saved.",
+  "title": "Breaking City",
+  "saveKey": "breakingCity.save",
+  "autosaveSeconds": 30,
+  "maxFrameSeconds": 0.05,
+  "wantedStarsMax": 5
+}

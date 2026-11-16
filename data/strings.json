@@ -1,0 +1,30 @@
+{
+  "_comment": "All UI text. Every key has 'en' and 'bn'. Use {name} for values filled in by the game.",
+  "strings": {
+    "game.title": { "en": "Breaking City", "bn": "ব্রেকিং সিটি" },
+    "loading.config": { "en": "Loading settings…", "bn": "সেটিংস লোড হচ্ছে…" },
+    "loading.fonts": { "en": "Loading fonts…", "bn": "ফন্ট লোড হচ্ছে…" },
+    "loading.content": { "en": "Loading lessons…", "bn": "লেসন লোড হচ্ছে…" },
+    "loading.city": { "en": "Building the city…", "bn": "শহর তৈরি হচ্ছে…" },
+    "loading.ready": { "en": "Ready!", "bn": "প্রস্তুত!" },
+    "loading.start": { "en": "Tap to start", "bn": "শুরু করতে ট্যাপ করুন" },
+    "loading.error": { "en": "Could not load the game. Check your internet and reload.", "bn": "গেম লোড হয়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।" },
+    "loading.tagline": { "en": "Study. Earn. Rule the city.", "bn": "পড়ো। আয় করো। শহর জয় করো।" },
+    "rotate.message": { "en": "Rotate your phone to landscape", "bn": "ফোনটি আড়াআড়ি ঘোরান" },
+    "hud.north": { "en": "N", "bn": "উ" },
+    "controls.attack": { "en": "Hit", "bn": "আঘাত" },
+    "controls.sprint": { "en": "Run", "bn": "দৌড়" },
+    "controls.jump": { "en": "Jump", "bn": "লাফ" },
+    "controls.action": { "en": "Enter", "bn": "ঢোকো" },
+    "controls.weapon": { "en": "Gun", "bn": "অস্ত্র" },
+    "controls.horn": { "en": "Horn", "bn": "হর্ন" },
+    "settings.title": { "en": "Settings", "bn": "সেটিংস" },
+    "settings.quality": { "en": "Graphics", "bn": "গ্রাফিক্স" },
+    "settings.quality.low": { "en": "Low", "bn": "কম" },
+    "settings.quality.medium": { "en": "Medium", "bn": "মাঝারি" },
+    "settings.quality.high": { "en": "High", "bn": "বেশি" },
+    "settings.qualityNote": { "en": "Low is fastest. Smooth edges on High apply after reloading.", "bn": "'কম' সবচেয়ে দ্রুত চলে। 'বেশি'-র মসৃণ ধার পেতে গেম আবার খুলুন।" },
+    "settings.close": { "en": "Close", "bn": "বন্ধ করুন" },
+    "settings.saved": { "en": "Game saved", "bn": "গেম সেভ হয়েছে" }
+  }
+}

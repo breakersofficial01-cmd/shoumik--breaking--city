@@ -41,8 +41,9 @@ Always read `docs/GAME_SPEC.md`, `docs/CHANGELOG.md` and `docs/CHARACTER.md` (if
 6. **Strings.** All UI text in `data/strings.json` with `en` and `bn` keys. Default language
    is Bangla (`data/ui.json → defaultLanguage`).
 7. **Bangla font.** All Bangla text uses the font configured in `data/ui.json → fonts.bn`
-   (Li Ador Noirrit), loaded with a CSS `@font-face` from `fonts.bn.file`. If that file is
-   missing, fall back to `fonts.bn.fallback` (load the Google Fonts URL). Never hard-code the
+   (Li Ador Noirrit), loaded with a CSS `@font-face` from `fonts.bn.file` when
+   `fonts.bn.fileInstalled` is true. If that file is missing, fall back to
+   `fonts.bn.fallback` (load the Google Fonts URL). Never hard-code the
    font name in code or CSS outside the font loader. Canvas/3D text (signboards, posters)
    must wait for `document.fonts.ready` before drawing.
 
