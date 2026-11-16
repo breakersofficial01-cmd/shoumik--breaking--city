@@ -12,3 +12,9 @@
 - Added `assets/shoumik/face.png` (face texture) and `assets/shoumik/portrait.png` (HUD).
 - Session 2 now uses these files; photos no longer required.
 - Fixed hosting sub-path to `/shoumik--breaking--city/`.
+
+## 2026-11-16 — Bangla quiz + font (Claude Opus 5.5)
+- Test lesson questions, options and explanations translated to Bangla.
+- Added `data/ui.json` (Bangla default, Li Ador Noirrit font with Hind Siliguri fallback).
+- New rules in CLAUDE.md: Bangla font loader, Class Mode fully in Bangla with Bangla digits.
+- Font file not committed yet (licence check pending, see NEXT.md).

@@ -7,6 +7,10 @@ touching gameplay code.
 
 ## 1. Lessons and questions
 
+**Language:** write questions, options and explanations in **Bangla**. The game shows them in
+the Bangla font (Li Ador Noirrit, set in `data/ui.json`). Scientific terms can keep the
+English word in brackets, e.g. "তন্তুময় তরুণাস্থি (ফাইব্রোকার্টিলেজ)".
+
 ### Now: `data/lessons.json`
 One lesson = one YouTube class + its questions. See the sample lesson
 `bio-bone-cartilage-01` in that file.

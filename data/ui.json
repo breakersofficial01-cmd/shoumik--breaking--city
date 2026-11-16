@@ -1,0 +1,17 @@
+{
+  "_comment": "UI look settings. Bangla text (questions, options, explanations, Bangla UI) uses fonts.bn. If the custom font file is missing, the game silently uses the fallback stack (Hind Siliguri from Google Fonts, then Noto Sans Bengali). To activate Li Ador Noirrit, place the licensed file at the path below — no code change needed.",
+  "fonts": {
+    "bn": {
+      "family": "Li Ador Noirrit",
+      "file": "assets/fonts/LiAdorNoirrit-Regular.ttf",
+      "fallback": "'Hind Siliguri', 'Noto Sans Bengali', sans-serif",
+      "googleFontsFallbackUrl": "https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap"
+    },
+    "en": {
+      "family": "system-ui",
+      "fallback": "'Segoe UI', Roboto, sans-serif"
+    }
+  },
+  "defaultLanguage": "bn",
+  "questionLanguage": "bn"
+}

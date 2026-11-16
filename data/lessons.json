@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "_comment": "Lessons for Lesson Check. Later this file is replaced by a Google Sheet (see docs/CONTENT_GUIDE.md). Keep this file as the offline fallback.",
+  "_comment": "Lessons for Lesson Check. Questions are written in Bangla (language: bn). Later this file is replaced by a Google Sheet (see docs/CONTENT_GUIDE.md). Keep this file as the offline fallback.",
   "source": {
     "type": "local",
     "googleSheet": {
@@ -10,6 +10,7 @@
     }
   },
   "defaults": {
+    "language": "bn",
     "rewardPerCorrect": 150,
     "questionsPerAttempt": 3,
     "maxAttempts": 2,
@@ -20,33 +21,49 @@
     {
       "id": "bio-bone-cartilage-01",
       "institute": "breaking-biology",
-      "subject": "Biology",
-      "chapter": "Bone and Cartilage",
-      "title": "Bone and Cartilage — Class 1",
+      "language": "bn",
+      "subject": "জীববিজ্ঞান",
+      "chapter": "অস্থি ও তরুণাস্থি",
+      "title": "অস্থি ও তরুণাস্থি — ক্লাস ১",
       "youtubeUrl": "https://youtu.be/n9wUkCiCyD8",
       "rewardPerCorrect": 150,
       "active": true,
       "questions": [
         {
           "id": "q1",
-          "question": "Which type of cartilage forms the intervertebral discs?",
-          "options": { "A": "Hyaline cartilage", "B": "Elastic cartilage", "C": "Fibrocartilage", "D": "Calcified cartilage" },
+          "question": "কশেরুকার মাঝের চাকতি (ইন্টারভার্টিব্রাল ডিস্ক) কোন ধরনের তরুণাস্থি দিয়ে গঠিত?",
+          "options": {
+            "A": "হায়ালিন তরুণাস্থি",
+            "B": "স্থিতিস্থাপক (ইলাস্টিক) তরুণাস্থি",
+            "C": "তন্তুময় তরুণাস্থি (ফাইব্রোকার্টিলেজ)",
+            "D": "চুনময় (ক্যালসিফাইড) তরুণাস্থি"
+          },
           "answer": "C",
-          "explanation": "Intervertebral discs are made of fibrocartilage, which is tough and resists compression."
+          "explanation": "ইন্টারভার্টিব্রাল ডিস্ক তন্তুময় তরুণাস্থি দিয়ে গঠিত, যা শক্ত এবং চাপ সহ্য করতে পারে।"
         },
         {
           "id": "q2",
-          "question": "Which cells break down (resorb) bone tissue?",
-          "options": { "A": "Osteoblasts", "B": "Osteocytes", "C": "Osteoclasts", "D": "Chondrocytes" },
+          "question": "কোন কোষ অস্থি টিস্যু ভেঙে ফেলে (অস্থি শোষণ করে)?",
+          "options": {
+            "A": "অস্টিওব্লাস্ট",
+            "B": "অস্টিওসাইট",
+            "C": "অস্টিওক্লাস্ট",
+            "D": "কন্ড্রোসাইট"
+          },
           "answer": "C",
-          "explanation": "Osteoclasts resorb bone; osteoblasts build new bone."
+          "explanation": "অস্টিওক্লাস্ট অস্থি শোষণ করে; অস্টিওব্লাস্ট নতুন অস্থি গঠন করে।"
         },
         {
           "id": "q3",
-          "question": "What is the structural unit of compact bone?",
-          "options": { "A": "Osteon (Haversian system)", "B": "Lacuna", "C": "Trabecula", "D": "Perichondrium" },
+          "question": "ঘন অস্থির (কম্প্যাক্ট বোন) গঠনগত একক কোনটি?",
+          "options": {
+            "A": "অস্টিওন (হ্যাভারসিয়ান তন্ত্র)",
+            "B": "ল্যাকুনা",
+            "C": "ট্র্যাবেকুলা",
+            "D": "পেরিকন্ড্রিয়াম"
+          },
           "answer": "A",
-          "explanation": "Compact bone is built from osteons, each with a central Haversian canal."
+          "explanation": "ঘন অস্থি অসংখ্য অস্টিওন দিয়ে গঠিত; প্রতিটির কেন্দ্রে একটি হ্যাভারসিয়ান নালী থাকে।"
         }
       ]
     }

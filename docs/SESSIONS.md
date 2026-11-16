@@ -18,6 +18,8 @@ Foundations (most important — everything later depends on these):
 - `src/features/index.js` feature registry reading `data/features.json`; each feature is a
   folder exporting `{ id, init(game), update(dt), dispose() }`.
 - `src/assets/registry.js` asset registry.
+- `src/ui/fonts.js` font loader reading `data/ui.json` (Bangla font with fallback, see
+  CLAUDE.md rule 7). The loading screen and HUD already use it.
 
 World:
 - `index.html` with Three.js import map, renderer, resize + notch handling, "rotate to
@@ -100,6 +102,8 @@ Biology Institution — a mobile-friendly HTML overlay:
    - Each correct answer pays `rewardPerCorrect` Taka (emit `cash:changed`,
      `lesson:completed`). A lesson pays once per player; `maxAttempts` limits retries. Save
      results per lesson id.
+   - Everything in Class Mode is in Bangla with the Bangla font from `data/ui.json`
+     (see "Quiz language" in CLAUDE.md), including Bangla digits.
    - Test lesson: `bio-bone-cartilage-01` in `data/lessons.json` (one YouTube link, 3 questions
      on bone and cartilage). It must work end to end.
 2. **Quiz Class** — free practice from all active questions of that institute, ৳50 per correct,
