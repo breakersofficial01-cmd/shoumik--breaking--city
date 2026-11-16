@@ -1,0 +1,27 @@
+{
+  "_comment": "Named places of Breaking City. Right now they are the destinations for hired rickshaw / CNG rides (ride:true) and every one of them has a rickshaw + CNG stand. Session 4 adds the landmark buildings to this same file. col/row = the ROAD JUNCTION next to the place (junction 0,0 is the north-west corner of the city; see the map in docs/GAME_SPEC.md). Loaded through the Content Service; a bad row is skipped, never crashes the game.",
+  "source": { "type": "local" },
+  "places": [
+    { "id": "shahbag", "name": { "en": "Shahbag", "bn": "শাহবাগ" }, "col": 3, "row": 10, "ride": true },
+    { "id": "tsc", "name": { "en": "TSC", "bn": "টিএসসি" }, "col": 4, "row": 10, "ride": true },
+    { "id": "breaking-school", "name": { "en": "Breaking School", "bn": "ব্রেকিং স্কুল" }, "col": 2, "row": 11, "ride": true },
+    { "id": "dhaka-university", "name": { "en": "Dhaka University", "bn": "ঢাকা বিশ্ববিদ্যালয়" }, "col": 4, "row": 12, "ride": true },
+    { "id": "dhaka-medical", "name": { "en": "Dhaka Medical College", "bn": "ঢাকা মেডিকেল কলেজ" }, "col": 6, "row": 12, "ride": true },
+    { "id": "nilkhet", "name": { "en": "Nilkhet", "bn": "নীলক্ষেত" }, "col": 1, "row": 12, "ride": true },
+    { "id": "breaking-biology", "name": { "en": "Breaking Biology Institution", "bn": "ব্রেকিং বায়োলজি ইনস্টিটিউশন" }, "col": 5, "row": 7, "ride": true },
+    { "id": "dhanmondi-lake", "name": { "en": "Dhanmondi Lake", "bn": "ধানমন্ডি লেক" }, "col": 2, "row": 5, "ride": true },
+    { "id": "hatirjheel", "name": { "en": "Hatirjheel", "bn": "হাতিরঝিল" }, "col": 10, "row": 6, "ride": true },
+    { "id": "sangsad-bhaban", "name": { "en": "Jatiya Sangsad Bhaban", "bn": "জাতীয় সংসদ ভবন" }, "col": 2, "row": 3, "ride": true },
+    { "id": "gulshan", "name": { "en": "Gulshan Circle", "bn": "গুলশান চত্বর" }, "col": 10, "row": 2, "ride": true },
+    { "id": "banani", "name": { "en": "Banani", "bn": "বনানী" }, "col": 8, "row": 3, "ride": true },
+    { "id": "farmgate", "name": { "en": "Farmgate", "bn": "ফার্মগেট" }, "col": 8, "row": 9, "ride": true },
+    { "id": "karwan-bazar", "name": { "en": "Karwan Bazar", "bn": "কারওয়ান বাজার" }, "col": 9, "row": 10, "ride": true },
+    { "id": "shapla-chattar", "name": { "en": "Shapla Chattar", "bn": "শাপলা চত্বর" }, "col": 11, "row": 11, "ride": true },
+    { "id": "notre-dame", "name": { "en": "Notre Dame College", "bn": "নটর ডেম কলেজ" }, "col": 12, "row": 12, "ride": true },
+    { "id": "police-hq", "name": { "en": "Police Headquarters", "bn": "পুলিশ হেডকোয়ার্টার্স" }, "col": 10, "row": 12, "ride": true },
+    { "id": "ssmc", "name": { "en": "Sir Salimullah Medical College", "bn": "স্যার সলিমুল্লাহ মেডিকেল কলেজ" }, "col": 9, "row": 15, "ride": true },
+    { "id": "ahsan-manzil", "name": { "en": "Ahsan Manzil", "bn": "আহসান মঞ্জিল" }, "col": 5, "row": 15, "ride": true },
+    { "id": "lalbagh-fort", "name": { "en": "Lalbagh Fort", "bn": "লালবাগ কেল্লা" }, "col": 2, "row": 14, "ride": true },
+    { "id": "sadarghat", "name": { "en": "Sadarghat", "bn": "সদরঘাট" }, "col": 7, "row": 16, "ride": true }
+  ]
+}

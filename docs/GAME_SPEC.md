@@ -4,7 +4,7 @@ What the game is and what exists **right now**. Updated at the end of every sess
 Rules live in `/CLAUDE.md`; the build plan in `docs/SESSIONS.md`; how the code is organised
 in `docs/HANDOFF.md`.
 
-Status: **Session 2 of 8 done** (engine, city, foundations, Shoumik, people).
+Status: **Session 3 of 8 done** (engine, city, foundations, Shoumik, people, vehicles, traffic).
 
 ---
 
@@ -17,7 +17,7 @@ A free-roam, Vice-City-flavoured open world set in a compressed Dhaka, made for
 
 Money only comes from answering lesson questions. YouTube links open outside the game.
 
-## 2. What you can do today (after Session 2)
+## 2. What you can do today (after Session 3)
 - Open the game → loading screen → "শুরু করতে ট্যাপ করুন" → you are Shoumik on a street corner
   in Shahbag at sunset.
 - Walk, run, sprint and jump around the whole city. Buildings, poles, trees, lake edges and
@@ -31,10 +31,16 @@ Money only comes from answering lesson questions. YouTube links open outside the
 - Gear button → পোশাক: change between his 5 outfits.
 - Find a hangout spot (TSC is one block east of the start, in the park) and press ঢোকো / E
   to dance with the crowd.
-- Progress (cash, position, quality, outfit) saves itself every 30 seconds and when you leave.
+- Walk up to any vehicle and press ঢোকো / E to get in — a parked one, or one somebody is
+  driving (the driver is thrown out). Drive, drift with the handbrake, reverse, crash, jump the
+  yellow-and-black ramps in the parks. Press ঢোকো / E again to get out.
+- Hire a waiting rickshaw (৳২০) or CNG (৳১০০) and be driven to any of 21 named places.
+- Watch the traffic: rickshaws, CNGs, buses stopping at bus stops, jams at Shahbag and Farmgate.
+- Progress (cash, position, quality, outfit, owned vehicles) saves itself every 30 seconds and
+  when you leave.
 
-Not in yet: vehicles, landmarks, posters, classes, shops, crime,
-police, day/night, sound. See `docs/SESSIONS.md`.
+Not in yet: landmarks, posters, classes, shops, weapons, wanted stars and police, health,
+day/night, real sound. See `docs/SESSIONS.md`.
 
 ## 3. The city
 A fixed-seed grid: **14 × 16 big blocks**, each 82 m with 14 m roads (about 1.36 × 1.55 km).
@@ -117,7 +123,42 @@ hit, clap. Guns, melee weapons and vehicles that use them arrive in Sessions 3 a
   Hatirjheel, Gulshan café. Dance mat, boombox, neon posts, Gen-Z dancers in time with the
   beat. Shoumik can join. No sexual content, no romance.
 
+## 5c. Vehicles and traffic
+| Vehicle | Top speed | Notes |
+|---|---|---|
+| Rickshaw | 22 km/h | painted art panel; can be hired (৳20) |
+| Bicycle | 31 km/h | |
+| CNG | 50 km/h | green three-wheeler; can be hired (৳100) |
+| Leguna | 58 km/h | stops at bus stops |
+| Motorbike | 112 km/h | leans into corners |
+| Sedan | 108 km/h | |
+| SUV | 101 km/h | heavy, tough |
+| Sports car | 155 km/h | fastest, best grip |
+| Local bus | 61 km/h | very heavy, dented, stops at bus stops |
+| Police pickup | 126 km/h | no logos; police AI comes in Session 6 |
+| Ambulance | 108 km/h | |
+
+- **Driving**: arcade physics made for this game (no physics engine). Handbrake = drift.
+  Buildings, poles, trees and lake edges are solid; kerbs are not. Kerb-high steps are driven
+  over, anything taller is a wall.
+- **Damage**: health per vehicle; crashes above 16 km/h cost health; under 50% smoke, under
+  20% fire, at 0 it burns for 5 s and explodes (9 m blast).
+- **Traffic**: left-hand driving, 2 lanes each way on the main roads (inner 1.7 m and outer
+  4.4 m from the centre line). 7 / 12 / 18 AI vehicles around you on Low / Medium / High (more
+  near a jam), plus 5 / 8 / 12 parked ones. Junctions alternate north-south and east-west
+  traffic every 9 s. Jams: Shahbag (junction 3,10) and Farmgate (junction 8,9).
+- **Rides**: a stand (rickshaw + CNG with waiting drivers) at each of the 21 places in
+  `data/places.json`. Fares in `data/economy.json`.
+- **Owned vehicles**: listed in the save; they appear on the road south of the Shahbag start
+  junction (`data/vehicles.json → garage`) until homes exist.
+- **Ramps**: Suhrawardy Udyan (2), Sangsad plaza (2), Chandrima Udyan (1) — `data/world.json → ramps`.
+
+Junctions are numbered like the blocks on the map in section 3: junction (col, row) is the
+north-west corner of block (col, row).
+
 ## 6. Controls
+On foot:
+
 | Action | Phone | Computer |
 |---|---|---|
 | Move | left joystick (appears where you touch) | W A S D / arrows |
@@ -126,7 +167,19 @@ hit, clap. Guns, melee weapons and vehicles that use them arrive in Sessions 3 a
 | Jump | লাফ | Space |
 | Punch | আঘাত | click (after clicking into the game) |
 | Dance at a hangout spot | ঢোকো | E |
-| Weapon / Horn | অস্ত্র / হর্ন (used from Session 3+) | Q / H |
+| Get into a vehicle / hire a ride | ঢোকো | E |
+| Weapon | অস্ত্র (Session 6) | Q |
+
+In a vehicle (the same buttons, with new labels):
+
+| Action | Phone | Computer |
+|---|---|---|
+| Steer | left joystick left / right | A / D |
+| Accelerate | গ্যাস, or joystick forward | W |
+| Brake, then reverse | joystick back | S |
+| Handbrake (drift) | ব্রেক | Space |
+| Horn | হর্ন | H |
+| Get out (brakes first if moving) | নামো | E |
 
 Phones must be in landscape; in portrait a "rotate your phone" screen shows and the game
 pauses.
@@ -148,14 +201,18 @@ Target: 30+ fps on a mid-range Android (4 GB RAM), landscape, Chrome.
 | মাঝারি (medium, default) | 1.25× | 300 m | |
 | বেশি (high) | 2× | 430 m | smooth edges (after reload) |
 
-With people (Session 2) the headless test shows 54 draw calls / 43k triangles on Low and
+With traffic (Session 3) the headless test shows 57 draw calls / 72k triangles on Low and about 100 / 140k
+on Medium at Shahbag; all vehicle code together takes about 0.4 ms per frame on a desktop CPU.
+Each vehicle is one draw call, all wheels together are one, smoke and fire are two.
+With people (Session 2) the headless test showed 54 draw calls / 43k triangles on Low and
 96 / 143k on High at the start corner. Before people, measured in the headless test: 30–75 draw calls, 50–190k triangles in view (Old Dhaka is the
 heaviest), about 9,700 collision boxes, whole-city layout generated in ~25 ms, a chunk meshed
 in ~3 ms on a desktop CPU. Real-phone numbers still need to be measured by the owner.
 
 ## 9. Save
 `localStorage["breakingCity.save"]`, version 2: cash, player position, outfit, settings (quality,
-language, blood), plus empty slots for lessons, owned items, stats and flags. Migrations in
+language, blood), owned vehicles (`owned.vehicles` = list of `{ type, color }`), plus empty slots
+for lessons, other owned items, stats and flags. Migrations in
 `src/core/save.js`. Unreadable saves are backed up to `breakingCity.save.broken`.
 
 ## 10. Content
@@ -163,4 +220,5 @@ language, blood), plus empty slots for lessons, owned items, stats and flags. Mi
   (`bio-bone-cartilage-01`, 3 Bangla questions). Google Sheet adapter is written and tested
   but switched off (`source.type: "local"`).
 - Hangout spots: `data/hotspots.json`, also loaded and validated by the Content Service.
+- Places (ride destinations, later landmarks): `data/places.json`, same.
 - Everything else that is tunable: `data/*.json` (each file starts with a `_comment`).

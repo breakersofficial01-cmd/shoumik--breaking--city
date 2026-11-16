@@ -32,3 +32,16 @@
 - Café tables/umbrellas at the Gulshan spot, fairy lights at Hatirjheel (Session 4 landmarks).
 - Loading screen and profile card showing Shoumik in his arms-crossed pose (Session 7).
 - Pedestrian LOD 3: one flat "impostor" card per person beyond ~60 m for even bigger crowds.
+
+## Ideas noted during Session 3
+- Visible traffic lights (or a traffic policeman with a stick) at junctions; indicator lights.
+- Shoumik visible through the windows of closed cars; opening doors; riders pedalling.
+- Minimap blips: owned vehicles, the hired ride's destination, rickshaw stands.
+- AI rickshaws inside the narrow Old Dhaka lanes; overtaking; ambulances and police with sirens
+  that others make way for (police chases are Session 6).
+- Passengers visibly getting on and off buses at stops; riding a bus as a passenger for ৳10.
+- Vehicle damage you can see (dents, a missing bumper), tyre marks on the road, sparks.
+- A horn that makes pedestrians and rickshaws move aside.
+- Unique-jump bonuses on the ramps, a stunt counter on the profile card.
+- Boats at Sadarghat; the MRT train as something you can ride (after Session 4).
+- Trailers / vans of goods, tea-stall carts and parked rickshaw rows as street dressing.

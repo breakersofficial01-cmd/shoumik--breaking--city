@@ -2,7 +2,7 @@
 // toast. Listens to events only:
 //   cash:changed { cash }      wanted:changed { stars }      district:entered { district }
 //   language:changed
-//   prompt:show { id, key }  /  prompt:hide { id }   a one-line hint at the bottom (e.g. "press to dance")
+//   prompt:show { id, key, vars? }  /  prompt:hide { id }   a one-line hint at the bottom (e.g. "press to dance")
 // Sends:  profile:open  when the portrait is tapped (the profile card comes in Session 7).
 
 import { formatMoney, pickName, t } from '../../ui/i18n.js';
@@ -13,13 +13,13 @@ let offs = [];
 let toastTimer = null;
 let stars = 0;
 let lastDistrict = null;
-const prompts = new Map(); // id -> strings key; the newest one is shown
+const prompts = new Map(); // id -> { key, vars }; the newest one is shown
 
 function renderPrompt() {
   const el = root.querySelector('.hud-prompt');
-  const key = [...prompts.values()].pop();
-  el.hidden = !key;
-  if (key) el.textContent = t(key);
+  const top = [...prompts.values()].pop();
+  el.hidden = !top;
+  if (top) el.textContent = t(top.key, top.vars);
 }
 
 function renderCash() {
@@ -78,7 +78,7 @@ export default {
       g.events.on('wanted:changed', ({ stars: n }) => { stars = n || 0; renderStars(); }),
       g.events.on('district:entered', ({ district }) => showDistrict(district)),
       g.events.on('language:changed', () => { renderCash(); renderPrompt(); if (lastDistrict) showDistrict(lastDistrict); }),
-      g.events.on('prompt:show', ({ id, key }) => { prompts.delete(id); prompts.set(id, key); renderPrompt(); }),
+      g.events.on('prompt:show', ({ id, key, vars }) => { prompts.delete(id); prompts.set(id, { key, vars }); renderPrompt(); }),
       g.events.on('prompt:hide', ({ id }) => { prompts.delete(id); renderPrompt(); }),
       g.events.on('save:reset', renderCash),
     ];

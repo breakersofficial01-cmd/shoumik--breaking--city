@@ -1,4 +1,4 @@
-# Handoff — how Breaking City is built (v2, after Session 2)
+# Handoff — how Breaking City is built (v3, after Session 3)
 
 For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, then
 `docs/GAME_SPEC.md` (what exists) and `docs/CHANGELOG.md` (what changed last).
@@ -12,6 +12,10 @@ For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, th
 - Automated check: `node tools/smoke-test.js --three <path to an npm copy of three@0.170.0>
   --shot out.png`. It boots the game headless under the GitHub Pages sub-path, walks forward,
   and fails on any console error or if no pedestrians appear.
+- Vehicles: `node tools/vehicle-shots.js --three <dir> --out <folder>` photographs every vehicle
+  type and tests driving, the ramp jump, drifting, carjacking, a hired ride, an explosion and a
+  minute of traffic (`--only gallery,drive,jack,ride,boom,traffic`). Run it after touching
+  anything in `src/entities/vehicles/`, `src/world/roads.js` or the two features.
 - See what you changed: `node tools/character-shots.js --three <dir> --out <folder>` saves
   close-ups of Shoumik in every outfit and animation (`--only front,punch,doctor`). (Cloud sandboxes usually cannot reach the CDN, hence
   `--three`.) Run it before every commit.
@@ -20,6 +24,8 @@ For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, th
   `BC.events.emit('wanted:changed', { stars: 3 })`, `BC.world.layout`, `BC.save.flush()`,
   `BC.events.emit('outfit:set', { id: 'doctor' })`, `BC.events.emit('player:action', { name: 'aim' })`,
   `BC.debugPeds` (the pedestrian pool), `BC.crowd.people`. Number keys 1–0 play animations.
+  Vehicles: `BC.fleet.vehicles`, `BC.player.vehicle`, `BC.fleet.create('bus', { x, z, heading })`,
+  `BC.fleet.damage(v, 100)`, `BC.events.emit('vehicle:grant', { type: 'sports' })`, `BC.world.roads`.
 
 ## 2. Boot order (`src/main.js`)
 1. `config.loadSome` (ui, strings, game, economy) → `save.load` → `initI18n`
@@ -29,6 +35,10 @@ For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, th
 5. `new Game(canvas).init()` → renderer, `World` (layout, materials, sky, water, chunks,
    collision), `Input`, `ChaseCamera`, features, first chunks built
 6. autosave starts → "Tap to start" → `game.start()` (frame loop)
+
+Feature order (`src/features/index.js`): traffic → vehicles → player → pedestrians → the rest. The
+`vehicles` feature steps the shared fleet (physics) and then puts Shoumik on his seat, so it must
+run before `player` draws him; `traffic` only sets the AI's pedals and wheel before that.
 
 Frame order (`Game.frame`): input → camera look → `features.update(dt)` → `crowd.update()` → camera →
 `world.update` (chunks, water, sky) → render → input end-of-frame → debug panel.
@@ -46,16 +56,22 @@ src/assets/  registry.js (asset ids + overrides), proceduralTextures.js (atlases
 src/world/   layout.js (piece grid) → blockgen.js (buildings/poles/trees DATA)
              geoBuilder.js, buildingMesher.js, groundMesher.js, props.js  (DATA → geometry)
              chunks.js (build/show/hide/unload), collision.js, water.js, sky.js, world.js (glue)
+             roads.js (road graph: junctions, lanes, signals, routes, bus stops), ramps.js
 src/entities/ chaseCamera.js
+  vehicles/  fleet.js (all vehicles; step + draw) vehicle.js physics.js damage.js driver.js (AI)
+             models.js modelsCars.js modelsSmall.js shapes.js (VBuilder)
+  effects/   particles.js (smoke / fire puffs)
   people/    skeleton.js (pose format, bones) animLocomotion.js animActions.js animator.js
              shapes.js (loft/ellipsoid helpers) partGeometry.js looks.js crowd.js (instancing)
   shoumik/   model.js head.js body.js faceTexture.js
 src/features/ index.js (registry) + player/ (index.js, actions.js) pedestrians/ (index.js,
              navigation.js, brain.js, bubbles.js) hotspots/ (index.js, props.js, boombox.js)
              touchControls/ hud/ minimap/ settings/
+             vehicles/ (index.js, boarding.js, rides.js, parked.js, horn.js) traffic/ (index.js, shelters.js)
+             pedestrians/roadSense.js (people vs vehicles)
 src/ui/      fonts.js, i18n.js, loading.js, styles.css
 data/        every tunable number and all content
-tools/       smoke-test.js, character-shots.js
+tools/       smoke-test.js, character-shots.js, vehicle-shots.js
 ```
 
 ## 4. Conventions that are easy to get wrong
@@ -100,8 +116,19 @@ tools/       smoke-test.js, character-shots.js
 | `outfit:set` / `outfit:changed` | `{ id }` | settings (later clothes shop) → player / player |
 | `ped:hit` | `{ x, z, down }` | pedestrians |
 | `danger:raised` | `{ x, z, radius, source }` people nearby flee — **send this for gunshots, crashes, explosions** | pedestrians (later crime/vehicles) |
-| `prompt:show` / `prompt:hide` | `{ id, key }` / `{ id }` one-line hint at the bottom of the HUD | anyone → hud |
+| `prompt:show` / `prompt:hide` | `{ id, key, vars? }` / `{ id }` one-line hint at the bottom of the HUD | anyone → hud |
 | `hotspot:entered` / `hotspot:left` | `{ id }` | hotspots |
+| `vehicle:entered` / `vehicle:exited` | `{ id, type, jacked?, passenger }` | vehicles |
+| `vehicle:driverEjected` | `{ x, z, heading, archetype, angry, flee }` a driver is now on foot | vehicles, traffic → pedestrians |
+| `vehicle:crashed` | `{ id, x, z, speed }` | fleet |
+| `vehicle:burning` / `vehicle:exploded` | `{ id, x, z }` / `{ id, type, x, z, radius }` | fleet |
+| `explosion` | `{ x, z, radius, power }` — **send this for any blast** (people nearby fall) | fleet (later weapons) |
+| `vehicle:horn` | `{ id, x, z, kind, ai }` | vehicles, AI drivers → vehicles (plays it) |
+| `vehicle:grant` | `{ type, color? }` Shoumik now owns a vehicle | *shops (Session 5)* → vehicles |
+| `crime:committed` | `{ type: 'carjack' \| 'hitPedestrian', x, z }` | vehicles, pedestrians → *police (Session 6)* |
+| `ride:started` / `ride:ended` | `{ type, place, fare }` / `{ type, place, arrived }` | vehicles |
+| `traffic:adopt` | `{ id }` take over a vehicle that has a driver | vehicles → traffic |
+| `controls:mode` | `{ mode: 'driving' \| 'onFoot' }` | vehicles → touchControls |
 | `wanted:changed` | `{ stars }` | *listened to by hud; police feature will send it* |
 | `lesson:completed` | *(Session 5)* | classes |
 
@@ -191,19 +218,58 @@ version, add the field to `defaults()`. Features store live state with
   yourself, `.delete()` when gone; `resolveDynamic(pos, radius, self)` pushes out of them.
   Vehicles should use this and send `danger:raised`.
 
-## 12. Notes for the next sessions
-- **Session 3 (vehicles):** animations `enterVehicle` (holds the seated pose), `sit`,
-  `exitVehicle` exist — play them with `player:action` and set `game.player.mode = 'driving'`
-  (the player feature then stops moving him; place him yourself). Pedestrians need a
-  "dive away / get hit" reaction: add states in `pedestrians/brain.js`. Rickshaw pullers
-  exist as an archetype. `ChaseCamera.setTarget(vehicle, 'driving')` + a `driving` block
-  in `data/camera.json`. Roads are the pieces with `kind` CROSSING / ROAD_EW / ROAD_NS;
-  lanes inside blocks are `patches` with `lane: true`. Kerbs are 0.15 m.
+## 12. Vehicles: how it fits together
+- **Fleet** (`game.fleet`, get it with `await acquireFleet(game)`): every vehicle in the world.
+  `fleet.create(type, { x, z, heading, color? })`, `fleet.remove(v)`, `fleet.nearest(x, z, range, filter)`,
+  `fleet.damage(v, hp)`, `fleet.setRider(v, look)`. `fleet.update(dt)` is called once a frame by the
+  `vehicles` feature: physics → vehicle-vs-vehicle → damage/fire → meshes, wheels, riders, particles.
+- **A vehicle** (`vehicle.js`): `x y z heading vx vz speed forwardSpeed`, `input { throttle, steer
+  (+ = left), handbrake }`, `driver` (`null` parked | `'player'` | `'ai'` | `'ride'`), `state`
+  (`ok` | `burning` | `wreck`), `health`, `T` (its type from `data/vehicles.json`), `tags` (notes
+  for features: `owned`, `stand`, `slot`, `seg`, `riderArchetype`), `brain` (AI data). Whoever
+  drives only writes `vehicle.input`.
+- **Physics** (`physics.js`): engine/brake along the heading, steering by wheel angle limited by
+  `lateralAccel`, then sideways speed decays by *grip* — handbrake = tiny grip = drift. A vehicle
+  collides as 1–3 circles; the same circles are in `world.collision.dynamic` (marked
+  `kind: 'vehicle'`, with `vx vz speed owner`) so people and Shoumik bump into vehicles and
+  pedestrians can read traffic without importing anything.
+- **Roads** (`game.world.roads`): junction `(c, r)`, direction `d` 0=N 1=E 2=S 3=W.
+  `exits(c, r)`, `segment(c, r, d, offsetLeft)`, `signalGreen(c, r, d)`, `route(c0, r0, c1, r1)`,
+  `nearestSegment(x, z)`, `nearestJunction(x, z)`, `jamAt(x, z)`, `busStops`. Left-hand traffic:
+  a lane is `offset` metres to the LEFT of the direction of travel.
+- **AI** (`driver.js`): `driver.attach(v, c, r, d, { route?, stopU?, cruise? })` then
+  `driver.update(v, dt)` every frame → `'ok' | 'arrived' | 'stuck'`. Without a route it wanders.
+  The path is a list of straight "legs" (segments + sampled junction curves) followed by
+  aiming at a point a little ahead.
+- **New vehicle type**: add a block to `data/vehicles.json → types` with an existing `style`,
+  then add it to a `mix` in `data/traffic.json` / `parked.mix`. A new `style` = a builder
+  function in `modelsCars.js` / `modelsSmall.js` + one line in `BUILDERS` (`models.js`).
+- **Ramps** are part of the ground: `world.heightAt()` already includes them.
+- **Particles**: `game.fleet.fx.emit('smoke' | 'fire', { x, y, z, vx, vy, vz, life, size: [from, to], color })`.
+
+## 13. Notes for the next sessions
 - **Session 4 (landmarks):** reserve space by adding an entry to `areas` in
-  `data/districts.json` (type `plaza`/`park`), exactly like `sangsad-grounds`.
+  `data/districts.json` (type `plaza`/`park`), exactly like `sangsad-grounds`. `data/places.json`
+  already exists (id, name, junction col/row, ride) and is loaded by the vehicles feature through
+  the Content Service — extend those rows with landmark fields rather than starting a new file,
+  and move a place's junction if the landmark ends up elsewhere (ride stands follow). Two ramps
+  stand on the Sangsad plaza edges (`data/world.json → ramps`): move them if the building needs
+  the room. Poster slots: bus shelters are in `world.roads.busStops` (`sx, sz, heading`), a
+  rickshaw's back panel is the child mesh named `art-panel`, buses have `T.backPanel`. MRT
+  pillars / flyovers in the middle of a road must leave the lanes (1.7 m and 4.4 m from the
+  centre line, vehicles up to 2.5 m wide) clear, or add colliders — AI drivers do not look for
+  static obstacles.
+- **Session 5 (shops):** sell a vehicle by sending `vehicle:grant { type, color }` after the
+  payment; owned vehicles park at `data/vehicles.json → garage` — when homes exist, make that
+  the home's garage position (see `spawnOwned` in `features/vehicles/index.js`).
 - **Session 5 (shops):** sell outfits by setting `unlocked: false` in `data/outfits.json`
   and pushing ids into `save.data.owned.outfits`; then `outfit:set`.
-- **Session 6 (weapons):** `melee`, `aim`, `shoot`, `down`, `hit` animations are ready;
+- **Session 6 (police, weapons):** listen to `crime:committed` (carjack, hitPedestrian) for wanted
+  stars. Police vehicles: `fleet.create('police_pickup', …)`, then drive them by writing
+  `vehicle.input` (chase = steer at the player; `driver.js` only follows roads). Bullets and
+  blasts hurt vehicles with `fleet.damage(v, hp)`; send `explosion` for molotovs. Shoumik's health
+  should also listen to `vehicle:exploded` and to `player:hit` (power up to 3 from vehicles).
+  `melee`, `aim`, `shoot`, `down`, `hit` animations are ready;
   pedestrians have `hp` and a `knockDown` — add death and blood there. Player health should
   listen to `player:hit`.
 - **Session 7:** replace `hotspots/boombox.js` with real tracks; it already obeys

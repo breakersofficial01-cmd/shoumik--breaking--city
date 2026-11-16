@@ -64,6 +64,7 @@ export class PlayerActions {
 
   onHit({ x, z, power = 1 }) {
     const s = this.state;
+    if (s.mode !== 'onFoot') return; // safe inside a vehicle (health arrives in Session 6)
     const dx = s.position.x - x, dz = s.position.z - z;
     const len = Math.hypot(dx, dz) || 1;
     const k = this.cfg.actions.hit.knockback * power;

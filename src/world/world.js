@@ -4,6 +4,8 @@
 //   world.districtAt(x, z)      district entry from data/districts.json (or null)
 //   world.collision             CollisionWorld (resolveCircle / raycast / isBlocked)
 //   world.layout                the full city grid (roads, blocks, buildings) for minimap, traffic...
+//   world.roads                 RoadNet: junctions, lanes, signals, routes, bus stops (roads.js)
+//   world.ramps                 stunt ramps; their height is already part of heightAt()
 
 import * as THREE from 'three';
 import { log, debugLine } from '../core/debug.js';
@@ -12,6 +14,8 @@ import { ChunkManager } from './chunks.js';
 import { CollisionWorld, COLLIDE } from './collision.js';
 import { Water } from './water.js';
 import { Sky } from './sky.js';
+import { RoadNet } from './roads.js';
+import { Ramps } from './ramps.js';
 import { makePoleGeometry, makeTankGeometry, makeTreeGeometry } from './props.js';
 
 export class World {
@@ -29,6 +33,9 @@ export class World {
     const t0 = performance.now();
     this.layout = new CityLayout(this.cfg, config.get('districts'));
     log.info(`city layout: ${this.layout.pieces.length} pieces in ${(performance.now() - t0).toFixed(0)} ms`);
+    // Ramps first: they remove the trees in their way before any mesh or collider exists.
+    this.ramps = new Ramps(this.layout, this.cfg.ramps);
+    this.roads = new RoadNet(this.layout, config.get('traffic'));
 
     // Placeholder prop shapes go through the asset registry so real models can replace them.
     assets.registerDefault('geometry.pole', () => makePoleGeometry(this.cfg));
@@ -53,6 +60,8 @@ export class World {
     this.chunks = new ChunkManager(this.layout, this.shared, this.root);
     this.collision = new CollisionWorld();
     this.buildColliders();
+    const rampMesh = this.ramps.buildMesh();
+    if (rampMesh) this.root.add(rampMesh);
   }
 
   /** Register every static obstacle once. */
@@ -88,8 +97,9 @@ export class World {
     this.sky.setViewDistance(quality.viewDistance, this.game.camera);
   }
 
+  /** Ground height: road 0, sidewalk/park = kerb height, plus any stunt ramp. */
   heightAt(x, z) {
-    return this.layout.heightAt(x, z);
+    return this.layout.heightAt(x, z) + this.ramps.heightAt(x, z);
   }
 
   districtAt(x, z) {

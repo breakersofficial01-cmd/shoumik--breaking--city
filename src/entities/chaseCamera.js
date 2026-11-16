@@ -22,15 +22,17 @@ export class ChaseCamera {
     this.distance = this.mode.distance;
     this.sinceLook = 99;
     this.focusY = 0;
+    this.scale = 1; // bigger vehicles push the camera further back (data/vehicles.json → camera)
   }
 
-  setTarget(target, modeName = 'onFoot', snap = false) {
+  setTarget(target, modeName = 'onFoot', snap = false, scale = 1) {
     this.target = target;
+    this.scale = scale;
     this.mode = this.cfg[modeName] || this.cfg.onFoot;
     if (snap) {
       this.yaw = target.heading;
       this.pitch = this.mode.pitch;
-      this.distance = this.mode.distance;
+      this.distance = this.mode.distance * scale;
       this.focusY = target.position.y;
     }
   }
@@ -64,12 +66,13 @@ export class ChaseCamera {
     this.focusY += (t.position.y - this.focusY) * Math.min(1, m.positionSmooth * dt);
     const fx = Math.sin(this.yaw), fz = Math.cos(this.yaw);
     const tx = t.position.x, tz = t.position.z;
-    const ty = this.focusY + m.targetHeight;
+    const full = m.distance * this.scale;
+    const ty = this.focusY + m.targetHeight * this.scale;
 
     // Pull the camera in if a building is between it and the target.
-    const flat = Math.cos(this.pitch) * m.distance;
+    const flat = Math.cos(this.pitch) * full;
     const free = this.world.collision.raycast(tx, tz, -fx, -fz, flat + m.wallPadding, COLLIDE.CAMERA) - m.wallPadding;
-    const wanted = Math.max(m.minDistance, Math.min(m.distance, (free / Math.max(0.001, flat)) * m.distance));
+    const wanted = Math.max(m.minDistance, Math.min(full, (free / Math.max(0.001, flat)) * full));
     if (wanted < this.distance) this.distance = wanted;                          // in: at once
     else this.distance += (wanted - this.distance) * Math.min(1, 4 * dt);        // out: gently
 

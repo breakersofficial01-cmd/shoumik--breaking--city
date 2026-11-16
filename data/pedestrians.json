@@ -7,7 +7,11 @@
   "straightWeight": 3, "crossWeight": 2, "waitAtCrossing": [0.4, 2.2], "pauseChance": 0.12, "pauseSeconds": [2, 6],
   "dangerRadius": 16, "fleeSpeed": [4.6, 6.2], "fleeSeconds": [5, 9], "cowerChance": 0.14, "cowerSeconds": [2.5, 5], "shoutChance": 0.5,
   "fightReach": 1.05, "fightPunchEvery": [0.9, 1.5], "fightSeconds": 14, "fightGiveUpDistance": 18, "fightSpeed": 4.4, "fighterHealth": 3, "health": 1, "punchPower": 0.6,
-  "downSeconds": [2.5, 4.5], "stuckSeconds": 1.6, "playerPushRadius": 0.75, "bubbleSeconds": 2.2, "maxBubbles": 4
+  "downSeconds": [2.5, 4.5], "stuckSeconds": 1.6, "playerPushRadius": 0.75, "bubbleSeconds": 2.2, "maxBubbles": 4,
+  "vehicles": {
+   "_comment": "How people react to vehicles. hitSpeed = a vehicle this fast (m/s) knocks a person down; slower ones just push. A vehicle faster than diveSpeed makes people in its path jump aside when it is diveSeconds away (diveSecondsAi for AI drivers, who normally brake in time). diveWidth = extra metres either side of the vehicle that count as in its path. throw = metres a person is thrown when hit.",
+   "hitSpeed": 3.2, "diveSpeed": 5, "diveSeconds": 0.9, "diveSecondsAi": 0.3, "diveWidth": 0.8, "diveTime": 0.38, "diveRunSpeed": 6.5, "diveDownSeconds": [0.8, 1.6], "diveShoutChance": 0.5, "throw": 1.4, "hitDangerRadius": 14, "checkRange": 16
+  }
  },
  "palettes": {
   "skin": ["#C08B68", "#B07A56", "#9C6A4C", "#8A5A3C", "#D2A27E", "#A9744F", "#C69A72"],
@@ -66,6 +70,8 @@
  "shouts": {
   "flee": ["ped.shout.flee1", "ped.shout.flee2", "ped.shout.flee3", "ped.shout.flee4"],
   "angry": ["ped.shout.angry1", "ped.shout.angry2", "ped.shout.angry3"],
-  "pain": ["ped.shout.pain1", "ped.shout.pain2"]
+  "pain": ["ped.shout.pain1", "ped.shout.pain2"],
+  "jack": ["ped.shout.jack1", "ped.shout.jack2", "ped.shout.angry3"],
+  "dive": ["ped.shout.dive1", "ped.shout.dive2", "ped.shout.flee3"]
  }
 }

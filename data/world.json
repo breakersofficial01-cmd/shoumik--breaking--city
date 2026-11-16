@@ -146,5 +146,57 @@
     "color": "#f2a57c",
     "nearFactor": 0.28,
     "farFactor": 0.97
+  },
+  "ramps": {
+    "_comment": "Stunt ramps (tent-shaped humps) in parks and plazas. run = length of each slope, width, height in metres. clearRunUp = metres of tree-free run-up on both sides. list: at = [col, row] in road-junction units (fractions allowed; 3, 2 = the junction at column 3, row 2), heading in degrees = the direction you drive over it (0 = north-south, 90 = east-west).",
+    "run": 5.5,
+    "width": 4.4,
+    "height": 1.45,
+    "clearRunUp": 26,
+    "color": "#e8b923",
+    "stripeColor": "#2b2b2b",
+    "sideColor": "#8a6d1a",
+    "list": [
+      {
+        "id": "suhrawardy-east-west",
+        "at": [
+          5,
+          10.45
+        ],
+        "heading": 90
+      },
+      {
+        "id": "suhrawardy-north-south",
+        "at": [
+          4.5,
+          11.3
+        ],
+        "heading": 0
+      },
+      {
+        "id": "sangsad-west",
+        "at": [
+          2.3,
+          1.35
+        ],
+        "heading": 90
+      },
+      {
+        "id": "sangsad-east",
+        "at": [
+          3.65,
+          2.6
+        ],
+        "heading": 0
+      },
+      {
+        "id": "chandrima",
+        "at": [
+          3,
+          0.5
+        ],
+        "heading": 90
+      }
+    ]
   }
 }

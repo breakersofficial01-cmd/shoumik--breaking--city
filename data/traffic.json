@@ -1,0 +1,88 @@
+{
+  "_comment": "AI traffic. Bangladesh drives on the LEFT. lanes = distance of each lane from the middle of the road (inner = fast lane for cars, outer = slow lane for rickshaws, buses, CNGs). How many vehicles drive around is set per graphics level in data/quality.json (traffic / parked). spawn = where they appear/disappear around the player (metres). signals = junctions let north-south and east-west traffic go in turns (seconds). ai = how drivers behave. mix = which vehicles drive in each district (weights; names from data/vehicles.json) and density (1 = the full number). jams = permanently crowded junctions (col/row of the city grid): more vehicles, slower, longer waits; jamSpawnShare = share of new vehicles that appear on the roads leading into a nearby jam. busStops = one stop on every Nth road side (shelter + buses and legunas pull up).",
+  "lanes": { "inner": 1.7, "outer": 4.4 },
+  "spawn": {
+    "minDistance": 45,
+    "minDistanceInView": 95,
+    "maxDistance": 150,
+    "despawnDistance": 175,
+    "jamDespawnDistance": 125,
+    "perFrame": 1,
+    "triesPerFrame": 5,
+    "clearGap": 11,
+    "warmMinDistance": 18
+  },
+  "signals": { "greenSeconds": 9, "allRedSeconds": 2, "stopLineBack": 4.2 },
+  "ai": {
+    "_comment": "lookAhead = how far along the lane a driver aims (seconds of travel, limited to min/max metres). senseSeconds/senseMin = how far ahead he watches for obstacles. minGap = distance he keeps when stopped. turnSpeed = top speed inside a junction. honkAfter = seconds stuck before honking (queuePatience = how much slower that clock runs when he is only queuing behind other AI traffic); pushAfter = seconds stuck before he squeezes through anyway; giveUpAfter = seconds stuck before he is quietly removed (only when the player is not close).",
+    "lookAheadSeconds": 0.7,
+    "lookAheadMin": 3,
+    "lookAheadMax": 8,
+    "steerGain": 2.4,
+    "senseSeconds": 1.6,
+    "senseMin": 6,
+    "minGap": 2.2,
+    "gapGain": 0.9,
+    "sideMargin": 0.3,
+    "turnSpeed": 5,
+    "throttle": 0.7,
+    "honkAfter": 2.5,
+    "queuePatience": 0.25,
+    "honkEvery": [2.5, 6],
+    "pushAfter": 9,
+    "pushSeconds": 2.5,
+    "giveUpAfter": 20,
+    "giveUpDistance": 60,
+    "reverseAfter": 4,
+    "reverseSeconds": 1.3,
+    "busStopSeconds": [4, 7],
+    "straightWeight": 3,
+    "leftWeight": 2,
+    "rightWeight": 1.5
+  },
+  "riderArchetypes": {
+    "_comment": "Who is seen riding open vehicles (names from data/pedestrians.json).",
+    "rickshaw": { "rickshaw_puller": 1 },
+    "bicycle": { "shirt_pant_man": 2, "student_boy": 2, "lungi_man": 1 },
+    "motorbike": { "shirt_pant_man": 3, "genz_oversized": 1, "office_man": 1 },
+    "cng": { "shirt_pant_man": 2, "lungi_man": 1, "panjabi_man": 1 },
+    "default": { "shirt_pant_man": 3, "office_man": 1, "panjabi_man": 1 }
+  },
+  "mix": {
+    "default": { "density": 0.8, "types": {"sedan": 4, "rickshaw": 3, "cng": 3, "motorbike": 2, "bus": 1, "suv": 1} },
+    "old-dhaka": { "density": 1.0, "types": {"rickshaw": 12, "bicycle": 3, "cng": 2, "motorbike": 2, "leguna": 1, "sedan": 1} },
+    "shahbag-campus": { "density": 1.0, "types": {"rickshaw": 6, "cng": 3, "sedan": 3, "bus": 2, "motorbike": 2, "bicycle": 2, "leguna": 1, "ambulance": 0.4, "suv": 1} },
+    "motijheel-central": { "density": 1.0, "types": {"bus": 3, "sedan": 4, "cng": 4, "rickshaw": 3, "leguna": 2, "motorbike": 3, "suv": 1, "police_pickup": 0.5} },
+    "gulshan-banani": { "density": 0.8, "types": {"sedan": 5, "suv": 4, "sports": 1.5, "cng": 2, "motorbike": 2, "bus": 1, "rickshaw": 1} },
+    "dhanmondi-hatirjheel": { "density": 0.9, "types": {"sedan": 4, "suv": 2, "rickshaw": 4, "cng": 3, "motorbike": 2, "bus": 1, "bicycle": 1, "sports": 0.5} },
+    "sher-e-bangla-nagar": { "density": 0.6, "types": {"sedan": 4, "suv": 2, "bus": 2, "cng": 2, "motorbike": 1, "police_pickup": 0.5, "ambulance": 0.5} }
+  },
+  "jamSpawnShare": 0.7,
+  "jams": [
+    {
+      "id": "farmgate",
+      "name": { "en": "Farmgate", "bn": "ফার্মগেট" },
+      "col": 8,
+      "row": 9,
+      "radius": 75,
+      "speedFactor": 0.45,
+      "greenFactor": 0.55,
+      "extraVehicles": 1.6
+    },
+    {
+      "id": "shahbag",
+      "name": { "en": "Shahbag", "bn": "শাহবাগ" },
+      "col": 3,
+      "row": 10,
+      "radius": 70,
+      "speedFactor": 0.5,
+      "greenFactor": 0.6,
+      "extraVehicles": 1.6
+    }
+  ],
+  "busStops": {
+    "every": 5,
+    "at": 0.55,
+    "shelter": { "length": 3.4, "depth": 0.9, "height": 2.4, "fromKerb": 0.25, "roofColor": "#c62828", "postColor": "#6f7378", "benchColor": "#3d5a80" }
+  }
+}

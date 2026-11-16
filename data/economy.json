@@ -1,5 +1,10 @@
 {
   "_comment": "All money numbers. Later sessions add prices, bail, rewards here.",
   "startCash": 500,
-  "currencySymbol": "৳"
+  "currencySymbol": "৳",
+  "rides": {
+    "_comment": "Fare in Taka for one hired ride, by vehicle type (data/vehicles.json).",
+    "rickshaw": 20,
+    "cng": 100
+  }
 }

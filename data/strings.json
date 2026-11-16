@@ -37,6 +37,25 @@
     "ped.shout.pain2": { "en": "Aaah!", "bn": "আহ্‌! মরে গেলাম!" },
     "hotspot.dance": { "en": "Press Enter (E) to dance", "bn": "নাচতে ‘ঢোকো’ চাপো" },
     "hotspot.stop": { "en": "Move to stop dancing", "bn": "থামতে হাঁটা শুরু করো" },
-    "settings.outfit": { "en": "Outfit", "bn": "পোশাক" }
+    "settings.outfit": { "en": "Outfit", "bn": "পোশাক" },
+    "controls.exit": { "en": "Exit", "bn": "নামো" },
+    "controls.gas": { "en": "Gas", "bn": "গ্যাস" },
+    "controls.handbrake": { "en": "Brake", "bn": "ব্রেক" },
+    "vehicle.enter": { "en": "Press Enter (E) to get in: {vehicle}", "bn": "{vehicle} — উঠতে ‘ঢোকো’ চাপো" },
+    "vehicle.jack": { "en": "Press Enter (E) to throw the driver out", "bn": "চালককে নামিয়ে গাড়ি নিতে ‘ঢোকো’ চাপো" },
+    "vehicle.hire": { "en": "Press Enter (E) to hire this {vehicle} ({fare})", "bn": "{vehicle} ভাড়া নিতে ‘ঢোকো’ চাপো ({fare})" },
+    "vehicle.burning": { "en": "It's on fire! Get out!", "bn": "আগুন লেগেছে! এখনই নামো!" },
+    "vehicle.speed": { "en": "{speed} km/h", "bn": "{speed} কিমি/ঘণ্টা" },
+    "ride.title": { "en": "{vehicle} — where to?", "bn": "{vehicle} — কোথায় যাবে?" },
+    "ride.fare": { "en": "Fare: {fare} to any place", "bn": "ভাড়া: যেকোনো জায়গায় {fare}" },
+    "ride.take": { "en": "Take the vehicle instead", "bn": "গাড়িটাই নিয়ে নাও" },
+    "ride.cancel": { "en": "Cancel", "bn": "বাদ দাও" },
+    "ride.noMoney": { "en": "Not enough Taka. Study a lesson to earn more!", "bn": "টাকা কম আছে। লেসন পড়ে টাকা আয় করো!" },
+    "ride.noRoute": { "en": "The driver can't get there from here.", "bn": "এখান থেকে ওখানে যাওয়ার রাস্তা নেই।" },
+    "ride.skip": { "en": "Take me there ▶▶", "bn": "পৌঁছে দাও ▶▶" },
+    "ped.shout.jack1": { "en": "Hey! My vehicle!", "bn": "এই! আমার গাড়ি!" },
+    "ped.shout.jack2": { "en": "Thief! Thief!", "bn": "চোর! চোর!" },
+    "ped.shout.dive1": { "en": "Watch out!", "bn": "সামলে!" },
+    "ped.shout.dive2": { "en": "Can't you see?!", "bn": "চোখে দেখো না?!" }
   }
 }

@@ -91,6 +91,8 @@ function makeButtons() {
     el.type = 'button';
     el.className = `touch-btn touch-${b.action}`;
     el.dataset.label = b.label;
+    el.dataset.onFoot = b.label;
+    el.dataset.driving = b.drivingLabel || b.label;
     el.textContent = t(b.label);
     el.style.width = el.style.height = `${b.size}px`;
     el.style.right = `calc(env(safe-area-inset-right, 0px) + ${b.right}px)`;
@@ -139,9 +141,16 @@ export default {
     const isTouch = window.matchMedia('(pointer: coarse)').matches || debug.flag('touch') === '1';
     if (isTouch) show();
     else window.addEventListener('touchstart', show, { once: true, passive: true }); // hybrid laptops
-    offs = [g.events.on('language:changed', () => {
-      root.querySelectorAll('.touch-btn').forEach((el) => { el.textContent = t(el.dataset.label); });
-    })];
+    const relabel = () => root.querySelectorAll('.touch-btn').forEach((el) => { el.textContent = t(el.dataset.label); });
+    offs = [
+      g.events.on('language:changed', relabel),
+      // In a vehicle the same buttons mean Exit / Gas / Handbrake (data/controls.json → drivingLabel).
+      g.events.on('controls:mode', ({ mode }) => {
+        root.classList.toggle('driving', mode === 'driving');
+        root.querySelectorAll('.touch-btn').forEach((el) => { el.dataset.label = mode === 'driving' ? el.dataset.driving : el.dataset.onFoot; });
+        relabel();
+      }),
+    ];
   },
 
   update() {},

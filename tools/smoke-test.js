@@ -1,6 +1,7 @@
 // Smoke test for Claude sessions (not part of the game).
 // Boots the game in headless Chromium, walks Shoumik forward, saves a screenshot and fails
-// if the browser console shows any error.
+// if the browser console shows any error, or if there are no pedestrians or no traffic.
+// Vehicles have their own deeper test: tools/vehicle-shots.js.
 //
 //   node tools/smoke-test.js [--three <dir>] [--shot <file.png>] [--query "debug=1&autostart=1"]
 //
@@ -68,6 +69,9 @@ const server = http.createServer((req, res) => {
     const people = await page.evaluate(() => (window.BC.crowd ? window.BC.crowd.people.size : -1));
     console.log(`people on the street: ${people}`);
     if (people === 0) { ok = false; console.log('FAIL: no pedestrians were spawned'); }
+    const fleet = await page.evaluate(() => (window.BC.fleet ? { all: window.BC.fleet.vehicles.length, ai: window.BC.fleet.vehicles.filter((v) => v.driver === 'ai').length } : null));
+    console.log(`vehicles: ${fleet ? `${fleet.all} (${fleet.ai} driven by AI)` : 'none'}`);
+    if (!fleet || fleet.ai === 0) { ok = false; console.log('FAIL: no AI traffic was spawned'); }
     if (shotFile) await page.screenshot({ path: shotFile });
   } catch (err) {
     ok = false;

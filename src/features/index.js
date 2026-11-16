@@ -16,6 +16,9 @@
 import { log } from '../core/debug.js';
 
 const LOADERS = {
+  // traffic + vehicles run BEFORE the player: vehicles move first, then Shoumik is drawn on his seat.
+  traffic: () => import('./traffic/index.js'),
+  vehicles: () => import('./vehicles/index.js'),
   player: () => import('./player/index.js'),
   pedestrians: () => import('./pedestrians/index.js'),
   hotspots: () => import('./hotspots/index.js'),

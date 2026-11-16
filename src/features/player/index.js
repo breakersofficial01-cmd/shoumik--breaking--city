@@ -33,7 +33,8 @@ const state = {
   heading: 0,          // radians; 0 faces +z (south), turning towards +x (east)
   speed: 0,            // ground speed, m/s
   grounded: true,
-  mode: 'onFoot',      // 'driving' etc. in later sessions
+  mode: 'onFoot',      // 'vehicle' while entering / driving / riding (the vehicles feature places him)
+  vehicle: null,       // the vehicle he is in, or null
   model: null,         // THREE.Group
   action: null,        // name of the animation he is doing (punch, dance…) or null
   outfit: null,        // id from data/outfits.json
@@ -105,12 +106,18 @@ export default {
   syncModel(dt = 0) {
     const p = state.position;
     const ground = game.world.heightAt(p.x, p.z);
-    const pose = animator.update(dt, { speed: state.speed, grounded: state.grounded, vy: state.velocity.y });
+    const walking = state.mode === 'onFoot';
+    const pose = animator.update(dt, { speed: walking ? state.speed : 0, grounded: walking ? state.grounded : true, vy: state.velocity.y });
     model.update(p.x, p.y, p.z, state.heading, pose, ground);
   },
 
   update(dt) {
-    if (state.mode !== 'onFoot') return;
+    if (state.mode !== 'onFoot') {
+      // In a vehicle: somebody else moves him; just animate, draw and report districts.
+      this.syncModel(dt);
+      this.reportDistrict();
+      return;
+    }
     const { input, cameraRig, world } = game;
     const pos = state.position;
     const vel = state.velocity;
@@ -176,12 +183,17 @@ export default {
     this.syncModel(dt);
 
     // 5) Tell everyone when he walks into another district.
-    const district = world.districtAt(pos.x, pos.z);
+    const district = this.reportDistrict();
+    debugLine('player', `pos ${pos.x.toFixed(0)}, ${pos.z.toFixed(0)}  ${district ? district.id : '-'}  ${state.speed.toFixed(1)} m/s`);
+  },
+
+  reportDistrict() {
+    const district = game.world.districtAt(state.position.x, state.position.z);
     if (district && district !== lastDistrict) {
       lastDistrict = district;
       game.events.emit('district:entered', { district });
     }
-    debugLine('player', `pos ${pos.x.toFixed(0)}, ${pos.z.toFixed(0)}  ${district ? district.id : '-'}  ${state.speed.toFixed(1)} m/s`);
+    return district;
   },
 
   dispose() {

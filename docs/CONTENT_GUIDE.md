@@ -64,7 +64,7 @@ See `posters/README.md` (created in Session 4).
 
 ## 3. Everything else
 Prices, vehicles, weapons, places, text: `data/*.json`. Each file has a `_comment` field
-explaining it.
+explaining it. Places and vehicles are described at the end of this guide.
 
 ## Hangout spots (dance spots) — `data/hotspots.json`
 Each row in `hotspots` is one spot where young adults dance to a boombox:
@@ -87,3 +87,30 @@ music is are in `settings` in the same file.
 ## Shoumik's outfits — `data/outfits.json`
 Change colours freely (hex codes). `style` must be one of `tee`, `polo`, `panjabi`, `doctor`.
 `"unlocked": false` hides an outfit until it is owned (shop comes in Session 5).
+
+## Places (ride destinations) — `data/places.json`
+Every row is a named place. A hired rickshaw or CNG can take Shoumik to any place with
+`"ride": true`, and each place gets its own rickshaw + CNG stand.
+
+| Field | Meaning |
+|---|---|
+| `id` | short unique name, e.g. `nilkhet` |
+| `name` | `{ "en": "...", "bn": "..." }` — shown in the ride menu |
+| `col`, `row` | the **road junction** next to the place (junction 0,0 = north-west corner of the city; the map is in `docs/GAME_SPEC.md`) |
+| `ride` | `false` hides it from the ride menu |
+
+A place whose junction is inside a lake or park is ignored. Bad rows are skipped and logged.
+Session 4 adds the landmark buildings to these same rows.
+
+## Vehicles, traffic and fares
+- `data/vehicles.json` → `types`: one block per vehicle. Safe things to change: `name`,
+  `maxSpeed` (metres per second; ×3.6 = km/h), `acceleration`, `brake`, `handling` (0–1),
+  `mass`, `health`, `colors` (hex codes). The `_comment` at the top explains every field.
+- Ride fares: `data/economy.json` → `rides` (`rickshaw`, `cng`).
+- How much traffic: `data/quality.json` → `traffic` and `parked` for each graphics level.
+- Which vehicles drive in which district, the two jam junctions and the bus stops:
+  `data/traffic.json`.
+- Stunt ramps: `data/world.json` → `ramps` → `list` (`at` = junction position, `heading` in
+  degrees).
+- To give Shoumik a vehicle before the showroom exists, open the game with `?debug=1` and type
+  in the browser console: `BC.events.emit('vehicle:grant', { type: 'sports' })`.

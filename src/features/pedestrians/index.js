@@ -12,6 +12,9 @@
 // Events
 //   listens  player:attack { x, z, heading, range, arc, power }   → who got hit
 //            danger:raised { x, z, radius, source }               → run / cower / shout
+//            vehicle:driverEjected { x, z, heading, archetype, angry }  → a driver thrown out of his vehicle becomes a pedestrian
+//            explosion { x, z, radius }                            → everybody close is knocked down
+//   Vehicles: people dive away from fast vehicles and are knocked down when hit (roadSense.js).
 //   sends    ped:hit { x, z, down }      danger:raised (when the player hits somebody)
 //            player:hit { x, z, power }  (a pedestrian punched Shoumik)
 
@@ -23,6 +26,7 @@ import { acquireCrowd } from '../../entities/people/crowd.js';
 import { SidewalkNav } from './navigation.js';
 import { Brain } from './brain.js';
 import { Bubbles } from './bubbles.js';
+import { RoadSense } from './roadSense.js';
 
 const wrapAngle = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 
@@ -32,6 +36,7 @@ let crowd = null;
 let nav = null;
 let brain = null;
 let bubbles = null;
+let roadSense = null;
 let rng = null;
 let peds = [];      // the pool
 let active = 0;
@@ -68,9 +73,9 @@ function despawn(ped) {
 }
 
 /** Put a pooled pedestrian on the sidewalk at `spot`, walking towards one end of that edge. */
-function spawn(ped, spot, district) {
+function spawn(ped, spot, district, archetype = null) {
   const mix = cfg.districts[district?.id] || cfg.districts.default;
-  const arch = cfg.archetypes[rng.weighted(mix.mix)] || Object.values(cfg.archetypes)[0];
+  const arch = cfg.archetypes[archetype] || cfg.archetypes[rng.weighted(mix.mix)] || Object.values(cfg.archetypes)[0];
   const look = buildLook(arch, cfg.palettes, rng);
   const forward = rng.chance(0.5);
   Object.assign(ped, {
@@ -136,7 +141,7 @@ function onDanger({ x, z, radius, source }) {
   const b = cfg.behaviour;
   const r = radius || b.dangerRadius;
   for (const ped of peds) {
-    if (!ped.active || ped.state === 'down' || ped.state === 'fight' || ped.state === 'flee') continue;
+    if (!ped.active || ped.state === 'down' || ped.state === 'dive' || ped.state === 'fight' || ped.state === 'flee') continue;
     if (Math.hypot(ped.x - x, ped.z - z) > r) continue;
     if (rng.chance(b.shoutChance)) shout(ped, 'flee');
     if (rng.chance(b.cowerChance)) brain.startCower(ped, { x, z });
@@ -172,6 +177,43 @@ function onPlayerAttack({ x, z, heading, range, arc, power = 1 }) {
   game.events.emit('danger:raised', { x: best.x, z: best.z, radius: cfg.behaviour.dangerRadius, source: 'player' });
 }
 
+/** A driver was dragged (or jumped) out of his vehicle: he becomes a pedestrian right there. */
+function onDriverEjected({ x, z, heading, archetype, angry }) {
+  let ped = peds.find((p) => !p.active);
+  if (!ped) {
+    // Pool is full: reuse the person furthest from the player.
+    const p = game.player.position;
+    let far = -1;
+    for (const q of peds) {
+      const d = Math.hypot(q.x - p.x, q.z - p.z);
+      if (d > far) { far = d; ped = q; }
+    }
+    despawn(ped);
+  }
+  const spot = nav.sidewalkSpot(x, z, 2);
+  if (!spot) return;
+  ped.off = 2;
+  spawn(ped, { ...spot, x, z }, game.world.districtAt(x, z), archetype);
+  ped.heading = heading;
+  shout(ped, 'jack');
+  if (angry) {
+    ped.fighter = true;
+    ped.hp = cfg.behaviour.fighterHealth;
+    brain.startFight(ped);
+  } else {
+    brain.knockDown(ped);
+  }
+}
+
+function onExplosion({ x, z, radius }) {
+  for (const ped of peds) {
+    if (!ped.active || ped.state === 'down' || Math.hypot(ped.x - x, ped.z - z) > radius) continue;
+    brain.knockDown(ped);
+    shout(ped, 'pain');
+    game.events.emit('ped:hit', { x: ped.x, z: ped.z, down: true, byExplosion: true });
+  }
+}
+
 export default {
   id: 'pedestrians',
 
@@ -186,6 +228,7 @@ export default {
       game: g, cfg: cfg.behaviour, spawnCfg: cfg.spawn, nav, rng, shout,
       hitPlayer: (ped) => g.events.emit('player:hit', { x: ped.x, z: ped.z, power: cfg.behaviour.punchPower }),
     });
+    roadSense = new RoadSense({ game: g, cfg: cfg.behaviour, radius: cfg.spawn.radius, brain, rng, shout });
     const most = Math.max(...Object.values(g.config.get('quality').levels).map((q) => q.pedestrians || 0));
     peds = Array.from({ length: most }, makePed);
     active = 0;
@@ -194,6 +237,8 @@ export default {
     offs = [
       g.events.on('player:attack', onPlayerAttack),
       g.events.on('danger:raised', onDanger),
+      g.events.on('vehicle:driverEjected', onDriverEjected),
+      g.events.on('explosion', onExplosion),
     ];
   },
 
@@ -203,11 +248,13 @@ export default {
     const p = game.player.position;
     const lod = game.quality.pedLodDistance;
     populate();
+    const traffic = roadSense.collect() > 0;
     for (const ped of peds) {
       if (!ped.active) continue;
       const dist = Math.hypot(ped.x - p.x, ped.z - p.z);
       if (dist > s.despawnDistance) { despawn(ped); continue; }
       const near = dist < s.collideDistance;
+      if (traffic && near && ped.state !== 'down' && ped.state !== 'dive') roadSense.check(ped);
       brain.update(ped, dt, near);
       const ground = game.world.heightAt(ped.x, ped.z);
       ped.y += (ground - ped.y) * Math.min(1, 14 * dt);
@@ -231,6 +278,6 @@ export default {
     for (const ped of peds) despawn(ped);
     peds = [];
     bubbles?.dispose();
-    bubbles = brain = nav = null;
+    bubbles = brain = nav = roadSense = null;
   },
 };

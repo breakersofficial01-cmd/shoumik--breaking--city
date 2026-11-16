@@ -381,3 +381,46 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   pointer-events: none;
   white-space: pre;
 }
+
+/* ------------------------------------------------------------ vehicles (Session 3) */
+#drive-hud {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--safe-top) + 8px);
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 14px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: rgba(20, 12, 40, 0.72);
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+}
+#drive-hud .drive-speed { color: var(--gold); min-width: 5.5em; text-align: right; }
+#drive-hud .drive-health { width: 54px; height: 8px; border: 2px solid var(--ink); border-radius: 6px; background: #3a1420; overflow: hidden; }
+#drive-hud .drive-health i { display: block; height: 100%; background: var(--cyan); }
+.ride-places { max-height: 46vh; overflow: auto; margin-bottom: 10px; }
+.ride-msg { min-height: 1.3em; margin: 0 0 10px; color: var(--pink); font-size: 15px; font-weight: 600; }
+.ride-actions { display: flex; gap: 10px; }
+.ride-actions button { flex: 1; }
+.ride-take { padding: 10px; border: 2px solid var(--ink); border-radius: 10px; background: rgba(255, 255, 255, 0.12); font-size: 16px; font-weight: 700; }
+#ride-skip {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--safe-top) + 46px);
+  transform: translateX(-50%);
+  z-index: 20;
+  padding: 8px 18px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 700;
+}
+#ride-fade { position: absolute; inset: 0; z-index: 25; background: #000; opacity: 0; pointer-events: none; transition: opacity 0.4s; }
+#ride-fade.on { opacity: 1; }

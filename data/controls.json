@@ -1,57 +1,25 @@
 {
-  "_comment": "Key bindings and touch-control layout. Touch button positions are distances from the bottom-right corner in px (before safe-area padding). 'action' names are used by the game code; labels are in data/strings.json under controls.*",
+  "_comment": "Key bindings and touch-control layout. Touch button positions are distances from the bottom-right corner in px (before safe-area padding). 'action' names are used by the game code; labels are in data/strings.json under controls.* drivingLabel = the label shown on a button while Shoumik is in a vehicle.",
   "keyboard": {
-    "forward": [
-      "KeyW",
-      "ArrowUp"
-    ],
-    "back": [
-      "KeyS",
-      "ArrowDown"
-    ],
-    "left": [
-      "KeyA",
-      "ArrowLeft"
-    ],
-    "right": [
-      "KeyD",
-      "ArrowRight"
-    ],
-    "sprint": [
-      "ShiftLeft",
-      "ShiftRight"
-    ],
-    "jump": [
-      "Space"
-    ],
-    "action": [
-      "KeyE"
-    ],
-    "weapon": [
-      "KeyQ"
-    ],
-    "horn": [
-      "KeyH"
-    ]
+    "forward": ["KeyW", "ArrowUp"],
+    "back": ["KeyS", "ArrowDown"],
+    "left": ["KeyA", "ArrowLeft"],
+    "right": ["KeyD", "ArrowRight"],
+    "sprint": ["ShiftLeft", "ShiftRight"],
+    "jump": ["Space"],
+    "action": ["KeyE"],
+    "weapon": ["KeyQ"],
+    "horn": ["KeyH"]
   },
-  "mouse": {
-    "sensitivity": 0.0024,
-    "invertY": false
-  },
+  "mouse": { "sensitivity": 0.0024, "invertY": false },
   "touch": {
     "lookSensitivity": 0.0055,
-    "joystick": {
-      "radius": 58,
-      "knob": 26,
-      "deadzone": 0.14,
-      "left": 96,
-      "bottom": 96
-    },
+    "joystick": { "radius": 58, "knob": 26, "deadzone": 0.14, "left": 96, "bottom": 96 },
     "buttons": [
       { "action": "attack", "label": "controls.attack", "right": 44, "bottom": 76, "size": 78 },
-      { "action": "sprint", "label": "controls.sprint", "right": 140, "bottom": 34, "size": 62 },
-      { "action": "jump", "label": "controls.jump", "right": 136, "bottom": 122, "size": 62 },
-      { "action": "action", "label": "controls.action", "right": 48, "bottom": 176, "size": 60 },
+      { "action": "sprint", "label": "controls.sprint", "right": 140, "bottom": 34, "size": 62, "drivingLabel": "controls.gas" },
+      { "action": "jump", "label": "controls.jump", "right": 136, "bottom": 122, "size": 62, "drivingLabel": "controls.handbrake" },
+      { "action": "action", "label": "controls.action", "right": 48, "bottom": 176, "size": 60, "drivingLabel": "controls.exit" },
       { "action": "weapon", "label": "controls.weapon", "right": 134, "bottom": 194, "size": 50 },
       { "action": "horn", "label": "controls.horn", "right": 216, "bottom": 78, "size": 50 }
     ]

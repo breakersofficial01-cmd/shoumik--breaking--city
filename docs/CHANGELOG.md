@@ -135,3 +135,73 @@ Known issues
 - The boombox beat is a simple placeholder; there is no sound on/off switch until Session 7.
 
 Next: Session 3 (vehicles and traffic).
+
+## 2026-11-16 — Session 3: vehicles and traffic
+The streets now have traffic, and Shoumik can drive, ride, crash and jump.
+
+Vehicles
+- 11 low-poly vehicles built in code from `data/vehicles.json`: rickshaw (with a painted art
+  panel on the back, 3 designs), bicycle, green CNG, leguna, motorbike, sedan, SUV, sports car,
+  colourful dented local bus, police pickup (no logos), ambulance. Each has speed,
+  acceleration, brake, handling, mass, health and paint colours.
+- Get in / out with ঢোকো / E (with the enter and exit animations). If somebody is driving,
+  Shoumik throws him out: the driver lands on the road, shouts, and either runs or fights.
+- Arcade driving: accelerate, brake, reverse, handbrake drifts with tyre smoke, body lean,
+  bikes lean into corners. The chase camera sits behind the vehicle (further back for a bus).
+- Crashes push vehicles around and cost health: grey smoke → black smoke and flames →
+  5 seconds of burning → explosion (hurts everything near it) → burnt wreck.
+- 5 stunt ramps in Suhrawardy Udyan, the Sangsad plaza and Chandrima Udyan: hit one fast and
+  the car flies.
+- Hire a waiting rickshaw (৳20) or CNG (৳100): press ঢোকো next to it, choose one of 21 places
+  and the driver takes you there. "পৌঁছে দাও ▶▶" skips the trip (it also skips by itself after
+  30 s). There is a stand at every place.
+- Empty vehicles are parked along the roads to take. Vehicles Shoumik **owns** are stored in
+  the save and wait near the Shahbag start corner every time the game opens (homes with
+  garages and the showroom come in Session 5).
+- Horn button / H (placeholder sounds: bell, beep, car, bus, siren). Small display on top
+  while driving: vehicle name, speed in km/h, health bar.
+
+Traffic
+- AI vehicles drive on the left in two lanes (cars inside, rickshaws / buses / CNGs outside),
+  take junctions in a curve, wait their turn at junctions, keep a gap, honk when something
+  blocks them, back off after a crash. Buses and legunas pull up at bus stops (shelters with a
+  red roof on about every fifth road side).
+- Each district has its own mix: Old Dhaka is mostly rickshaws, Gulshan cars and SUVs,
+  Motijheel buses and CNGs. Farmgate and Shahbag are permanent jams (more vehicles, slower,
+  shorter green time).
+- People jump out of the way of fast vehicles ("সামলে!") and are knocked down when hit.
+
+Under the hood
+- `src/entities/vehicles/` (shared engine: fleet, physics, damage, models, AI driver),
+  `src/entities/effects/particles.js`, `src/world/roads.js` (road graph, lanes, signals,
+  routes, bus stops), `src/world/ramps.js`, features `vehicles` and `traffic`.
+- New data: `data/vehicles.json`, `data/traffic.json`, `data/places.json` (through the Content
+  Service). New numbers in `camera.json` (driving), `quality.json` (traffic, parked),
+  `economy.json` (ride fares), `world.json` (ramps), `pedestrians.json` (reactions to vehicles).
+- Touch buttons change their labels while driving (গ্যাস / ব্রেক / নামো). New events are
+  listed in `docs/HANDOFF.md`. Save format is unchanged (still version 2).
+- New tool `tools/vehicle-shots.js`: screenshots of every vehicle and an automatic test of
+  driving, ramp jump, drift, carjacking, a hired ride, an explosion and one minute of traffic.
+
+Tested (headless Chromium): zero console errors on Low + touch and on Medium; all the steps
+above; a minute of traffic at Shahbag with no crashes, nobody stuck and nobody off his lane;
+owned vehicles come back after a reload. Vehicle code costs about 0.4 ms per frame on a
+desktop CPU. **Not tested on a real phone. Horn sounds could not be heard in the test machine.**
+
+Known issues
+- Sessions 1 and 2 were still on their own branches (not merged into `main`); this session
+  was built on top of them, so this branch contains Sessions 1–3.
+- Junctions have no visible traffic lights or police yet — vehicles simply take turns.
+- Inside a closed vehicle Shoumik is hidden (dark glass) and while climbing in he is drawn
+  through the door. Open vehicles (rickshaw, bikes) show him properly.
+- Riders do not pedal or lean; two-wheelers never fall over; vehicles never roll over.
+- AI drivers only use the main roads, not the small lanes inside blocks, and never overtake.
+  A long bus cuts corners over the kerb.
+- Parked cars stand half on the sidewalk (as in Dhaka) so that they do not block the slow lane.
+- A hired ride is dropped about 14 m before the junction, earlier if traffic is queuing.
+- No health for Shoumik yet: being run over or blown up only throws him (Session 6).
+- Wrecks vanish after 45 s even while you look at them. No engine sounds until Session 7.
+- The places in `data/places.json` are only names and junctions until Session 4 builds the
+  landmarks; Session 4 may move them.
+
+Next: Session 4 (real Dhaka landmarks and the poster system).

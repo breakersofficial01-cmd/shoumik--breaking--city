@@ -3,6 +3,7 @@
 //   pause  stand a while (phone, looking around)         flee   run away from danger
 //   cower  crouch with hands over the head               fight  chase the player and punch
 //   down   knocked to the ground, gets up after a while
+//   dive   jumps out of the way of a vehicle, lands on the ground, then gets up
 // Numbers: data/pedestrians.json → behaviour. The feature (index.js) owns spawning and events.
 
 const wrapAngle = (a) => Math.atan2(Math.sin(a), Math.cos(a));
@@ -72,6 +73,14 @@ export class Brain {
     this.setState(ped, 'fight', this.ctx.cfg.fightSeconds);
   }
 
+  /** Jump sideways (nx, nz) out of a vehicle's path. */
+  startDive(ped, nx, nz) {
+    const v = this.ctx.cfg.vehicles;
+    ped.diveX = nx; ped.diveZ = nz;
+    ped.animator.play('down', { duration: v.diveTime });
+    this.setState(ped, 'dive', v.diveTime);
+  }
+
   knockDown(ped) {
     ped.animator.play('down');
     ped.speed = 0;
@@ -135,6 +144,8 @@ export class Brain {
         if (ped.timer <= 0 || dist > cfg.fightGiveUpDistance) { this.calm(ped); break; }
         if (dist > cfg.fightReach) {
           this.step(ped, dx, dz, cfg.fightSpeed, dt, true);
+        } else if (player.mode !== 'onFoot') {
+          ped.speed = 0; // he is in a vehicle: stand there fuming
         } else {
           ped.speed = 0;
           ped.heading = wrapAngle(ped.heading + wrapAngle(Math.atan2(dx, dz) - ped.heading) * Math.min(1, 12 * dt));
@@ -152,6 +163,10 @@ export class Brain {
         }
         break;
       }
+      case 'dive':
+        this.step(ped, ped.diveX, ped.diveZ, cfg.vehicles.diveRunSpeed, dt, true);
+        if (ped.timer <= 0) { ped.speed = 0; this.setState(ped, 'down', this.range(cfg.vehicles.diveDownSeconds)); }
+        break;
       case 'down':
         ped.speed = 0;
         if (ped.timer <= 0) {

@@ -143,3 +143,26 @@ export function validateHotspots(raw) {
   });
   return { items, defaults: raw?.settings || {}, skipped };
 }
+
+/**
+ * Validate named places (shape of data/places.json). col/row = road junction next to it.
+ * @param {{places?:any[]}} raw
+ */
+export function validatePlaces(raw) {
+  const skipped = [];
+  const items = [];
+  const list = Array.isArray(raw?.places) ? raw.places : [];
+  if (!Array.isArray(raw?.places)) skipped.push({ id: '(file)', reason: '"places" list is missing' });
+  const seen = new Set();
+  list.forEach((p, i) => {
+    const label = isText(p?.id) ? p.id : `place #${i + 1}`;
+    const skip = (reason) => skipped.push({ id: label, reason });
+    if (!p || typeof p !== 'object') return skip('not an object');
+    if (!isText(p.id)) return skip('id is empty');
+    if (seen.has(p.id)) return skip('duplicate id');
+    if (!Number.isInteger(p.col) || !Number.isInteger(p.row) || p.col < 0 || p.row < 0) return skip('col and row must be whole numbers');
+    seen.add(p.id);
+    items.push({ ...p, id: p.id.trim(), name: p.name && typeof p.name === 'object' ? p.name : { en: p.id, bn: p.id }, ride: p.ride !== false });
+  });
+  return { items, defaults: {}, skipped };
+}
