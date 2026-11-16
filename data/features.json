@@ -1,0 +1,20 @@
+{
+  "_comment": "Switch features on/off without code. Each key matches a folder in src/features/. New features are added here.",
+  "player": true,
+  "vehicles": true,
+  "traffic": true,
+  "pedestrians": true,
+  "hotspots": true,
+  "posters": true,
+  "classes": true,
+  "shops": true,
+  "crime": true,
+  "police": true,
+  "dayNight": true,
+  "weather": true,
+  "radio": true,
+  "profileCard": true,
+  "rewardCodes": true,
+  "screenshot": true,
+  "ageGate": true
+}

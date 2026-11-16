@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "_comment": "Lessons for Lesson Check. Later this file is replaced by a Google Sheet (see docs/CONTENT_GUIDE.md). Keep this file as the offline fallback.",
+  "source": {
+    "type": "local",
+    "googleSheet": {
+      "lessonsCsvUrl": "",
+      "questionsCsvUrl": "",
+      "refreshMinutes": 60
+    }
+  },
+  "defaults": {
+    "rewardPerCorrect": 150,
+    "questionsPerAttempt": 3,
+    "maxAttempts": 2,
+    "timePerQuestionSec": 30,
+    "shuffleOptions": true
+  },
+  "lessons": [
+    {
+      "id": "bio-bone-cartilage-01",
+      "institute": "breaking-biology",
+      "subject": "Biology",
+      "chapter": "Bone and Cartilage",
+      "title": "Bone and Cartilage — Class 1",
+      "youtubeUrl": "https://youtu.be/n9wUkCiCyD8",
+      "rewardPerCorrect": 150,
+      "active": true,
+      "questions": [
+        {
+          "id": "q1",
+          "question": "Which type of cartilage forms the intervertebral discs?",
+          "options": { "A": "Hyaline cartilage", "B": "Elastic cartilage", "C": "Fibrocartilage", "D": "Calcified cartilage" },
+          "answer": "C",
+          "explanation": "Intervertebral discs are made of fibrocartilage, which is tough and resists compression."
+        },
+        {
+          "id": "q2",
+          "question": "Which cells break down (resorb) bone tissue?",
+          "options": { "A": "Osteoblasts", "B": "Osteocytes", "C": "Osteoclasts", "D": "Chondrocytes" },
+          "answer": "C",
+          "explanation": "Osteoclasts resorb bone; osteoblasts build new bone."
+        },
+        {
+          "id": "q3",
+          "question": "What is the structural unit of compact bone?",
+          "options": { "A": "Osteon (Haversian system)", "B": "Lacuna", "C": "Trabecula", "D": "Perichondrium" },
+          "answer": "A",
+          "explanation": "Compact bone is built from osteons, each with a central Haversian canal."
+        }
+      ]
+    }
+  ]
+}
