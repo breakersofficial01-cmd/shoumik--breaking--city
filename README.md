@@ -8,4 +8,4 @@ Drive around a Vice-City-style Dhaka, study real lessons to earn Taka, and spend
 - How to add lessons, questions and posters: `docs/CONTENT_GUIDE.md`
 - What was done so far: `docs/CHANGELOG.md`
 
-Play (after GitHub Pages is on): `https://<github-username>.github.io/breaking-city/`
+Play (after GitHub Pages is on): `https://breakersofficial01-cmd.github.io/shoumik--breaking--city/`

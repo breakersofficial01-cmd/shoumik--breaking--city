@@ -9,7 +9,7 @@ Always read `docs/GAME_SPEC.md`, `docs/CHANGELOG.md` and `docs/CHARACTER.md` (if
 
 ## Tech (do not change without the owner's approval)
 - Three.js (pin ONE exact version via an import map from a CDN), plain JavaScript ES modules,
-  no build step. Must run from static hosting (GitHub Pages) at a sub-path (`/breaking-city/`),
+  no build step. Must run from static hosting (GitHub Pages) at a sub-path (`/shoumik--breaking--city/`),
   so use relative paths everywhere.
 - Visual style: early-2000s PS2 era like the original GTA Vice City. Low-poly models built in
   code, flat/vertex colours, small low-res textures, distance fog, neon glow at night, warm

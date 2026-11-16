@@ -34,19 +34,19 @@ World:
 - Write `docs/GAME_SPEC.md` and `docs/HANDOFF.md` (first version: architecture and how to add
   a feature, a content type and a poster).
 
-## Session 2 — Shoumik and people (owner attaches photos of Shoumik)
-Shoumik:
-- Study the attached photos: face shape, skin tone, hair style/colour, beard or moustache,
-  glasses, height/build, usual clothes.
-- Low-poly Shoumik in code (about 1,500–3,000 triangles), PS2 style, matching proportions, skin
-  tone, hair, facial hair, outfit colours from the photos.
-- Code-driven animations: idle, walk, run, jump, punch, melee swing, aim/shoot, enter/exit
-  vehicle, fall, dance.
-- Face texture slot `assets/shoumik/face.png` mapped on the front of the head (PS2 trick).
-  Explain to the owner exactly how to crop a photo for it. Until it exists, use a drawn face.
-- Portrait slot `assets/shoumik/portrait.png` for the HUD/profile card. Until it exists,
-  generate a stylised SVG portrait matching the photos.
-- Write `docs/CHARACTER.md` (hex colours, hair, build, outfit) so he stays consistent.
+## Session 2 — Shoumik and people
+Shoumik (the look is fully specified in `docs/CHARACTER.md`; the owner may also attach
+reference photos in chat — use them only to refine details, never commit them to the repo):
+- Low-poly Shoumik in code (about 1,500–3,000 triangles), PS2 style, stocky build, round face,
+  black quiff hair, full beard, black wristwatch on the left wrist, default outfit
+  `casual_maroon`. All 5 outfits from CHARACTER.md selectable through an outfit system
+  (data in `data/outfits.json`), no brand logos.
+- Head: map `assets/shoumik/face.png` on a slightly rounded front plane of the head, blending
+  edges into skin and hair colours. HUD portrait and profile card use
+  `assets/shoumik/portrait.png` in a circle.
+- Code-driven animations: idle, idle arms-crossed (signature pose), walk, run, jump, punch,
+  melee swing, aim/shoot, enter/exit vehicle, fall, dance.
+- Update `docs/CHARACTER.md` if anything was refined.
 
 People:
 - Procedural low-poly adult pedestrians: lungi, panjabi, shirt-pant, saree, salwar kameez,
