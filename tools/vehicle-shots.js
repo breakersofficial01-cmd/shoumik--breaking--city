@@ -81,9 +81,9 @@ const server = http.createServer((req, res) => {
 
     if (only.includes('gallery')) {
       const types = await page.evaluate(() => Object.keys(window.BC.config.get('vehicles').types));
-      // Line them up on the open Sangsad plaza.
+      // Line them up on the open strip of the Sangsad plaza.
       await page.evaluate((list) => {
-        const b = window.BC, c = window.T.at(2.5, 1.9);
+        const b = window.BC, c = window.T.at(3, 1.25); // north of the Sangsad lake (Session 4)
         window.T.tp(c.x - 30, c.z - 12);
         window.T.clearNear(c.x, c.z, 60);
         window.G = list.map((type, i) => b.fleet.create(type, { x: c.x + (i - list.length / 2) * 13, z: c.z, heading: 0.6 }));
@@ -136,7 +136,7 @@ const server = http.createServer((req, res) => {
       check(air && maxY > 1, `jumped the ramp (highest ${maxY.toFixed(2)} m)`);
       // Handbrake turn on the open plaza.
       await page.keyboard.up('KeyW');
-      await page.evaluate(() => { const b = window.BC, c = window.T.at(3, 2), v = window.CAR; v.place(c.x - 40, c.z - 20, Math.PI / 2, b.world.heightAt(c.x - 40, c.z - 20)); v.health = v.T.health; });
+      await page.evaluate(() => { const b = window.BC, c = window.T.at(3, 2), v = window.CAR; window.T.clearNear(c.x - 30, c.z - 72, 45); v.place(c.x - 60, c.z - 72, Math.PI / 2, b.world.heightAt(c.x - 60, c.z - 72)); v.health = v.T.health; }); // north of the Sangsad lake (Session 4)
       await page.keyboard.down('KeyW');
       await wait(2200);
       await page.keyboard.down('KeyA');

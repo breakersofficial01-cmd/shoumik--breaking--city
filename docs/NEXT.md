@@ -45,3 +45,17 @@
 - Unique-jump bonuses on the ramps, a stunt counter on the profile card.
 - Boats at Sadarghat; the MRT train as something you can ride (after Session 4).
 - Trailers / vans of goods, tea-stall carts and parked rickshaw rows as street dressing.
+
+## Ideas noted during Session 4
+- Ride the MRT: buy a ticket (৳) at a station, sit in the train, get off at another station.
+- Drive on the elevated expressway (ramps up/down at both ends; needs a second road level).
+- Pillars in the water where the MRT crosses the lakes; Hatirjheel water-taxi boats you can hire.
+- Landmark interiors: walk into TSC, Curzon Hall, Ahsan Manzil (museum) — or at least open doors.
+- Night lighting for landmarks (Session 7): floodlit Sangsad, lit Shaheed Minar, glowing launches.
+- Minimap icons for landmarks, MRT stations and Breaking School / Biology.
+- Posters from a Google Sheet tab (same columns as posters.json) — add a poster sheet mapper.
+- Tap analytics (which poster was opened how often) once there is a server; optional QR posters.
+- Video-like LED screens (2–3 frame animated posters) and night-time glow for billboards.
+- Seasonal posters (Eid, Pohela Boishakh, exam season) prepared in advance with dates.
+- Unload far poster pictures from memory if the poster list grows past ~50.
+- Bus-stop posters on the sidewalk side of the shelter too; posters on MRT station walls.

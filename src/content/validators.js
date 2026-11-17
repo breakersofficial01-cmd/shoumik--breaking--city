@@ -179,3 +179,42 @@ export function validatePlaces(raw) {
   });
   return { items, defaults: {}, skipped };
 }
+
+export const POSTER_SHAPES = ['wide', '16:9', 'tall'];
+const DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+/**
+ * Validate posters (shape of data/posters.json). Dates are YYYY-MM-DD (both days included).
+ * @param {{settings?:object, posters?:any[]}} raw
+ */
+export function validatePosters(raw) {
+  const skipped = [];
+  const items = [];
+  const list = Array.isArray(raw?.posters) ? raw.posters : [];
+  if (!Array.isArray(raw?.posters)) skipped.push({ id: '(file)', reason: '"posters" list is missing' });
+  const seen = new Set();
+  list.forEach((p, i) => {
+    const label = isText(p?.id) ? p.id : `poster #${i + 1}`;
+    const skip = (reason) => skipped.push({ id: label, reason });
+    if (!p || typeof p !== 'object') return skip('not an object');
+    if (!isText(p.id)) return skip('id is empty');
+    if (seen.has(p.id)) return skip('duplicate id');
+    if (!isText(p.image) || p.image.trim().startsWith('/')) return skip('image must be a file like posters/my-poster.jpg (no leading /)');
+    const shape = isText(p.shape) ? p.shape.trim().toLowerCase() : '';
+    if (!POSTER_SHAPES.includes(shape)) return skip(`shape must be one of ${POSTER_SHAPES.join(', ')}`);
+    const link = isText(p.link) ? p.link.trim() : '';
+    if (link && !isHttpUrl(link)) return skip('link is not a valid http(s) address');
+    for (const key of ['startDate', 'endDate']) if (isText(p[key]) && !DATE.test(p[key].trim())) return skip(`${key} must look like 2026-12-31`);
+    let districts = 'all';
+    if (Array.isArray(p.districts)) districts = p.districts.filter(isText).map((d) => d.trim());
+    else if (isText(p.districts) && p.districts.trim() !== 'all') districts = p.districts.split(',').map((d) => d.trim()).filter(Boolean);
+    const weight = Number(p.weight);
+    seen.add(p.id);
+    items.push({
+      id: p.id.trim(), image: p.image.trim(), shape, link,
+      startDate: isText(p.startDate) ? p.startDate.trim() : '', endDate: isText(p.endDate) ? p.endDate.trim() : '',
+      districts, weight: Number.isFinite(weight) && weight > 0 ? weight : 1, active: p.active !== false,
+    });
+  });
+  return { items, defaults: raw?.settings || {}, skipped };
+}

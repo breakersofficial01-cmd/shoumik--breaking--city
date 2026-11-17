@@ -56,6 +56,10 @@
     "ped.shout.jack1": { "en": "Hey! My vehicle!", "bn": "এই! আমার গাড়ি!" },
     "ped.shout.jack2": { "en": "Thief! Thief!", "bn": "চোর! চোর!" },
     "ped.shout.dive1": { "en": "Watch out!", "bn": "সামলে!" },
-    "ped.shout.dive2": { "en": "Can't you see?!", "bn": "চোখে দেখো না?!" }
+    "ped.shout.dive2": { "en": "Can't you see?!", "bn": "চোখে দেখো না?!" },
+    "poster.open": { "en": "Open poster ↗", "bn": "পোস্টার খুলুন ↗" },
+    "poster.hint": { "en": "Tap the poster or press {key} to open it", "bn": "পোস্টারে ট্যাপ করো বা {key} চাপো — খুলে যাবে" },
+    "entrance.prompt": { "en": "{place} — press Enter (E) to go in", "bn": "{place} — ভেতরে যেতে ‘ঢোকো’ চাপো" },
+    "entrance.soon": { "en": "Classes open soon here! Lesson Check and Quiz Class are coming.", "bn": "শীঘ্রই এখানে ক্লাস শুরু হবে! লেসন চেক আর কুইজ ক্লাস আসছে।" }
   }
 }

@@ -4,7 +4,8 @@ What the game is and what exists **right now**. Updated at the end of every sess
 Rules live in `/CLAUDE.md`; the build plan in `docs/SESSIONS.md`; how the code is organised
 in `docs/HANDOFF.md`.
 
-Status: **Session 3 of 8 done** (engine, city, foundations, Shoumik, people, vehicles, traffic).
+Status: **Session 4 of 8 done** (engine, city, foundations, Shoumik, people, vehicles, traffic,
+landmarks, MRT, posters).
 
 ---
 
@@ -17,7 +18,7 @@ A free-roam, Vice-City-flavoured open world set in a compressed Dhaka, made for
 
 Money only comes from answering lesson questions. YouTube links open outside the game.
 
-## 2. What you can do today (after Session 3)
+## 2. What you can do today (after Session 4)
 - Open the game → loading screen → "শুরু করতে ট্যাপ করুন" → you are Shoumik on a street corner
   in Shahbag at sunset.
 - Walk, run, sprint and jump around the whole city. Buildings, poles, trees, lake edges and
@@ -39,8 +40,17 @@ Money only comes from answering lesson questions. YouTube links open outside the
 - Progress (cash, position, quality, outfit, owned vehicles) saves itself every 30 seconds and
   when you leave.
 
-Not in yet: landmarks, posters, classes, shops, weapons, wanted stars and police, health,
-day/night, real sound. See `docs/SESSIONS.md`.
+- Visit 18 real Dhaka landmarks (section 3b) — hire a rickshaw/CNG to any of them.
+- Watch MRT Line 6 trains run on the viaduct over Bijoy Sarani → Shahbag → Karwan Bazar →
+  Motijheel and stop at its 4 stations; the elevated expressway runs down the east side.
+- Breaking School (campus, Shahbag) and Breaking Biology Institution (Dhanmondi) glow in neon
+  with their names in English and Bangla. Step into the pink ring at the door and press ঢোকো:
+  "classes open soon" (Class Mode is Session 5).
+- Posters everywhere (section 3c). Look at one that has a link and tap it (or the
+  "পোস্টার খুলুন ↗" button, or F) to open the link.
+
+Not in yet: classes, shops, weapons, wanted stars and police, health, day/night, real sound.
+See `docs/SESSIONS.md`.
 
 ## 3. The city
 A fixed-seed grid: **14 × 16 big blocks**, each 82 m with 14 m roads (about 1.36 × 1.55 km).
@@ -78,8 +88,54 @@ Totals: about 3,800 buildings, 2,400 electric poles, 3,400 trees, 3,000 roof tan
 Everything about districts (size, colours, density, heights, lakes, parks, bridges) is in
 `data/districts.json`; grid, sky, fog, props in `data/world.json`.
 
-Reserved for Session 4 landmarks: **Sangsad grounds** (2×2 block plaza). Other landmarks
-will replace ordinary blocks using the same "areas" mechanism.
+## 3b. Landmarks (Session 4)
+Low-poly look-alikes, no official logos or crests. Where: `data/places.json → landmark`;
+colours: `data/landmarks.json`. Block = (col, row) on the map above.
+
+| Landmark | Block | Notes |
+|---|---|---|
+| Jatiya Sangsad Bhaban | Sangsad grounds (2–3, 1–2) | octagon + round towers, big circle/triangle openings, its lake, red-brick plaza with steps |
+| Shaheed Minar | 3, 11 | five white frames (middle one bowed), red sun, red stepped platform |
+| TSC | 3, 10 | vaulted auditorium, colonnade, cafeteria, little shrine, lawn |
+| **Breaking School** | 2, 11 | 9-floor neon glass block, pink/cyan, sign on 4 sides, entrance ring |
+| Dhaka University | 4, 12 | long white arts building, three-figure sculpture on a plinth |
+| Curzon Hall | 5, 12 | red brick, pointed arches, domed kiosks |
+| Dhaka Medical College | 6, 12 | cream colonial hospital, verandas, porch, red emergency canopy |
+| BUET | 6, 11 | red-brick blocks with white bands, brick gate with name |
+| Nilkhet | 1, 12 | rows of tin-roofed book stalls with colourful book piles |
+| **Breaking Biology Institution** | 5, 7 | 8-floor neon glass block, green/yellow, entrance ring |
+| Gulshan towers | 10, 2 | four glass towers (one round) on a shopping podium |
+| Karwan Bazar | 9, 10 | open market sheds with crates and sacks, media tower |
+| Shapla Chattar | 11, 11 | white water-lily fountain, bank towers |
+| Notre Dame College | 12, 12 | cream arcaded college round a playing field |
+| Sir Salimullah Medical College | 9, 15 | old ochre hospital with red tiled roofs + new ward block |
+| Ahsan Manzil | 5, 15 | the pink palace: dome, arched verandas, grand stair |
+| Lalbagh Fort | 2, 14 | red walls, gate, white tomb, three-domed mosque, hall, water channel |
+| Sadarghat | 7, 15 | launch terminal, pontoons on the Buriganga, 3 river launches, country boats |
+
+Also: paddle boats + lamp posts with fairy lights on the Dhanmondi Lake bridge; white arches
+and coloured lights on the Hatirjheel bridges. **MRT Line 6** on pillars (path in
+`data/landmarks.json → viaducts`), 4 stations with name boards, 2 trains that stop 7 s at each
+station. **Elevated expressway** on pillars along column 13 and row 9 (scenery for now).
+Landmark blocks keep their sidewalks, poles and wires, so people, ride stands and bus stops work
+as before. Steps at the Sangsad plaza and Shaheed Minar can be walked and driven up.
+
+## 3c. Posters (Session 4)
+487 fixed slots + adverts on buses and some rickshaws (`data/posterSlots.json`):
+
+| Kind | Shape | How many | Where |
+|---|---|---|---|
+| Roof billboard | wide 2:1 | 34 | roofs of 2–8-floor buildings facing a main road |
+| LED screen | 16:9 | 16 | on a pole at busy junction corners; changes every 10 s |
+| Wall poster | tall 2:3 | 40 | first floor of buildings facing a main road |
+| Bus stop | tall 2:3 | 165 | back board of every bus shelter |
+| Metro / flyover pillar | tall 2:3 | 232 | both sides of every pillar |
+| Bus back panel | wide | every bus | above the rear window |
+| Rickshaw back panel | wide (cropped) | ~45% of rickshaws | replaces the painted art |
+
+Posters come from `data/posters.json` (dates, districts, weights, links; guide in
+`posters/README.md`). Pictures load only near the player; small posters are drawn within
+75 / 160 / 220 m (Low / Medium / High). Empty slots show "এখানে আপনার বিজ্ঞাপন".
 
 ## 4. Look
 - PS2-era: low-poly, vertex colours, two 512×64 texture atlases painted in code, nearest
@@ -169,6 +225,8 @@ On foot:
 | Dance at a hangout spot | ঢোকো | E |
 | Get into a vehicle / hire a ride | ঢোকো | E |
 | Weapon | অস্ত্র (Session 6) | Q |
+| Open the poster you look at | tap it, or the পোস্টার খুলুন button | F |
+| Enter Breaking School / Biology (in the ring) | ঢোকো | E |
 
 In a vehicle (the same buttons, with new labels):
 
@@ -201,6 +259,11 @@ Target: 30+ fps on a mid-range Android (4 GB RAM), landscape, Chrome.
 | মাঝারি (medium, default) | 1.25× | 300 m | |
 | বেশি (high) | 2× | 430 m | smooth edges (after reload) |
 
+With landmarks and posters (Session 4) the headless test (software rendering, 915×412) shows about
+84 draw calls / 64k triangles on Low and ~127 / 122k on Medium at the Shahbag start corner, the
+busiest landmark area (Session 3: 57 on Low, ~100 on Medium);
+each landmark is ≤3 draw calls and is only drawn within view distance; each visible poster is one.
+All landmark geometry together is ~120k triangles but only a few landmarks are in view at once.
 With traffic (Session 3) the headless test shows 57 draw calls / 72k triangles on Low and about 100 / 140k
 on Medium at Shahbag; all vehicle code together takes about 0.4 ms per frame on a desktop CPU.
 Each vehicle is one draw call, all wheels together are one, smoke and fire are two.
@@ -220,5 +283,6 @@ for lessons, other owned items, stats and flags. Migrations in
   (`bio-bone-cartilage-01`, 3 Bangla questions). Google Sheet adapter is written and tested
   but switched off (`source.type: "local"`).
 - Hangout spots: `data/hotspots.json`, also loaded and validated by the Content Service.
-- Places (ride destinations, later landmarks): `data/places.json`, same.
+- Places (ride destinations + landmark plots): `data/places.json`, loaded at boot.
+- Posters: `data/posters.json` through the Content Service (local now, Google Sheet later).
 - Everything else that is tunable: `data/*.json` (each file starts with a `_comment`).

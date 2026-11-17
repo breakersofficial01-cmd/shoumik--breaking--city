@@ -1,4 +1,4 @@
-# Handoff — how Breaking City is built (v3, after Session 3)
+# Handoff — how Breaking City is built (v4, after Session 4)
 
 For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, then
 `docs/GAME_SPEC.md` (what exists) and `docs/CHANGELOG.md` (what changed last).
@@ -16,6 +16,11 @@ For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, th
   type and tests driving, the ramp jump, drifting, carjacking, a hired ride, an explosion and a
   minute of traffic (`--only gallery,drive,jack,ride,boom,traffic`). Run it after touching
   anything in `src/entities/vehicles/`, `src/world/roads.js` or the two features.
+- Landmarks: `node tools/landmark-shots.js --three <dir> --out <folder> [--only tsc,sadarghat]`
+  photographs every landmark, MRT station, viaduct, lake and a billboard/LED screen.
+- Posters + gameplay: `node tools/poster-check.js --three <dir> --out <folder>` stands Shoumik
+  at one slot of each kind, tests tap-to-open (F), LED rotation, the MRT train, the Breaking
+  School entrance and the bus/rickshaw adverts.
 - See what you changed: `node tools/character-shots.js --three <dir> --out <folder>` saves
   close-ups of Shoumik in every outfit and animation (`--only front,punch,doctor`). (Cloud sandboxes usually cannot reach the CDN, hence
   `--three`.) Run it before every commit.
@@ -26,17 +31,20 @@ For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, th
   `BC.debugPeds` (the pedestrian pool), `BC.crowd.people`. Number keys 1–0 play animations.
   Vehicles: `BC.fleet.vehicles`, `BC.player.vehicle`, `BC.fleet.create('bus', { x, z, heading })`,
   `BC.fleet.damage(v, 100)`, `BC.events.emit('vehicle:grant', { type: 'sports' })`, `BC.world.roads`.
+  Session 4: `BC.world.landmarks` (sites, markers, viaducts), `BC.posters.slots`, `BC.metro.trains`.
 
 ## 2. Boot order (`src/main.js`)
 1. `config.loadSome` (ui, strings, game, economy) → `save.load` → `initI18n`
 2. `loadFonts` + `config.loadAll` (all other `data/*.json`)
 3. `assets.configure` + procedural placeholder textures registered
-4. `content.loadAll()` (lessons through the Content Service)
-5. `new Game(canvas).init()` → renderer, `World` (layout, materials, sky, water, chunks,
-   collision), `Input`, `ChaseCamera`, features, first chunks built
+4. `content.loadAll()` (lessons AND places through the Content Service — the layout needs places)
+5. `new Game(canvas).init()` → renderer, `World` (layout with landmark plots, ramps, landmark
+   plan, roads, materials, sky, water, chunks, collision, then landmark meshes — async, they
+   wait for the fonts), `Input`, `ChaseCamera`, features, first chunks built
 6. autosave starts → "Tap to start" → `game.start()` (frame loop)
 
-Feature order (`src/features/index.js`): traffic → vehicles → player → pedestrians → the rest. The
+Feature order (`src/features/index.js`): traffic → vehicles → player → pedestrians → hotspots →
+posters → metro → entrances → the rest. The
 `vehicles` feature steps the shared fleet (physics) and then puts Shoumik on his seat, so it must
 run before `player` draws him; `traffic` only sets the AI's pedals and wheel before that.
 
@@ -57,6 +65,9 @@ src/world/   layout.js (piece grid) → blockgen.js (buildings/poles/trees DATA)
              geoBuilder.js, buildingMesher.js, groundMesher.js, props.js  (DATA → geometry)
              chunks.js (build/show/hide/unload), collision.js, water.js, sky.js, world.js (glue)
              roads.js (road graph: junctions, lanes, signals, routes, bus stops), ramps.js
+  landmarks/ index.js (plan + build + cull), kit.js (modelling toolbox), signs.js (name-board
+             atlas), civic.js campus.js oldDhaka.js modern.js (one builder per landmark),
+             viaduct.js (MRT / flyover deck, pillars, stations, ViaductPath)
 src/entities/ chaseCamera.js
   vehicles/  fleet.js (all vehicles; step + draw) vehicle.js physics.js damage.js driver.js (AI)
              models.js modelsCars.js modelsSmall.js shapes.js (VBuilder)
@@ -68,10 +79,13 @@ src/features/ index.js (registry) + player/ (index.js, actions.js) pedestrians/ 
              navigation.js, brain.js, bubbles.js) hotspots/ (index.js, props.js, boombox.js)
              touchControls/ hud/ minimap/ settings/
              vehicles/ (index.js, boarding.js, rides.js, parked.js, horn.js) traffic/ (index.js, shelters.js)
+             posters/ (index.js, slots.js, frames.js, library.js, schedule.js, vehicles.js)
+             metro/ (MRT trains)  entrances/ (glowing markers at Breaking School / Biology)
              pedestrians/roadSense.js (people vs vehicles)
 src/ui/      fonts.js, i18n.js, loading.js, styles.css
 data/        every tunable number and all content
-tools/       smoke-test.js, character-shots.js, vehicle-shots.js
+tools/       smoke-test.js, character-shots.js, vehicle-shots.js, landmark-shots.js, poster-check.js
+posters/     poster pictures + README.md (how to add one)
 ```
 
 ## 4. Conventions that are easy to get wrong
@@ -131,6 +145,10 @@ tools/       smoke-test.js, character-shots.js, vehicle-shots.js
 | `controls:mode` | `{ mode: 'driving' \| 'onFoot' }` | vehicles → touchControls |
 | `wanted:changed` | `{ stars }` | *listened to by hud; police feature will send it* |
 | `lesson:completed` | *(Session 5)* | classes |
+| `input:open` | – (F key) open the poster being looked at | Input → posters |
+| `poster:opened` | `{ id, slot, link }` | posters |
+| `metro:arrived` | `{ line, station }` a train stopped at a station | metro |
+| `entrance:enter` | `{ id, place }` Shoumik pressed ঢোকো in a Breaking School / Biology marker | entrances → *classes (Session 5)* |
 
 Add new events to this table.
 
@@ -167,16 +185,40 @@ with a debug log until their folder and loader exist.
    `ContentService.loadRemote`.
 5. Document the columns in `docs/CONTENT_GUIDE.md`.
 
-## 8. How to add a poster (system arrives in Session 4)
-Planned shape, so Session 4 only has to fill it in:
-- Image file in `/posters/`, row in `data/posters.json` (`id, image, shape, link, startDate,
-  endDate, districts, weight`) loaded as a content type (section 7).
-- `src/features/posters/` creates the slots. Buildings already carry **blank signboards**
-  (see `buildingMesher.js`, "signboard per shop") and the layout exposes every building
-  (`piece.content.buildings` with `front` sides and height) to hang billboards on.
-- Poster textures must go through the asset registry and be lazy-loaded near the player;
-  any Bangla text drawn on a canvas waits for `fontsReady()`.
-Until then there is nothing for the owner to do for posters.
+## 8. Posters and landmarks: how it fits together
+**Posters** (`src/features/posters/`):
+- Content: `data/posters.json` (validator `validatePosters`, loaded in the feature's `init`).
+  Where slots are: `data/posterSlots.json` (tunables, loaded by config).
+- `slots.js` plans 480+ static slots once: roof billboards (2:1) and wall posters (2:3) on
+  buildings facing main roads, LED screens (16:9) on junction corners, a poster on every bus
+  shelter and on both sides of every viaduct pillar. A slot = `{ id, kind, shape, x, y, z,
+  heading (direction it faces), w, h, district, tap }`.
+- `frames.js` merges billboard legs / LED housings / wall borders into one mesh per 192 m cell.
+- Each slot is one plane mesh, made lazily and drawn only within `quality.posterDistance`
+  (billboards and LEDs: the full view distance). `schedule.js` picks one poster per slot per
+  day (weighted, date + district filtered); LED screens rotate every `ledRotateSeconds`.
+- `library.js` loads pictures lazily through the asset registry (`texture.poster.<id>`); until
+  then the default picture of that shape is shown.
+- `vehicles.js` gives buses a back panel and some rickshaws a poster on their art panel.
+- Tap-to-open: look at a poster with a link within its `tap` distance → button + hint; F,
+  the button, or a quick tap on the poster itself calls `window.open(link, '_blank')`.
+- Owner's guide: `posters/README.md`.
+
+**Landmarks** (`src/world/landmarks/`, part of the world, not a feature):
+- `data/places.json` rows with a `landmark` block reserve a city block (layout.js keeps its
+  sidewalk, poles, wires and street trees and leaves the inside empty) or use a plaza area.
+- `Kit` is the modelling toolbox: local space +z = front, `box`, `prism`, `dome`, `vault`,
+  `gable`, `arch`/`arcade` (painted openings), `columns`, `steps`, `beam`, `sign` (name board
+  from the sign atlas), `solid` (collider), `platform` (walkable raised floor — part of
+  `world.heightAt` via `ramps.surface`), `marker` (entrance). Three builders per landmark:
+  lit (facade material), glow (unlit), sign (name-board atlas) → ≤3 draw calls each, culled by
+  distance in `Landmarks.update`.
+- New landmark: write a builder in one of the group files, add it to `BUILDERS` in
+  `landmarks/index.js`, colours in `data/landmarks.json → types`, a `landmark` on a place.
+- Viaducts (`viaduct.js`): `path` = junction list → rounded `ViaductPath` (`at(s, out, side)`,
+  `nearest(x, z)`); deck sections of `sectionLength` m; pillars only on straight road pieces,
+  on the centre line, with colliders (AI drivers keep their lanes); stations add platforms and
+  legs on the sidewalks. The `metro` feature runs trains on `path` with `side` = track offset.
 
 ## 9. How to add or swap an asset
 - Code asks for ids: `assets.registerDefault('model.player', factory)` then
@@ -189,6 +231,8 @@ Until then there is nothing for the owner to do for posters.
   `image.shoumik.portrait`, `image.shoumik.face`, `texture.shoumik.face`,
   `geometry.person.<shape>` (tube, torso, skirt, head, hairShort, hairLong, hairBun, hijab,
   cap, bucket, box).
+- Session 4: `texture.poster.<poster id>` (and `texture.poster.default-<shape>`) for every poster
+  picture — an override in `data/assets.json` replaces the file without touching posters.json.
 - `model.player` is a factory object `{ create(outfit) }` returning a `ShoumikModel`. A
   rigged .glb cannot simply be dropped in: it would need a small adapter that maps our pose
   (see `skeleton.js`) onto its bones.
@@ -248,7 +292,12 @@ version, add the field to `defaults()`. Features store live state with
 - **Particles**: `game.fleet.fx.emit('smoke' | 'fire', { x, y, z, vx, vy, vz, life, size: [from, to], color })`.
 
 ## 13. Notes for the next sessions
-- **Session 4 (landmarks):** reserve space by adding an entry to `areas` in
+- **Session 4 is done** (the old notes below are kept for reference).
+- **Session 5 (classes):** listen to `entrance:enter { id }` (`breaking-school` /
+  `breaking-biology`) to open Class Mode; the entrances feature shows a "coming soon" note only
+  while `game.features.get('classes')` is null. Markers are in `world.landmarks.markers`.
+  Shops can be landmark blocks too (a new builder + a `landmark` on a place).
+- **Session 4 (landmarks, historical):** reserve space by adding an entry to `areas` in
   `data/districts.json` (type `plaza`/`park`), exactly like `sangsad-grounds`. `data/places.json`
   already exists (id, name, junction col/row, ride) and is loaded by the vehicles feature through
   the Content Service — extend those rows with landmark fields rather than starting a new file,

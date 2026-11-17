@@ -57,10 +57,15 @@ const server = http.createServer((req, res) => {
   // Every target: a point to look at, how far away the camera stands and from which side.
   const targets = await page.evaluate(() => {
     const lm = window.BC.world.landmarks;
-    const list = lm.sites.map((s) => ({ id: s.id, x: s.cx, z: s.cz, angle: s.angle, dist: s.type === 'sangsad' ? 150 : s.type === 'gulshanTowers' ? 120 : 82, lift: s.type === 'gulshanTowers' ? 40 : 26, look: s.type === 'gulshanTowers' ? 45 : 8 }));
-    for (const v of lm.viaducts) for (const st of v.stations) list.push({ id: st.id, x: st.x, z: st.z, angle: st.heading + 0.9, dist: 60, lift: 16, look: 10 });
-    for (const v of lm.viaducts) { const p = v.path.at(v.path.length * 0.45, {}); list.push({ id: v.id, x: p.x, z: p.z, angle: p.heading + 0.5, dist: 55, lift: 7, look: 8 }); }
+    const list = lm.sites.map((s) => ({ id: s.id, x: s.cx, z: s.cz, angle: s.angle, dist: s.type === 'sangsad' ? 150 : s.type === 'gulshanTowers' || s.type === 'karwanBazar' ? 125 : 82, lift: s.type === 'gulshanTowers' ? 60 : 40, look: s.type === 'gulshanTowers' ? 45 : 8 }));
+    for (const v of lm.viaducts) for (const st of v.stations) list.push({ id: st.id, x: st.x, z: st.z, angle: st.heading + 0.9, dist: 70, lift: 42, look: 10 });
+    for (const v of lm.viaducts) { const p = v.path.at(v.path.length * 0.45, {}); list.push({ id: v.id, x: p.x, z: p.z, angle: p.heading + 0.5, dist: 70, lift: 40, look: 8 }); }
     for (const u of lm.units) if (u.id.startsWith('lake-')) list.push({ id: u.id, x: u.cx, z: u.cz, angle: 0.6, dist: 120, lift: 45, look: 0 });
+    // A roof billboard and an LED screen (posters feature), seen from across the street and above.
+    for (const kind of ['billboard', 'led']) {
+      const s = window.BC.posters?.slots.find((x) => x.kind === kind);
+      if (s) list.push({ id: `poster-${kind}`, x: s.x, z: s.z, angle: s.heading - 0.35, dist: kind === 'led' ? 16 : 34, lift: s.y + (kind === 'led' ? 1 : 4), look: s.y });
+    }
     return list;
   });
   console.log('landmarks:', targets.map((t) => t.id).join(', '));
@@ -69,6 +74,9 @@ const server = http.createServer((req, res) => {
     if (only.length && !only.includes(t.id)) continue;
     for (const [suffix, turn] of [['', 0.35], ['-b', Math.PI - 0.5]]) {
       if (suffix && !arg('both', null)) continue;
+      // Let the game run a moment with Shoumik at the target, so near-only things (posters) appear.
+      await page.evaluate(({ t }) => { const BC = window.BC; BC.setPaused('shots', false); BC.player.position.x = t.x; BC.player.position.z = t.z; }, { t });
+      await page.waitForTimeout(700);
       await page.evaluate(async ({ t, turn }) => {
         const BC = window.BC;
         BC.setPaused('shots', true);

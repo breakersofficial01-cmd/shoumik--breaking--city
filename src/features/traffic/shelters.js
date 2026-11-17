@@ -1,6 +1,6 @@
 // Bus-stop shelters: a roof on two posts with a bench, on the sidewalk next to every bus
 // stop from world.roads.busStops. All of them are merged into ONE mesh.
-// Session 4 can hang a 2:3 poster on the back of each (roads.busStops has the positions).
+// The posters feature hangs a 2:3 poster on the back board of each (features/posters/slots.js).
 
 import * as THREE from 'three';
 import { VBuilder } from '../../entities/vehicles/shapes.js';

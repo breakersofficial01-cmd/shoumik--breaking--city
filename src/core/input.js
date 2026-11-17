@@ -2,7 +2,7 @@
 // into, so gameplay code never cares where input came from.
 //
 //   input.move      { x, y }   -1..1, y = forward
-//   input.held      { sprint, jump, action, attack, weapon, horn }  (true while down)
+//   input.held      { sprint, jump, action, attack, weapon, horn, open }  (true while down)
 //   input.pressed   same names, true only on the frame the button went down
 //   input.look      { x, y }   camera turn collected this frame (radians)
 // Each press also emits an event: `input:jump`, `input:action`, `input:attack`, ...
@@ -10,7 +10,7 @@
 
 import { events } from './events.js';
 
-const ACTIONS = ['sprint', 'jump', 'action', 'attack', 'weapon', 'horn'];
+const ACTIONS = ['sprint', 'jump', 'action', 'attack', 'weapon', 'horn', 'open'];
 
 export class Input {
   constructor(controlsCfg, canvas) {

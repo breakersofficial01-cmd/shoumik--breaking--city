@@ -10,6 +10,8 @@
   "pedestrians": true,
   "hotspots": true,
   "posters": true,
+  "metro": true,
+  "entrances": true,
   "classes": true,
   "shops": true,
   "crime": true,

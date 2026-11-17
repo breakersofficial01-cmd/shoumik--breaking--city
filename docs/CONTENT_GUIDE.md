@@ -60,7 +60,17 @@ Correct → green + Taka added. Wrong → red + the right answer and explanation
 Each lesson pays once per player; `maxAttempts` limits retries.
 
 ## 2. Posters — `data/posters.json` and `/posters/`
-See `posters/README.md` (created in Session 4).
+Step-by-step guide with picture sizes: **`posters/README.md`**.
+
+Each row: `id`, `image` (file in `posters/`), `shape` (`wide` 2:1, `16:9`, `tall` 2:3), `link`
+(opens in a new tab when tapped; may be empty), `startDate` / `endDate` (`YYYY-MM-DD`, both days
+included, empty = no limit), `districts` (`"all"` or a list of district ids), `weight`, `active`.
+Posters only appear in slots of their own shape; empty slots show the default poster of that
+shape (`settings.defaults`). Bad rows are skipped and logged.
+
+Later as a Google Sheet tab "Posters" with the same column names (one row per poster);
+`districts` as a comma-separated list. (The sheet adapter for posters is not written yet —
+lessons first.)
 
 ## 3. Everything else
 Prices, vehicles, weapons, places, text: `data/*.json`. Each file has a `_comment` field
@@ -99,8 +109,19 @@ Every row is a named place. A hired rickshaw or CNG can take Shoumik to any plac
 | `col`, `row` | the **road junction** next to the place (junction 0,0 = north-west corner of the city; the map is in `docs/GAME_SPEC.md`) |
 | `ride` | `false` hides it from the ride menu |
 
+| `landmark` | optional — puts a landmark building there (see below) |
+
 A place whose junction is inside a lake or park is ignored. Bad rows are skipped and logged.
-Session 4 adds the landmark buildings to these same rows.
+
+**Landmarks.** `"landmark": { "type": "curzonHall", "block": [5, 12], "facing": "N" }`
+- `type` = which model (17 are built: sangsad, shaheedMinar, shaplaChattar, curzonHall,
+  dhakaUniversity, tsc, dhakaMedical, buet, notreDame, ssmc, ahsanManzil, lalbaghFort, sadarghat,
+  nilkhet, gulshanTowers, karwanBazar, breakingSchool, breakingBiology). Their colours and a few
+  sizes are in `data/landmarks.json → types` and are safe to change.
+- `block` = the city BLOCK it stands on (block col,row is south-east of junction col,row), or
+  `area` = a plaza from `data/districts.json` (Sangsad uses `sangsad-grounds`).
+- `facing` = which way the front looks: `N`, `S`, `E`, `W`. One landmark per block.
+- Moving a landmark = changing `block`. A brand-new kind of building needs code (ask Claude).
 
 ## Vehicles, traffic and fares
 - `data/vehicles.json` → `types`: one block per vehicle. Safe things to change: `name`,

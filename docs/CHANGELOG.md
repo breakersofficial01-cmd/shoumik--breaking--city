@@ -205,3 +205,69 @@ Known issues
   landmarks; Session 4 may move them.
 
 Next: Session 4 (real Dhaka landmarks and the poster system).
+
+## 2026-11-17 — Session 4: real Dhaka landmarks and the poster system
+Breaking City now looks like Dhaka: 18 landmarks, MRT Line 6 with moving trains, and adverts
+everywhere that players can tap to open.
+
+Landmarks (`src/world/landmarks/`, colours in `data/landmarks.json`, places in `data/places.json`)
+- Low-poly look-alikes, no logos or crests: Jatiya Sangsad Bhaban (with its lake and brick plaza),
+  Shaheed Minar, TSC, Dhaka University, Curzon Hall, Dhaka Medical College, BUET, Nilkhet book
+  market, Gulshan glass towers, Karwan Bazar, Shapla Chattar, Notre Dame College, Sir Salimullah
+  Medical College, Ahsan Manzil, Lalbagh Fort, Sadarghat (terminal, pontoons, launches, boats).
+- **Breaking School** (campus, block 2,11) and **Breaking Biology Institution** (Dhanmondi, block
+  5,7): big neon glass buildings, names in English + Bangla on every side, a glowing entrance
+  ring. Stand in it and press ঢোকো → "classes open soon" (Class Mode is Session 5; the
+  `entrance:enter` event is ready for it).
+- Name boards in Bangla + English on every landmark (painted on a canvas after the fonts load).
+- Dhanmondi Lake: paddle boats, lamp posts with fairy lights on the bridge. Hatirjheel: white
+  arches and coloured lights on both bridges, boats.
+- MRT Line 6 on pillars (Bijoy Sarani → Shahbag → Karwan Bazar → Motijheel) with 4 stations and
+  2 trains that stop at every station (`src/features/metro/`). Elevated expressway on pillars
+  down the east side. Pillars stand between the lanes and are solid; traffic is unaffected.
+- A place gets a landmark with one `landmark` entry in `data/places.json`; the block keeps its
+  sidewalks, poles and wires. Steps at Sangsad and Shaheed Minar can be walked and driven up.
+
+Posters (`src/features/posters/`, content in `data/posters.json`, slots in `data/posterSlots.json`)
+- 487 fixed slots: 34 roof billboards (2:1), 16 LED screens at junctions (16:9, change every 10 s),
+  40 wall posters, 165 bus-stop posters and 232 metro/flyover pillar posters (2:3), plus adverts
+  on the back of every bus and on ~45% of rickshaws.
+- Posters show only between their start and end dates and in their districts; weighted daily pick;
+  empty slots show "এখানে আপনার বিজ্ঞাপন". Loaded through the Content Service (ready for a sheet).
+- Pictures load lazily near the player through the asset registry. Small posters are drawn within
+  75 / 160 / 220 m by quality; billboards and LED screens as far as the city is drawn.
+- Tap to open: look at a poster that has a link → "পোস্টার খুলুন ↗" button (or tap the poster, or
+  F). The link opens in a new tab / app.
+- 3 sample posters + 3 default posters in `posters/`, and `posters/README.md` (sizes, how to add one).
+
+Under the hood
+- Places now load at boot (the city layout needs the landmark plots). New config files
+  `landmarks`, `posterSlots`; `quality.json` gained `posterDistance`; `controls.json` gained F
+  (`open`); new strings `poster.*`, `entrance.*`. New features `posters`, `metro`, `entrances`.
+  Save format unchanged (version 2).
+- New tools: `tools/landmark-shots.js` (photos of every landmark) and `tools/poster-check.js`
+  (posters, tap-to-open, LED rotation, train, entrance, vehicle adverts).
+  `tools/vehicle-shots.js` drives and lines vehicles up north of the Sangsad lake now.
+
+Tested (headless Chromium): zero console errors on Low + touch and on Medium; every landmark
+photographed; poster check (one slot of every kind drawn, F opens the YouTube link, LED screen
+changes, trains move, entrance prompt + note, bus and rickshaw adverts); the full Session 3
+vehicle test (drive, ramp jump, drift, carjack, hired ride, explosion, a minute of traffic).
+Draw calls at the Shahbag start corner: about 84 on Low, 127 on Medium.
+**Not tested on a real phone.**
+
+Known issues
+- Landmarks are simplified look-alikes; some details (Sangsad's exact openings, Curzon Hall's
+  domes, Ahsan Manzil's stair) are approximate. Nothing can be entered except the two Breaking
+  entrance rings (and those only show a note until Session 5).
+- The MRT deck and the expressway are scenery: you cannot walk, drive or ride on them yet. The
+  viaduct crosses Dhanmondi Lake / Hatirjheel without pillars in the water.
+- Draw calls went up (Low 57 → 84 at the busiest corner). Needs a real-phone check.
+- Roof billboards can overlap a roof water tank or stair room; some wall posters cover windows.
+- Rickshaw adverts crop the left and right of the 2:1 picture.
+- Poster pictures stay in memory once loaded (fine for a few dozen posters).
+- The Breaking School "admission" sample poster has no link yet: `data/links.json` is still empty.
+- Sessions 1–3 were still on their own branches (not merged into `main`); this branch was built on
+  top of the Session 3 branch, so it contains Sessions 1–4.
+
+Next: Session 5 (classes, Lesson Check, money and shops).

@@ -9,7 +9,8 @@
     "jump": ["Space"],
     "action": ["KeyE"],
     "weapon": ["KeyQ"],
-    "horn": ["KeyH"]
+    "horn": ["KeyH"],
+    "open": ["KeyF"]
   },
   "mouse": { "sensitivity": 0.0024, "invertY": false },
   "touch": {

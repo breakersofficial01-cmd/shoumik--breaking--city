@@ -1,0 +1,10 @@
+{
+  "_comment": "WHERE posters hang (the poster pictures themselves are content: data/posters.json). Sizes in metres. billboard = 2:1 boards on roofs facing a main road; led = 16:9 screens on a pole at junction corners (they change poster every few seconds; 'junctions' [col,row] are always used first); wall = 2:3 posters on the first floor of shop buildings; busStop = 2:3 poster on the back board of every bus shelter; pillar = 2:3 posters on both sides of every MRT / flyover pillar; vehicles = 2:1 panels on the back of buses and on some rickshaws (rickshawShare / busShare = share of them that carry an advert). count = how many, minSpacing = least distance between two of the same kind. tap = how close (metres) Shoumik must be to open the poster's link. frameCell = size of the groups the frames are drawn in.",
+  "frameCell": 192,
+  "billboard": { "count": 34, "minSpacing": 70, "minFloors": 2, "maxFloors": 8, "width": 9, "setback": 1.4, "lift": 1.6, "legColor": "#4a4d52", "backColor": "#2b2d31", "walkwayColor": "#6f7378", "lampColor": "#fff1c4", "tap": 45 },
+  "led": { "count": 16, "minSpacing": 150, "junctions": [[3, 10], [8, 9], [11, 11], [10, 2], [4, 12], [9, 10], [2, 11], [5, 7], [7, 13]], "width": 5, "poleHeight": 3.8, "inset": 0.75, "poleColor": "#3a3d42", "housingColor": "#1b1c20", "rimColor": "#36e6ff", "tap": 30 },
+  "wall": { "count": 40, "minSpacing": 32, "width": 2.2, "lift": 0.65, "frameColor": "#2b2d31", "tap": 14 },
+  "busStop": { "width": 0.78, "height": 1.17, "y": 1.5, "out": 0.365, "tap": 10 },
+  "pillar": { "width": 1.5, "height": 2.25, "y": 3.3, "tap": 14 },
+  "vehicles": { "rickshawShare": 0.45, "busShare": 1, "checkEverySeconds": 0.5, "busPanel": { "width": 1.36, "height": 0.68, "y": 2.7, "back": 0.02 }, "tap": 12 }
+}
