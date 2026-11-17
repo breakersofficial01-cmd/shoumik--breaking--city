@@ -53,3 +53,17 @@ No real brand logos on any outfit. The `doctor` outfit fits his medical-college 
   blend edges into skin colour `#C08B68` and hair colour at the top.
 - `assets/shoumik/portrait.png` — 512×512 head-and-shoulders crop for the HUD portrait and the
   profile card (show it in a circle).
+
+## In-game model notes (Session 2)
+- Built in code: `src/entities/shoumik/` (about 2,000 triangles). Colours come from
+  `data/player.json → model`, outfits from `data/outfits.json`.
+- Outfit details the photos did not fix, chosen in Session 2 (change them in
+  `data/outfits.json` if the owner prefers something else):
+  - `panjabi_navy`: off-white pajama `#E9E6DC`, brown sandals `#5A3B28`.
+  - `panjabi_grey`: white pajama `#F1EFE8`, dark shoes `#2a2420`; the "print" is a fine speckle.
+  - `doctor`: dark trousers `#2A2D34`, black shoes `#15151a`, steel chest-piece on the stethoscope.
+  - `polo_black`: dark blue jeans `#2B3443`, white sneakers.
+- Face texture: the photo is used at 128×128, slightly tone-matched to the skin colour and
+  faded at the edges (`data/player.json → model.face`). If the photo is ever replaced, set
+  `cheekWidth` and `chinY` there to match the new picture.
+- Signature arms-crossed pose plays automatically after 3.5 s of standing still.

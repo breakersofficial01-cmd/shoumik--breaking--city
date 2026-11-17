@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8">
+  <title>Breaking City</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="Breaking City — study, earn Taka and rule a Vice-City-style Dhaka. By Breaking School and Breaking Biology.">
+  <meta name="theme-color" content="#1b1238">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="assets/shoumik/portrait.png">
+  <link rel="stylesheet" href="src/ui/styles.css">
+
+  <!-- Three.js: ONE exact version, pinned here. Change the version in both lines together. -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <canvas id="game" aria-label="Breaking City"></canvas>
+
+  <!-- HUD, touch controls and overlays are added here by the feature modules. -->
+  <div id="ui"></div>
+
+  <!-- Loading screen: plain HTML so it shows before any script has loaded. -->
+  <div id="loading">
+    <div class="loading-sun"></div>
+    <div class="loading-inner">
+      <h1 class="logo"><span>BREAKING</span><span>CITY</span></h1>
+      <p class="tagline" data-i18n="loading.tagline"></p>
+      <div id="loading-bar"><div id="loading-bar-fill"></div></div>
+      <p id="loading-status">…</p>
+      <button id="loading-start" type="button" data-i18n="loading.start" hidden></button>
+    </div>
+  </div>
+
+  <!-- Shown by CSS only when a phone is held upright. -->
+  <div id="rotate">
+    <div class="rotate-phone"></div>
+    <p data-i18n="rotate.message"></p>
+  </div>
+
+  <noscript>This game needs JavaScript.</noscript>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

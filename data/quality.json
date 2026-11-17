@@ -1,0 +1,57 @@
+{
+  "_comment": "Graphics quality levels. pixelRatioCap = sharpness limit (lower = faster). viewDistance in metres (fog hides the rest). propDensity = share of poles/trees/tanks drawn. chunkBuildMs = time budget per frame for building new city chunks. pedestrians = how many people walk around the player at once; pedLodDistance = beyond this (metres) people are drawn in a simpler way. traffic = AI vehicles driving around; parked = empty vehicles waiting at the roadside. posterDistance = posters further away than this (metres) are not drawn.",
+  "default": "medium",
+  "levels": {
+    "low": {
+      "pixelRatioCap": 1.0,
+      "renderScale": 0.8,
+      "viewDistance": 210,
+      "antialias": false,
+      "wires": true,
+      "wireStrandScale": 0.5,
+      "propDensity": 0.6,
+      "balconies": false,
+      "chunkBuildMs": 5,
+      "minimapFps": 10,
+      "pedestrians": 16,
+      "pedLodDistance": 20,
+      "traffic": 7,
+      "parked": 5,
+      "posterDistance": 75
+    },
+    "medium": {
+      "pixelRatioCap": 1.25,
+      "renderScale": 1.0,
+      "viewDistance": 300,
+      "antialias": false,
+      "wires": true,
+      "wireStrandScale": 1.0,
+      "propDensity": 1.0,
+      "balconies": true,
+      "chunkBuildMs": 7,
+      "minimapFps": 15,
+      "pedestrians": 28,
+      "pedLodDistance": 30,
+      "traffic": 12,
+      "parked": 8,
+      "posterDistance": 160
+    },
+    "high": {
+      "pixelRatioCap": 2.0,
+      "renderScale": 1.0,
+      "viewDistance": 430,
+      "antialias": true,
+      "wires": true,
+      "wireStrandScale": 1.0,
+      "propDensity": 1.0,
+      "balconies": true,
+      "chunkBuildMs": 10,
+      "minimapFps": 30,
+      "pedestrians": 40,
+      "pedLodDistance": 42,
+      "traffic": 18,
+      "parked": 12,
+      "posterDistance": 220
+    }
+  }
+}

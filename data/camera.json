@@ -1,0 +1,29 @@
+{
+  "_comment": "Vice-City style chase camera. distance/height in metres, angles in radians. followSpeed = how fast the camera swings back behind Shoumik when you are not dragging the view. 'driving' is used while Shoumik is in a vehicle; each vehicle type's 'camera' number (data/vehicles.json) scales distance and height.",
+  "fov": 62,
+  "near": 0.3,
+  "onFoot": {
+    "distance": 5.6,
+    "minDistance": 1.1,
+    "targetHeight": 1.55,
+    "pitch": 0.2,
+    "pitchMin": -0.25,
+    "pitchMax": 1.05,
+    "followSpeed": 1.5,
+    "followDelay": 1.2,
+    "positionSmooth": 12,
+    "wallPadding": 0.35
+  },
+  "driving": {
+    "distance": 7.2,
+    "minDistance": 2.2,
+    "targetHeight": 1.5,
+    "pitch": 0.24,
+    "pitchMin": -0.15,
+    "pitchMax": 1.0,
+    "followSpeed": 3.4,
+    "followDelay": 0.5,
+    "positionSmooth": 10,
+    "wallPadding": 0.4
+  }
+}

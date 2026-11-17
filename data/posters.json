@@ -1,0 +1,18 @@
+{
+  "_comment": "Posters and billboards around the city. How to add one in plain words: posters/README.md. Each poster: id (unique), image (a file in the posters/ folder), shape (wide = 2:1, 16:9, tall = 2:3 — it only appears in slots of that shape), link (opens in a new tab when the player taps the poster; leave empty for none), startDate / endDate (YYYY-MM-DD, both days included; empty = no limit), districts ('all' or a list of district ids from data/districts.json), weight (bigger = shown more often), active (false hides it). Empty slots show the default poster of their shape (settings.defaults). Loaded through the Content Service, so this list can later come from a Google Sheet.",
+  "source": { "type": "local" },
+  "settings": {
+    "defaults": { "wide": "posters/default-wide.jpg", "16:9": "posters/default-16x9.jpg", "tall": "posters/default-tall.jpg" },
+    "ledRotateSeconds": 10,
+    "lazyLoadDistance": 170,
+    "refreshDatesSeconds": 60,
+    "lookAngleDegrees": 28,
+    "openKeyHint": "F",
+    "vehicles": { "rickshawShare": 0.45, "busShare": 1, "checkEverySeconds": 0.5 }
+  },
+  "posters": [
+    { "id": "breaking-school-admission", "image": "posters/breaking-school-wide.jpg", "shape": "wide", "link": "", "startDate": "2026-11-01", "endDate": "2027-12-31", "districts": "all", "weight": 3, "active": true },
+    { "id": "breaking-biology-bone-class", "image": "posters/breaking-biology-tall.jpg", "shape": "tall", "link": "https://youtu.be/n9wUkCiCyD8", "startDate": "2026-11-01", "endDate": "2027-12-31", "districts": "all", "weight": 3, "active": true },
+    { "id": "breaking-city-earn", "image": "posters/breaking-city-led.jpg", "shape": "16:9", "link": "", "startDate": "2026-11-01", "endDate": "2027-12-31", "districts": "all", "weight": 2, "active": true }
+  ]
+}

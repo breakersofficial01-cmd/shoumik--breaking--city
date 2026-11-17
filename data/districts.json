@@ -1,0 +1,203 @@
+{
+  "_comment": "The districts of Breaking City (a compressed Dhaka). 'rect' is in big-block units (col/row from the north-west corner; see data/world.json grid). subdivide = small lanes cutting each block into sub-blocks. lot = size of one building plot in metres. density = share of plots that get a building (the rest are open/green). floors = building height range (bias > 1 means more low buildings). Colours are plain hex. 'areas' are lakes, parks and plazas that replace blocks; 'bridges' keep a road across the water between two neighbouring blocks [col,row].",
+  "districts": [
+    {
+      "id": "sher-e-bangla-nagar",
+      "name": { "en": "Sher-e-Bangla Nagar", "bn": "শেরেবাংলা নগর" },
+      "rect": { "col": 0, "row": 0, "cols": 7, "rows": 5 },
+      "subdivide": { "x": 1, "z": 1, "laneWidth": 7 },
+      "lot": { "min": 20, "max": 34, "gap": [2.5, 6] },
+      "density": 0.55,
+      "floors": { "min": 3, "max": 9, "bias": 1.6 },
+      "towerChance": 0.02,
+      "styles": { "residential": 0.35, "office": 0.55, "glass": 0.1, "old": 0 },
+      "shopChance": 0.15,
+      "balconyChance": 0.3,
+      "tankChance": 0.55,
+      "wireStrands": 2,
+      "streetTreeChance": 0.75,
+      "greenTreeDensity": 0.012,
+      "palette": {
+        "walls": ["#d9d2c2", "#c9c3b5", "#e3d8c0", "#b9b4a8", "#cfc0a6", "#d6cdbd"],
+        "shutters": ["#5d6f7c", "#7a8088", "#4f6a58"],
+        "signs": ["#2f6f4f", "#1f4f7a", "#8a2f2f", "#e0d9c5"],
+        "balcony": ["#a59f93", "#8f8a80"]
+      },
+      "minimapColor": "#4a5a4a"
+    },
+    {
+      "id": "gulshan-banani",
+      "name": { "en": "Gulshan / Banani", "bn": "গুলশান / বনানী" },
+      "rect": { "col": 7, "row": 0, "cols": 7, "rows": 5 },
+      "subdivide": { "x": 2, "z": 1, "laneWidth": 8 },
+      "lot": { "min": 17, "max": 28, "gap": [1.5, 4] },
+      "density": 0.9,
+      "floors": { "min": 5, "max": 18, "bias": 1.5 },
+      "towerChance": 0.1,
+      "styles": { "residential": 0.3, "office": 0.3, "glass": 0.4, "old": 0 },
+      "shopChance": 0.45,
+      "balconyChance": 0.45,
+      "tankChance": 0.4,
+      "wireStrands": 2,
+      "streetTreeChance": 0.6,
+      "greenTreeDensity": 0.01,
+      "palette": {
+        "walls": ["#e8e4da", "#cfd8dc", "#b8c7cf", "#e2d6c2", "#9fb4bf", "#d9d9d9", "#c2b59b"],
+        "shutters": ["#3d4a57", "#6b7178", "#2f3b45"],
+        "signs": ["#111111", "#f2efe6", "#0f5a6a", "#b0282e", "#d9a521"],
+        "balcony": ["#9aa7ad", "#7f8a90", "#c9c2b2"]
+      },
+      "minimapColor": "#4d5560"
+    },
+    {
+      "id": "dhanmondi-hatirjheel",
+      "name": { "en": "Dhanmondi / Hatirjheel", "bn": "ধানমন্ডি / হাতিরঝিল" },
+      "rect": { "col": 0, "row": 5, "cols": 14, "rows": 4 },
+      "subdivide": { "x": 2, "z": 2, "laneWidth": 7 },
+      "lot": { "min": 13, "max": 20, "gap": [0.8, 2.4] },
+      "density": 0.92,
+      "floors": { "min": 4, "max": 9, "bias": 1.1 },
+      "towerChance": 0.03,
+      "styles": { "residential": 0.7, "office": 0.2, "glass": 0.1, "old": 0 },
+      "shopChance": 0.4,
+      "balconyChance": 0.85,
+      "tankChance": 0.75,
+      "wireStrands": 3,
+      "streetTreeChance": 0.7,
+      "greenTreeDensity": 0.014,
+      "palette": {
+        "walls": ["#e6d3b3", "#d9b99b", "#c7a17f", "#e9e1cf", "#b9c4a7", "#d6a98c", "#cfc7b6", "#e0c9a6", "#a9b8c2"],
+        "shutters": ["#4a6a8a", "#5a7d5a", "#7b7b7b", "#8a5a3c"],
+        "signs": ["#c0392b", "#1e6f9f", "#f1c40f", "#27ae60", "#f2efe6", "#8e44ad"],
+        "balcony": ["#b08a6a", "#8f7a66", "#a8a091", "#6f6a62"]
+      },
+      "minimapColor": "#5a5148"
+    },
+    {
+      "id": "shahbag-campus",
+      "name": { "en": "Shahbag / Campus", "bn": "শাহবাগ / ক্যাম্পাস" },
+      "rect": { "col": 0, "row": 9, "cols": 7, "rows": 4 },
+      "subdivide": { "x": 1, "z": 2, "laneWidth": 7 },
+      "lot": { "min": 18, "max": 30, "gap": [2, 5] },
+      "density": 0.68,
+      "floors": { "min": 2, "max": 6, "bias": 1.2 },
+      "towerChance": 0.01,
+      "styles": { "residential": 0.35, "office": 0.45, "glass": 0.02, "old": 0.18 },
+      "shopChance": 0.35,
+      "balconyChance": 0.4,
+      "tankChance": 0.6,
+      "wireStrands": 3,
+      "streetTreeChance": 0.85,
+      "greenTreeDensity": 0.02,
+      "palette": {
+        "walls": ["#b5533c", "#c4694d", "#e3d9c4", "#d8ccb4", "#a8452f", "#cbbf9f", "#e9e2d0"],
+        "shutters": ["#3f5f7f", "#5f6f5f", "#7a6a5a"],
+        "signs": ["#f2efe6", "#1a5276", "#922b21", "#196f3d"],
+        "balcony": ["#8a5a48", "#a89f8f"]
+      },
+      "minimapColor": "#4f5a44"
+    },
+    {
+      "id": "motijheel-central",
+      "name": { "en": "Motijheel / Central", "bn": "মতিঝিল / কেন্দ্র" },
+      "rect": { "col": 7, "row": 9, "cols": 7, "rows": 4 },
+      "subdivide": { "x": 1, "z": 2, "laneWidth": 7 },
+      "lot": { "min": 16, "max": 27, "gap": [0.8, 3] },
+      "density": 0.95,
+      "floors": { "min": 6, "max": 22, "bias": 1.4 },
+      "towerChance": 0.08,
+      "styles": { "residential": 0.1, "office": 0.65, "glass": 0.25, "old": 0 },
+      "shopChance": 0.7,
+      "balconyChance": 0.1,
+      "tankChance": 0.5,
+      "wireStrands": 4,
+      "streetTreeChance": 0.25,
+      "greenTreeDensity": 0.006,
+      "palette": {
+        "walls": ["#c9c4b8", "#b3aea2", "#d6cfbf", "#9da3a6", "#bfb49d", "#a79f92", "#d2c7ad", "#8f9a9f"],
+        "shutters": ["#566573", "#7b7d7d", "#34495e", "#5d6d5d"],
+        "signs": ["#c0392b", "#1f618d", "#f4d03f", "#1e8449", "#f2efe6", "#111111"],
+        "balcony": ["#8a857b", "#a39d90"]
+      },
+      "minimapColor": "#565656"
+    },
+    {
+      "id": "old-dhaka",
+      "name": { "en": "Old Dhaka", "bn": "পুরান ঢাকা" },
+      "rect": { "col": 0, "row": 13, "cols": 14, "rows": 3 },
+      "subdivide": { "x": 3, "z": 3, "laneWidth": 4.5 },
+      "lot": { "min": 6.5, "max": 12, "gap": [0.05, 0.4] },
+      "density": 0.97,
+      "floors": { "min": 2, "max": 6, "bias": 1.2 },
+      "towerChance": 0,
+      "styles": { "residential": 0.45, "office": 0.05, "glass": 0, "old": 0.5 },
+      "shopChance": 0.9,
+      "balconyChance": 0.7,
+      "tankChance": 0.85,
+      "wireStrands": 6,
+      "streetTreeChance": 0.12,
+      "greenTreeDensity": 0.004,
+      "palette": {
+        "walls": ["#d98c6a", "#e2b17a", "#c96f5a", "#e6cfa0", "#9fc2b0", "#d4a0a0", "#b7c49a", "#e0d2b8", "#c7b07a", "#8fb3c9", "#d9a15c", "#b98b73"],
+        "shutters": ["#2f6f9f", "#3f8f5f", "#8a8a8a", "#a0522d", "#356a6a"],
+        "signs": ["#d62828", "#f4b400", "#0b7a4b", "#1565c0", "#f2efe6", "#e85d04", "#6a1b9a"],
+        "balcony": ["#8a5f45", "#6f7f72", "#9a8a70", "#5f5f5f"]
+      },
+      "minimapColor": "#6a5140"
+    }
+  ],
+  "areas": [
+    {
+      "id": "dhanmondi-lake",
+      "type": "water",
+      "name": { "en": "Dhanmondi Lake", "bn": "ধানমন্ডি লেক" },
+      "rects": [
+        { "col": 2, "row": 5, "cols": 1, "rows": 2 },
+        { "col": 3, "row": 6, "cols": 1, "rows": 3 }
+      ],
+      "bridges": [ [[3, 6], [3, 7]] ]
+    },
+    {
+      "id": "hatirjheel",
+      "type": "water",
+      "name": { "en": "Hatirjheel", "bn": "হাতিরঝিল" },
+      "rects": [
+        { "col": 8, "row": 6, "cols": 5, "rows": 1 },
+        { "col": 8, "row": 7, "cols": 2, "rows": 1 }
+      ],
+      "bridges": [ [[9, 6], [10, 6]], [[11, 6], [12, 6]] ]
+    },
+    {
+      "id": "sangsad-grounds",
+      "type": "plaza",
+      "_comment": "Kept empty for Jatiya Sangsad Bhaban (Session 4).",
+      "name": { "en": "Sangsad Grounds", "bn": "সংসদ ভবন চত্বর" },
+      "rects": [ { "col": 2, "row": 1, "cols": 2, "rows": 2 } ],
+      "bridges": []
+    },
+    {
+      "id": "chandrima-udyan",
+      "type": "park",
+      "name": { "en": "Chandrima Udyan", "bn": "চন্দ্রিমা উদ্যান" },
+      "rects": [ { "col": 2, "row": 0, "cols": 2, "rows": 1 } ],
+      "bridges": []
+    },
+    {
+      "id": "suhrawardy-udyan",
+      "type": "park",
+      "name": { "en": "Suhrawardy Udyan", "bn": "সোহরাওয়ার্দী উদ্যান" },
+      "rects": [ { "col": 4, "row": 10, "cols": 2, "rows": 2 } ],
+      "bridges": []
+    }
+  ],
+  "areaTypes": {
+    "park": { "treeDensity": 0.02, "minimapColor": "#3f7a3a" },
+    "plaza": { "treeDensity": 0.0015, "minimapColor": "#9a9080" },
+    "water": { "minimapColor": "#3d7fb0" }
+  },
+  "river": {
+    "id": "buriganga",
+    "name": { "en": "Buriganga River", "bn": "বুড়িগঙ্গা নদী" },
+    "side": "south"
+  }
+}

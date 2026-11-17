@@ -1,0 +1,166 @@
+{
+  "_comment": "How the landmarks look. WHERE each one stands is in data/places.json (the 'landmark' part of a place). types = colours and a few sizes (metres) for each landmark model; ground = what the plot is paved with (plaza / grass / lot); trees = lawn trees as [x, z] metres from the plot centre (+z = towards the landmark's front). bigSign makes the huge glowing name sign (background = top and bottom colour). lakes = boats and bridge lights for the lakes of data/districts.json. viaducts = MRT Line 6 and the elevated expressway: path is a list of road junctions [col,row] (see the map in docs/GAME_SPEC.md; values outside 0..14 / 0..16 run the line out of the city), stations 'at' the same kind of position. marker = the glowing entrance ring in front of Breaking School and Breaking Biology.",
+  "viewMargin": 40,
+  "signs": {
+    "atlasSize": 1024,
+    "big": { "heightShare": 0.19 },
+    "board": { "columns": 3, "maxAspect": 0.26, "background": "#12382b", "border": "#e8e2cf", "text": "#ffffff", "subText": "#ffe9a8" }
+  },
+  "marker": {
+    "_comment": "radius/height of the glowing ring, how fast it turns (turns per second) and bobs, and how close Shoumik must stand (enterRadius).",
+    "radius": 1.7,
+    "height": 2.4,
+    "color": "#ff4fb0",
+    "color2": "#ffe14a",
+    "spin": 0.35,
+    "bob": 0.25,
+    "enterRadius": 2.3,
+    "visibleDistance": 140
+  },
+  "types": {
+    "sangsad": {
+      "ground": "plaza", "height": 34, "lakeHalf": 50,
+      "water": "#4c8f96", "plinth": "#a79f90", "concrete": "#b9b4a6", "concreteLight": "#cfcabc", "hole": "#2b2a2c",
+      "brick": "#a5503c", "brickDark": "#7d3a2b", "lampPost": "#4a4d52", "lamp": "#ffe9b0"
+    },
+    "shaheedMinar": {
+      "ground": "plaza", "platformHeight": 1.2, "frameHeight": 14, "sunRadius": 4.6,
+      "lawn": "#4f7d3a", "path": "#b9a48a", "brick": "#a9483a", "brickDark": "#823426", "marble": "#f2efe6", "sun": "#d81f26",
+      "lampPost": "#4a4d52", "lamp": "#ffe9b0",
+      "trees": [[-33, -32], [-22, -33], [22, -33], [33, -32], [-34, -10], [34, -10], [-34, 12], [34, 12]]
+    },
+    "shaplaChattar": {
+      "ground": "plaza", "basinRadius": 11, "towerHeight": 62,
+      "basin": "#d9d4c6", "water": "#58a7b3", "stem": "#3f7a45", "petal": "#fbf7ef", "petalShade": "#d9cfc0", "petalInner": "#ffe3ea", "bud": "#f2c230", "jet": "#c9f4ff",
+      "towerA": "#c9c4b8", "towerB": "#9fb4bf", "roof": "#6f6a64", "lampPost": "#4a4d52", "lamp": "#ffe9b0"
+    },
+    "curzonHall": {
+      "ground": "plaza",
+      "lawn": "#4f7d3a", "path": "#c4ad8e", "brick": "#a8402f", "roof": "#7a3024", "shadow": "#2a1512", "trim": "#e6d9c2", "dome": "#8f3327",
+      "trees": [[-30, 14], [-30, 30], [-14, 22], [14, 22], [30, 14], [-22, 33]]
+    },
+    "dhakaUniversity": {
+      "ground": "plaza",
+      "lawn": "#4f7d3a", "path": "#c4ad8e", "wall": "#e9e4d6", "trim": "#f6f3ea", "plinth": "#8d8679", "statue": "#6e675c",
+      "trees": [[-30, 8], [-30, 24], [-16, 30], [16, 10], [30, 8], [30, 22], [-16, 12]]
+    },
+    "tsc": {
+      "ground": "plaza",
+      "lawn": "#4f7d3a", "path": "#c4ad8e", "wall": "#efece2", "wallWarm": "#e6d7b8", "shell": "#d8d3c6", "shadow": "#2c2a28", "trim": "#fbf9f2", "shrine": "#e3b63a",
+      "trees": [[-30, 30], [-12, 14], [2, 30], [34, 30], [-33, 2]]
+    },
+    "dhakaMedical": {
+      "ground": "plaza",
+      "forecourt": "#8f8a80", "wall": "#eadfc4", "trim": "#f7f1e1", "shadow": "#2e2a25", "roof": "#8a4a38", "emergency": "#c62828", "emergencyGlow": "#ff5a4f",
+      "trees": [[-33, 14], [-33, 28], [33, 28]]
+    },
+    "buet": {
+      "ground": "plaza",
+      "lawn": "#4f7d3a", "path": "#c4ad8e", "brick": "#a4472f", "band": "#ece6d8", "roof": "#6f6a64", "concrete": "#b5afa2",
+      "trees": [[-30, 12], [-30, 26], [-16, 20], [12, 22], [26, 28]]
+    },
+    "notreDame": {
+      "ground": "plaza",
+      "field": "#4d8a3c", "line": "#f2f2ea", "wall": "#f0e6cc", "trim": "#fbf6e6", "roof": "#8a4a38", "shadow": "#2e2a25",
+      "trees": [[-30, 34], [30, 34]]
+    },
+    "ssmc": {
+      "ground": "plaza",
+      "forecourt": "#8f8a80", "lawn": "#4f7d3a", "wall": "#e2b85a", "shadow": "#2e2418", "tile": "#a8432e", "tileDark": "#7d3122", "trim": "#f4ead0", "newWall": "#dfe7e1", "band": "#3f8f6a",
+      "trees": [[-30, 14], [-30, 28], [30, 14], [-10, 33]]
+    },
+    "ahsanManzil": {
+      "ground": "plaza",
+      "lawn": "#4f7d3a", "path": "#c9b79c", "pink": "#de7f8c", "roof": "#8c4b52", "shadow": "#3a1e24", "trim": "#fff4ee", "dome": "#c9606f", "stair": "#e9ddd0", "lampPost": "#4a4d52", "lamp": "#ffe9b0",
+      "trees": [[-32, 12], [-32, 26], [-18, 20], [18, 12], [32, 14], [32, 24]]
+    },
+    "lalbaghFort": {
+      "ground": "plaza", "wallHeight": 4.6, "gateHeight": 12.5,
+      "lawn": "#56853d", "water": "#5aa3ad", "path": "#c9b79c", "red": "#a14a36", "redDark": "#7c3526", "shadow": "#28130e", "marble": "#f1ede2", "plinth": "#cfc7b6", "tombDome": "#4a3b33", "plaster": "#d9c7a8",
+      "trees": [[-14, -24], [14, -24], [-14, 18], [14, 18], [-26, 22], [26, 22], [-26, -26], [26, -26]]
+    },
+    "sadarghat": {
+      "ground": "plaza",
+      "wall": "#e8eef2", "roof": "#2f6f9f", "band": "#1f5f8f", "shadow": "#1e2a33", "counter": "#c9b98f", "pontoon": "#5b6066", "pontoonTop": "#8a8f96", "gangway": "#9a8a6a",
+      "deck": "#d9d2c0", "cabin": "#f4f4f0", "funnel": "#d8a016", "funnelBand": "#1b1b1e", "hullA": "#7a1f1f", "hullB": "#1f3f6f", "hullC": "#1f5a3a",
+      "wood": "#4a3222", "woodLight": "#7a5a3c", "thatch": "#b99a5a"
+    },
+    "nilkhet": {
+      "ground": "lot",
+      "wall": "#b9b0a0", "roofs": ["#6f7f8a", "#8a5a44", "#5f7a6a", "#7a7468"],
+      "books": ["#c0392b", "#1e6f9f", "#f1c40f", "#27ae60", "#8e44ad", "#e67e22", "#ecf0f1", "#16a085", "#d35400", "#2c3e50"],
+      "lampPost": "#4a4d52", "lamp": "#ffe9b0"
+    },
+    "breakingSchool": {
+      "ground": "plaza", "floors": 9,
+      "bigSign": { "background": ["#2a0a4a", "#0c1036"], "text": "#ffffff", "accent": "#ff4fb0" },
+      "forecourt": "#3a3550", "neonA": "#ff4fb0", "neonB": "#36e6ff", "glass": "#7f9cc9", "roof": "#2b2a33", "podium": "#1d1b2b", "door": "#bff3ff", "step": "#8e8aa6", "signBack": "#120a24", "beacon": "#ff2a2a"
+    },
+    "breakingBiology": {
+      "ground": "plaza", "floors": 8,
+      "bigSign": { "background": ["#053d2c", "#06231f"], "text": "#ffffff", "accent": "#8dff5a" },
+      "forecourt": "#30493f", "neonA": "#8dff5a", "neonB": "#ffe14a", "glass": "#8fc9a8", "roof": "#243029", "podium": "#12241d", "door": "#e6ffd0", "step": "#8aa698", "signBack": "#06231a", "beacon": "#ff2a2a"
+    },
+    "gulshanTowers": {
+      "ground": "plaza", "heights": [96, 118, 72, 84],
+      "podium": "#3d4a57", "roof": "#4a4d52", "neon": "#36e6ff", "fin": "#d9dee2", "beacon": "#ff2a2a", "glassA": "#8fb0c4", "glassB": "#a8c4d4", "glassC": "#c7d9cf", "plaza": "#a8a296"
+    },
+    "karwanBazar": {
+      "ground": "lot", "towerHeight": 74,
+      "post": "#5c564e", "roofA": "#7f8a8f", "roofB": "#8a5a44", "glass": "#9fc4d4", "roof": "#5a5650", "beacon": "#ff2a2a", "office": "#bfb49d",
+      "goods": ["#c0392b", "#2e8b57", "#e6a817", "#8b5a2b", "#d9d2b8", "#6b8e23", "#b5651d", "#e67e22"]
+    }
+  },
+  "lakes": {
+    "dhanmondi-lake": {
+      "boats": 7, "boatColors": ["#ffffff", "#ff7aa8", "#ffd84a", "#6fd3ff"], "boatDeck": "#e8e2d0", "canopy": "#e2483f",
+      "style": "lamps", "lampSpacing": 20, "lampHeight": 4.6, "lampPost": "#3a3d42", "lamp": "#ffe9b0",
+      "lights": ["#ffe14a", "#ff7aa8", "#6fd3ff"]
+    },
+    "hatirjheel": {
+      "boats": 5, "boatColors": ["#ffffff", "#ffd84a", "#6fd3ff"], "boatDeck": "#e8e2d0", "canopy": "#2f7fd0",
+      "style": "arches", "archHeight": 9, "arch": "#f4f4f0", "cable": "#d0d4d8",
+      "lampSpacing": 13.5, "lampHeight": 5, "lampPost": "#e4e4e0", "lamp": "#fff1c4",
+      "lights": ["#ff4fb0", "#36e6ff", "#ffe14a", "#8dff5a", "#ff7a3a"]
+    }
+  },
+  "viaductColors": {
+    "rail": { "deck": "#6f6c68", "concrete": "#c9c5bb", "under": "#9a968c", "pillar": "#c2beb4", "rail": "#2e2e31", "mast": "#7d8288", "platform": "#d8d2c2", "stationWall": "#e9ecee", "stationGlow": "#bfefff", "roof": "#3f8f6a" },
+    "road": { "deck": "#3d3c40", "concrete": "#bdb8ad", "under": "#8f8b82", "pillar": "#b5b0a5", "mast": "#6f7378", "lamp": "#ffe9b0" }
+  },
+  "viaducts": [
+    {
+      "id": "mrt-line-6",
+      "kind": "rail",
+      "name": { "en": "MRT Line 6", "bn": "এমআরটি লাইন ৬" },
+      "path": [[4, -0.7], [4, 10], [11, 10], [11, 11.95]],
+      "cornerRadius": 20,
+      "deckY": 9.2, "deckWidth": 8.6, "deckThickness": 1.2, "parapet": 1.0,
+      "step": 8, "sectionLength": 128, "mastEvery": 4,
+      "pillar": { "width": 0.9, "length": 1.7, "head": 1.5, "collider": 0.7, "perBlock": 4, "fromJunction": 12 },
+      "station": { "length": 58, "platform": 3.2, "roofHeight": 5.6, "roofRise": 2.3, "legOffset": 8.6 },
+      "stations": [
+        { "id": "mrt-bijoy-sarani", "name": { "en": "Bijoy Sarani Station", "bn": "বিজয় সরণি স্টেশন" }, "at": [4, 2.5] },
+        { "id": "mrt-shahbag", "name": { "en": "Shahbag Station", "bn": "শাহবাগ স্টেশন" }, "at": [4, 9.5] },
+        { "id": "mrt-karwan-bazar", "name": { "en": "Karwan Bazar Station", "bn": "কারওয়ান বাজার স্টেশন" }, "at": [8.5, 10] },
+        { "id": "mrt-motijheel", "name": { "en": "Motijheel Station", "bn": "মতিঝিল স্টেশন" }, "at": [11, 11.5] }
+      ],
+      "train": {
+        "_comment": "count = trains (each shuttles up and down its own track). Speeds in metres per second.",
+        "count": 2, "cars": 4, "carLength": 15.5, "carWidth": 2.9, "carHeight": 3.5, "gap": 0.7, "trackOffset": 1.9,
+        "speed": 17, "acceleration": 2.4, "stopSeconds": 7, "visibleDistance": 420,
+        "body": "#eef0f2", "stripeA": "#c62828", "stripeB": "#1e8a4c", "window": "#1d2a36", "roof": "#b9bcc2", "under": "#2b2b2e", "headlight": "#fff3c4"
+      }
+    },
+    {
+      "id": "elevated-expressway",
+      "kind": "road",
+      "name": { "en": "Elevated Expressway", "bn": "এলিভেটেড এক্সপ্রেসওয়ে" },
+      "path": [[13, -0.7], [13, 9], [14.7, 9]],
+      "cornerRadius": 24,
+      "deckY": 8.4, "deckWidth": 9.6, "deckThickness": 1.1, "parapet": 0.9,
+      "step": 8, "sectionLength": 128, "mastEvery": 4,
+      "pillar": { "width": 0.9, "length": 1.9, "head": 1.5, "collider": 0.7, "perBlock": 4, "fromJunction": 12 }
+    }
+  ]
+}

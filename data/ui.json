@@ -1,9 +1,10 @@
 {
-  "_comment": "UI look settings. Bangla text (questions, options, explanations, Bangla UI) uses fonts.bn. If the custom font file is missing, the game silently uses the fallback stack (Hind Siliguri from Google Fonts, then Noto Sans Bengali). To activate Li Ador Noirrit, place the licensed file at the path below — no code change needed.",
+  "_comment": "UI look settings. Bangla text (questions, options, explanations, Bangla UI) uses fonts.bn. Li Ador Noirrit is NOT in the repo yet (licence pending), so fonts.bn.fileInstalled is false and the game uses the fallback (Hind Siliguri from Google Fonts, then Noto Sans Bengali, then the phone's own Bangla font). To activate Li Ador Noirrit: put the licensed file at fonts.bn.file and set fileInstalled to true — no code change needed.",
   "fonts": {
     "bn": {
       "family": "Li Ador Noirrit",
       "file": "assets/fonts/LiAdorNoirrit-Regular.ttf",
+      "fileInstalled": false,
       "fallback": "'Hind Siliguri', 'Noto Sans Bengali', sans-serif",
       "googleFontsFallbackUrl": "https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap"
     },
@@ -13,5 +14,29 @@
     }
   },
   "defaultLanguage": "bn",
-  "questionLanguage": "bn"
+  "questionLanguage": "bn",
+  "hud": {
+    "_comment": "digits: 'language' = Bangla digits when the game is in Bangla.",
+    "digits": "language",
+    "districtToastSeconds": 3.5
+  },
+  "minimap": {
+    "_comment": "size in px on screen, range = metres shown from centre to edge, pixelsPerMetre = sharpness of the pre-drawn city map.",
+    "size": 132,
+    "range": 150,
+    "pixelsPerMetre": 0.5,
+    "rotate": true,
+    "colors": {
+      "background": "#2a2a2e",
+      "road": "#8a8a8e",
+      "lane": "#6a6a6c",
+      "block": "#3d3d42",
+      "player": "#ffffff",
+      "border": "#111111"
+    }
+  },
+  "loading": {
+    "minMilliseconds": 600,
+    "fontTimeoutMs": 3000
+  }
 }

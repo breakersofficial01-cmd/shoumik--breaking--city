@@ -1,0 +1,30 @@
+{
+  "_comment": "Named places of Breaking City. Every place is a destination for hired rickshaw / CNG rides (ride:true) and has a rickshaw + CNG stand. col/row = the ROAD JUNCTION next to the place (junction 0,0 is the north-west corner of the city; see the map in docs/GAME_SPEC.md). LANDMARK (optional) puts a landmark building there: type = which model (colours in data/landmarks.json → types), block = [col,row] of the city BLOCK it stands on (block col,row lies south-east of junction col,row) or area = the id of a plaza in data/districts.json, facing = which way its front looks (N, S, E, W). One landmark per block. Loaded through the Content Service; a bad row is skipped, never crashes the game.",
+  "source": { "type": "local" },
+  "places": [
+    { "id": "shahbag", "name": { "en": "Shahbag", "bn": "শাহবাগ" }, "col": 3, "row": 10, "ride": true },
+    { "id": "tsc", "name": { "en": "TSC", "bn": "টিএসসি" }, "col": 4, "row": 10, "ride": true, "landmark": { "type": "tsc", "block": [3, 10], "facing": "E" } },
+    { "id": "breaking-school", "name": { "en": "Breaking School", "bn": "ব্রেকিং স্কুল" }, "col": 2, "row": 11, "ride": true, "landmark": { "type": "breakingSchool", "block": [2, 11], "facing": "N" } },
+    { "id": "shaheed-minar", "name": { "en": "Shaheed Minar", "bn": "শহীদ মিনার" }, "col": 3, "row": 11, "ride": true, "landmark": { "type": "shaheedMinar", "block": [3, 11], "facing": "N" } },
+    { "id": "dhaka-university", "name": { "en": "Dhaka University", "bn": "ঢাকা বিশ্ববিদ্যালয়" }, "col": 4, "row": 12, "ride": true, "landmark": { "type": "dhakaUniversity", "block": [4, 12], "facing": "N" } },
+    { "id": "curzon-hall", "name": { "en": "Curzon Hall", "bn": "কার্জন হল" }, "col": 5, "row": 12, "ride": true, "landmark": { "type": "curzonHall", "block": [5, 12], "facing": "N" } },
+    { "id": "dhaka-medical", "name": { "en": "Dhaka Medical College", "bn": "ঢাকা মেডিকেল কলেজ" }, "col": 6, "row": 12, "ride": true, "landmark": { "type": "dhakaMedical", "block": [6, 12], "facing": "N" } },
+    { "id": "buet", "name": { "en": "BUET", "bn": "বুয়েট" }, "col": 6, "row": 11, "ride": true, "landmark": { "type": "buet", "block": [6, 11], "facing": "W" } },
+    { "id": "nilkhet", "name": { "en": "Nilkhet", "bn": "নীলক্ষেত" }, "col": 1, "row": 12, "ride": true, "landmark": { "type": "nilkhet", "block": [1, 12], "facing": "N" } },
+    { "id": "breaking-biology", "name": { "en": "Breaking Biology Institution", "bn": "ব্রেকিং বায়োলজি ইনস্টিটিউশন" }, "col": 5, "row": 7, "ride": true, "landmark": { "type": "breakingBiology", "block": [5, 7], "facing": "N" } },
+    { "id": "dhanmondi-lake", "name": { "en": "Dhanmondi Lake", "bn": "ধানমন্ডি লেক" }, "col": 2, "row": 5, "ride": true },
+    { "id": "hatirjheel", "name": { "en": "Hatirjheel", "bn": "হাতিরঝিল" }, "col": 10, "row": 6, "ride": true },
+    { "id": "sangsad-bhaban", "name": { "en": "Jatiya Sangsad Bhaban", "bn": "জাতীয় সংসদ ভবন" }, "col": 2, "row": 3, "ride": true, "landmark": { "type": "sangsad", "area": "sangsad-grounds", "facing": "S", "clear": [56, -56, 84] } },
+    { "id": "gulshan", "name": { "en": "Gulshan Circle", "bn": "গুলশান চত্বর" }, "col": 10, "row": 2, "ride": true, "landmark": { "type": "gulshanTowers", "block": [10, 2], "facing": "N" } },
+    { "id": "banani", "name": { "en": "Banani", "bn": "বনানী" }, "col": 8, "row": 3, "ride": true },
+    { "id": "farmgate", "name": { "en": "Farmgate", "bn": "ফার্মগেট" }, "col": 8, "row": 9, "ride": true },
+    { "id": "karwan-bazar", "name": { "en": "Karwan Bazar", "bn": "কারওয়ান বাজার" }, "col": 9, "row": 10, "ride": true, "landmark": { "type": "karwanBazar", "block": [9, 10], "facing": "N" } },
+    { "id": "shapla-chattar", "name": { "en": "Shapla Chattar", "bn": "শাপলা চত্বর" }, "col": 11, "row": 11, "ride": true, "landmark": { "type": "shaplaChattar", "block": [11, 11], "facing": "N" } },
+    { "id": "notre-dame", "name": { "en": "Notre Dame College", "bn": "নটর ডেম কলেজ" }, "col": 12, "row": 12, "ride": true, "landmark": { "type": "notreDame", "block": [12, 12], "facing": "N" } },
+    { "id": "police-hq", "name": { "en": "Police Headquarters", "bn": "পুলিশ হেডকোয়ার্টার্স" }, "col": 10, "row": 12, "ride": true },
+    { "id": "ssmc", "name": { "en": "Sir Salimullah Medical College", "bn": "স্যার সলিমুল্লাহ মেডিকেল কলেজ" }, "col": 9, "row": 15, "ride": true, "landmark": { "type": "ssmc", "block": [9, 15], "facing": "N" } },
+    { "id": "ahsan-manzil", "name": { "en": "Ahsan Manzil", "bn": "আহসান মঞ্জিল" }, "col": 5, "row": 15, "ride": true, "landmark": { "type": "ahsanManzil", "block": [5, 15], "facing": "S" } },
+    { "id": "lalbagh-fort", "name": { "en": "Lalbagh Fort", "bn": "লালবাগ কেল্লা" }, "col": 2, "row": 14, "ride": true, "landmark": { "type": "lalbaghFort", "block": [2, 14], "facing": "S" } },
+    { "id": "sadarghat", "name": { "en": "Sadarghat", "bn": "সদরঘাট" }, "col": 7, "row": 16, "ride": true, "landmark": { "type": "sadarghat", "block": [7, 15], "facing": "S" } }
+  ]
+}
