@@ -6,6 +6,7 @@
 // Look: data/landmarks.json → marker.
 
 import * as THREE from 'three';
+import { markGlow } from '../../world/graphics/glow.js';
 import { pickName, t } from '../../ui/i18n.js';
 
 let game = null;
@@ -20,9 +21,9 @@ let offs = [];
 function makeMarker(m) {
   const group = new THREE.Group();
   group.name = `entrance-${m.id}`;
-  const ring = new THREE.Mesh(new THREE.TorusGeometry(cfg.radius, 0.09, 4, 20), new THREE.MeshBasicMaterial({ color: cfg.color }));
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(cfg.radius, 0.09, 4, 20), markGlow(new THREE.MeshBasicMaterial({ color: cfg.color }), 'marker'));
   ring.rotation.x = Math.PI / 2;
-  const inner = new THREE.Mesh(new THREE.TorusGeometry(cfg.radius * 0.62, 0.06, 4, 16), new THREE.MeshBasicMaterial({ color: cfg.color2 }));
+  const inner = new THREE.Mesh(new THREE.TorusGeometry(cfg.radius * 0.62, 0.06, 4, 16), markGlow(new THREE.MeshBasicMaterial({ color: cfg.color2 }), 'marker'));
   inner.rotation.x = Math.PI / 2;
   const beam = new THREE.Mesh(
     new THREE.CylinderGeometry(cfg.radius, cfg.radius, cfg.height, 16, 1, true),

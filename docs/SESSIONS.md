@@ -89,6 +89,21 @@ People:
 - Lazy-load textures near the player. "Tap to open" when near and looking at a poster.
 - 3 sample posters and `posters/README.md` (sizes, how to add one, in plain words).
 
+## Session 4.5 — Visual upgrade to Gangstar Vegas level (owner-approved 2026-11-18)
+Done in parts, each one leaves the game runnable:
+- **Part A — Lighting and graphics (no new art needed):** filmic tone mapping, real sun
+  shadows that follow the player, bloom so neon and the sunset glow, colour grading
+  (saturation, contrast, warmth, vignette), water reflecting the sky, stronger neon. All values
+  in `data/graphics.json`; per-quality switches in `data/quality.json`.
+- **Part B — Real Shoumik:** owner supplies a Rodin/Meshy model rigged on Mixamo (FBX T-pose +
+  animation FBXs). Convert to one compressed GLB, load through the asset registry, map the
+  animations onto the existing animation names. Code-built Shoumik stays as the Low fallback.
+- **Part C — Real cars and buildings:** owner supplies FBX/GLB packs (web-game licence).
+  Swap sedan/SUV/sports car/motorbike/police/ambulance/bus models and add modern building and
+  street-prop models district by district. Rickshaws, CNGs, legunas and landmarks stay
+  code-built but get better materials. Compress (Draco/Meshopt, KTX2) and load per district;
+  keep the first download small.
+
 ## Session 5 — Classes, Lesson Check, money and shops
 Class Mode (`src/features/classes/`), opened at the entrance of Breaking School or Breaking
 Biology Institution — a mobile-friendly HTML overlay:

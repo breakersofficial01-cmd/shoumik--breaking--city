@@ -16,6 +16,7 @@
 //            hotspot:entered { id } / hotspot:left { id }
 
 import * as THREE from 'three';
+import { markGlow } from '../../world/graphics/glow.js';
 import { log, debugLine } from '../../core/debug.js';
 import { Rng } from '../../core/rng.js';
 import { isRaised } from '../../world/layout.js';
@@ -127,7 +128,7 @@ export default {
     boombox = new Boombox();
     materials = {
       lit: new THREE.MeshLambertMaterial({ vertexColors: true }),
-      neon: new THREE.MeshBasicMaterial({ vertexColors: true }), // unlit = glows
+      neon: markGlow(new THREE.MeshBasicMaterial({ vertexColors: true }), 'glow'), // unlit = glows
     };
     root = new THREE.Group();
     root.name = 'hotspots';

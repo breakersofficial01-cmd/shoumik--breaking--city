@@ -4,8 +4,8 @@ What the game is and what exists **right now**. Updated at the end of every sess
 Rules live in `/CLAUDE.md`; the build plan in `docs/SESSIONS.md`; how the code is organised
 in `docs/HANDOFF.md`.
 
-Status: **Session 4 of 8 done** (engine, city, foundations, Shoumik, people, vehicles, traffic,
-landmarks, MRT, posters).
+Status: **Session 4 of 8 done + Session 4.5 Part A** (engine, city, foundations, Shoumik, people,
+vehicles, traffic, landmarks, MRT, posters; upgraded lighting, shadows, neon glow).
 
 ---
 
@@ -138,8 +138,14 @@ Posters come from `data/posters.json` (dates, districts, weights, links; guide i
 75 / 160 / 220 m (Low / Medium / High). Empty slots show "এখানে আপনার বিজ্ঞাপন".
 
 ## 4. Look
-- PS2-era: low-poly, vertex colours, two 512×64 texture atlases painted in code, nearest
-  filtering up close, distance fog, no real-time shadows (blob shadow under Shoumik).
+- Target since Session 4.5 (owner-approved): **Gangstar Vegas-level mobile open world**.
+  Models are still the code-built low-poly ones until real 3D art arrives (Parts B and C).
+- Part A (done): filmic ACES tone mapping; strong warm sun with real shadows that follow the
+  player (Medium 1024 px map, High 2048 soft; Low has none); neon strips, entrance rings and
+  landmark name boards glow (bloom); colour grade (saturation, contrast, warmth, vignette);
+  lakes and the river reflect the sunset sky. Every value is in `data/graphics.json`.
+- Two 512×64 texture atlases painted in code, nearest filtering up close, distance fog, blob
+  shadow under Shoumik and people (kept for contact shadows).
 - Permanent warm sunset for now (purple → pink → orange sky, low orange sun). Day/night comes
   in Session 7.
 - Buildings: window bays on street sides, blank plaster side walls, ground-floor shutters with
@@ -255,9 +261,15 @@ Target: 30+ fps on a mid-range Android (4 GB RAM), landscape, Chrome.
 
 | Quality | Sharpness cap | View distance | Notes |
 |---|---|---|---|
-| কম (low) | 0.8× | 210 m | no balconies, fewer props and wires |
-| মাঝারি (medium, default) | 1.25× | 300 m | |
-| বেশি (high) | 2× | 430 m | smooth edges (after reload) |
+| কম (low) | 0.8× | 210 m | no balconies, fewer props and wires; tone mapping only (no shadows, no bloom) |
+| মাঝারি (medium, default) | 1.25× | 300 m | sun shadows (1024), bloom, colour grade |
+| বেশি (high) | 2× | 430 m | soft sun shadows (2048), bloom, colour grade, 4× anti-aliasing |
+
+Session 4.5 Part A (headless, software rendering): Shahbag start corner about 89 draw calls on
+Low, ~190 on Medium, ~210 on High (shadows draw nearby things a second time). In the software
+renderer Medium/High are too slow for the time-based vehicle/poster tests, which pass on Low;
+**real-phone FPS on Medium must be checked** — if it is under 30, use কম or tune
+`data/quality.json`.
 
 With landmarks and posters (Session 4) the headless test (software rendering, 915×412) shows about
 84 draw calls / 64k triangles on Low and ~127 / 122k on Medium at the Shahbag start corner, the

@@ -271,3 +271,41 @@ Known issues
   top of the Session 3 branch, so it contains Sessions 1–4.
 
 Next: Session 5 (classes, Lesson Check, money and shops).
+
+## 2026-11-18 — Session 4.5 Part A: lighting and graphics upgrade (Claude Opus 5.5)
+Owner approved moving the look from "PS2 era" to **Gangstar Vegas level** (rule changed in
+`CLAUDE.md`; Session 4.5 added to `docs/SESSIONS.md`). Also: Sessions 1–4 were merged into `main`
+(they were only on side branches), so GitHub Pages can show the game.
+
+What changed on screen
+- Filmic tone mapping (ACES) and a brighter exposure: punchier sunset colours.
+- Real sun shadows from buildings, trees, poles, people, cars and Shoumik (Medium/High).
+- Bloom: Breaking School / Breaking Biology neon, hotspot neon, entrance rings, landmark name
+  boards and the sun glow.
+- Colour grade: more saturation and warmth, slight contrast, soft vignette.
+- Lakes and the Buriganga reflect the sunset sky.
+
+Under the hood
+- New `data/graphics.json` (all look values) and new `src/world/graphics/` (index, postfx,
+  shadows, glow). `data/quality.json` levels gained `postfx`, `bloom`, `shadowMapSize`,
+  `softShadows`, `msaa`. `game.graphics` renders the frame now.
+- Glow materials marked with `markGlow()` in landmarks, hotspots and entrances.
+- New tool `tools/look-shots.js`; `tools/landmark-shots.js` renders through `game.graphics`.
+- Save format unchanged.
+
+Tested (headless Chromium, software rendering): zero console errors on Low, Medium and High;
+smoke test passes on all three; switching quality in-game works (shadows/bloom on and off).
+Vehicle test and poster check pass completely on Low (27 m/s, ramp jump, drift, carjack, ride,
+explosion, LED rotation, trains). On Medium/High the software renderer is too slow for their
+real-time timers (speed, LED rotation), so those checks time out there — not a game bug, but
+it means **Medium is noticeably heavier**. Not tested on a real phone.
+
+Known issues
+- Medium/High cost more GPU (shadow pass + bloom): check FPS on the owner's phone; switch to কম
+  if it stutters.
+- Very low sunset sun: shadows use a slightly higher sun angle than the sun you see.
+- Shadowed roads are quite dark; tune `data/graphics.json → lighting.hemiIntensity`.
+- Models are still code-built: the big jump in detail needs Parts B (real Shoumik) and C (cars,
+  buildings).
+
+Next: Session 4.5 Part B (real Shoumik GLB) when the owner sends the Mixamo files, else Session 5.

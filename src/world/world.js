@@ -64,7 +64,7 @@ export class World {
     };
 
     this.sky = new Sky(this.cfg, glow, scene);
-    this.water = new Water(this.layout, water, this.root);
+    this.water = new Water(this.layout, water, this.root, config.get('graphics'));
     this.chunks = new ChunkManager(this.layout, this.shared, this.root);
     this.collision = new CollisionWorld();
     this.buildColliders();

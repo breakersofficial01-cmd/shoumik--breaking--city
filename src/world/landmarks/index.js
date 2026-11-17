@@ -20,6 +20,7 @@
 // colours in data/landmarks.json → types, and add the `landmark` block to a place.
 
 import * as THREE from 'three';
+import { markGlow } from '../graphics/glow.js';
 import { log } from '../../core/debug.js';
 import { Rng, hashInts } from '../../core/rng.js';
 import { GeoBuilder } from '../geoBuilder.js';
@@ -188,8 +189,8 @@ export class Landmarks {
     const atlas = await buildSignAtlas(entries, cfg.signs);
     this.materials = {
       lit: shared.facadeMaterial,
-      glow: new THREE.MeshBasicMaterial({ vertexColors: true }),
-      sign: new THREE.MeshBasicMaterial({ map: atlas.texture }),
+      glow: markGlow(new THREE.MeshBasicMaterial({ vertexColors: true }), 'glow'),
+      sign: markGlow(new THREE.MeshBasicMaterial({ map: atlas.texture }), 'sign'),
     };
     const sign = (id) => atlas.uv.get(id) || null;
     const makeBuilders = () => ({ lit: new GeoBuilder(), glow: new GeoBuilder(), sign: new GeoBuilder() });

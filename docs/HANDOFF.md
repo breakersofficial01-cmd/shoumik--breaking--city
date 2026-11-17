@@ -233,6 +233,8 @@ with a debug log until their folder and loader exist.
   cap, bucket, box).
 - Session 4: `texture.poster.<poster id>` (and `texture.poster.default-<shape>`) for every poster
   picture — an override in `data/assets.json` replaces the file without touching posters.json.
+- Real 3D models should use MeshStandardMaterial (GLB default) so they pick up the sky
+  reflections and tone mapping; they get shadows automatically.
 - `model.player` is a factory object `{ create(outfit) }` returning a `ShoumikModel`. A
   rigged .glb cannot simply be dropped in: it would need a small adapter that maps our pose
   (see `skeleton.js`) onto its bones.
@@ -290,6 +292,24 @@ version, add the field to `defaults()`. Features store live state with
   function in `modelsCars.js` / `modelsSmall.js` + one line in `BUILDERS` (`models.js`).
 - **Ramps** are part of the ground: `world.heightAt()` already includes them.
 - **Particles**: `game.fleet.fx.emit('smoke' | 'fire', { x, y, z, vx, vy, vz, life, size: [from, to], color })`.
+
+## 12b. Graphics: how the look is made (Session 4.5)
+- `src/world/graphics/index.js` — `Graphics` (owned by `Game` as `game.graphics`). Sets tone
+  mapping, overrides sun/sky light strength, builds the sky reflection map
+  (`scene.environment`, used by every MeshStandardMaterial: the water now, GLB models later),
+  and each frame calls `update(dt, focus)` + `render(dt)`. **Never call
+  `renderer.render(scene, camera)` directly** for the main view — use `game.graphics.render()`
+  so bloom and grading run. (Tools do the same.)
+- `postfx.js` — EffectComposer: RenderPass → UnrealBloomPass → OutputPass (tone mapping +
+  sRGB) → grade ShaderPass. Only on qualities with `postfx: true`.
+- `shadows.js` — one shadow map that follows the player, snapped to texels. Every lit,
+  opaque mesh is flagged automatically twice a second; ground and water only receive. Set
+  `mesh.userData.noCastShadow = true` to stop something casting. The shadow sun is never lower
+  than `shadows.minElevation` (the visible sun can be lower).
+- `glow.js` — `markGlow(material, 'glow'|'sign'|'marker')` makes an unlit material brighter
+  than white so it blooms. Use it for any new neon, lamp or screen material.
+- Renderer counters (`renderer.info`) are reset once per frame by Graphics (several passes).
+- Look check: `node tools/look-shots.js --three <three dir> --out shots --quality medium`.
 
 ## 13. Notes for the next sessions
 - **Session 4 is done** (the old notes below are kept for reference).

@@ -8,6 +8,7 @@
 //   game.player       (set by the player feature: { position, heading, speed, ... })
 //   game.crowd        (shared instanced pedestrian renderer, made by acquireCrowd(game))
 //   game.ui           (the #ui element: put HUD / overlays here)
+//   game.graphics     (tone mapping, shadows, bloom: src/world/graphics/)
 //   game.setPaused(reason, bool), game.setQuality(name)
 
 import * as THREE from 'three';
@@ -20,6 +21,7 @@ import { Input } from './input.js';
 import { content } from '../content/ContentService.js';
 import { assets } from '../assets/registry.js';
 import { World } from '../world/world.js';
+import { Graphics } from '../world/graphics/index.js';
 import { ChaseCamera } from '../entities/chaseCamera.js';
 import { loadFeatures } from '../features/index.js';
 
@@ -58,7 +60,9 @@ export class Game {
 
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
-      antialias: this.quality.antialias, // can only be chosen at start-up
+      // Can only be chosen at start-up. With post-effects on, anti-aliasing happens inside the
+      // effect chain instead (data/quality.json → msaa), so the canvas itself does not need it.
+      antialias: this.quality.antialias && !this.quality.postfx,
       powerPreference: 'high-performance',
       stencil: false,
     });
@@ -67,6 +71,7 @@ export class Game {
 
     this.world = new World(this);
     await this.world.init();
+    this.graphics = new Graphics(this);
     onProgress(0.15);
 
     this.input = new Input(config.get('controls'), this.canvas);
@@ -86,8 +91,9 @@ export class Game {
     await this.world.buildAround(focus.x, focus.z, (f) => onProgress(0.3 + f * 0.7));
     this.cameraRig.update(0.016);
     this.world.update(0, focus);
+    this.graphics.update(0, focus);
     this.renderer.compile(this.scene, this.camera);
-    this.renderer.render(this.scene, this.camera);
+    this.graphics.render(0);
     if (debug.enabled) window.BC = this; // handy in the browser console
     events.emit('game:ready', {});
   }
@@ -96,6 +102,7 @@ export class Game {
     const q = this.quality;
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, q.pixelRatioCap) * q.renderScale);
     this.world.setQuality(q);
+    this.graphics.setQuality(q);
   }
 
   /** Switch Low / Medium / High at any time. Saved for next launch. */
@@ -118,6 +125,7 @@ export class Game {
     this.renderer.setSize(w, h, false);
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
+    this.graphics?.setSize(w, h);
     events.emit('screen:resized', { width: w, height: h });
   }
 
@@ -156,8 +164,10 @@ export class Game {
     this.features.update(dt);
     this.crowd?.update();            // shared pedestrian renderer (src/entities/people/crowd.js)
     this.cameraRig.update(dt);
-    this.world.update(dt, this.player?.position || this.camera.position);
-    this.renderer.render(this.scene, this.camera);
+    const focus = this.player?.position || this.camera.position;
+    this.world.update(dt, focus);
+    this.graphics.update(dt, focus);
+    this.graphics.render(dt);
     this.input.endFrame();
     tickDebug(dt, this.renderer);
   }

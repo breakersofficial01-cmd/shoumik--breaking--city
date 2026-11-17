@@ -11,9 +11,13 @@ Always read `docs/GAME_SPEC.md`, `docs/CHANGELOG.md` and `docs/CHARACTER.md` (if
 - Three.js (pin ONE exact version via an import map from a CDN), plain JavaScript ES modules,
   no build step. Must run from static hosting (GitHub Pages) at a sub-path (`/shoumik--breaking--city/`),
   so use relative paths everywhere.
-- Visual style: early-2000s PS2 era like the original GTA Vice City. Low-poly models built in
-  code, flat/vertex colours, small low-res textures, distance fog, neon glow at night, warm
-  sunset grading. Not realistic, not pixel-perfect.
+- Visual style (owner-approved upgrade, 2026-11-18): **mobile open-world quality like
+  Gangstar Vegas** — bright saturated sunset and neon look, real sun shadows, glowing neon
+  (bloom), filmic tone mapping and colour grading, water that reflects the sky. Real 3D models
+  (GLB, e.g. Shoumik from Mixamo, bought car/building packs) are allowed and loaded through the
+  asset registry; code-built low-poly models stay as the fallback and for things no pack has
+  (rickshaws, CNGs, landmarks). Every look setting lives in `data/graphics.json`; heavy effects
+  scale with Low/Medium/High so mid-range phones keep 30+ fps.
 - Camera: third-person chase camera behind and slightly above the player, like Vice City.
   Swings behind vehicles when driving. Drag on the right half of the screen to look around.
 - Performance: 30+ fps (aim 60) on a mid-range Android (4GB RAM) in Chrome, landscape. Also

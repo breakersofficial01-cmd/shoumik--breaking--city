@@ -59,3 +59,12 @@
 - Seasonal posters (Eid, Pohela Boishakh, exam season) prepared in advance with dates.
 - Unload far poster pictures from memory if the poster list grows past ~50.
 - Bus-stop posters on the sidewalk side of the shelter too; posters on MRT station walls.
+
+## Ideas noted during Session 4.5 (Part A)
+- Auto-pick quality from the first seconds of FPS (Medium may be heavy on 4 GB phones now that it
+  has shadows + bloom). Planned for Session 8; worth doing as soon as the owner reports phone FPS.
+- A cheaper "Medium-lite": bloom without shadows, or shadows every second frame.
+- Headlights and tail lights as glow materials so cars look good at night (Session 7).
+- Glass towers with a reflective MeshStandardMaterial (they would pick up the sky map).
+- Make the vehicle/poster test tools use game time instead of real time, so they also pass on
+  Medium/High in the software renderer.

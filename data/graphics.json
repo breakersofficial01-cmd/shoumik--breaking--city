@@ -1,0 +1,52 @@
+{
+  "_comment": "The look of the game (Session 4.5 visual upgrade, Gangstar-Vegas style). Change numbers here, not in code. Which effects run on Low / Medium / High is set in data/quality.json (postfx, bloom, shadowMapSize, softShadows, msaa).",
+  "toneMapping": {
+    "_comment": "Filmic tone mapping makes bright colours roll off like a film camera. type: ACES (punchy, saturated), AgX (softer), Neutral (closest to raw colours), None. exposure: overall brightness.",
+    "type": "ACES",
+    "exposure": 1.25
+  },
+  "lighting": {
+    "_comment": "Sun and sky light strength for the upgraded look (overrides data/world.json → light intensities; colours still come from world.json). A stronger sun and a weaker sky fill make shadows readable.",
+    "sunIntensity": 3.4,
+    "hemiIntensity": 1.4,
+    "ambientIntensity": 0.22
+  },
+  "bloom": {
+    "_comment": "Glow around very bright things (neon, signs, the sun). threshold: how bright a pixel must be to glow (lower = more glow). strength: how strong. radius: how far it spreads (0-1).",
+    "threshold": 1.05,
+    "strength": 0.55,
+    "radius": 0.4
+  },
+  "grade": {
+    "_comment": "Final colour grading, applied after tone mapping. saturation 1 = unchanged. contrast 1 = unchanged. warmth: + makes the image more orange, - more blue. vignette: darkening at the screen edges (0 = off).",
+    "saturation": 1.22,
+    "contrast": 1.06,
+    "warmth": 0.025,
+    "vignette": 0.32
+  },
+  "shadows": {
+    "_comment": "Real sun shadows around the player (Medium and High only). extent: half-width in metres of the shadowed area. distance: how far back along the sun ray the shadow camera sits. bias/normalBias fix stripes ('shadow acne'). minElevation (radians): the shadow-casting sun never goes lower than this, so sunset shadows stay a sensible length (the sky still shows the low sun). flagEverySeconds: how often new objects are checked for shadows.",
+    "extent": 42,
+    "distance": 300,
+    "bias": -0.0005,
+    "normalBias": 0.05,
+    "minElevation": 0.5,
+    "flagEverySeconds": 0.5
+  },
+  "neon": {
+    "_comment": "Unlit glowing materials are multiplied by these so they are brighter than white and bloom. glow = neon strips and lights, sign = landmark name boards, marker = entrance rings.",
+    "glow": 2.4,
+    "sign": 1.35,
+    "marker": 2.2
+  },
+  "water": {
+    "_comment": "Lakes and the river reflect the sunset sky. roughness: 0 = mirror, 1 = matte. envIntensity: how strong the sky reflection is.",
+    "roughness": 0.14,
+    "metalness": 0.0,
+    "envIntensity": 1.25
+  },
+  "environment": {
+    "_comment": "A small picture of the sky used for reflections (water now, real 3D cars and glass later). size in pixels per cube side.",
+    "size": 128
+  }
+}

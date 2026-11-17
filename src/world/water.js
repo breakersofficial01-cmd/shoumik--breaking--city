@@ -8,7 +8,8 @@ import { KIND } from './layout.js';
 
 export class Water {
   /** @param {import('./layout.js').CityLayout} layout */
-  constructor(layout, waterTexture, parent) {
+  /** @param {object} gfx  data/graphics.json */
+  constructor(layout, waterTexture, parent, gfx) {
     const world = layout.world;
     const w = world.water;
     this.cfg = w;
@@ -38,7 +39,13 @@ export class Water {
     geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
     geo.setIndex(idx);
     geo.computeVertexNormals();
-    this.mesh = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ map: waterTexture, vertexColors: true }));
+    // Reflective water (Session 4.5): picks up the sunset sky through scene.environment,
+    // which src/world/graphics/index.js fills with a small sky reflection map.
+    const look = gfx.water;
+    this.mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
+      map: waterTexture, vertexColors: true,
+      roughness: look.roughness, metalness: look.metalness, envMapIntensity: look.envIntensity,
+    }));
     this.mesh.name = 'water';
     this.mesh.frustumCulled = false;
     this.mesh.matrixAutoUpdate = false;

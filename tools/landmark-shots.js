@@ -87,7 +87,8 @@ const server = http.createServer((req, res) => {
         BC.camera.position.set(cx, t.lift, cz);
         BC.camera.lookAt(t.x, t.look, t.z);
         BC.world.sky.update(BC.camera);
-        BC.renderer.render(BC.scene, BC.camera);
+        BC.graphics.update(0, { x: t.x, z: t.z });
+        BC.graphics.render(0);
       }, { t, turn });
       await page.waitForTimeout(120);
       await page.screenshot({ path: path.join(outDir, `${t.id}${suffix}.png`) });
