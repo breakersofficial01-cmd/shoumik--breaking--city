@@ -154,6 +154,7 @@ export function validatePlaces(raw) {
   const list = Array.isArray(raw?.places) ? raw.places : [];
   if (!Array.isArray(raw?.places)) skipped.push({ id: '(file)', reason: '"places" list is missing' });
   const seen = new Set();
+  const blocks = new Set(); // one landmark per city block
   list.forEach((p, i) => {
     const label = isText(p?.id) ? p.id : `place #${i + 1}`;
     const skip = (reason) => skipped.push({ id: label, reason });
@@ -162,7 +163,19 @@ export function validatePlaces(raw) {
     if (seen.has(p.id)) return skip('duplicate id');
     if (!Number.isInteger(p.col) || !Number.isInteger(p.row) || p.col < 0 || p.row < 0) return skip('col and row must be whole numbers');
     seen.add(p.id);
-    items.push({ ...p, id: p.id.trim(), name: p.name && typeof p.name === 'object' ? p.name : { en: p.id, bn: p.id }, ride: p.ride !== false });
+    // Optional landmark: { type, block:[col,row] | area:"<area id>", facing:"N|S|E|W", clear? }.
+    let landmark = null;
+    const lm = p.landmark;
+    if (lm && typeof lm === 'object') {
+      const blockOk = Array.isArray(lm.block) && lm.block.length === 2 && lm.block.every((n) => Number.isInteger(n) && n >= 0);
+      if (!isText(lm.type) || (!blockOk && !isText(lm.area))) skipped.push({ id: `${label} / landmark`, reason: 'landmark needs a type and a block [col,row] or an area' });
+      else if (blockOk && blocks.has(lm.block.join(','))) skipped.push({ id: `${label} / landmark`, reason: `block ${lm.block.join(',')} already has a landmark` });
+      else {
+        if (blockOk) blocks.add(lm.block.join(','));
+        landmark = { type: lm.type.trim(), block: blockOk ? lm.block : null, area: blockOk ? null : lm.area.trim(), facing: SIDES.includes(lm.facing) ? lm.facing : 'S', clear: Array.isArray(lm.clear) ? lm.clear : null };
+      }
+    }
+    items.push({ ...p, id: p.id.trim(), name: p.name && typeof p.name === 'object' ? p.name : { en: p.id, bn: p.id }, ride: p.ride !== false, landmark });
   });
   return { items, defaults: {}, skipped };
 }

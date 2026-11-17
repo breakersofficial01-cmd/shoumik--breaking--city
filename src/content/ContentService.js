@@ -16,7 +16,7 @@ import { log } from '../core/debug.js';
 import { events } from '../core/events.js';
 import { LocalJsonAdapter } from './adapters/LocalJsonAdapter.js';
 import { GoogleSheetCsvAdapter } from './adapters/GoogleSheetCsvAdapter.js';
-import { validateLessons } from './validators.js';
+import { validateLessons, validatePlaces } from './validators.js';
 
 const CACHE_PREFIX = 'breakingCity.content.';
 
@@ -28,6 +28,8 @@ class ContentService {
     this.registerAdapter(new LocalJsonAdapter());
     this.registerAdapter(new GoogleSheetCsvAdapter());
     this.registerType('lessons', { localPath: 'data/lessons.json', validate: validateLessons });
+    // Places are needed while the city is laid out (landmark plots), so they load at boot too.
+    this.registerType('places', { localPath: 'data/places.json', validate: validatePlaces });
   }
 
   registerAdapter(adapter) {

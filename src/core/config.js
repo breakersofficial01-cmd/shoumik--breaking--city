@@ -10,7 +10,7 @@ import { log } from './debug.js';
 
 const FILES = [
   'game', 'ui', 'strings', 'features', 'economy', 'world', 'districts',
-  'quality', 'controls', 'player', 'camera', 'assets', 'links', 'outfits', 'pedestrians', 'vehicles', 'traffic',
+  'quality', 'controls', 'player', 'camera', 'assets', 'links', 'outfits', 'pedestrians', 'vehicles', 'traffic', 'landmarks',
 ];
 
 const store = new Map();

@@ -149,6 +149,17 @@ export function generateBlock(layout, piece, district, rng) {
   return out;
 }
 
+const LANDMARK_GROUND = { plaza: GROUND.PLAZA, grass: GROUND.GRASS, lot: GROUND.LOT };
+
+/** A block reserved for a landmark: one open plot inside the usual sidewalk, poles and wires. */
+export function generateLandmarkBlock(layout, piece, district, rng, ground) {
+  const sw = layout.world.grid.sidewalkWidth;
+  const out = { buildings: [], patches: [], poles: [], wires: [], tanks: [], trees: [] };
+  out.patches.push({ x0: piece.x + sw, z0: piece.z + sw, x1: piece.x + piece.w - sw, z1: piece.z + piece.d - sw, tile: LANDMARK_GROUND[ground] ?? GROUND.PLAZA });
+  addStreetFurniture(out, layout, piece, district, rng);
+  return out;
+}
+
 /** Black plastic water tanks on the roof. */
 function addTanks(tanks, b, district, world, rng) {
   if (!rng.chance(district.tankChance)) return;

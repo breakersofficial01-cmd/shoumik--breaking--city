@@ -6,6 +6,7 @@
 //   world.layout                the full city grid (roads, blocks, buildings) for minimap, traffic...
 //   world.roads                 RoadNet: junctions, lanes, signals, routes, bus stops (roads.js)
 //   world.ramps                 stunt ramps; their height is already part of heightAt()
+//   world.landmarks             real Dhaka places, MRT / flyover, entrance markers (landmarks/index.js)
 
 import * as THREE from 'three';
 import { log, debugLine } from '../core/debug.js';
@@ -17,6 +18,7 @@ import { Sky } from './sky.js';
 import { RoadNet } from './roads.js';
 import { Ramps } from './ramps.js';
 import { makePoleGeometry, makeTankGeometry, makeTreeGeometry } from './props.js';
+import { Landmarks, landmarkBlocks } from './landmarks/index.js';
 
 export class World {
   /** @param {object} game  the Game (scene, camera, config, assets) */
@@ -31,10 +33,16 @@ export class World {
   async init() {
     const { assets, config, scene } = this.game;
     const t0 = performance.now();
-    this.layout = new CityLayout(this.cfg, config.get('districts'));
+    // Places (with their landmark plots) were loaded by the Content Service at boot.
+    const places = this.game.content.get('places');
+    const landmarkCfg = config.get('landmarks');
+    this.layout = new CityLayout(this.cfg, config.get('districts'), landmarkBlocks(places, landmarkCfg));
     log.info(`city layout: ${this.layout.pieces.length} pieces in ${(performance.now() - t0).toFixed(0)} ms`);
     // Ramps first: they remove the trees in their way before any mesh or collider exists.
     this.ramps = new Ramps(this.layout, this.cfg.ramps);
+    // Landmarks plan their plots now (they plant and remove trees); meshes come further down.
+    this.landmarks = new Landmarks(this.layout, places, landmarkCfg, this.cfg);
+    this.ramps.surface = (x, z) => this.landmarks.heightAt(x, z);
     this.roads = new RoadNet(this.layout, config.get('traffic'));
 
     // Placeholder prop shapes go through the asset registry so real models can replace them.
@@ -60,6 +68,7 @@ export class World {
     this.chunks = new ChunkManager(this.layout, this.shared, this.root);
     this.collision = new CollisionWorld();
     this.buildColliders();
+    await this.landmarks.build(this.shared, this.root, this.collision);
     const rampMesh = this.ramps.buildMesh();
     if (rampMesh) this.root.add(rampMesh);
   }
@@ -116,6 +125,7 @@ export class World {
     this.chunks.update(focus.x, focus.z);
     this.water.update(dt);
     this.sky.update(this.game.camera);
+    this.landmarks.update(focus, this.quality.viewDistance);
     debugLine('chunks', `chunks ${this.chunks.stats.visible}/${this.chunks.stats.built} queue ${this.chunks.queue.length}`);
   }
 }

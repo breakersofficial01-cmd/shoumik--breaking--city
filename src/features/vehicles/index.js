@@ -25,7 +25,6 @@ import { debugLine, log } from '../../core/debug.js';
 import { Rng } from '../../core/rng.js';
 import { t, pickName, formatNumber, formatMoney } from '../../ui/i18n.js';
 import { dirByName } from '../../world/roads.js';
-import { validatePlaces } from '../../content/validators.js';
 import { acquireFleet } from '../../entities/vehicles/fleet.js';
 import { Boarding } from './boarding.js';
 import { Rides } from './rides.js';
@@ -155,8 +154,7 @@ export default {
     game = g;
     cfg = g.config.get('vehicles');
     fleet = await acquireFleet(g);
-    g.content.registerType('places', { localPath: 'data/places.json', validate: validatePlaces });
-    await g.content.load('places');
+    // Places are loaded at boot by the Content Service (the city layout needs them too).
     const rng = new Rng(g.config.get('world').seed ^ 0x51de);
     boarding = new Boarding(g, fleet, cfg, rng);
     rides = new Rides(g, fleet, cfg, boarding, rng, { enter: (v, passenger) => boarding.enter(v, passenger) });

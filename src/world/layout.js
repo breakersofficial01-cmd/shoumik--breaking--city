@@ -12,7 +12,7 @@
 // The same seed always gives the same city (fixed seed, CLAUDE.md).
 
 import { Rng, hashInts } from '../core/rng.js';
-import { generateBlock, scatterTrees } from './blockgen.js';
+import { generateBlock, generateLandmarkBlock, scatterTrees } from './blockgen.js';
 
 export const KIND = { CROSSING: 0, ROAD_EW: 1, ROAD_NS: 2, BLOCK: 3, WATER: 4, PARK: 5, PLAZA: 6 };
 const AREA_KIND = { water: KIND.WATER, park: KIND.PARK, plaza: KIND.PLAZA };
@@ -21,7 +21,9 @@ export const isRoad = (p) => p.kind <= KIND.ROAD_NS;
 export const isRaised = (p) => p.kind === KIND.BLOCK || p.kind === KIND.PARK || p.kind === KIND.PLAZA;
 
 export class CityLayout {
-  constructor(world, districtsCfg) {
+  /** @param {Map<string,{id:string, ground:string}>} [landmarkBlocks]  "col,row" → landmark plot (see landmarks/index.js) */
+  constructor(world, districtsCfg, landmarkBlocks = new Map()) {
+    this.landmarkBlocks = landmarkBlocks;
     const g = world.grid;
     this.world = world;
     this.seed = world.seed;
@@ -161,7 +163,13 @@ export class CityLayout {
     for (const p of this.pieces) {
       p.y = isRaised(p) ? this.kerb : 0;
       const rng = new Rng(hashInts(this.seed, p.i, p.j));
-      if (p.kind === KIND.BLOCK) {
+      const landmark = p.kind === KIND.BLOCK ? this.landmarkBlocks.get(`${p.i >> 1},${p.j >> 1}`) : null;
+      if (landmark) {
+        // A landmark plot: sidewalk, poles, wires and street trees stay; the inside is left
+        // empty for the landmark builder (src/world/landmarks/).
+        p.landmark = landmark.id;
+        p.content = generateLandmarkBlock(this, p, this.districts[p.district], rng, landmark.ground);
+      } else if (p.kind === KIND.BLOCK) {
         p.content = generateBlock(this, p, this.districts[p.district], rng);
       } else if (p.kind === KIND.PARK || p.kind === KIND.PLAZA) {
         const density = this.areaTypes[p.area.type]?.treeDensity ?? 0;

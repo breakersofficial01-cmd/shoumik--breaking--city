@@ -27,10 +27,15 @@ export class Ramps {
       });
     }
     this.clearTrees(layout);
+    /** Optional extra height function (x, z) → metres, set by world.js for landmark platforms. */
+    this.surface = null;
   }
 
   /** Height of the ramp surface above the normal ground at (x, z); 0 when not on a ramp. */
   heightAt(x, z) {
+    // Walkable landmark platforms count as ramps too, so vehicles climb and jump them.
+    const extra = this.surface ? this.surface(x, z) : 0;
+    if (extra > 0) return extra;
     for (const r of this.list) {
       const dx = x - r.x, dz = z - r.z;
       const along = Math.abs(dx * r.fx + dz * r.fz);
