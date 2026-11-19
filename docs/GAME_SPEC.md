@@ -145,6 +145,7 @@ Posters come from `data/posters.json` (dates, districts, weights, links; guide i
 75 / 160 / 220 m (Low / Medium / High). Empty slots show "এখানে আপনার বিজ্ঞাপন".
 
 ## 4. Look
+Sky: our own painted 360° sunset (`data/world.json → sky.painted`, `src/world/skyPainter.js`): orange horizon, gold-lit streaky clouds, purple top with faint stars.
 - Target since Session 4.5 (owner-approved): **Gangstar Vegas-level mobile open world**.
   Models are still the code-built low-poly ones until real 3D art arrives (Parts B and C).
 - Part A (done): filmic ACES tone mapping; strong warm sun with real shadows that follow the

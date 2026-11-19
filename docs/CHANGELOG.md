@@ -413,3 +413,14 @@ Tests: smoke test passes on Low and High; landmark photos checked.
   17 kit pieces, interiors removed, 512 px textures), made by `tools/city-kit/pack-pieces.js`.
 - Tool: `tools/hero-shots.js` (zone list + street/above photos).
 Tests: smoke test passes on Low / Medium / High; vehicle test passes on Low.
+
+## 2026-11-19 — Session 4.5 Part D: our own painted sunset sky (Claude Opus 5.5)
+- New 360° sky made in code (`src/world/skyPainter.js`), painted ONCE at load into a texture, so
+  it costs nothing per frame. Based on the owner's reference photos (colours and mood only):
+  deep orange horizon glowing more on the sun side, peach → rose → purple-navy overhead,
+  streaky sunset clouds lit gold from below, a soft halo around the sun, faint stars high up.
+- Every number and colour in `data/world.json → sky.painted`; fog colour matched to the
+  horizon. Reflections (water, glass, cars) use the same sky automatically.
+- The poster-style images the owner sent were not used as files (not a 360° sky, unclear
+  licence); only their colours guided the painting.
+- Tool: `tools/sky-shots.js`. Tests: smoke test passes on Low and High.

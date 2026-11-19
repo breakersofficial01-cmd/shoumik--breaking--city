@@ -130,7 +130,74 @@
       -0.72,
       0.24,
       0.42
-    ]
+    ],
+    "painted": {
+      "_comment": "The sky is painted once at load from these numbers (src/world/skyPainter.js). stops = [height, colour] from below the horizon (-1) to straight up (1). glow = warm band along the horizon, stronger towards the sun (power = how narrow, height = how tall). halo = light around the sun. clouds = streaky layer: cover (higher = fewer clouds), softness, scale (bigger = smaller clouds), stretch (lower = longer streaks), lit/shade/rim colours, opacity, from/to = heights where clouds appear, seed = another cloud pattern. stars = faint dots high up. width = texture size.",
+      "width": 2048,
+      "stops": [
+        [
+          -1,
+          "#2a1418"
+        ],
+        [
+          0.0,
+          "#d9784a"
+        ],
+        [
+          0.03,
+          "#e2671e"
+        ],
+        [
+          0.09,
+          "#f08a22"
+        ],
+        [
+          0.2,
+          "#d97a4e"
+        ],
+        [
+          0.38,
+          "#a8586a"
+        ],
+        [
+          0.62,
+          "#5e3f66"
+        ],
+        [
+          1,
+          "#1f1d42"
+        ]
+      ],
+      "glow": {
+        "color": "#ff7a1a",
+        "strength": 0.35,
+        "power": 3.0,
+        "height": 0.12
+      },
+      "halo": {
+        "color": "#ffc060",
+        "strength": 0.45,
+        "power": 60
+      },
+      "clouds": {
+        "lit": "#ff8a32",
+        "shade": "#6e3450",
+        "rim": "#ffd27a",
+        "cover": 0.44,
+        "softness": 0.22,
+        "scale": 2.2,
+        "stretch": 0.28,
+        "opacity": 0.85,
+        "from": 0.03,
+        "to": 0.85,
+        "seed": 3.7
+      },
+      "stars": {
+        "density": 0.012,
+        "brightness": 0.55,
+        "from": 0.5
+      }
+    }
   },
   "light": {
     "sunColor": "#ffb070",
@@ -143,7 +210,7 @@
   },
   "fog": {
     "_comment": "Fog start/end as a fraction of the quality's view distance.",
-    "color": "#f2a57c",
+    "color": "#d9784a",
     "nearFactor": 0.28,
     "farFactor": 0.97
   },

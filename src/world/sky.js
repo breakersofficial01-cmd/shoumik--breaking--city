@@ -2,12 +2,22 @@
 // data/world.json (sky, light, fog). Session 7 (day/night) will animate these values.
 
 import * as THREE from 'three';
+import { paintSky } from './skyPainter.js';
 
 export class Sky {
-  constructor(world, glowTexture, scene) {
+  constructor(world, glowTexture, scene, renderer) {
     this.cfg = world;
     this.scene = scene;
     const s = world.sky;
+
+    // Painted 360° sky (skyPainter.js, made once at load). Falls back to the simple gradient.
+    if (s.painted && renderer) {
+      try {
+        this.texture = paintSky(renderer, s);
+      } catch (err) {
+        console.warn('sky: painting failed, using the plain gradient', err);
+      }
+    }
 
     // Gradient dome: vertex colours by height, drawn first, never fogged.
     const geo = new THREE.SphereGeometry(1, 20, 12);
@@ -31,8 +41,10 @@ export class Sky {
       colors.set([c.r, c.g, c.b], i * 3);
     }
     geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    this.dome = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
-      vertexColors: true, side: THREE.BackSide, fog: false, depthWrite: false, depthTest: false,
+    const domeGeo = this.texture ? new THREE.SphereGeometry(1, 48, 24) : geo;
+    this.dome = new THREE.Mesh(domeGeo, new THREE.MeshBasicMaterial({
+      vertexColors: !this.texture, map: this.texture || null,
+      side: THREE.BackSide, fog: false, depthWrite: false, depthTest: false,
     }));
     this.dome.renderOrder = -10;
     this.dome.frustumCulled = false;

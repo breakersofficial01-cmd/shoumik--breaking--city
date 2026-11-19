@@ -64,7 +64,7 @@ export class World {
       poleGeo, tankGeo, treeGeo,
     };
 
-    this.sky = new Sky(this.cfg, glow, scene);
+    this.sky = new Sky(this.cfg, glow, scene, this.game.renderer);
     this.water = new Water(this.layout, water, this.root, config.get('graphics'));
     this.chunks = new ChunkManager(this.layout, this.shared, this.root);
     this.collision = new CollisionWorld();
