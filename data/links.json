@@ -1,10 +1,13 @@
 {
-  "_comment": "External links used in the game. Fill in real URLs.",
-  "breakingSchoolYoutube": "",
-  "breakingBiologyYoutube": "",
+  "_comment": "External links used in the game (open in a new tab / the app, never embedded). breakingSchool = SSC, breakingBiology = HSC. The YouTube links are shown on the 'under 17' screen; Session 8 uses the rest on the credits page. enroll* = Enroll buttons in Class Mode (still empty = 'coming soon'). tiktok* = fill in when ready.",
+  "breakingSchoolYoutube": "https://youtube.com/@breakingschool-v7d",
+  "breakingBiologyYoutube": "https://youtube.com/@breakingbiology-g2e",
+  "breakingSchoolFacebook": "https://www.facebook.com/share/14owtdEzTcc/",
+  "breakingBiologyFacebook": "https://www.facebook.com/share/1A4qgRScfM/",
+  "breakingSchoolInstagram": "https://www.instagram.com/breakers_school",
+  "breakingBiologyInstagram": "https://www.instagram.com/biology.breaking",
+  "breakingSchoolTiktok": "",
+  "breakingBiologyTiktok": "",
   "enrollBreakingSchool": "",
-  "enrollBreakingBiology": "",
-  "facebookPage": "",
-  "instagram": "",
-  "tiktok": ""
+  "enrollBreakingBiology": ""
 }

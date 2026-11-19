@@ -530,6 +530,9 @@ version, add the field to `defaults()`. Features store live state with
 ## 13. Notes for the next sessions
 - **Session 4 is done** (the old notes below are kept for reference).
 - **Session 5 is done** (notes below kept for reference).
+- **Links (2026-11-19):** `data/links.json` now has both brands' YouTube, Facebook and Instagram
+  (`breakingSchool*` = SSC, `breakingBiology*` = HSC); TikTok and enroll links are still empty.
+  Use them on the Session 8 credits page.
 - **Session 7 is done.** For Session 8: the service worker must cache `src/audio/`, `src/ui/vibe.css`
   and the new data files (`audio`, `dayNight`, `weather`, `radio`, `profile`, `signboards`,
   `rewards` — rewards is content: network-first like lessons/posters). The painted day/night skies

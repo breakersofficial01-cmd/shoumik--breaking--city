@@ -630,3 +630,9 @@ Known issues
   empty (the "under 17" screen shows lesson links once they are filled in).
 - Sharing a screenshot needs a browser with the share sheet (Chrome on Android: yes); otherwise
   only Save is shown.
+
+## 2026-11-19 — Social links (Claude Opus 5.5)
+- `data/links.json`: YouTube, Facebook and Instagram for Breaking School (SSC) and Breaking Biology
+  (HSC). Share-tracking parts of the URLs were removed. The YouTube links now show on the
+  "under 17" screen. TikTok and enroll links are still empty.
+
