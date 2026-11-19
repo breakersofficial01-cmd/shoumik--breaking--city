@@ -105,13 +105,24 @@
       "row": 14,
       "corner": "SW",
       "stock": [
+        "bat",
+        "machete",
         "pistol",
         "revolver",
-        "sawedOff",
         "smg",
+        "sawedOff",
         "shotgun",
         "rifle",
-        "sniper"
+        "sniper",
+        "molotov",
+        "armour",
+        "ammo-pistol",
+        "ammo-revolver",
+        "ammo-smg",
+        "ammo-sawedOff",
+        "ammo-shotgun",
+        "ammo-rifle",
+        "ammo-sniper"
       ]
     },
     {

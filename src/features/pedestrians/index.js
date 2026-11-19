@@ -17,6 +17,11 @@
 //   Vehicles: people dive away from fast vehicles and are knocked down when hit (roadSense.js).
 //   sends    ped:hit { x, z, down }      danger:raised (when the player hits somebody)
 //            player:hit { x, z, power }  (a pedestrian punched Shoumik)
+//            ped:killed { x, z, by }     crime:committed { type: 'assault' | 'murder' }   (Session 6)
+//   Session 6: every pedestrian is a shootable target in game.targets (src/core/targets.js) with
+//   `life` (data/combat.json → people.life). Weapons hurt life; at 0 he dies (state 'dead': lies
+//   still in a blood pool for people.deadSeconds, then is cleared). Punches still just knock
+//   people down (hp), and only kill someone who is beaten while lying on the ground.
 
 import { debug, debugLine } from '../../core/debug.js';
 import { Rng } from '../../core/rng.js';
@@ -25,8 +30,9 @@ import { buildLook } from '../../entities/people/looks.js';
 import { acquireCrowd } from '../../entities/people/crowd.js';
 import { SidewalkNav } from './navigation.js';
 import { Brain } from './brain.js';
-import { Bubbles } from './bubbles.js';
+import { Bubbles } from '../../ui/bubbles.js';
 import { RoadSense } from './roadSense.js';
+import { acquireCombatFx } from '../../entities/effects/combatFx.js';
 
 const wrapAngle = (a) => Math.atan2(Math.sin(a), Math.cos(a));
 
@@ -38,6 +44,8 @@ let brain = null;
 let bubbles = null;
 let roadSense = null;
 let rng = null;
+let combat = null;  // data/combat.json → people
+let fx = null;      // blood (src/entities/effects/combatFx.js)
 let peds = [];      // the pool
 let active = 0;
 let warm = true;    // first fill: people may appear anywhere, even in view
@@ -53,9 +61,40 @@ function makePed() {
     animator: new Animator(null),
     person: null,
     circle: { x: 0, z: 0, r: cfg.spawn.radius, owner: null },
+    life: 100,
+    target: null,
   };
   ped.circle.owner = ped;
+  ped.target = { kind: 'ped', x: 0, y: 0, z: 0, r: combat.bodyRadius, h: combat.bodyHeight, owner: ped, dead: true, onHit: (info) => onShot(ped, info) };
   return ped;
+}
+
+/** He dies: lies where he fell, a blood pool spreads, the body is cleared after a while. */
+function kill(ped, by = null, dirX = 0, dirZ = 0) {
+  if (ped.state === 'dead') return;
+  ped.life = 0;
+  ped.target.dead = true;
+  ped.animator.play('down');
+  ped.speed = 0;
+  ped.state = 'dead';
+  ped.timer = combat.deadSeconds;
+  if (dirX || dirZ) ped.heading = Math.atan2(-dirX, -dirZ); // falls away from the shot
+  fx?.pool(ped.x + dirX * 0.5, ped.z + dirZ * 0.5);
+  shout(ped, 'pain');
+  game.events.emit('ped:killed', { x: ped.x, z: ped.z, by });
+  if (by === 'player') game.events.emit('crime:committed', { type: 'murder', x: ped.x, z: ped.z });
+}
+
+/** Shot, burnt or blown up (game.targets → onHit). Returns 'killed' when he dies. */
+function onShot(ped, info) {
+  if (!ped.active || ped.state === 'dead') return null;
+  ped.life -= info.damage || 0;
+  if (ped.life <= 0) { kill(ped, info.by, info.dirX, info.dirZ); return 'killed'; }
+  if (info.kind !== 'fire' || Math.random() < 0.3) ped.animator.play('hit');
+  shout(ped, 'pain');
+  if (ped.state !== 'down') brain.startFlee(ped, { x: info.x ?? ped.x, z: info.z ?? ped.z }, info.by === 'player');
+  if (info.by === 'player') game.events.emit('crime:committed', { type: 'assault', x: ped.x, z: ped.z });
+  return 'hit';
 }
 
 function shout(ped, kind) {
@@ -66,6 +105,8 @@ function shout(ped, kind) {
 function despawn(ped) {
   if (!ped.active) return;
   ped.active = false;
+  ped.target.dead = true;
+  game.targets.remove(ped.target);
   crowd.remove(ped.person);
   ped.person = null;
   game.world.collision.dynamic.delete(ped.circle);
@@ -86,6 +127,9 @@ function spawn(ped, spot, district, archetype = null) {
     fighter: rng.chance(arch.brave), fleeFrom: null, hitIn: -1,
   });
   ped.hp = ped.fighter ? cfg.behaviour.fighterHealth : cfg.behaviour.health;
+  ped.life = combat.life;
+  ped.target.dead = false;
+  game.targets.add(ped.target);
   const target = nav.cornerPos(ped.node, ped.off, { x: 0, z: 0 });
   ped.heading = Math.atan2(target.x - ped.x, target.z - ped.z);
   ped.animator.dims = look.dims;
@@ -141,7 +185,7 @@ function onDanger({ x, z, radius, source }) {
   const b = cfg.behaviour;
   const r = radius || b.dangerRadius;
   for (const ped of peds) {
-    if (!ped.active || ped.state === 'down' || ped.state === 'dive' || ped.state === 'fight' || ped.state === 'flee') continue;
+    if (!ped.active || ped.state === 'down' || ped.state === 'dead' || ped.state === 'dive' || ped.state === 'fight' || ped.state === 'flee') continue;
     if (Math.hypot(ped.x - x, ped.z - z) > r) continue;
     if (rng.chance(b.shoutChance)) shout(ped, 'flee');
     if (rng.chance(b.cowerChance)) brain.startCower(ped, { x, z });
@@ -149,12 +193,13 @@ function onDanger({ x, z, radius, source }) {
   }
 }
 
-/** Shoumik swung at something: hit the nearest pedestrian in front of him. */
-function onPlayerAttack({ x, z, heading, range, arc, power = 1 }) {
+/** Shoumik swung at something (fists, bat, machete): hit the nearest pedestrian in front of him. */
+function onPlayerAttack({ x, z, heading, range, arc, power = 1, damage = 0, weapon = 'fists' }) {
   let best = null;
   let bestD = range;
+  // Fists only reach people who are standing — or finish off someone lying on the ground.
   for (const ped of peds) {
-    if (!ped.active || ped.state === 'down') continue;
+    if (!ped.active || ped.state === 'dead' || (ped.state === 'down' && weapon !== 'fists' && damage <= 0)) continue;
     const dx = ped.x - x, dz = ped.z - z;
     const d = Math.hypot(dx, dz);
     if (d > bestD) continue;
@@ -163,6 +208,19 @@ function onPlayerAttack({ x, z, heading, range, arc, power = 1 }) {
     bestD = d;
   }
   if (!best) return;
+  const dirX = Math.sin(heading), dirZ = Math.cos(heading);
+  game.events.emit('crime:committed', { type: 'assault', x: best.x, z: best.z });
+  if (weapon !== 'fists') fx?.blood(best.x, best.y + 1.2, best.z, dirX, dirZ);
+  // Lying down already: every hit costs life (fists too).
+  const lifeHit = best.state === 'down' ? Math.max(damage, combat.fistLifeDamageWhenDown) : damage;
+  best.life -= lifeHit;
+  if (best.life <= 0) {
+    kill(best, 'player', dirX, dirZ);
+    game.events.emit('combat:hit', { kind: 'ped', by: 'player', police: false, killed: true });
+    game.events.emit('danger:raised', { x: best.x, z: best.z, radius: cfg.behaviour.dangerRadius, source: 'player' });
+    return;
+  }
+  if (best.state === 'down') return;
   best.hp -= power;
   const down = best.hp <= 0;
   if (down) {
@@ -178,7 +236,8 @@ function onPlayerAttack({ x, z, heading, range, arc, power = 1 }) {
 }
 
 /** A driver was dragged (or jumped) out of his vehicle: he becomes a pedestrian right there. */
-function onDriverEjected({ x, z, heading, archetype, angry }) {
+function onDriverEjected({ x, z, heading, archetype, angry, police }) {
+  if (police) return; // a police driver: the police feature makes him an officer
   let ped = peds.find((p) => !p.active);
   if (!ped) {
     // Pool is full: reuse the person furthest from the player.
@@ -205,9 +264,16 @@ function onDriverEjected({ x, z, heading, archetype, angry }) {
   }
 }
 
-function onExplosion({ x, z, radius }) {
+function onExplosion({ x, z, radius, by = null }) {
   for (const ped of peds) {
-    if (!ped.active || ped.state === 'down' || Math.hypot(ped.x - x, ped.z - z) > radius) continue;
+    if (!ped.active || ped.state === 'dead') continue;
+    const d = Math.hypot(ped.x - x, ped.z - z);
+    if (d > radius) continue;
+    if (d < radius * combat.explosionKillShare) {
+      kill(ped, by, (ped.x - x) / (d || 1), (ped.z - z) / (d || 1));
+      continue;
+    }
+    if (ped.state === 'down') continue;
     brain.knockDown(ped);
     shout(ped, 'pain');
     game.events.emit('ped:hit', { x: ped.x, z: ped.z, down: true, byExplosion: true });
@@ -220,6 +286,8 @@ export default {
   async init(g) {
     game = g;
     cfg = g.config.get('pedestrians');
+    combat = g.config.get('combat').people;
+    fx = await acquireCombatFx(g);
     rng = new Rng(g.config.get('world').seed ^ 0x5eed);
     crowd = await acquireCrowd(g);
     nav = new SidewalkNav(g.world.layout);
@@ -228,7 +296,7 @@ export default {
       game: g, cfg: cfg.behaviour, spawnCfg: cfg.spawn, nav, rng, shout,
       hitPlayer: (ped) => g.events.emit('player:hit', { x: ped.x, z: ped.z, power: cfg.behaviour.punchPower }),
     });
-    roadSense = new RoadSense({ game: g, cfg: cfg.behaviour, radius: cfg.spawn.radius, brain, rng, shout });
+    roadSense = new RoadSense({ game: g, cfg: cfg.behaviour, radius: cfg.spawn.radius, brain, rng, shout, killSpeed: combat.runOverKillSpeed, kill });
     const most = Math.max(...Object.values(g.config.get('quality').levels).map((q) => q.pedestrians || 0));
     peds = Array.from({ length: most }, makePed);
     active = 0;
@@ -252,15 +320,16 @@ export default {
     for (const ped of peds) {
       if (!ped.active) continue;
       const dist = Math.hypot(ped.x - p.x, ped.z - p.z);
-      if (dist > s.despawnDistance) { despawn(ped); continue; }
+      if (dist > s.despawnDistance || (ped.state === 'dead' && ped.timer <= 0)) { despawn(ped); continue; }
       const near = dist < s.collideDistance;
-      if (traffic && near && ped.state !== 'down' && ped.state !== 'dive') roadSense.check(ped);
+      if (traffic && near && ped.state !== 'down' && ped.state !== 'dive' && ped.state !== 'dead') roadSense.check(ped);
       brain.update(ped, dt, near);
       const ground = game.world.heightAt(ped.x, ped.z);
       ped.y += (ground - ped.y) * Math.min(1, 14 * dt);
       ped.circle.x = ped.x;
       ped.circle.z = ped.z;
-      ped.circle.r = ped.state === 'down' ? 0 : s.radius;
+      ped.circle.r = ped.state === 'down' || ped.state === 'dead' ? 0 : s.radius;
+      ped.target.x = ped.x; ped.target.y = ped.y; ped.target.z = ped.z;
       ped.animator.update(dt, { speed: ped.speed, panic: ped.state === 'flee' });
       const person = ped.person;
       person.x = ped.x; person.y = ped.y; person.z = ped.z;

@@ -1,0 +1,62 @@
+/* Breaking City — weapons, wanted stars, police, busted / wasted / jail (Session 6).
+   Fonts only through var(--font-ui|--font-bn|--font-en) (CLAUDE.md rule 7). */
+
+/* ------------------------------------------------------------ armour bar + blinking stars */
+.hud-armour { width: 92px; height: 7px; margin-top: 2px; border: 2px solid var(--ink); border-radius: 6px; background: #142038; overflow: hidden; }
+.hud-armour[hidden] { display: none; }
+.hud-armour i { display: block; width: 0; height: 100%; background: #6cb8ff; transition: width 0.3s ease; }
+.hud-stars.unseen span.on { animation: star-blink 0.7s steps(2, start) infinite; }
+@keyframes star-blink { to { color: rgba(255, 95, 162, 0.25); text-shadow: none; } }
+
+/* ------------------------------------------------------------ weapon badge (left of the minimap,
+   so the right-hand column stays free for the touch buttons) */
+#weapon-hud {
+  position: absolute;
+  top: calc(var(--safe-top) + 12px);
+  right: calc(var(--safe-right) + var(--weapon-right, 156px));
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px 4px 6px;
+  border: 2px solid var(--ink); border-radius: 12px;
+  background: rgba(20, 13, 38, 0.62);
+  color: #fff; font-family: var(--font-ui); font-size: 14px;
+  pointer-events: none;
+}
+#weapon-hud[hidden] { display: none; }
+#weapon-hud .w-icon { font-size: 20px; line-height: 1; }
+#weapon-hud .w-ammo { font-family: var(--font-en); font-weight: 700; color: var(--gold, #ffd35a); }
+#weapon-hud .w-ammo.empty { color: #ff5050; }
+
+/* ------------------------------------------------------------ crosshair, lock-on, hit marker */
+#crosshair, #lock-marker, #hit-marker { position: absolute; pointer-events: none; transform: translate(-50%, -50%); }
+#crosshair { left: 50%; top: 50%; width: 22px; height: 22px; }
+#crosshair::before, #crosshair::after { content: ''; position: absolute; background: #fff; box-shadow: 0 0 2px #000; }
+#crosshair::before { left: 10px; top: 0; width: 2px; height: 22px; }
+#crosshair::after { top: 10px; left: 0; height: 2px; width: 22px; }
+#lock-marker { width: 34px; height: 34px; border: 3px solid #ff4a4a; border-radius: 50%; box-shadow: 0 0 6px #ff4a4a; }
+#hit-marker { width: 18px; height: 18px; left: 50%; top: 50%; }
+#hit-marker::before, #hit-marker::after { content: ''; position: absolute; left: 8px; top: -2px; width: 2px; height: 22px; background: #ff3030; }
+#hit-marker::before { transform: rotate(45deg); }
+#hit-marker::after { transform: rotate(-45deg); }
+#crosshair[hidden], #lock-marker[hidden], #hit-marker[hidden] { display: none; }
+
+/* ------------------------------------------------------------ BUSTED / WASTED banner */
+#big-banner {
+  position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.55));
+}
+#big-banner[hidden] { display: none; }
+#big-banner b {
+  font-family: var(--font-ui); font-size: clamp(40px, 13vh, 92px); letter-spacing: 2px;
+  color: #fff; text-shadow: 4px 4px 0 var(--ink), 0 0 18px currentColor;
+  animation: banner-in 0.5s ease-out;
+}
+#big-banner.busted b { color: #6cb8ff; }
+#big-banner.wasted b { color: #ff4a4a; }
+@keyframes banner-in { from { transform: scale(1.6); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* ------------------------------------------------------------ jail / bail screens */
+.jail-mode .panel { font-family: var(--font-bn); }
+.jail-bar { height: 16px; margin: 10px 0 4px; border: 2px solid var(--ink); border-radius: 9px; background: #2b1a3e; overflow: hidden; }
+.jail-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #7dff9b, #4be3ff); transition: width 0.4s ease; }
+.jail-line { margin: 6px 0; }
+.jail-big { font-size: 1.25em; font-weight: 700; }

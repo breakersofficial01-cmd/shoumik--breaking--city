@@ -19,6 +19,7 @@
 //            garage:changed { col, row, dir } he moved home: parked owned vehicles move there
 //            vehicle:exploded { id }          he is thrown out if he was inside
 //            vehicle:horn { x, z, kind, ai }  play a horn (AI drivers send these)
+//            vehicle:forceExit {}             throw him out at once (busted / wasted)
 //   sends    prompt:show / prompt:hide, vehicle:horn, player:hit, and everything listed in
 //            boarding.js and rides.js
 
@@ -184,10 +185,11 @@ export default {
       g.events.on('vehicle:grant', (p) => grant(p || {})),
       g.events.on('garage:changed', reparkOwned),
       g.events.on('vehicle:horn', ({ x, z, kind, ai }) => horn.play(kind, x, z, ai)),
+      g.events.on('vehicle:forceExit', () => { if (!boarding.onFoot) boarding.exitNow(true); }),
       g.events.on('vehicle:exploded', ({ id, x, z }) => {
         if (boarding.vehicle?.id !== id) return;
         boarding.exitNow(true);
-        g.events.emit('player:hit', { x, z, power: 3 });
+        g.events.emit('player:hit', { x, z, power: 3, by: 'explosion' });
       }),
     ];
     log.info(`vehicles: ${Object.keys(cfg.types).length} types, ${parked.slots.length} roadside spots`);

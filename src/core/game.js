@@ -7,6 +7,8 @@
 //   game.events, game.config, game.save, game.economy, game.content, game.assets
 //   game.player       (set by the player feature: { position, heading, speed, ... })
 //   game.crowd        (shared instanced pedestrian renderer, made by acquireCrowd(game))
+//   game.targets      (everything that can be shot: src/core/targets.js)
+//   game.combatFx     (blood, bullet tracers, muzzle flashes: acquireCombatFx(game))
 //   game.ui           (the #ui element: put HUD / overlays here)
 //   game.graphics     (tone mapping, shadows, bloom: src/world/graphics/)
 //   game.setPaused(reason, bool), game.setQuality(name)
@@ -18,6 +20,7 @@ import { save } from './save.js';
 import { economy } from './economy.js';
 import { debug, log, tickDebug, initDebugPanel } from './debug.js';
 import { Input } from './input.js';
+import { Targets } from './targets.js';
 import { content } from '../content/ContentService.js';
 import { assets } from '../assets/registry.js';
 import { World } from '../world/world.js';
@@ -37,6 +40,8 @@ export class Game {
     this.assets = assets;
     this.player = null;
     this.crowd = null;
+    this.targets = new Targets();
+    this.combatFx = null;
     this.features = null;
     this.pauseReasons = new Set();
     this.running = false;
@@ -163,6 +168,7 @@ export class Game {
     this.cameraRig.addLook(this.input.look.x, this.input.look.y);
     this.features.update(dt);
     this.crowd?.update();            // shared pedestrian renderer (src/entities/people/crowd.js)
+    this.combatFx?.update(dt, this.camera); // blood, tracers (src/entities/effects/combatFx.js)
     this.cameraRig.update(dt);
     const focus = this.player?.position || this.camera.position;
     this.world.update(dt, focus);

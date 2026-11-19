@@ -25,5 +25,10 @@
     "followDelay": 0.5,
     "positionSmooth": 10,
     "wallPadding": 0.4
+  },
+  "aim": {
+    "_comment": "While aiming a gun (desktop: hold the right mouse button): zoom = share of the normal distance, shoulder = metres the view moves to the right.",
+    "zoom": 0.6,
+    "shoulder": 0.55
   }
 }

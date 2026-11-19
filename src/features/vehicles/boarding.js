@@ -12,7 +12,9 @@
 // Events sent
 //   vehicle:entered { id, type, jacked, passenger }    vehicle:exited { id, type, passenger }
 //   vehicle:driverEjected { x, z, heading, archetype, angry, flee }
-//   crime:committed { type: 'carjack', x, z }          (Session 6: wanted stars)
+//   crime:committed { type: 'carjack' | 'stealPolice', x, z }   (wanted stars)
+//   A police pickup (driver 'police', tags.police) can be jacked too: its driver is sent out
+//   with police: true and the police feature turns him into an angry officer.
 //   controls:mode { mode: 'driving' | 'onFoot' }       player:action { name, … }
 
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -60,8 +62,9 @@ export class Boarding {
     this.fleet.setRider(v, null);
     const angry = this.rng.chance(this.cfg.ejectAngry);
     const ev = this.game.events;
-    ev.emit('vehicle:driverEjected', { x: _door.x, z: _door.z, heading: v.heading, archetype: v.tags.riderArchetype || null, angry, flee: !angry });
-    ev.emit('crime:committed', { type: 'carjack', x: v.x, z: v.z });
+    const police = !!v.tags.police;
+    ev.emit('vehicle:driverEjected', { x: _door.x, z: _door.z, heading: v.heading, archetype: v.tags.riderArchetype || null, angry: angry || police, flee: !angry && !police, police });
+    ev.emit('crime:committed', { type: police ? 'stealPolice' : 'carjack', x: v.x, z: v.z });
     ev.emit('danger:raised', { x: v.x, z: v.z, radius: this.cfg.jackDangerRadius, source: 'player' });
   }
 
@@ -72,7 +75,7 @@ export class Boarding {
     this.vehicle = v;
     this.passenger = passenger;
     this.side = this.sideOf(v, p.x, p.z);
-    const jacked = !passenger && (v.driver === 'ai' || !!v.tags.stand);
+    const jacked = !passenger && (v.driver === 'ai' || v.driver === 'police' || !!v.tags.stand);
     if (jacked) this.ejectDriver(v, this.side);
     if (!passenger) {
       v.driver = 'player';

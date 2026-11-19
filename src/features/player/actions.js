@@ -8,7 +8,8 @@
 //                { name: 'enterVehicle', side: -1 } · { name: 'shoot' } · { name: 'melee' }
 //            player:hit { x, z, power }       somebody hit him from (x, z)
 //            outfit:set { id }                 wear an outfit from data/outfits.json
-//   sends    player:attack { x, z, heading, range, arc, kind, power }   when a punch lands
+//   sends    player:attack { x, z, heading, range, arc, kind, power, damage, weapon }   when a punch lands
+//            (the weapons feature sends the same event for the bat and machete)
 //            player:actionChanged { name, on }
 //            outfit:changed { id }
 
@@ -64,7 +65,7 @@ export class PlayerActions {
 
   onHit({ x, z, power = 1 }) {
     const s = this.state;
-    if (s.mode !== 'onFoot') return; // safe inside a vehicle (health arrives in Session 6)
+    if (s.mode !== 'onFoot' || s.dead) return; // inside a vehicle: only health is lost (index.js)
     if (Number.isFinite(x) && Number.isFinite(z)) { // no position = no push (only the hurt animation)
       const dx = s.position.x - x, dz = s.position.z - z;
       const len = Math.hypot(dx, dz) || 1;
@@ -92,8 +93,8 @@ export class PlayerActions {
     const punch = this.cfg.actions.punch;
     if (wantsToMove && this.cfg.actions.cancelOnMove.includes(a.current)) a.stop();
 
-    // Fists: the attack button throws alternating punches.
-    if (input.pressed.attack && s.grounded && !this.locked && a.current !== 'punch' && a.current !== 'hit') {
+    // Fists: the attack button throws alternating punches (other weapons: the weapons feature).
+    if (input.pressed.attack && !s.weapon && !s.dead && !s.frozen && s.grounded && !this.locked && a.current !== 'punch' && a.current !== 'hit') {
       this.punchSide = -this.punchSide;
       a.play('punch', { side: this.punchSide, duration: punch.duration, mask: s.speed > 1 ? 'upper' : 'full' });
       this.pendingHit = punch.hitAt;
@@ -104,6 +105,7 @@ export class PlayerActions {
         this.game.events.emit('player:attack', {
           x: s.position.x, z: s.position.z, heading: s.heading,
           range: punch.range, arc: (punch.arcDegrees * Math.PI) / 180, kind: 'fists', power: punch.power,
+          damage: punch.lifeDamage ?? 0, weapon: 'fists',
         });
       }
     }

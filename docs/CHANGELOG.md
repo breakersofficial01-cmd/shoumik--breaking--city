@@ -482,3 +482,69 @@ Known issues
 - Bought outfits only show on Low (the 3D Shoumik has one outfit); guns can be bought but not used
   until Session 6; weapon names are shown as ids (pistol, smg…).
 - No daily cap on Quiz Class by default — a player can practise the same questions for money.
+
+## 2026-11-19 — Session 6: Crime, weapons and police (Claude Opus 5.5)
+Shoumik can now fight, shoot, get wanted, get busted, go to jail and study his way out.
+
+Weapons (`src/features/weapons/`, `data/weapons.json`)
+- Fists, cricket bat, machete, pistol, revolver, SMG, sawed-off, shotgun, assault rifle, sniper
+  rifle and molotovs. Q / অস্ত্র switches; a badge next to the minimap shows the weapon and bullets.
+- Guns are the real 3D models in his hand on every quality (real Shoumik: `grips`; code-built
+  Shoumik: new `lowGrips`); bat, machete and bottle are built in code. Aim / shoot / swing
+  animations play on both models.
+- Phones: aim assist locks on to the best target in front (red ring). Computer: free aim at the
+  crosshair, right mouse = closer over-the-shoulder view (`data/camera.json → aim`).
+- Bullets: tracers, muzzle flash, sparks on walls/cars, blood on people; stop at walls; shotguns
+  fire pellets; vehicles take damage, burn and explode. Molotovs fly in an arc and leave a fire
+  that hurts people, Shoumik and vehicles.
+- Weapon shop now also sells the bat, machete, molotovs (3 per buy), body armour and ammo boxes
+  (need the gun first).
+
+Health, death and blood (`data/combat.json`)
+- People have life (100; police 120; black-uniform unit 180). They die from weapons, fast vehicles
+  (≈50 km/h) and blasts, lie in a spreading blood pool and are cleared after 35 s. Punches still only
+  knock people down, unless they are already lying down.
+- Shoumik: armour (blue bar) takes 70 % of damage first; bullets, fire and explosions hurt him; the
+  old "never below 10 health" floor is gone.
+- Settings → রক্ত (Blood) চালু / বন্ধ.
+
+Wanted stars (`src/features/crime/`, `data/economy.json → wanted`)
+- Crimes add heat; 5 thresholds = 5 stars. Stars blink while no police unit sees him and one star
+  fades every 14 s out of sight. The chase goes on after a reload.
+- Stats for the profile card: kills, policeKilled, carsDestroyed, longestChase, busted, wasted,
+  shotsFired (`save.data.stats`).
+
+Police (`src/features/police/`, `data/police.json`)
+- 1★ baton officers who arrest, 2★ armed officers, 3★ police pickups that chase and ram (crew
+  jumps out), 4★ black-uniform unit with rifles, black pickups and road blocks, 5★ + helicopter
+  with spotlight and gunner (can be shot down). Fewer units on Low / Medium.
+- Officers shout in Bangla (থামো! পুলিশ!), shoot with tracers, can be punched, shot, run over and
+  killed (serious crime). Police pickups can be stolen.
+
+Busted / jail / wasted (`src/features/jail/`)
+- BUSTED banner → bail ৳1,000 × stars → pay and walk out at Police HQ, or go to jail: cash goes
+  towards the bail and every right Lesson Check answer pays ৳250 more (progress bar, Bangla, Bangla
+  digits, 30 s timer, no way out with Esc). Jail is saved.
+- WASTED banner → wake at Dhaka Medical College, pay 10 % of cash, lose weapons.
+
+Under the hood
+- Save format **v4** (migration from v3): ammo, weapon, armour, wanted, jail; guns bought in
+  Session 5 get their starting ammo.
+- New shared modules: `src/core/targets.js` (`game.targets`), `src/entities/effects/combatFx.js`
+  (`game.combatFx`), `src/ui/quiz.js` + `src/ui/quizScreens.js` (moved from classes, now shared
+  with the jail), `src/ui/bubbles.js` (moved from pedestrians, shared with police), `src/ui/combat.css`.
+- `createOverlay` got `escape: false`; `ChaseCamera.setAim()`; input action `aim` (right mouse).
+- New tool `tools/crime-check.js` (40 checks). `tools/class-check.js` expects save v4;
+  `tools/weapon-grip.js` skips weapons without a GLB.
+
+Tests (headless Chromium, software rendering): crime check passes on Low; class check and smoke test
+pass; vehicle test — see below. Visual checks of the pistol and bat in his hand on Low and Medium.
+
+Known issues
+- Police drive straight at him when they can see him and follow junctions otherwise; in narrow Old
+  Dhaka lanes pickups can still get stuck on corners for a moment before reversing.
+- Officers on foot have no path finding: behind a building they walk round it by trial and error.
+- No drive-by shooting from vehicles yet; no gun sounds yet (Session 7).
+- Phone aim assist only locks on to people and the helicopter, not to vehicles (shoot vehicles by
+  facing them).
+- Real-phone FPS with a 5-star chase is unmeasured.

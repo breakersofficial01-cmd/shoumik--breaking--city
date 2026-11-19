@@ -1,5 +1,5 @@
 {
-  "_comment": "All money numbers (Taka). Class rewards, every shop price, bail later (Session 6). Lesson Check rewards are per lesson in data/lessons.json (rewardPerCorrect).",
+  "_comment": "All money numbers (Taka). Class rewards, every shop price, wanted stars, bail, hospital and jail. Lesson Check rewards are per lesson in data/lessons.json (rewardPerCorrect).",
   "startCash": 500,
   "currencySymbol": "৳",
   "rides": {
@@ -33,13 +33,25 @@
       "gulshan-house": 200000
     },
     "weapons": {
+      "bat": 1200,
+      "machete": 2500,
       "pistol": 5000,
       "revolver": 7000,
       "sawedOff": 12000,
       "smg": 15000,
       "shotgun": 18000,
       "rifle": 35000,
-      "sniper": 50000
+      "sniper": 50000,
+      "molotov": 3000,
+      "armour": 2000,
+      "ammo-pistol": 600,
+      "ammo-revolver": 800,
+      "ammo-smg": 1200,
+      "ammo-sawedOff": 900,
+      "ammo-shotgun": 1000,
+      "ammo-rifle": 2000,
+      "ammo-sniper": 2500,
+      "_comment": "Weapons, ammo boxes (ammo-<weapon id>, needs the gun; box size = data/weapons.json ammoPack), molotovs (each buy gives ammoPack bottles) and body armour (fills the armour bar)."
     },
     "outfits": {
       "polo_black": 800,
@@ -52,5 +64,45 @@
       "fuchka": 50,
       "chotpoti": 40
     }
+  },
+  "wanted": {
+    "_comment": "Wanted stars. Every crime adds heat points; the number of stars = how many starAt values the heat has passed. When no police officer, car or helicopter has seen Shoumik for fadeSeconds, one star fades (heat drops to the level of one star less). witnessRange = police inside this distance count as seeing him even behind a wall. Crime ids are sent by the game as crime:committed { type }.",
+    "starAt": [
+      30,
+      120,
+      300,
+      600,
+      1000
+    ],
+    "maxHeat": 1400,
+    "fadeSeconds": 14,
+    "seenGraceSeconds": 4,
+    "crimes": {
+      "assault": 10,
+      "hitPedestrian": 30,
+      "carjack": 40,
+      "shotsFired": 15,
+      "murder": 60,
+      "molotov": 40,
+      "destroyVehicle": 50,
+      "assaultPolice": 45,
+      "killPolice": 150,
+      "destroyPolice": 150,
+      "stealPolice": 90
+    }
+  },
+  "bail": {
+    "_comment": "Busted: bail = perStar x stars. Enough cash -> pay and walk out at Police HQ. Not enough -> jail: the cash he has is taken as part of the bail and the rest is earned by answering questions in jail (perCorrect Taka of bail per right answer, questionsPerRound per round, timePerQuestionSec each).",
+    "perStar": 1000,
+    "perCorrect": 250,
+    "questionsPerRound": 5,
+    "timePerQuestionSec": 30,
+    "releasePlace": "police-hq"
+  },
+  "wasted": {
+    "_comment": "Wasted (health reaches 0): wake up at hospitalPlace, pay feeShare of the cash as the hospital bill, lose every weapon and its ammo when loseWeapons is true.",
+    "feeShare": 0.1,
+    "loseWeapons": true,
+    "hospitalPlace": "dhaka-medical"
   }
 }

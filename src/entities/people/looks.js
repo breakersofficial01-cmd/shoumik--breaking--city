@@ -5,7 +5,7 @@
 //           oversized_tee | crop_jacket
 //   bottom: pants | cargo | lungi | salwar | saree
 //   head:   hairShort | hairLong | hairBun | hijab | cap | bucket
-//   extras: backpack | basket | gamcha | chain | tie | bag | orna
+//   extras: backpack | basket | gamcha | chain | tie | bag | orna | gun | vest (police, Session 6)
 // To add a new kind of person, add an archetype in the JSON; to add a new clothing kind,
 // add a case here. Everyone is an adult (heights come from the JSON, all adult sizes).
 
@@ -123,6 +123,13 @@ export function buildLook(arch, palettes, rng) {
   }
   if (has('tie')) add(BONE.SPINE, 'box', pick('tie'), mat(0, 0.28, td * 0.98, 0.036, 0.26, 0.012), null);
   if (has('bag')) add(BONE.FORE_R, 'box', pick('bags'), mat(0, -0.46, 0, 0.07, 0.24, 0.3), null);
+  if (has('gun')) {
+    // A dark gun held in the right hand, barrel along the hand (points ahead when aiming).
+    const black = hexToLinear('#151515');
+    add(BONE.FORE_R, 'box', black, mat(0, -0.33, 0.07, 0.04, 0.05, 0.2), null);
+    add(BONE.FORE_R, 'box', black, mat(0, -0.3, 0.02, 0.035, 0.1, 0.04), null);
+  }
+  if (has('vest')) add(BONE.SPINE, 'torso', hexToLinear('#0b0c0e'), mat(0, 0.0, 0, tw * 1.1, 0.42, td * 1.18));
 
   return { parts, dims, scale };
 }

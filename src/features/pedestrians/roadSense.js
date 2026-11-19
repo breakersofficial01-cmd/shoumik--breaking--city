@@ -6,7 +6,7 @@
 // vx, vz, speed and `owner` = the vehicle). Numbers: data/pedestrians.json → behaviour.vehicles.
 
 export class RoadSense {
-  /** @param {object} ctx { game, cfg (behaviour), radius, brain, rng, shout } */
+  /** @param {object} ctx { game, cfg (behaviour), radius, brain, rng, shout, killSpeed, kill(ped, by, dx, dz) } */
   constructor(ctx) {
     this.ctx = ctx;
     this.moving = [];
@@ -44,6 +44,13 @@ export class RoadSense {
         ped.x += vdx * V.throw + vdz * sign * 0.5;
         ped.z += vdz * V.throw - vdx * sign * 0.5;
         game.world.collision.resolveCircle(ped, radius);
+        if (o.speed >= this.ctx.killSpeed) {
+          // Too fast to survive (data/combat.json → people.runOverKillSpeed).
+          this.ctx.kill(ped, byPlayer ? 'player' : 'traffic', vdx, vdz);
+          game.events.emit('danger:raised', { x: ped.x, z: ped.z, radius: V.hitDangerRadius, source: byPlayer ? 'player' : 'traffic' });
+          if (byPlayer) game.events.emit('crime:committed', { type: 'hitPedestrian', x: ped.x, z: ped.z });
+          return true;
+        }
         brain.knockDown(ped);
         shout(ped, 'pain');
         game.events.emit('ped:hit', { x: ped.x, z: ped.z, down: true, byVehicle: true });

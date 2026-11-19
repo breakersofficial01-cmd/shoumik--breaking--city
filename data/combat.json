@@ -1,0 +1,45 @@
+{
+  "_comment": "Fighting, hurting and dying (Session 6). people.life = life points of a pedestrian or police officer (weapons take data/weapons.json -> damage). deadSeconds = how long a body stays before it is cleared away. runOverKillSpeed = a vehicle this fast (m/s, about 50 km/h) kills instead of knocking down. explosionKillShare = inside this share of a blast radius people die. player: armour.max, armourShare = share of damage the armour takes first. bulletHitHeight = what counts as a body (m). blood: decals = how many blood pools can be on the ground at once, poolSeconds = how long a pool stays, colour, spray = drops per hit. Blood can be switched off in Settings (Blood: On/Off). tracers = the short bright lines bullets leave. hitMarkerSeconds = how long the red cross shows when you hit someone.",
+  "people": {
+    "life": 100,
+    "policeLife": 120,
+    "swatLife": 180,
+    "deadSeconds": 35,
+    "runOverKillSpeed": 14,
+    "explosionKillShare": 0.6,
+    "bodyHeight": 1.75,
+    "bodyRadius": 0.38,
+    "fistLifeDamageWhenDown": 30
+  },
+  "player": {
+    "armourMax": 100,
+    "armourShare": 0.7,
+    "explosionDamage": 70,
+    "fireDamagePerSecond": 25,
+    "vehicleBulletShare": 0.6,
+    "deadSeconds": 3.2,
+    "bustedSeconds": 2.4
+  },
+  "blood": {
+    "decals": 24,
+    "poolSeconds": 40,
+    "poolSize": [
+      0.9,
+      1.7
+    ],
+    "growSeconds": 2.5,
+    "color": "#6e0a0a",
+    "sprayColor": "#a3100f",
+    "spray": 6
+  },
+  "tracers": {
+    "max": 48,
+    "seconds": 0.07,
+    "width": 0.035,
+    "color": "#ffe9a8",
+    "flashSeconds": 0.05,
+    "flashColor": "#ffd27a",
+    "sparkColor": "#ffd27a"
+  },
+  "hitMarkerSeconds": 0.18
+}

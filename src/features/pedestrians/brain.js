@@ -4,6 +4,7 @@
 //   cower  crouch with hands over the head               fight  chase the player and punch
 //   down   knocked to the ground, gets up after a while
 //   dive   jumps out of the way of a vehicle, lands on the ground, then gets up
+//   dead   killed (Session 6): lies still until the feature clears the body
 // Numbers: data/pedestrians.json → behaviour. The feature (index.js) owns spawning and events.
 
 const wrapAngle = (a) => Math.atan2(Math.sin(a), Math.cos(a));
@@ -167,6 +168,9 @@ export class Brain {
         this.step(ped, ped.diveX, ped.diveZ, cfg.vehicles.diveRunSpeed, dt, true);
         if (ped.timer <= 0) { ped.speed = 0; this.setState(ped, 'down', this.range(cfg.vehicles.diveDownSeconds)); }
         break;
+      case 'dead':
+        ped.speed = 0;
+        return;
       case 'down':
         ped.speed = 0;
         if (ped.timer <= 0) {

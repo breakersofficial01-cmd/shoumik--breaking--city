@@ -125,14 +125,15 @@
     "runAtSpeed": 5.2
   },
   "actions": {
-    "_comment": "punch: duration of the swing, hitAt = seconds into the swing when it lands, range in metres, arcDegrees = how wide in front of him it reaches, moveFactor = how much he can still move while punching. hit = what happens when somebody punches him. lockMovement = animations during which the stick does nothing; cancelOnMove = animations that stop when the stick is pushed.",
+    "_comment": "punch: duration of the swing, hitAt = seconds into the swing when it lands, range in metres, arcDegrees = how wide in front of him it reaches, moveFactor = how much he can still move while punching. hit = what happens when somebody punches him. lockMovement = animations during which the stick does nothing; cancelOnMove = animations that stop when the stick is pushed. lifeDamage = life points a punch takes (data/combat.json -> people.life); people only die from punches when they are beaten while lying down.",
     "punch": {
       "duration": 0.42,
       "hitAt": 0.15,
       "range": 1.45,
       "arcDegrees": 110,
       "moveFactor": 0.35,
-      "power": 1
+      "power": 1,
+      "lifeDamage": 12
     },
     "hit": {
       "knockback": 3.2,
@@ -164,9 +165,8 @@
     "Digit0": "shout"
   },
   "health": {
-    "_comment": "Health (Session 5: food stalls heal it, punches and crashes lower it). minFromHits keeps him alive until Session 6 adds getting knocked out / hospital. damagePerPower = health lost per point of player:hit power.",
+    "_comment": "Health. Food and sleeping fill it; punches, crashes, bullets, fire and blasts lower it. At 0 he is WASTED (data/economy.json -> wasted). damagePerPower = health lost per point of player:hit power. Armour: data/combat.json -> player.",
     "max": 100,
-    "minFromHits": 10,
     "damagePerPower": 6
   }
 }

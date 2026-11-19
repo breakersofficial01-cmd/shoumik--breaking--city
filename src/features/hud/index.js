@@ -1,6 +1,7 @@
 // Feature: HUD. Cash + wanted stars + Shoumik's portrait (top-left) and the district name
 // toast. Listens to events only:
-//   cash:changed { cash }      wanted:changed { stars }      health:changed { value, max }      district:entered { district }
+//   cash:changed { cash }      wanted:changed { stars, seen }  (stars blink while seen is false)
+//   health:changed { value, max }   armour:changed { value, max }   district:entered { district }
 //   language:changed
 //   prompt:show { id, key, vars? }  /  prompt:hide { id }   a one-line hint at the bottom (e.g. "press to dance")
 // Sends:  profile:open  when the portrait is tapped (the profile card comes in Session 7).
@@ -12,6 +13,7 @@ let root = null;
 let offs = [];
 let toastTimer = null;
 let stars = 0;
+let seen = true;
 let lastDistrict = null;
 const prompts = new Map(); // id -> { key, vars }; the newest one is shown
 
@@ -36,6 +38,14 @@ function renderStars() {
     if (i < stars) s.className = 'on';
     box.appendChild(s);
   }
+  box.classList.toggle('unseen', stars > 0 && !seen);
+}
+
+function renderArmour(a) {
+  const box = root.querySelector('.hud-armour');
+  if (!a) return;
+  box.hidden = !(a.value > 0);
+  box.firstChild.style.width = `${Math.round((a.max > 0 ? a.value / a.max : 0) * 100)}%`;
 }
 
 function renderHealth(h) {
@@ -70,6 +80,7 @@ export default {
           <div class="hud-cash"></div>
           <div class="hud-stars"></div>
           <div class="hud-health"><i></i></div>
+          <div class="hud-armour" hidden><i></i></div>
         </div>
       </div>
       <div class="hud-district"></div>
@@ -84,9 +95,11 @@ export default {
     renderCash();
     renderStars();
     renderHealth(g.player?.health);
+    renderArmour(g.player?.armour);
     offs = [
       g.events.on('cash:changed', renderCash),
-      g.events.on('wanted:changed', ({ stars: n }) => { stars = n || 0; renderStars(); }),
+      g.events.on('wanted:changed', ({ stars: n, seen: s = true }) => { stars = n || 0; seen = s !== false; renderStars(); }),
+      g.events.on('armour:changed', renderArmour),
       g.events.on('district:entered', ({ district }) => showDistrict(district)),
       g.events.on('language:changed', () => { renderCash(); renderPrompt(); if (lastDistrict) showDistrict(lastDistrict); }),
       g.events.on('prompt:show', ({ id, key, vars }) => { prompts.delete(id); prompts.set(id, { key, vars }); renderPrompt(); }),

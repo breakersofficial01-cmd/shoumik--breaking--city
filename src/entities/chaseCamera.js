@@ -23,6 +23,17 @@ export class ChaseCamera {
     this.sinceLook = 99;
     this.focusY = 0;
     this.scale = 1; // bigger vehicles push the camera further back (data/vehicles.json → camera)
+    this.zoom = 1;      // < 1 pulls the camera closer (aiming: data/camera.json → aim)
+    this.shoulder = 0;  // metres the view shifts to the right (over-the-shoulder aiming)
+    this.zoomTarget = 1;
+    this.shoulderTarget = 0;
+  }
+
+  /** Over-the-shoulder aiming view on/off (the weapons feature calls this). */
+  setAim(on) {
+    const a = this.cfg.aim || { zoom: 0.62, shoulder: 0.55 };
+    this.zoomTarget = on ? a.zoom : 1;
+    this.shoulderTarget = on ? a.shoulder : 0;
   }
 
   setTarget(target, modeName = 'onFoot', snap = false, scale = 1) {
@@ -65,8 +76,11 @@ export class ChaseCamera {
     // Smooth the height so kerbs and jumps don't jolt the view.
     this.focusY += (t.position.y - this.focusY) * Math.min(1, m.positionSmooth * dt);
     const fx = Math.sin(this.yaw), fz = Math.cos(this.yaw);
-    const tx = t.position.x, tz = t.position.z;
-    const full = m.distance * this.scale;
+    this.zoom += (this.zoomTarget - this.zoom) * Math.min(1, 8 * dt);
+    this.shoulder += (this.shoulderTarget - this.shoulder) * Math.min(1, 8 * dt);
+    // Right of the view is (-fz, fx) rotated: right() = (-cos yaw, sin yaw).
+    const tx = t.position.x - Math.cos(this.yaw) * this.shoulder, tz = t.position.z + Math.sin(this.yaw) * this.shoulder;
+    const full = m.distance * this.scale * this.zoom;
     const ty = this.focusY + m.targetHeight * this.scale;
 
     // Pull the camera in if a building is between it and the target.

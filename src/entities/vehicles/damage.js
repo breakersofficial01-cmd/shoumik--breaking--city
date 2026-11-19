@@ -16,6 +16,7 @@ export class DamageModel {
     const D = this.D;
     const over = kind === 'land' ? speed : speed - D.minImpactSpeed;
     if (over <= 0 || v.state === 'wreck') return;
+    if (v.driver === 'player') v.tags.lastHitBy = 'player'; // he wrecked it himself (crime + stats)
     this.damage(v, over * (kind === 'land' ? D.landPerSpeed : D.perSpeed));
     const now = performance.now();
     if (now - (v.lastCrashAt || 0) < 250) return; // one crash, several circles
@@ -68,8 +69,9 @@ export class DamageModel {
       this.damage(o, D.explosionDamage * f);
     }
     const ev = this.game.events;
-    ev.emit('vehicle:exploded', { id: v.id, type: v.type, x: v.x, z: v.z, radius: D.explosionRadius });
-    ev.emit('explosion', { x: v.x, z: v.z, radius: D.explosionRadius, power: 1 });
+    const by = v.tags.lastHitBy || (v.driver === 'player' ? 'player' : null);
+    ev.emit('vehicle:exploded', { id: v.id, type: v.type, x: v.x, z: v.z, radius: D.explosionRadius, by, police: !!v.tags.police });
+    ev.emit('explosion', { x: v.x, z: v.z, radius: D.explosionRadius, power: 1, by });
     ev.emit('danger:raised', { x: v.x, z: v.z, radius: D.explosionDangerRadius, source: 'explosion' });
   }
 

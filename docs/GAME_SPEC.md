@@ -4,8 +4,9 @@ What the game is and what exists **right now**. Updated at the end of every sess
 Rules live in `/CLAUDE.md`; the build plan in `docs/SESSIONS.md`; how the code is organised
 in `docs/HANDOFF.md`.
 
-Status: **Session 5 of 8 done** (+ Session 4.5 visual upgrade) (engine, city, foundations, Shoumik, people,
-vehicles, traffic, landmarks, MRT, posters; upgraded lighting, shadows, neon glow).
+Status: **Session 6 of 8 done** (+ Session 4.5 visual upgrade) (engine, city, foundations, Shoumik, people,
+vehicles, traffic, landmarks, MRT, posters; upgraded lighting, shadows, neon glow; classes, money,
+shops; weapons, wanted stars, police, busted / jail / wasted).
 
 ---
 
@@ -18,7 +19,7 @@ A free-roam, Vice-City-flavoured open world set in a compressed Dhaka, made for
 
 Money only comes from answering lesson questions. YouTube links open outside the game.
 
-## 2. What you can do today (after Session 4)
+## 2. What you can do today (after Session 6)
 - Open the game → loading screen → "শুরু করতে ট্যাপ করুন" → you are Shoumik on a street corner
   in Shahbag at sunset.
 - Walk, run, sprint and jump around the whole city. Buildings, poles, trees, lake edges and
@@ -48,12 +49,17 @@ Money only comes from answering lesson questions. YouTube links open outside the
   open **Class Mode** (section 10b).
 - Earn Taka in Class Mode (Lesson Check, Quiz Class) and spend it in 11 shops (section 10c):
   cars, bikes, homes, weapons (used from Session 6), clothes, tea and fuchka (heal).
-- Health bar under the stars: punches and crashes lower it (never below 10 until Session 6), food
-  and sleeping at home fill it.
+- Health bar under the stars: punches, crashes, bullets, fire and blasts lower it; food and
+  sleeping at home fill it. A blue armour bar appears under it after buying body armour.
+- Weapons (section 10d): fists, cricket bat, machete, 7 guns and molotovs from the weapon shop.
+  People bleed and die; vehicles can be shot until they burn and explode.
+- Crimes give wanted stars; police come on foot, in pickups, with road blocks and a helicopter
+  (section 10e). BUSTED → pay bail or study your way out of jail; WASTED → wake up at Dhaka
+  Medical College.
 - Posters everywhere (section 3c). Look at one that has a link and tap it (or the
   "পোস্টার খুলুন ↗" button, or F) to open the link.
 
-Not in yet: using weapons, wanted stars and police, knock-outs/hospital, day/night, real sound.
+Not in yet: day/night, real sound, radio, the profile card (stats are already kept), 17+ age screen.
 See `docs/SESSIONS.md`.
 
 ## 3. The city
@@ -257,10 +263,11 @@ On foot:
 | Camera | drag on the right side | click the game, then move the mouse (Esc frees it) |
 | Sprint | দৌড় | Shift |
 | Jump | লাফ | Space |
-| Punch | আঘাত | click (after clicking into the game) |
+| Punch / swing / shoot / throw | আঘাত (guns lock on to the nearest target in front: red ring) | click (after clicking into the game); guns fire at the crosshair |
+| Aim closer (over the shoulder) | – | hold the right mouse button |
 | Dance at a hangout spot | ঢোকো | E |
 | Get into a vehicle / hire a ride | ঢোকো | E |
-| Weapon | অস্ত্র (Session 6) | Q |
+| Next weapon | অস্ত্র | Q |
 | Open the poster you look at | tap it, or the পোস্টার খুলুন button | F |
 | Enter Breaking School / Biology (in the ring) | ঢোকো | E |
 
@@ -315,11 +322,13 @@ heaviest), about 9,700 collision boxes, whole-city layout generated in ~25 ms, a
 in ~3 ms on a desktop CPU. Real-phone numbers still need to be measured by the owner.
 
 ## 9. Save
-`localStorage["breakingCity.save"]`, version 3: cash, player position, outfit, settings (quality,
+`localStorage["breakingCity.save"]`, version 4: cash, player position, outfit, settings (quality,
 language, blood), owned vehicles (`owned.vehicles` = list of `{ type, color }`), owned homes /
 weapons / outfits, `health`, `home` (spawn point), `garage`, Lesson Check results per lesson
 (`lessons[id] = { attempts, paid: [question ids], earned, best }`), Quiz Class stats (`classes`),
-stats and flags. Migrations in
+`ammo` (bullets per weapon), `weapon` (in his hand), `armour`, `wanted` (heat — a chase goes on
+after a reload), `jail` (`{ owed, paid }` while in jail), `stats` (kills, policeKilled,
+carsDestroyed, longestChase, busted, wasted, shotsFired) and flags. Migrations in
 `src/core/save.js`. Unreadable saves are backed up to `breakingCity.save.broken`.
 
 ## 10. Content
@@ -355,7 +364,7 @@ Glowing rings with a floating name sign on sidewalk corners, coloured dots on th
 | গুলশান কার শোরুম | Gulshan (9,1) | yellow cab ৳30,000 · sedan ৳40,000 · SUV ৳65,000 · sports car ৳1,50,000 |
 | বাইক ও সাইকেলের দোকান | Karwan Bazar side (7,10) | bicycle ৳2,500 · motorbike ৳18,000 |
 | প্রপার্টি অফিস | Motijheel (11,10) | Old Dhaka mess ৳12,000 · Dhanmondi flat ৳60,000 · Gulshan house ৳2,00,000 |
-| গলির অস্ত্রের দোকান | Old Dhaka (6,14) | pistol ৳5,000 … sniper ৳50,000 (7 guns; usable from Session 6) |
+| গলির অস্ত্রের দোকান | Old Dhaka (6,14) | cricket bat ৳1,200 · machete ৳2,500 · pistol ৳5,000 … sniper ৳50,000 (7 guns) · molotov ×3 ৳3,000 · body armour ৳2,000 · ammo boxes ৳600–2,500 |
 | পোশাকের দোকান | Nilkhet side (2,10) | the 3 locked outfits |
 | চায়ের দোকান ×3 | TSC (4,10), Dhanmondi lake (1,6), Old Dhaka (8,14) | tea ৳10 (+15 health), tea + biscuit ৳15 (+25) |
 | ফুচকার দোকান ×3 | Shahbag start (3,10), Dhanmondi (4,7), Motijheel (10,9) | fuchka ৳50 (+45), chotpoti ৳40 (+35) |
@@ -365,3 +374,51 @@ have none). A bought home gets a white ring: ঢোকো there = sleep (full he
 becomes your home (spawn point if the saved spot is unusable, garage for your vehicles). With
 several homes, choose with "এখানে থাকো" in the property office or by sleeping there. Food is
 refused at full health so you never pay for nothing.
+
+## 10d. Weapons (Session 6)
+All numbers in `data/weapons.json` (prices in `data/economy.json → prices.weapons`). Q / অস্ত্র
+switches between the weapons he owns; the badge next to the minimap shows the weapon and bullets.
+
+| Weapon | Kind | Damage | Notes |
+|---|---|---|---|
+| ঘুষি fists | melee | knock-down | always there; only kills someone already lying down |
+| ক্রিকেট ব্যাট cricket bat | melee | 45 | knocks people down, dents cars |
+| রামদা machete | melee | 75 | |
+| পিস্তল pistol / রিভলভার revolver | gun | 34 / 70 | one shot per tap |
+| এসএমজি SMG / রাইফেল assault rifle | gun | 22 / 38 | automatic while held |
+| কাটা শটগান sawed-off / শটগান shotgun | gun | 8–9 pellets × 20–22 | short range |
+| স্নাইপার sniper | gun | 160 | long range |
+| মলোটভ molotov | throw | fire 45/s for 7 s | sets cars alight; 3 bottles per purchase |
+
+- People have 100 life (police 120, the black-uniform unit 180, `data/combat.json`). Dead people lie
+  in a spreading blood pool for 35 s. Running someone over faster than ~50 km/h kills.
+- Phones: **aim assist** locks on to the best target in front of the camera (red ring).
+  Computer: **free aim** at the crosshair; hold the right mouse button for a closer view.
+- Bullets stop at walls; vehicles take damage and explode; the guns are real 3D models in his hand
+  (code-built bat, machete and bottle).
+- Settings → রক্ত (Blood) চালু / বন্ধ switches all blood off (pools and spray).
+
+## 10e. Wanted stars and police (Session 6)
+Crimes add heat (`data/economy.json → wanted.crimes`): punching someone 10, hitting someone with a
+vehicle 30, carjacking 40, shots fired 15, murder 60, molotov 40, destroying a vehicle 50,
+attacking police 45, killing a police officer / destroying a police vehicle 150, stealing a police
+pickup 90. Stars at 30 / 120 / 300 / 600 / 1000 heat. When no police unit has seen him for 14 s
+the stars blink and one star fades.
+
+| Stars | Police (`data/police.json → levels`) |
+|---|---|
+| ★ | 2 officers on foot with batons — they run up and arrest him |
+| ★★ | 4 officers with pistols |
+| ★★★ | + 2 police pickups that chase and ram; the crew jumps out when he is on foot |
+| ★★★★ | + the black-uniform unit with rifles, black pickups, road blocks ahead of him while he drives |
+| ★★★★★ | everything + a helicopter with a spotlight and a gunner (it can be shot down) |
+
+Counts are scaled by quality (`data/quality.json → police`: Low 0.6, Medium 0.85, High 1).
+No real police names, crests or logos.
+
+**BUSTED** (an officer holds him for 1.3 s while he is slow on foot, or his vehicle has stopped):
+bail = ৳1,000 × stars. Enough cash → pay and walk out at Police HQ. Not enough → **jail**: his cash
+goes towards the bail and he answers Lesson Check questions (Bangla, Bangla digits, 30 s each);
+every right answer pays ৳250 of the bail (progress bar) until he walks out. Jail is saved.
+**WASTED** (health 0): he wakes up at Dhaka Medical College, pays 10 % of his cash and loses his
+weapons (`data/economy.json → wasted`).

@@ -7,7 +7,7 @@
 // keyboard Escape key closes it. Closing writes the save, so purchases / rewards are kept even
 // if the phone kills the browser right after.
 
-export function createOverlay(game, { id, reason, className = '', onClose = null }) {
+export function createOverlay(game, { id, reason, className = '', onClose = null, escape = true }) {
   const root = document.createElement('div');
   root.id = id;
   root.className = `overlay ${className}`.trim();
@@ -18,7 +18,7 @@ export function createOverlay(game, { id, reason, className = '', onClose = null
   game.ui.appendChild(root);
 
   const onKey = (e) => {
-    if (e.key === 'Escape' && !root.hidden) ov.close();
+    if (escape && e.key === 'Escape' && !root.hidden) ov.close(); // escape: false = must use a button (jail)
   };
   window.addEventListener('keydown', onKey);
 

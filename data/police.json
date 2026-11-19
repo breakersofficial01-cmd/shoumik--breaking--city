@@ -1,0 +1,95 @@
+{
+  "_comment": "Police (Session 6). Everything a wanted level sends after Shoumik. levels[stars - 1]: foot = officers on foot at once, armed = foot officers shoot (else they try to arrest with batons), swat = black-uniform officers (rifles, more health), cars = police pickups chasing (they ram), carColor = paint of those pickups, roadblocks = road blocks ahead of him while he drives, helicopter = one police helicopter. Counts are multiplied by data/quality.json -> police and rounded. No real police logos or names are used.",
+  "levels": [
+    { "foot": 2, "armed": false, "swat": 0, "cars": 0, "roadblocks": false, "helicopter": false },
+    { "foot": 4, "armed": true, "swat": 0, "cars": 0, "roadblocks": false, "helicopter": false },
+    { "foot": 3, "armed": true, "swat": 0, "cars": 2, "roadblocks": false, "helicopter": false },
+    { "foot": 2, "armed": true, "swat": 4, "cars": 3, "carColor": "#111316", "roadblocks": true, "helicopter": false },
+    { "foot": 2, "armed": true, "swat": 5, "cars": 4, "carColor": "#111316", "roadblocks": true, "helicopter": true }
+  ],
+  "spawn": {
+    "_comment": "Where new units appear: between minDistance and maxDistance metres from Shoumik, preferably out of view. every = seconds between new units. despawnDistance = units further than this are removed (and replaced closer).",
+    "minDistance": 32,
+    "maxDistance": 60,
+    "carMinDistance": 70,
+    "carMaxDistance": 130,
+    "every": 1.6,
+    "despawnDistance": 150,
+    "triesPerSpawn": 10
+  },
+  "officer": {
+    "_comment": "Officers on foot. speeds in m/s. arrestReach = how close an officer must be to arrest; bustSeconds = how long he must hold Shoumik (on foot and slower than bustMaxSpeed, or in a vehicle slower than bustVehicleSpeed) for BUSTED. sightRange = how far officers can see him (walls block). shootRange, fireEvery (s, random range), accuracy = chance a shot hits at 10 m (less further away and when he sprints), damage = health per hit, swatDamage for the black-uniform unit. meleeEvery / meleePower = baton hits. downSeconds = time on the ground after a punch or car hit.",
+    "runSpeed": 5.6,
+    "walkSpeed": 1.6,
+    "arrestReach": 1.35,
+    "bustSeconds": 1.3,
+    "bustMaxSpeed": 2.6,
+    "bustVehicleSpeed": 1.6,
+    "bustVehicleReach": 3.2,
+    "sightRange": 70,
+    "shootRange": 32,
+    "keepDistance": 7,
+    "fireEvery": [0.9, 1.7],
+    "swatFireEvery": [0.25, 0.6],
+    "accuracy": 0.42,
+    "swatAccuracy": 0.5,
+    "damage": 7,
+    "swatDamage": 6,
+    "meleeEvery": [0.9, 1.4],
+    "meleePower": 0.8,
+    "downSeconds": [2.2, 3.6],
+    "stuckSeconds": 1.2
+  },
+  "car": {
+    "_comment": "Police pickups. type = vehicle type from data/vehicles.json. ramSpeed = target speed when close (m/s); cruise = speed when far. leadSeconds = they aim where Shoumik will be this many seconds ahead. exitDistance = when Shoumik is on foot this close and the pickup has stopped, its officers get out (crew of them). sirenEvery = seconds between siren blasts. stuckSeconds/reverseSeconds = backing off after getting stuck.",
+    "type": "police_pickup",
+    "cruise": 26,
+    "ramSpeed": 30,
+    "leadSeconds": 0.6,
+    "exitDistance": 14,
+    "crew": 2,
+    "sirenEvery": 6,
+    "stuckSeconds": 1.4,
+    "reverseSeconds": 1.1,
+    "waypointReach": 9,
+    "directRange": 70
+  },
+  "roadblock": {
+    "_comment": "Road blocks (4+ stars, only while Shoumik drives faster than minPlayerSpeed). Two pickups across the road distance metres ahead, with officers beside them. every = seconds between blocks; lifeSeconds = how long one stays.",
+    "every": 22,
+    "distance": 95,
+    "minPlayerSpeed": 7,
+    "officers": 2,
+    "lifeSeconds": 60
+  },
+  "helicopter": {
+    "_comment": "Police helicopter (5 stars). height above ground (m), orbitRadius around Shoumik, speed (m/s), fireEvery (s), accuracy, damage per hit, health. spotlight = the light cone it points at him.",
+    "height": 26,
+    "orbitRadius": 18,
+    "speed": 22,
+    "fireEvery": 1.6,
+    "accuracy": 0.35,
+    "damage": 9,
+    "health": 600,
+    "bodyColor": "#1b2640",
+    "stripeColor": "#e9edf2",
+    "spotlightColor": "#fff4c8"
+  },
+  "archetypes": {
+    "_comment": "How officers look (same format as data/pedestrians.json archetypes; colour lists are in palettes below or in pedestrians.json). extras: gun = a pistol / rifle in the hand, vest = a black protective vest.",
+    "police": { "sex": "m", "top": "shirt_long", "topColors": "policeShirt", "bottom": "pants", "bottomColors": "policePants", "head": { "cap": 1 }, "headColors": "policeCap", "shoes": "shoe", "shoeColors": "policeShoes", "extras": { "gun": 1 }, "height": [1.68, 1.82], "build": [1.0, 1.12] },
+    "swat": { "sex": "m", "top": "shirt_long", "topColors": "swat", "bottom": "cargo", "bottomColors": "swat", "head": { "cap": 1 }, "headColors": "swat", "shoes": "shoe", "shoeColors": "policeShoes", "extras": { "gun": 1, "vest": 1 }, "height": [1.72, 1.86], "build": [1.08, 1.2] }
+  },
+  "palettes": {
+    "policeShirt": ["#3e5a7a", "#405d80"],
+    "policePants": ["#1f2a3d"],
+    "policeCap": ["#1f2a3d"],
+    "policeShoes": ["#111111"],
+    "swat": ["#141518", "#1a1b1f"]
+  },
+  "shouts": {
+    "_comment": "Speech bubbles (keys in data/strings.json).",
+    "chase": ["police.shout.stop", "police.shout.freeze", "police.shout.hands"],
+    "pain": ["ped.shout.pain1", "ped.shout.pain2"]
+  }
+}

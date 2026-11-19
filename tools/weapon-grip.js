@@ -41,6 +41,7 @@ const server = http.createServer((req, res) => {
   const assets = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/assets.json'), 'utf8')).assets;
   for (const w of cfg.weapons) {
     if (only.length && !only.includes(w.id)) continue;
+    if (!w.asset) continue; // fists and the code-built bat / machete / molotov have no GLB
     const grip = cfg.grips[w.grip];
     const url = '/' + assets[w.asset].url;
     const clip = w.grip === 'rifle' ? arg('rifleClip', clipName) : clipName;

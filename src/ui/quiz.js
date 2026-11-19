@@ -1,4 +1,5 @@
-// Quiz engine for Class Mode — pure logic, no DOM, so it is easy to test.
+// Quiz engine for Class Mode and the jail ("Study Your Way Out") — pure logic, no DOM, so it
+// is easy to test. Shared, so features use it without importing each other.
 //
 //   const run = new QuizRun(questions, { count: 3, shuffleOptions: true, seconds: 30, rng })
 //   run.current        -> { q, order: ['C','A','D','B'], index }   (order = real letters in screen order)

@@ -2,7 +2,8 @@
 // into, so gameplay code never cares where input came from.
 //
 //   input.move      { x, y }   -1..1, y = forward
-//   input.held      { sprint, jump, action, attack, weapon, horn, open }  (true while down)
+//   input.held      { sprint, jump, action, attack, weapon, horn, open, aim }  (true while down)
+//                   aim = right mouse button while the mouse is captured (desktop aiming)
 //   input.pressed   same names, true only on the frame the button went down
 //   input.look      { x, y }   camera turn collected this frame (radians)
 // Each press also emits an event: `input:jump`, `input:action`, `input:attack`, ...
@@ -10,7 +11,7 @@
 
 import { events } from './events.js';
 
-const ACTIONS = ['sprint', 'jump', 'action', 'attack', 'weapon', 'horn', 'open'];
+const ACTIONS = ['sprint', 'jump', 'action', 'attack', 'weapon', 'horn', 'open', 'aim'];
 
 export class Input {
   constructor(controlsCfg, canvas) {
@@ -64,6 +65,7 @@ export class Input {
       if (e.pointerType !== 'mouse') return;
       if (this.pointerLocked) {
         if (e.button === 0) this.setButton('attack', true);
+        if (e.button === 2) this.setButton('aim', true);
       } else {
         this.dragging = true;
         c.requestPointerLock?.()?.catch?.(() => {});
@@ -73,6 +75,7 @@ export class Input {
       if (e.pointerType !== 'mouse') return;
       this.dragging = false;
       if (e.button === 0) this.setButton('attack', false);
+      if (e.button === 2) this.setButton('aim', false);
     };
     this._mousemove = (e) => {
       if (e.pointerType !== 'mouse' || (!this.pointerLocked && !this.dragging)) return;

@@ -69,6 +69,28 @@ export class GlbShoumikModel {
         lower: this.mixer.clipAction(new THREE.AnimationClip(`${clip.name}:lower`, clip.duration, lower)),
       });
     }
+    // Right hand: weapons are hung on this bone (data/weapons.json → grips).
+    this.handBone = null;
+    rig.traverse((o) => { if (!this.handBone && o.isBone && /RightHand$/.test(o.name)) this.handBone = o; });
+    this.holder = new THREE.Group();
+    this.holder.name = 'weapon-holder';
+    this.handBone?.add(this.holder);
+    this.hand = {
+      kind: 'glb',
+      /** Put obj (already sized in metres) in his hand. grip: { position, rotation (deg), scale } */
+      attach: (obj, grip) => {
+        this.hand.clear();
+        if (!this.handBone) return;
+        rig.updateMatrixWorld(true);
+        const k = this.handBone.getWorldScale(new THREE.Vector3()).x || 1; // bone units → metres
+        const h = this.holder;
+        h.position.fromArray(grip.position).multiplyScalar(1 / k);
+        h.rotation.set(...grip.rotation.map((d) => THREE.MathUtils.degToRad(d)));
+        h.scale.setScalar((grip.scale ?? 1) / k);
+        h.add(obj);
+      },
+      clear: () => { this.holder.clear(); },
+    };
     this.weights = new Map(); // AnimationAction -> weight wanted this frame
     this.active = new Set();
     const missing = Object.values(this.cfg.clips).flat().filter((n) => n && !this.clips.has(n));

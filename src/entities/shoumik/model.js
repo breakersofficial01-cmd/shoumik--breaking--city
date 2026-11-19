@@ -68,6 +68,23 @@ export class ShoumikModel {
     this.group.add(this.shadow);
 
     this.setOutfit(outfit);
+
+    // Right hand: a weapon follows the right forearm (data/weapons.json → lowGrips).
+    this.holder = new THREE.Group();
+    this.holder.name = 'weapon-holder';
+    this.holder.matrixAutoUpdate = false;
+    this.group.add(this.holder);
+    this.gripMatrix = new THREE.Matrix4();
+    this.hand = {
+      kind: 'low',
+      attach: (obj, grip) => {
+        this.holder.clear();
+        const e = new THREE.Euler(...grip.rotation.map((d) => THREE.MathUtils.degToRad(d)));
+        this.gripMatrix.compose(new THREE.Vector3().fromArray(grip.position), new THREE.Quaternion().setFromEuler(e), new THREE.Vector3(1, 1, 1).multiplyScalar(1 / this.scale));
+        this.holder.add(obj);
+      },
+      clear: () => { this.holder.clear(); },
+    };
   }
 
   setBoneMesh(bone, gb) {
@@ -115,6 +132,10 @@ export class ShoumikModel {
       const m = this.meshes[i];
       m.matrix.copy(this.bones[i]);
       m.matrixWorldNeedsUpdate = true;
+    }
+    if (this.holder.children.length) {
+      this.holder.matrix.multiplyMatrices(this.bones[BONE.FORE_R], this.gripMatrix);
+      this.holder.matrixWorldNeedsUpdate = true;
     }
     if (this.face) {
       this.face.matrix.copy(this.bones[BONE.HEAD]);

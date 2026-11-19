@@ -3,10 +3,19 @@
 // this file). Numbers: data/player.json.
 //
 // Events sent:  player:spawned { x, z }   district:entered { district }
-//               health:changed { value, max, delta }
+//               health:changed { value, max, delta }   armour:changed { value, max }
+//               player:died { x, z, by }               health reached 0 (the jail feature takes over)
 // Events heard: player:heal { amount | full }  (food stalls, sleeping at home)
-//               player:hit { power }            lowers health (never below health.minFromHits
-//                                               until Session 6 adds being knocked out)
+//               player:hit { power }            punches, crashes (power × health.damagePerPower)
+//               player:damage { amount, x?, z?, by? }  bullets, fire, blasts (armour takes a share first)
+//               player:armour { amount | full } body armour from the weapon shop
+//               explosion { x, z, radius }      hurts him when he is on foot nearby
+//               player:teleport { x, z, heading }  move him (after busted / wasted)
+//               player:revive {}                stand up again with full health
+//               player:freeze { on }            hold him still (busted: hands up)
+// Shared state other features write: game.player.weapon ({ id, type } from the weapons
+// feature) and game.player.aimHeading (number = he faces that way while aiming, or null).
+// game.player.hand.attach(object3D, grip) puts a weapon model in his right hand.
 // Punches, dancing, outfits and animation requests live in ./actions.js (events listed there).
 //
 // Movement is relative to the camera: stick up = away from the camera.
@@ -46,6 +55,12 @@ const state = {
   action: null,        // name of the animation he is doing (punch, dance…) or null
   outfit: null,        // id from data/outfits.json
   health: { value: 100, max: 100 },  // data/player.json → health; saved in save.data.health
+  armour: { value: 0, max: 100 },    // data/combat.json → player.armourMax; saved in save.data.armour
+  dead: false,         // health reached 0 (until player:revive)
+  frozen: false,       // held still by player:freeze (busted)
+  weapon: null,        // { id, type } set by the weapons feature (null = fists)
+  aimHeading: null,    // set by the weapons feature while aiming
+  hand: null,          // { attach(obj, grip), clear() } — the model's right hand
 };
 
 let offs = [];
@@ -58,6 +73,32 @@ function setHealth(value) {
   h.value = next;
   game.save.data.health = next >= h.max ? null : next;
   game.events.emit('health:changed', { value: next, max: h.max, delta });
+}
+
+function setArmour(value) {
+  const a = state.armour;
+  const next = Math.max(0, Math.min(a.max, Math.round(value)));
+  if (next === a.value) return;
+  a.value = next;
+  game.save.data.armour = next;
+  game.events.emit('armour:changed', { value: next, max: a.max });
+}
+
+/** Lose health (armour takes its share first). Reaching 0 = he dies once. */
+function hurt(amount, by = null, x = null, z = null) {
+  if (state.dead || !(amount > 0)) return;
+  const share = game.config.get('combat').player.armourShare;
+  const soak = Math.min(state.armour.value, amount * share);
+  if (soak > 0) setArmour(state.armour.value - soak);
+  setHealth(state.health.value - (amount - soak));
+  if (state.health.value <= 0) die(by);
+}
+
+function die(by) {
+  state.dead = true;
+  state.velocity.x = state.velocity.z = 0;
+  game.events.emit('player:action', { name: 'down' }); // 'down' holds its last frame
+  game.events.emit('player:died', { x: state.position.x, z: state.position.z, by });
 }
 
 function spawnPoint() {
@@ -116,6 +157,7 @@ export default {
     model = (await loadRealModel(g)) || factory.create(outfit);
     model.setOutfit?.(outfit);
     animator.dims = model.dims;
+    state.hand = model.hand || null;
     state.outfit = outfit.id;
     state.model = model.group;
     g.scene.add(model.group);
@@ -132,12 +174,35 @@ export default {
     placeAt(savedOk ? saved : homeOk ? home : spawnPoint());
 
     const hc = cfg.health;
-    state.health = { value: Number.isFinite(g.save.data.health) ? Math.min(hc.max, g.save.data.health) : hc.max, max: hc.max };
+    const cc = g.config.get('combat').player;
+    // A saved 0 (closed the game while dead) comes back as full health.
+    state.health = { value: Number.isFinite(g.save.data.health) && g.save.data.health > 0 ? Math.min(hc.max, g.save.data.health) : hc.max, max: hc.max };
+    state.armour = { value: Math.min(cc.armourMax, g.save.data.armour || 0), max: cc.armourMax };
+    state.dead = state.frozen = false;
     offs = [
-      g.events.on('player:heal', ({ amount = 0, full = false } = {}) => setHealth(full ? hc.max : state.health.value + amount)),
-      g.events.on('player:hit', ({ power = 1 } = {}) => {
-        const floor = Math.min(state.health.value, hc.minFromHits);
-        setHealth(Math.max(floor, state.health.value - power * hc.damagePerPower));
+      g.events.on('player:heal', ({ amount = 0, full = false } = {}) => { if (!state.dead) setHealth(full ? hc.max : state.health.value + amount); }),
+      g.events.on('player:hit', ({ power = 1, by = null } = {}) => hurt(power * hc.damagePerPower, by)),
+      g.events.on('player:damage', ({ amount = 0, by = null, x = null, z = null } = {}) => hurt(amount, by, x, z)),
+      g.events.on('player:armour', ({ amount = 0, full = false } = {}) => setArmour(full ? state.armour.max : state.armour.value + amount)),
+      g.events.on('explosion', ({ x, z, radius, by = null }) => {
+        if (state.mode !== 'onFoot' || !Number.isFinite(x)) return;
+        const d = Math.hypot(state.position.x - x, state.position.z - z);
+        if (d < radius) hurt(cc.explosionDamage * (1 - d / radius), by, x, z);
+      }),
+      g.events.on('player:teleport', ({ x, z, heading = 0 }) => {
+        placeAt({ x, z, heading });
+        g.cameraRig.setTarget(state, 'onFoot', true);
+        this.syncModel();
+      }),
+      g.events.on('player:revive', () => {
+        state.dead = false;
+        state.frozen = false;
+        setHealth(hc.max);
+        animator.stop();
+      }),
+      g.events.on('player:freeze', ({ on }) => {
+        state.frozen = !!on;
+        state.velocity.x = state.velocity.z = 0;
       }),
     ];
     g.player = state;
@@ -173,8 +238,9 @@ export default {
     const mx = input.move.x;
     const my = input.move.y;
     let amount = Math.min(1, Math.hypot(mx, my));
-    actions.update(dt, input, amount > 0.01);
-    if (actions.locked) amount = 0;
+    const still = state.dead || state.frozen;
+    actions.update(dt, input, amount > 0.01 && !still);
+    if (actions.locked || still) amount = 0;
     let wantX = 0, wantZ = 0;
     if (amount > 0.01) {
       const f = cameraRig.forward();
@@ -185,9 +251,14 @@ export default {
       const top = (input.held.sprint ? cfg.sprintSpeed : amount < cfg.walkStickThreshold ? cfg.walkSpeed : cfg.runSpeed) * actions.moveFactor;
       wantX = (dx / len) * top;
       wantZ = (dz / len) * top;
-      // Turn to face where he is going.
-      const targetHeading = Math.atan2(dx, dz);
-      state.heading = wrapAngle(state.heading + wrapAngle(targetHeading - state.heading) * Math.min(1, cfg.turnSpeed * dt));
+      // Turn to face where he is going (unless he is aiming: then he walks sideways).
+      if (state.aimHeading == null) {
+        const targetHeading = Math.atan2(dx, dz);
+        state.heading = wrapAngle(state.heading + wrapAngle(targetHeading - state.heading) * Math.min(1, cfg.turnSpeed * dt));
+      }
+    }
+    if (state.aimHeading != null && !still) {
+      state.heading = wrapAngle(state.heading + wrapAngle(state.aimHeading - state.heading) * Math.min(1, cfg.turnSpeed * 1.6 * dt));
     }
 
     // 2) Accelerate / brake towards it.
@@ -209,7 +280,7 @@ export default {
     // 4) Jump + gravity; follow the ground (kerbs) smoothly.
     const ground = world.heightAt(pos.x, pos.z);
     if (state.grounded) {
-      if (input.pressed.jump && !actions.locked) {
+      if (input.pressed.jump && !actions.locked && !still) {
         animator.stop();
         vel.y = cfg.jumpSpeed;
         state.grounded = false;

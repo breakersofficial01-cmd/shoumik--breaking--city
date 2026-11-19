@@ -27,6 +27,11 @@ const LOADERS = {
   entrances: () => import('./entrances/index.js'),
   classes: () => import('./classes/index.js'),
   shops: () => import('./shops/index.js'),
+  // Session 6: weapons in his hand, wanted stars + stats, the police, busted / jail / wasted.
+  weapons: () => import('./weapons/index.js'),
+  crime: () => import('./crime/index.js'),
+  police: () => import('./police/index.js'),
+  jail: () => import('./jail/index.js'),
   touchControls: () => import('./touchControls/index.js'),
   hud: () => import('./hud/index.js'),
   minimap: () => import('./minimap/index.js'),

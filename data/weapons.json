@@ -1,16 +1,43 @@
 {
-  "_comment": "Weapon models (CC0 Quaternius 'Ultimate Gun Pack', assets/weapons/, already in metres). Gameplay numbers (damage, ammo, price) come in Session 6. weapons = the guns the game uses: id, asset (data/assets.json), grip (how it sits in Shoumik's right hand). grips = offset from the right-hand bone of the real model: position in metres, rotation in degrees (x, y, z), scale. Check a grip with: node tools/weapon-grip.js --three <three dir> --out shots.",
+  "_comment": "Weapons (Session 6). Models: CC0 Quaternius 'Ultimate Gun Pack' (assets/weapons/) for guns; bat, machete and molotov are built in code (build). Prices are in data/economy.json -> prices.weapons. Fields: type = fists | melee | gun | throw. damage = life points taken per hit (people have data/combat.json -> people.life). range in metres. fireEvery = seconds between shots / swings. auto = keeps firing while the button is held. pellets + spreadDegrees = shotgun spray. startAmmo = bullets that come with a new gun, ammoPack = bullets in one box bought at the weapon shop (price prices.weapons['ammo-<id>']), maxAmmo = most you can carry. length = how long the model is in metres. aimAssistDegrees = on phones the gun locks on to the nearest target inside this cone. vehicleDamage = damage to a vehicle per hit. knockDown = a melee hit that does not kill still knocks people down. noise = metres around a shot where people panic. grips = how a gun sits in the right hand of the real (Medium/High) Shoumik: offset from the right-hand bone in metres, rotation in degrees, scale; lowGrip = the same for the code-built (Low) Shoumik, relative to his right forearm (y points down the arm). Check grips with: node tools/weapon-grip.js --three <three dir> --out shots.",
+  "order": ["fists", "bat", "machete", "pistol", "revolver", "smg", "sawedOff", "shotgun", "rifle", "sniper", "molotov"],
   "grips": {
     "pistol": { "position": [0.0, 0.07, 0.0], "rotation": [-165.5, -40.1, -84.8], "scale": 1 },
-    "rifle": { "position": [0.0, 0.07, 0.0], "rotation": [-165.5, -40.1, -84.8], "scale": 1 }
+    "rifle": { "position": [0.0, 0.07, 0.0], "rotation": [-165.5, -40.1, -84.8], "scale": 1 },
+    "melee": { "position": [0.0, 0.08, 0.02], "rotation": [0, 0, 90], "scale": 1 },
+    "throw": { "position": [0.0, 0.08, 0.03], "rotation": [0, 0, 0], "scale": 1 }
+  },
+  "lowGrips": {
+    "pistol": { "position": [0.0, -0.33, 0.04], "rotation": [-90, 0, -90] },
+    "rifle": { "position": [0.0, -0.33, 0.04], "rotation": [-90, 0, -90] },
+    "melee": { "position": [0.0, -0.33, 0.02], "rotation": [0, 0, 0] },
+    "throw": { "position": [0.0, -0.36, 0.02], "rotation": [0, 0, 0] }
   },
   "weapons": [
-    { "id": "pistol", "asset": "model.weapon.pistol1", "grip": "pistol" },
-    { "id": "revolver", "asset": "model.weapon.revolver1", "grip": "pistol" },
-    { "id": "smg", "asset": "model.weapon.submachineGun1", "grip": "pistol" },
-    { "id": "shotgun", "asset": "model.weapon.shotgun1", "grip": "rifle" },
-    { "id": "sawedOff", "asset": "model.weapon.shotgunSawedOff", "grip": "rifle" },
-    { "id": "rifle", "asset": "model.weapon.assaultRifle1", "grip": "rifle" },
-    { "id": "sniper", "asset": "model.weapon.sniperRifle1", "grip": "rifle" }
-  ]
+    { "id": "fists", "type": "fists", "name": { "en": "Fists", "bn": "ঘুষি" }, "icon": "✊", "damage": 12, "range": 1.45 },
+    { "id": "bat", "type": "melee", "build": "bat", "grip": "melee", "name": { "en": "Cricket bat", "bn": "ক্রিকেট ব্যাট" }, "icon": "🏏", "damage": 45, "range": 1.9, "arcDegrees": 120, "fireEvery": 0.62, "hitAt": 0.28, "knockDown": true, "length": 0.86, "vehicleDamage": 12 },
+    { "id": "machete", "type": "melee", "build": "machete", "grip": "melee", "name": { "en": "Machete", "bn": "রামদা" }, "icon": "🔪", "damage": 75, "range": 1.7, "arcDegrees": 110, "fireEvery": 0.55, "hitAt": 0.25, "knockDown": true, "length": 0.62, "vehicleDamage": 6 },
+    { "id": "pistol", "type": "gun", "asset": "model.weapon.pistol1", "grip": "pistol", "name": { "en": "Pistol", "bn": "পিস্তল" }, "icon": "🔫", "damage": 34, "range": 60, "fireEvery": 0.32, "auto": false, "pellets": 1, "spreadDegrees": 1.5, "startAmmo": 48, "ammoPack": 36, "maxAmmo": 300, "length": 0.22, "aimAssistDegrees": 38, "vehicleDamage": 9, "noise": 30 },
+    { "id": "revolver", "type": "gun", "asset": "model.weapon.revolver1", "grip": "pistol", "name": { "en": "Revolver", "bn": "রিভলভার" }, "icon": "🔫", "damage": 70, "range": 70, "fireEvery": 0.7, "auto": false, "pellets": 1, "spreadDegrees": 1, "startAmmo": 24, "ammoPack": 18, "maxAmmo": 120, "length": 0.27, "aimAssistDegrees": 34, "vehicleDamage": 18, "noise": 34 },
+    { "id": "smg", "type": "gun", "asset": "model.weapon.submachineGun1", "grip": "pistol", "name": { "en": "SMG", "bn": "এসএমজি" }, "icon": "🔫", "damage": 22, "range": 55, "fireEvery": 0.09, "auto": true, "pellets": 1, "spreadDegrees": 4, "startAmmo": 120, "ammoPack": 90, "maxAmmo": 600, "length": 0.42, "aimAssistDegrees": 38, "vehicleDamage": 6, "noise": 36 },
+    { "id": "sawedOff", "type": "gun", "asset": "model.weapon.shotgunSawedOff", "grip": "rifle", "name": { "en": "Sawed-off shotgun", "bn": "কাটা শটগান" }, "icon": "💥", "damage": 22, "range": 20, "fireEvery": 0.8, "auto": false, "pellets": 8, "spreadDegrees": 10, "startAmmo": 16, "ammoPack": 12, "maxAmmo": 80, "length": 0.55, "aimAssistDegrees": 40, "vehicleDamage": 6, "noise": 36 },
+    { "id": "shotgun", "type": "gun", "asset": "model.weapon.shotgun1", "grip": "rifle", "name": { "en": "Shotgun", "bn": "শটগান" }, "icon": "💥", "damage": 20, "range": 28, "fireEvery": 0.95, "auto": false, "pellets": 9, "spreadDegrees": 7, "startAmmo": 20, "ammoPack": 15, "maxAmmo": 100, "length": 0.95, "aimAssistDegrees": 38, "vehicleDamage": 6, "noise": 40 },
+    { "id": "rifle", "type": "gun", "asset": "model.weapon.assaultRifle1", "grip": "rifle", "name": { "en": "Assault rifle", "bn": "রাইফেল" }, "icon": "🔫", "damage": 38, "range": 85, "fireEvery": 0.12, "auto": true, "pellets": 1, "spreadDegrees": 2.2, "startAmmo": 120, "ammoPack": 90, "maxAmmo": 600, "length": 0.88, "aimAssistDegrees": 32, "vehicleDamage": 12, "noise": 44 },
+    { "id": "sniper", "type": "gun", "asset": "model.weapon.sniperRifle1", "grip": "rifle", "name": { "en": "Sniper rifle", "bn": "স্নাইপার" }, "icon": "🎯", "damage": 160, "range": 160, "fireEvery": 1.3, "auto": false, "pellets": 1, "spreadDegrees": 0.2, "startAmmo": 12, "ammoPack": 10, "maxAmmo": 60, "length": 1.1, "aimAssistDegrees": 20, "vehicleDamage": 40, "noise": 50 },
+    { "id": "molotov", "type": "throw", "build": "molotov", "grip": "throw", "name": { "en": "Molotov", "bn": "মলোটভ" }, "icon": "🔥", "fireEvery": 1.0, "throwSpeed": 15, "throwUp": 6, "fireRadius": 3.2, "fireSeconds": 7, "fireDamagePerSecond": 45, "vehicleDamagePerSecond": 60, "startAmmo": 3, "ammoPack": 3, "maxAmmo": 15, "length": 0.26, "aimAssistDegrees": 30, "range": 22, "noise": 30 }
+  ],
+  "builds": {
+    "_comment": "Colours of the code-built weapons.",
+    "bat": { "blade": "#d8b57a", "handle": "#3a2a1c", "grip": "#1d1d1d" },
+    "machete": { "blade": "#c9ccd1", "edge": "#f2f4f6", "handle": "#4a2c16" },
+    "molotov": { "glass": "#3f8a3a", "rag": "#e8dcc0", "flame": "#ff8a1f" }
+  },
+  "aim": {
+    "_comment": "turnSpeed = how fast Shoumik turns to his target (rad/s factor). holdSeconds = how long he keeps the gun raised after the last shot. lockRange = farthest a phone auto-aim locks on (m). muzzle = where bullets start, relative to his feet (metres up, metres ahead). shotsFiredEvery = a crime is reported at most this often while shooting.",
+    "turnSpeed": 16,
+    "holdSeconds": 1.4,
+    "lockRange": 45,
+    "muzzle": [1.38, 0.55],
+    "shotsFiredEvery": 3
+  }
 }

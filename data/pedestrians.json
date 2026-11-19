@@ -1,6 +1,6 @@
 {
  "_comment": "Pedestrians. crowd = renderer limits. spawn = where people appear/disappear around the player (metres). behaviour = how they walk and react. palettes = colour lists. archetypes = kinds of people (clothing kinds are listed at the top of src/entities/people/looks.js; heights in metres - everyone is an adult). districts = how busy each district is (density 0-1 of the quality's pedestrian count) and which archetypes walk there (weights; 'default' is used when a district has no entry). shouts = keys in data/strings.json.",
- "crowd": { "capacity": 72, "farEvery": 3, "shadowRadius": 0.4, "shadowOpacity": 0.28 },
+ "crowd": { "capacity": 96, "farEvery": 3, "shadowRadius": 0.4, "shadowOpacity": 0.28 },
  "spawn": { "minDistance": 24, "minDistanceInView": 58, "maxDistance": 88, "despawnDistance": 102, "perFrame": 2, "triesPerFrame": 8, "laneOffset": [1.35, 2.45], "collideDistance": 32, "radius": 0.3 },
  "behaviour": {
   "_comment": "straight/cross weights at a street corner; waitAtCrossing seconds; pauseChance = chance to stand a while at a corner; flee* = running away; cowerChance / shoutChance when something scary happens nearby; fight* = people who hit back; downSeconds = how long a knocked-down person stays down; stuckSeconds = turn round if blocked this long.",

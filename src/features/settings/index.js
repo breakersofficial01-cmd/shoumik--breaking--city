@@ -1,7 +1,8 @@
 // Feature: settings (first small version). A gear button opens a panel where the player
 // picks graphics quality Low / Medium / High and Shoumik's outfit (sends outfit:set { id };
-// the player feature answers with outfit:changed). Session 7 adds the rest (sound, language,
-// control size, Blood On/Off, reset save) to this same folder.
+// the player feature answers with outfit:changed), and Blood On/Off (Session 6: saved in
+// save.data.settings.blood, sends settings:blood { on }). Session 7 adds the rest (sound,
+// language, control size, reset save) to this same folder.
 // The game is paused while the panel is open.
 
 import { t, applyStrings, pickName } from '../../ui/i18n.js';
@@ -19,6 +20,10 @@ function markActive() {
   });
   panel.querySelectorAll('[data-outfit]').forEach((b) => {
     b.classList.toggle('active', b.dataset.outfit === game.player?.outfit);
+  });
+  const blood = game.save.data.settings.blood !== false;
+  panel.querySelectorAll('[data-blood]').forEach((b) => {
+    b.classList.toggle('active', (b.dataset.blood === 'on') === blood);
   });
 }
 
@@ -65,6 +70,13 @@ export default {
           </div>
         </div>
         <p class="panel-note" data-i18n="settings.qualityNote"></p>
+        <div class="panel-row">
+          <span class="panel-label" data-i18n="settings.blood"></span>
+          <div class="segmented">
+            <button type="button" data-blood="on" data-i18n="settings.on"></button>
+            <button type="button" data-blood="off" data-i18n="settings.off"></button>
+          </div>
+        </div>
         <div class="panel-row panel-row-stack">
           <span class="panel-label" data-i18n="settings.outfit"></span>
           <div class="choices"></div>
@@ -86,7 +98,13 @@ export default {
     panel.addEventListener('click', (e) => {
       const q = e.target.closest('[data-quality]');
       const o = e.target.closest('[data-outfit]');
-      if (o) {
+      const bl = e.target.closest('[data-blood]');
+      if (bl) {
+        const on = bl.dataset.blood === 'on';
+        g.save.data.settings.blood = on;
+        g.events.emit('settings:blood', { on });
+        markActive();
+      } else if (o) {
         g.events.emit('outfit:set', { id: o.dataset.outfit });
         markActive();
       } else if (q) {

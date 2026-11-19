@@ -111,3 +111,15 @@
 - Turn on `quizClass.dailyCap` (e.g. ৳2,000) once there are many lessons, so practice money
   cannot be farmed with a few memorised questions.
 - Show which lessons are new since the last visit (badge on the ring).
+
+## Ideas noted during Session 6
+- Drive-by shooting (aim sideways from a car / motorbike) and shooting from a rickshaw as passenger.
+- Weapon pick-ups dropped by dead officers; health / armour pick-ups hidden around the city.
+- Gun sounds, sirens with Doppler, police radio chatter in Bangla (Session 7 sound pass).
+- Police path finding on the sidewalk graph (like pedestrians) so officers go round buildings.
+- "Hide in a garage / change outfit to lose a star" (Vice City paint shop idea with the clothes shop).
+- Ambulance arriving for bodies; fire truck for burning wrecks.
+- Jail could offer Quiz Class questions from both institutes and a "study streak" bonus.
+- Show the wanted level on the minimap (police dots, a red/blue flashing rim).
+- Phone aim assist cycling between targets with a swipe; lock on to vehicles too.
+- Profile card (Session 7) showing the Session 6 stats with Bangla digits.

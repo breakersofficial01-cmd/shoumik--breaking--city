@@ -10,7 +10,7 @@
 //   2. Quiz Class — free practice from every active question of the institute (data/economy.json
 //      → quizClass for the money).
 //   3. Enroll — opens data/links.json → enroll<Institute> (e.g. enrollBreakingBiology).
-// Money rules: ./progress.js. Screens: ./screens.js. Engine: ./quiz.js. ?admin=1 check: ./admin.js.
+// Money rules: ./progress.js. Screens: ./screens.js. Engine: src/ui/quiz.js. ?admin=1 check: ./admin.js.
 // Everything in Class Mode is in Bangla (lesson.language for a lesson; data/ui.json →
 // questionLanguage elsewhere) with the Bangla font and Bangla digits.
 //
@@ -20,7 +20,7 @@
 import { tl, moneyIn, numIn } from '../../ui/i18n.js';
 import { createOverlay } from '../../ui/overlay.js';
 import { debug, log } from '../../core/debug.js';
-import { QuizRun } from './quiz.js';
+import { QuizRun } from '../../ui/quiz.js';
 import { ClassProgress } from './progress.js';
 import { homeScreen, lessonListScreen, lessonScreen, questionScreen, feedbackHtml, resultScreen } from './screens.js';
 import { AdminCheck } from './admin.js';

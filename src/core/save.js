@@ -13,7 +13,7 @@
 import { events } from './events.js';
 import { log } from './debug.js';
 
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 4;
 
 /** MIGRATIONS[n] upgrades a save from version n to n+1. */
 const MIGRATIONS = {
@@ -28,6 +28,10 @@ const MIGRATIONS = {
     if (old.outfit && !outfits.includes(old.outfit)) outfits.push(old.outfit);
     return { ...old, health: null, home: null, garage: null, classes: {}, owned: { ...old.owned, outfits } };
   },
+  // Version 4 (Session 6) added bullets, the weapon in his hand, armour, the wanted level
+  // and the jail. Guns bought in Session 5 have no ammo entry yet: the weapons feature gives
+  // them their starting ammo (data/weapons.json → startAmmo).
+  3: (old) => ({ ...old, ammo: {}, weapon: null, armour: 0, wanted: null, jail: null, stats: old.stats || {} }),
 };
 
 function defaults({ startCash = 500 } = {}) {
@@ -45,7 +49,12 @@ function defaults({ startCash = 500 } = {}) {
     lessons: {},                      // lessonId -> { attempts, paid: [questionIds], earned, best, lastAt }
     classes: {},                      // Quiz Class: { lastDay, rounds, earned, bestStreak }
     owned: { vehicles: [], homes: [], weapons: [], outfits: [] },
-    stats: {},
+    ammo: {},                         // weapon id -> bullets (molotovs: bottles)
+    weapon: null,                     // weapon id in his hand (null = fists)
+    armour: 0,                        // body armour points (data/combat.json → player.armourMax)
+    wanted: null,                     // { heat } — a chase goes on after a reload
+    jail: null,                       // { owed, paid } while he studies his way out of jail
+    stats: {},                        // kills, policeKilled, carsDestroyed, longestChase, busted, wasted, shotsFired
     flags: {},                        // misc one-off flags (age gate etc.)
   };
 }

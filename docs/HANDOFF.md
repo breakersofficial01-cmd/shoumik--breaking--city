@@ -1,4 +1,4 @@
-# Handoff — how Breaking City is built (v5, after Session 5)
+# Handoff — how Breaking City is built (v6, after Session 6)
 
 For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, then
 `docs/GAME_SPEC.md` (what exists) and `docs/CHANGELOG.md` (what changed last).
@@ -21,6 +21,12 @@ For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, th
 - Posters + gameplay: `node tools/poster-check.js --three <dir> --out <folder>` stands Shoumik
   at one slot of each kind, tests tap-to-open (F), LED rotation, the MRT train, the Breaking
   School entrance and the bus/rickshaw adverts.
+- Crime + police (Session 6): `node tools/crime-check.js --three <dir> --out <folder> [--quality low]`
+  buys a pistol / ammo / armour, shoots a pedestrian dead (phone aim assist), checks wanted stars,
+  police on foot / pickups / helicopter, a star fading out of sight, BUSTED with and without cash
+  (jail → study → released, jail kept after a reload), desktop free aim, the bat, a molotov, a
+  blown-up car, WASTED (hospital bill, weapons lost) and Blood Off. Run it after touching weapons,
+  crime, police, jail, player health or pedestrians.
 - Class Mode + shops (Session 5): `node tools/class-check.js --three <dir> --out <folder> [--quality low]`
   walks into the Breaking Biology ring, runs two Lesson Checks, two Quiz Class rounds and a
   time-out, buys food / a bicycle / an outfit / a pistol / a home, sleeps at home, opens the
@@ -40,6 +46,10 @@ For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, th
   Session 5: `BC.features.get('classes').open({ id: 'breaking-biology' })`,
   `BC.events.emit('shop:open', { id: 'car-showroom' })`, `BC.features.get('shops').spots`,
   `BC.player.health`, `BC.save.data.lessons`, `?admin=1` (content report button).
+  Session 6: `BC.events.emit('wanted:set', { stars: 3 })`, `BC.events.emit('wanted:clear')`,
+  `BC.events.emit('weapon:owned', { id: 'smg' })`, `BC.events.emit('player:busted', { stars: 2 })`,
+  `BC.events.emit('player:damage', { amount: 50 })`, `BC.targets.list`, `BC.debugPolice.officers()`,
+  `BC.combatFx`, `BC.save.data.stats`.
 
 ## 2. Boot order (`src/main.js`)
 1. `config.loadSome` (ui, strings, game, economy) → `save.load` → `initI18n`
@@ -52,11 +62,11 @@ For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, th
 6. autosave starts → "Tap to start" → `game.start()` (frame loop)
 
 Feature order (`src/features/index.js`): traffic → vehicles → player → pedestrians → hotspots →
-posters → metro → entrances → the rest. The
+posters → metro → entrances → classes → shops → weapons → crime → police → jail → the rest. The
 `vehicles` feature steps the shared fleet (physics) and then puts Shoumik on his seat, so it must
 run before `player` draws him; `traffic` only sets the AI's pedals and wheel before that.
 
-Frame order (`Game.frame`): input → camera look → `features.update(dt)` → `crowd.update()` → camera →
+Frame order (`Game.frame`): input → camera look → `features.update(dt)` → `crowd.update()` → `combatFx.update()` → camera →
 `world.update` (chunks, water, sky) → render → input end-of-frame → debug panel.
 
 ## 3. Folder map
@@ -67,6 +77,7 @@ src/core/   events.js      event bus            config.js   loads data/*.json
             save.js        versioned save       economy.js  wallet → cash:changed
             game.js        renderer + loop      input.js    keyboard/mouse/touch state
             rng.js         seeded random        debug.js    ?debug=1 panel + log
+            targets.js     everything that can be shot (game.targets)
 src/content/ ContentService.js, validators.js, csv.js, adapters/{LocalJson,GoogleSheetCsv}Adapter.js
 src/assets/  registry.js (asset ids + overrides), proceduralTextures.js (atlases)
 src/world/   layout.js (piece grid) → blockgen.js (buildings/poles/trees DATA)
@@ -79,7 +90,7 @@ src/world/   layout.js (piece grid) → blockgen.js (buildings/poles/trees DATA)
 src/entities/ chaseCamera.js
   vehicles/  fleet.js (all vehicles; step + draw) vehicle.js physics.js damage.js driver.js (AI)
              models.js modelsCars.js modelsSmall.js shapes.js (VBuilder)
-  effects/   particles.js (smoke / fire puffs)
+  effects/   particles.js (smoke / fire puffs), combatFx.js (blood, tracers, flashes: game.combatFx)
   people/    skeleton.js (pose format, bones) animLocomotion.js animActions.js animator.js
              shapes.js (loft/ellipsoid helpers) partGeometry.js looks.js crowd.js (instancing)
   shoumik/   model.js head.js body.js faceTexture.js
@@ -94,10 +105,18 @@ src/features/ index.js (registry) + player/ (index.js, actions.js) pedestrians/ 
              shops/ (index.js rings + panels + homes, catalog.js what is sold / buy effects,
                markers.js ring + name sign + corner finder)
              pedestrians/roadSense.js (people vs vehicles)
+             weapons/ (index.js inventory + attack, firing.js bullets, throwing.js molotovs,
+               models.js gun/bat models, hud.js badge + crosshair + lock-on)
+             crime/ (heat → wanted stars, fading, stats)
+             police/ (index.js levels + sight + arrest, officers.js, pursuit.js pickups,
+               roadblock.js, helicopter.js)
+             jail/ (busted → bail / jail study, wasted → hospital; screens.js)
 src/ui/      fonts.js, i18n.js (t, tl = fixed language, numIn/moneyIn), loading.js, overlay.js
-             (createOverlay: pause + Esc + save on close, esc()), styles.css, panels.css (Session 5)
+             (createOverlay: pause + Esc + save on close, esc()), styles.css, panels.css (Session 5),
+             combat.css (Session 6), quiz.js + quizScreens.js (quiz engine + question screens, shared
+             by classes and jail), bubbles.js (speech bubbles, shared by pedestrians and police)
 data/        every tunable number and all content
-tools/       smoke-test.js, class-check.js, character-shots.js, vehicle-shots.js, landmark-shots.js, poster-check.js
+tools/       smoke-test.js, crime-check.js, class-check.js, character-shots.js, vehicle-shots.js, landmark-shots.js, poster-check.js
 posters/     poster pictures + README.md (how to add one)
 ```
 
@@ -142,21 +161,36 @@ posters/     poster pictures + README.md (how to add one)
 | `player:hit` | `{ x, z, power }` somebody hit Shoumik from (x, z) | pedestrians (later police) → player |
 | `outfit:set` / `outfit:changed` | `{ id }` | settings (later clothes shop) → player / player |
 | `ped:hit` | `{ x, z, down }` | pedestrians |
+| `ped:killed` / `police:killed` | `{ x, z, by }` (`by` = 'player', 'police', 'traffic', null) | pedestrians / police → crime (stats, wanted) |
+| `player:damage` | `{ amount, by?, x?, z? }` bullets, fire, blasts — armour takes `armourShare` first | police, weapons (fire) → player |
+| `player:armour` / `armour:changed` | `{ amount \| full }` / `{ value, max }` | shops → player / player → hud |
+| `player:died` | `{ x, z, by }` health reached 0 | player → jail, crime |
+| `player:busted` | `{ stars }` | police → jail, crime |
+| `player:teleport` / `player:revive` / `player:freeze` | `{ x, z, heading }` / – / `{ on }` | jail → player |
+| `vehicle:forceExit` | – throw him out of any vehicle now | jail → vehicles |
+| `crime:committed` | `{ type, x, z }` types: see `data/economy.json → wanted.crimes` | weapons, pedestrians, vehicles, police → crime |
+| `wanted:set` / `wanted:clear` | `{ stars }` / – | debug, tests / jail → crime |
+| `police:sight` | `{ seen }` can any police unit see him | police → crime |
+| `combat:hit` | `{ kind, by, police, killed }` something was hit | weapons, pedestrians, police → crime |
+| `weapon:changed` / `weapon:fired` | `{ id, ammo }` / `{ id, x, z }` | weapons |
+| `weapon:ammo` / `weapons:lose` | `{ id, amount? }` an ammo box / – (wasted) | shops / jail → weapons |
+| `settings:blood` | `{ on }` | settings → combatFx |
+| `stats:changed` | `{ stats }` | crime |
+| `jail:entered` / `jail:released` | `{ owed }` / `{ paid }` | jail |
 | `danger:raised` | `{ x, z, radius, source }` people nearby flee — **send this for gunshots, crashes, explosions** | pedestrians (later crime/vehicles) |
 | `prompt:show` / `prompt:hide` | `{ id, key, vars? }` / `{ id }` one-line hint at the bottom of the HUD | anyone → hud |
 | `hotspot:entered` / `hotspot:left` | `{ id }` | hotspots |
 | `vehicle:entered` / `vehicle:exited` | `{ id, type, jacked?, passenger }` | vehicles |
-| `vehicle:driverEjected` | `{ x, z, heading, archetype, angry, flee }` a driver is now on foot | vehicles, traffic → pedestrians |
+| `vehicle:driverEjected` | `{ x, z, heading, archetype, angry, flee, police? }` a driver is now on foot (police: true → the police feature makes him an officer) | vehicles, traffic → pedestrians, police |
 | `vehicle:crashed` | `{ id, x, z, speed }` | fleet |
-| `vehicle:burning` / `vehicle:exploded` | `{ id, x, z }` / `{ id, type, x, z, radius }` | fleet |
-| `explosion` | `{ x, z, radius, power }` — **send this for any blast** (people nearby fall) | fleet (later weapons) |
+| `vehicle:burning` / `vehicle:exploded` | `{ id, x, z }` / `{ id, type, x, z, radius, by, police }` | fleet |
+| `explosion` | `{ x, z, radius, power, by }` — **send this for any blast** (people nearby fall or die, Shoumik is hurt) | fleet, police (helicopter) |
 | `vehicle:horn` | `{ id, x, z, kind, ai }` | vehicles, AI drivers → vehicles (plays it) |
 | `vehicle:grant` | `{ type, color? }` Shoumik now owns a vehicle | *shops (Session 5)* → vehicles |
-| `crime:committed` | `{ type: 'carjack' \| 'hitPedestrian', x, z }` | vehicles, pedestrians → *police (Session 6)* |
 | `ride:started` / `ride:ended` | `{ type, place, fare }` / `{ type, place, arrived }` | vehicles |
 | `traffic:adopt` | `{ id }` take over a vehicle that has a driver | vehicles → traffic |
 | `controls:mode` | `{ mode: 'driving' \| 'onFoot' }` | vehicles → touchControls |
-| `wanted:changed` | `{ stars }` | *listened to by hud; police feature will send it* |
+| `wanted:changed` | `{ stars, seen }` (stars blink while `seen` is false) | crime → hud, police |
 | `lesson:completed` | `{ id, institute, correct, total, earned, attempt }` a Lesson Check finished | classes |
 | `class:opened` / `class:closed` / `class:quizStarted` | `{ institute }` | classes |
 | `player:heal` | `{ amount }` or `{ full: true }` | shops (food, sleeping) → player |
@@ -164,7 +198,7 @@ posters/     poster pictures + README.md (how to add one)
 | `shop:open` | `{ id }` open a shop panel (tools / console) | anyone → shops |
 | `shop:opened` / `shop:purchased` | `{ id, kind }` / `{ shop, kind, item, price }` | shops |
 | `outfit:owned` | `{ id }` an outfit was bought (settings rebuilds its list) | shops → settings |
-| `weapon:owned` | `{ id }` a gun was bought → *weapons (Session 6)* | shops |
+| `weapon:owned` | `{ id }` a weapon was bought (molotov: every purchase) | shops → weapons |
 | `home:owned` / `home:changed` / `home:slept` | `{ id }` | shops |
 | `garage:changed` | `{ col, row, dir }` owned vehicles move to the new home's garage | shops → vehicles |
 | `map:blips` | `{ id, points: [{ x, z, color }] }` coloured dots on the minimap ([] removes) | shops (anyone) → minimap |
@@ -395,9 +429,43 @@ version, add the field to `defaults()`. Features store live state with
   `spawnOwned` in the vehicles feature). The player spawns at home only when the saved position
   is unusable — Session 6 should use `save.data.home` after being busted / knocked out.
 
+## 12d. Weapons, crime, police, jail (Session 6)
+- **Targets** (`src/core/targets.js`, `game.targets`): anything shootable registers
+  `{ kind, x, y, z, r, h, police?, bleeds?, priority?, onHit(info) }` and moves it itself;
+  `onHit` returns `'killed'` or `'hit'`. Pedestrians, officers and the helicopter do this.
+  Weapons find hits with `targets.raycast()` (bullets), `bestInCone()` (phone aim assist) and
+  `within()` (molotov fire). Vehicles are hit through `game.fleet` (their collision circles).
+- **Combat effects** (`game.combatFx`, `acquireCombatFx(game)`): `blood`, `pool`, `tracer`,
+  `flash`, `spark`, `fire`; blood obeys `save.data.settings.blood`.
+- **Weapons feature** owns `save.data.ammo` and `save.data.weapon`, sets `game.player.weapon`
+  (`null` = fists, the player's own punch code then runs) and `game.player.aimHeading` (he faces
+  that way while aiming). Models go in his hand with `game.player.hand.attach(obj, grip)`
+  (`hand.kind` = 'glb' uses `weapons.json → grips`, 'low' uses `lowGrips`). New weapon = an entry in
+  `data/weapons.json → weapons` (+ `order`, + a price) with an existing `type`; a code-built model =
+  a builder in `weapons/models.js → BUILDERS`. Melee swings reuse `player:attack` (with `damage`,
+  `weapon`, `power` 3 = knock down).
+- **Crime feature**: heat → stars; `wanted:changed { stars, seen }`; stats in `save.data.stats`.
+  New crime = a key in `data/economy.json → wanted.crimes` + `crime:committed { type }`.
+- **Police feature**: per star level `data/police.json → levels` (foot, armed, swat, cars,
+  roadblocks, helicopter). Officers are drawn by the shared crowd (archetypes in police.json, extras
+  `gun`, `vest` in `looks.js`). Police pickups have `driver = 'police'` and `tags.police` (traffic
+  ignores them; boarding treats them like jacking). Sight (`police:sight`) 4× a second with
+  `collision.raycast`. Busted = `player:busted`.
+- **Jail feature**: `createOverlay(..., { escape: false })` (Esc cannot leave jail); questions come
+  from every active lesson; the jail screen is drawn in a fixed language with Bangla digits
+  (CLAUDE.md quiz rule). Release spot = a free sidewalk corner of a place's junction (`placeSpot`).
+- **Player**: health has no floor any more; 0 → `player:died`. Armour in `game.player.armour`.
+- Headless tests run game time slower than real time (frame time is capped at 50 ms): wait for
+  events (e.g. `waitForFunction`) instead of fixed sleeps when checking timers.
+
 ## 13. Notes for the next sessions
 - **Session 4 is done** (the old notes below are kept for reference).
 - **Session 5 is done** (notes below kept for reference).
+- **Session 6 is done.** For Session 7: the profile card can read `save.data.stats`
+  (kills, policeKilled, carsDestroyed, longestChase seconds, busted, wasted, shotsFired) and should
+  listen to `stats:changed`; Blood On/Off already exists in settings (keep it there); gunshot,
+  siren and explosion sounds should listen to `weapon:fired`, `vehicle:horn { kind: 'siren' }`,
+  `explosion`; the 17+ age screen should appear before the first gun is used too.
 - **Session 6 (weapons):** owned guns are in `save.data.owned.weapons` (ids from
   `data/weapons.json`); the weapon shop already sells them (`weapon:owned`). Give them names in
   strings and use the `Q` / অস্ত্র button to cycle owned guns. Jail: Lesson Check/Quiz Class can be

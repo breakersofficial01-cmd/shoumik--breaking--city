@@ -56,7 +56,8 @@ function itemButton(item) {
   const s = item.state;
   if (s === 'buy' || s === 'eat') return `<button type="button" class="shop-buy" data-buy="${esc(item.id)}">${esc(t('shop.buy', { price: formatMoney(item.price) }))}</button>`;
   if (s === 'wear' || s === 'live') return `<button type="button" class="shop-use" data-use="${esc(item.id)}">${esc(t(s === 'wear' ? 'shop.wear' : 'shop.liveHere'))}</button>`;
-  const key = { owned: 'shop.owned', wearing: 'shop.wearing', home: 'shop.livingHere' }[s];
+  if (s === 'locked') return `<span class="shop-owned">${esc(t('shop.needGun'))}</span>`;
+  const key = { owned: 'shop.owned', wearing: 'shop.wearing', home: 'shop.livingHere', full: 'shop.armourFull' }[s];
   return `<span class="shop-owned">✓ ${esc(t(key))}</span>`;
 }
 

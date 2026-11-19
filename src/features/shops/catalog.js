@@ -8,10 +8,12 @@
 // Effects are sent as events so other features do the work (no imports between features):
 //   vehicles → vehicle:grant { type }            outfits → outfit:owned { id } + outfit:set { id }
 //   weapons  → weapon:owned { id }               homes   → home:owned { id }, home:changed, garage:changed
+//   ammo-<w> → weapon:ammo { id: w }  (needs the gun)   armour → player:armour { full: true }
+//   molotov  → weapon:owned { id } every time (each buy = data/weapons.json ammoPack bottles)
 //   food     → player:heal { amount }
 // Every purchase also sends shop:purchased { shop, kind, item, price }.
 
-import { pickName } from '../../ui/i18n.js';
+import { pickName, t, formatNumber } from '../../ui/i18n.js';
 
 export class Catalog {
   constructor(game, shopsCfg) {
@@ -28,7 +30,14 @@ export class Catalog {
     if (kind === 'outfits') return pickName(c.get('outfits').outfits.find((o) => o.id === id)?.name) || id;
     if (kind === 'homes') return pickName(this.cfg.homes[id]?.name) || id;
     if (kind === 'food') return pickName(this.cfg.food[id]?.name) || id;
-    return id; // weapons: the strings file has no names yet → id (Session 6 adds names)
+    if (kind === 'weapons') {
+      if (id === 'armour') return t('shop.armour');
+      const ammo = id.startsWith('ammo-') ? id.slice(5) : null;
+      const w = c.get('weapons').weapons.find((x) => x.id === (ammo || id));
+      const name = pickName(w?.name) || id;
+      return ammo ? t('shop.ammoOf', { weapon: name, n: formatNumber(w?.ammoPack || 0) }) : `${w?.icon || ''} ${name}`.trim();
+    }
+    return id;
   }
 
   stateOf(kind, id) {
@@ -42,7 +51,13 @@ export class Catalog {
       if (!o.homes.includes(id)) return 'buy';
       return this.game.save.data.home?.id === id ? 'home' : 'live';
     }
-    if (kind === 'weapons') return o.weapons.includes(id) ? 'owned' : 'buy';
+    if (kind === 'weapons') {
+      if (id === 'armour') { const a = this.game.player?.armour; return a && a.value >= a.max ? 'full' : 'buy'; }
+      if (id.startsWith('ammo-')) return o.weapons.includes(id.slice(5)) ? 'buy' : 'locked';
+      const w = this.game.config.get('weapons').weapons.find((x) => x.id === id);
+      if (w?.type === 'throw') return 'buy';
+      return o.weapons.includes(id) ? 'owned' : 'buy';
+    }
     return 'buy'; // vehicles: you can own several
   }
 
@@ -79,8 +94,12 @@ export class Catalog {
         g.events.emit('outfit:set', { id });
         break;
       case 'weapons':
-        this.owned.weapons.push(id);
-        g.events.emit('weapon:owned', { id });
+        if (id === 'armour') g.events.emit('player:armour', { full: true });
+        else if (id.startsWith('ammo-')) g.events.emit('weapon:ammo', { id: id.slice(5) });
+        else {
+          if (!this.owned.weapons.includes(id)) this.owned.weapons.push(id);
+          g.events.emit('weapon:owned', { id });
+        }
         break;
       case 'homes':
         this.owned.homes.push(id);

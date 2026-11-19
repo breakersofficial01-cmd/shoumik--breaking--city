@@ -99,6 +99,7 @@ function makeButtons() {
     el.style.bottom = `calc(env(safe-area-inset-bottom, 0px) + ${b.bottom}px)`;
     const set = (down) => (e) => {
       e.preventDefault();
+      game.input.usingTouch = true; // phones aim with aim assist (weapons feature)
       if (down) el.setPointerCapture(e.pointerId);
       el.classList.toggle('down', down);
       game.input.setButton(b.action, down);
@@ -139,7 +140,7 @@ export default {
     makeButtons();
 
     const isTouch = window.matchMedia('(pointer: coarse)').matches || debug.flag('touch') === '1';
-    if (isTouch) show();
+    if (isTouch) { show(); g.input.usingTouch = true; }
     else window.addEventListener('touchstart', show, { once: true, passive: true }); // hybrid laptops
     const relabel = () => root.querySelectorAll('.touch-btn').forEach((el) => { el.textContent = t(el.dataset.label); });
     offs = [

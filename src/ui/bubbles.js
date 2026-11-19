@@ -1,9 +1,10 @@
 // Speech bubbles: short Bangla/English shouts floating over a pedestrian's head
-// ("বাঁচাও!"). Plain HTML labels placed over the 3D view; a few at a time.
+// ("বাঁচাও!"). Plain HTML labels placed over the 3D view; a few at a time. Shared by the
+// pedestrians and police features (anything with x, y, z can talk).
 // Text comes from data/strings.json and uses the UI font (var(--font-ui)).
 
 import * as THREE from 'three';
-import { t } from '../../ui/i18n.js';
+import { t } from './i18n.js';
 
 const _v = new THREE.Vector3();
 
