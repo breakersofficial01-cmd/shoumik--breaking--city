@@ -243,7 +243,7 @@ const BN = /[০-৯]/;
     const cashSaved = await cash();
     await boot();
     const after = await page.evaluate(() => ({ cash: window.BC.economy.getCash(), lesson: window.BC.save.data.lessons['bio-bone-cartilage-01'], homes: window.BC.save.data.owned.homes, homeSpots: window.BC.features.get('shops').spots.filter((s) => s.homeId).length, version: window.BC.save.data.version }));
-    check(after.cash === cashSaved && after.lesson?.attempts === 2 && after.homes.includes('dhanmondi-flat') && after.homeSpots === 1 && after.version === 4, 'reload keeps cash, lesson result and home (save v4)');
+    check(after.cash === cashSaved && after.lesson?.attempts === 2 && after.homes.includes('dhanmondi-flat') && after.homeSpots === 1 && after.version === 5, 'reload keeps cash, lesson result and home (save v5)');
   } catch (err) {
     failures++;
     console.log('FAIL', err.message);

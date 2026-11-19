@@ -1,0 +1,132 @@
+/* Session 7 ("vibe and polish") UI: toasts, radio banner, screenshot, profile card, 17+ screen,
+   the bigger settings panel and touch-control layouts. Colours/fonts: variables in styles.css. */
+
+/* ------------------------------------------------------------ toast (load-shedding, rewards…) */
+.hud-toast {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--safe-top) + 58px);
+  max-width: min(560px, 70vw);
+  padding: 8px 16px;
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  background: rgba(20, 13, 38, 0.82);
+  box-shadow: 0 0 0 2px var(--gold);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  opacity: 0;
+  transform: translate(-50%, -10px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none !important;
+}
+.hud-toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ------------------------------------------------------------ radio */
+.radio-banner {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--safe-top) + 12px);
+  max-width: min(620px, 64vw);
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 95, 162, 0.92), rgba(120, 70, 220, 0.92));
+  border: 2px solid var(--ink);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  transform: translate(-50%, -14px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none !important;
+}
+.radio-banner.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ------------------------------------------------------------ screenshot */
+#photo-button {
+  position: absolute;
+  top: calc(var(--safe-top) + 118px);
+  left: calc(var(--safe-left) + 20px);
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: rgba(20, 13, 38, 0.55);
+  color: #fff;
+}
+.photo-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: #fff;
+  animation: photo-flash 0.45s ease-out forwards;
+  pointer-events: none !important;
+}
+@keyframes photo-flash { from { opacity: 0.85; } to { opacity: 0; } }
+.photo-panel .panel { width: min(640px, 100%); }
+.photo-preview { display: block; width: 100%; max-height: 52vh; object-fit: contain; border: 2px solid var(--ink); border-radius: 10px; }
+.photo-actions { display: flex; gap: 8px; margin-top: 12px; }
+.photo-actions button { flex: 1; padding: 10px; border: 2px solid var(--ink); border-radius: 10px; background: var(--pink); color: #fff; font-size: 17px; font-weight: 700; }
+.photo-actions [data-close] { background: var(--gold); color: var(--ink); }
+
+/* ------------------------------------------------------------ profile card */
+.profile-card .panel { width: min(560px, 100%); }
+.profile-head { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; }
+.profile-head img { width: 84px; height: 84px; border-radius: 50%; border: 3px solid var(--gold); box-shadow: 0 0 0 2px var(--pink); object-fit: cover; }
+.profile-head h2 { margin: 0 0 4px; }
+.profile-tag { margin: 0; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cyan); }
+.profile-fact { margin: 2px 0; font-size: 15px; opacity: 0.92; }
+.profile-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; margin: 0 0 12px; }
+.profile-stats div { padding: 6px 10px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); }
+.profile-stats dt { font-size: 12.5px; opacity: 0.8; }
+.profile-stats dd { margin: 2px 0 0; font-size: 18px; font-weight: 700; color: var(--gold); }
+.profile-card h3 { margin: 6px 0 8px; font-size: 18px; color: var(--pink); }
+.profile-rewards { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 6px; }
+.reward { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); }
+.reward div { flex: 1; min-width: 0; }
+.reward b { display: block; font-size: 15px; }
+.reward small { display: block; font-size: 12.5px; opacity: 0.8; }
+.reward code { padding: 4px 8px; border-radius: 6px; background: #120a24; color: var(--gold); font-size: 15px; font-weight: 700; letter-spacing: 0.04em; user-select: all; }
+.reward button { padding: 6px 10px; border: 2px solid var(--ink); border-radius: 8px; background: var(--pink); color: #fff; font-weight: 700; }
+.reward.locked { opacity: 0.6; }
+
+/* ------------------------------------------------------------ 17+ screen */
+.age-gate { z-index: 60; background: rgba(10, 6, 22, 0.94); }
+.age-gate .panel { position: relative; text-align: center; width: min(520px, 100%); }
+.age-gate p { font-size: 16px; line-height: 1.5; }
+.age-badge { display: inline-block; margin: 2px 0 8px; padding: 4px 18px; border: 3px solid var(--ink); border-radius: 12px; background: #e23b3b; color: #fff; font-size: 30px; font-weight: 900; font-style: italic; box-shadow: 0 0 0 2px var(--gold); }
+.age-small { font-size: 13.5px !important; opacity: 0.8; }
+.age-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.age-actions button { padding: 11px; border: 2px solid var(--ink); border-radius: 10px; background: rgba(255, 255, 255, 0.12); color: #fff; font-size: 17px; font-weight: 700; }
+.age-actions .age-yes { background: var(--gold); color: var(--ink); }
+.age-lang { position: absolute; top: 10px; right: 10px; padding: 4px 10px; border: 2px solid var(--ink); border-radius: 8px; background: rgba(255, 255, 255, 0.12); color: #fff; font-size: 13px; font-weight: 700; }
+
+/* ------------------------------------------------------------ settings additions */
+#settings-panel .panel { width: min(520px, 100%); }
+#settings-panel .panel-row { margin-bottom: 10px; }
+.volumes { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; margin: 0 0 12px; }
+.volumes.muted { opacity: 0.45; }
+.volume { display: flex; flex-direction: column; font-size: 14px; }
+.volume input { width: 100%; accent-color: var(--pink); }
+.panel-danger { padding: 9px; border: 2px solid var(--ink); border-radius: 10px; background: rgba(226, 59, 59, 0.35); color: #fff; font-size: 16px; font-weight: 700; }
+.panel-danger.armed { background: #e23b3b; animation: danger-pulse 0.8s ease-in-out infinite alternate; }
+@keyframes danger-pulse { to { box-shadow: 0 0 0 3px var(--gold); } }
+
+/* ------------------------------------------------------------ touch controls: radio, sizes, left-handed */
+#touch:not(.driving) .driving-only { display: none; }
+#touch:not(.radio) .touch-radio { display: none; } /* only in vehicles with a radio */
+.touch-radio { border-color: var(--pink); font-size: 12px; }
+#touch.size-small .touch-btn { font-size: 12px; }
+#touch.size-large .touch-btn { font-size: 17px; }
+#touch.mirrored .touch-move { left: auto; right: 0; }
+#touch.mirrored .touch-look { right: auto; left: 0; }
+#touch.mirrored .joy-base { left: auto; right: calc(var(--safe-right) + var(--joy-left)); margin: calc(var(--joy-size) / -2) calc(var(--joy-size) / -2) 0 0; }
+#touch.mirrored .joy-base.active { right: auto; margin: calc(var(--joy-size) / -2) 0 0 calc(var(--joy-size) / -2); }

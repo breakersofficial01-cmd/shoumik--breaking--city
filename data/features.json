@@ -20,6 +20,7 @@
   "jail": true,
   "dayNight": true,
   "weather": true,
+  "sound": true,
   "radio": true,
   "profileCard": true,
   "rewardCodes": true,

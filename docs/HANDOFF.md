@@ -27,6 +27,13 @@ For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, th
   (jail → study → released, jail kept after a reload), desktop free aim, the bat, a molotov, a
   blown-up car, WASTED (hospital bill, weapons lost) and Blood Off. Run it after touching weapons,
   crime, police, jail, player health or pedestrians.
+- Session 7: `node tools/vibe-check.js --three <dir> --out <folder> [--quality medium] [--only times,rain,power,signs,sound,ui]`
+  photographs six times of day, rain (day, night, lightning), load-shedding and the Bangla shop
+  signs; plays guns / explosion / crow / hawker, the radio (R changes station, none in a
+  rickshaw); clicks through Settings (English, sound off, big buttons, reset asks twice), unlocks a
+  reward code, opens the profile card (Copy), takes a watermarked screenshot, and tests the 17+
+  screen on a fresh save (`&agegate=1`; `?autostart=1` skips it so the other tools keep working).
+  Run it after touching sky, graphics, audio, settings or any Session 7 feature.
 - Class Mode + shops (Session 5): `node tools/class-check.js --three <dir> --out <folder> [--quality low]`
   walks into the Breaking Biology ring, runs two Lesson Checks, two Quiz Class rounds and a
   time-out, buys food / a bicycle / an outfit / a pistol / a home, sleeps at home, opens the
@@ -50,6 +57,11 @@ For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, th
   `BC.events.emit('weapon:owned', { id: 'smg' })`, `BC.events.emit('player:busted', { stars: 2 })`,
   `BC.events.emit('player:damage', { amount: 50 })`, `BC.targets.list`, `BC.debugPolice.officers()`,
   `BC.combatFx`, `BC.save.data.stats`.
+  Session 7: `?hour=21` (start time), `?rain=1`, `BC.events.emit('time:set', { hour: 12 })`,
+  `BC.clock.hour`, `BC.events.emit('weather:set', { rain: true })`, `BC.weather.rain`,
+  `BC.events.emit('weather:thunder')`, `BC.events.emit('power:cutNow', { district: 'old-dhaka' })`,
+  `BC.audio.play('crow')`, `BC.audio.ctx`, `BC.events.emit('radio:set', { station: 2 })`,
+  `BC.events.emit('profile:open')`, `BC.rewards.list()`, `BC.world.cityShading`, `&agegate=1`.
 
 ## 2. Boot order (`src/main.js`)
 1. `config.loadSome` (ui, strings, game, economy) → `save.load` → `initI18n`
@@ -62,7 +74,9 @@ For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, th
 6. autosave starts → "Tap to start" → `game.start()` (frame loop)
 
 Feature order (`src/features/index.js`): traffic → vehicles → player → pedestrians → hotspots →
-posters → metro → entrances → classes → shops → weapons → crime → police → jail → the rest. The
+posters → metro → entrances → classes → shops → weapons → crime → police → jail → dayNight →
+weather → sound → radio → rewardCodes → profileCard → screenshot → ageGate → the rest.
+`game.audio` (Session 7) is created in `Game.init` right before the features. The
 `vehicles` feature steps the shared fleet (physics) and then puts Shoumik on his seat, so it must
 run before `player` draws him; `traffic` only sets the AI's pedals and wheel before that.
 
@@ -80,10 +94,14 @@ src/core/   events.js      event bus            config.js   loads data/*.json
             targets.js     everything that can be shot (game.targets)
 src/content/ ContentService.js, validators.js, csv.js, adapters/{LocalJson,GoogleSheetCsv}Adapter.js
 src/assets/  registry.js (asset ids + overrides), proceduralTextures.js (atlases)
+src/audio/   audio.js (AudioManager = game.audio: one context, buses, play/loop, file overrides),
+             synth.js (every code-made sound: SYNTH one-shots, LOOPS beds)
 src/world/   layout.js (piece grid) → blockgen.js (buildings/poles/trees DATA)
              geoBuilder.js, buildingMesher.js, groundMesher.js, props.js  (DATA → geometry)
              chunks.js (build/show/hide/unload), collision.js, water.js, sky.js, world.js (glue)
              roads.js (road graph: junctions, lanes, signals, routes, bus stops), ramps.js
+             cityShading.js (lit windows / sign glow / wet roads / load-shedding cut: shader patches),
+             signboards.js (Bangla shop-name atlas + sign faces)
   landmarks/ index.js (plan + build + cull), kit.js (modelling toolbox), signs.js (name-board
              atlas), civic.js campus.js oldDhaka.js modern.js (one builder per landmark),
              viaduct.js (MRT / flyover deck, pillars, stations, ViaductPath)
@@ -111,12 +129,16 @@ src/features/ index.js (registry) + player/ (index.js, actions.js) pedestrians/ 
              police/ (index.js levels + sight + arrest, officers.js, pursuit.js pickups,
                roadblock.js, helicopter.js)
              jail/ (busted → bail / jail study, wasted → hospital; screens.js)
+             dayNight/ (index.js clock + look, clock.js key blending + sun path, loadShedding.js)
+             weather/ (rain drops, wetness, thunder)   sound/ (events + street → game.audio)
+             radio/ (index.js stations + DJ banner, music.js code-made music)
+             rewardCodes/  profileCard/  screenshot/  ageGate/  settings/ (rewritten in Session 7)
 src/ui/      fonts.js, i18n.js (t, tl = fixed language, numIn/moneyIn), loading.js, overlay.js
              (createOverlay: pause + Esc + save on close, esc()), styles.css, panels.css (Session 5),
-             combat.css (Session 6), quiz.js + quizScreens.js (quiz engine + question screens, shared
+             combat.css (Session 6), vibe.css (Session 7), quiz.js + quizScreens.js (quiz engine + question screens, shared
              by classes and jail), bubbles.js (speech bubbles, shared by pedestrians and police)
 data/        every tunable number and all content
-tools/       smoke-test.js, crime-check.js, class-check.js, character-shots.js, vehicle-shots.js, landmark-shots.js, poster-check.js
+tools/       smoke-test.js, vibe-check.js, crime-check.js, class-check.js, character-shots.js, vehicle-shots.js, landmark-shots.js, poster-check.js
 posters/     poster pictures + README.md (how to add one)
 ```
 
@@ -206,6 +228,19 @@ posters/     poster pictures + README.md (how to add one)
 | `poster:opened` | `{ id, slot, link }` | posters |
 | `metro:arrived` | `{ line, station }` a train stopped at a station | metro |
 | `entrance:enter` | `{ id, place }` Shoumik pressed ঢোকো in a Breaking School / Biology marker | entrances → *classes (Session 5)* |
+| `time:changed` / `time:night` | `{ hour, night }` once per game minute / `{ night }` when it flips | dayNight |
+| `time:set` | `{ hour }` jump to a time (debug, tools) | anyone → dayNight |
+| `weather:changed` | `{ rain }` 0..1 | weather → dayNight |
+| `weather:set` / `weather:thunder` | `{ rain: bool }` / – | debug, tools → weather |
+| `power:cut` | `{ district, rect: {x0,z0,x1,z1}, on }` load-shedding starts / ends | dayNight → posters, sound |
+| `power:cutNow` | `{ district? }` start one now | debug, tools → dayNight |
+| `toast:show` | `{ key, vars?, text?, seconds? }` short message under the top of the screen | anyone → hud |
+| `police:fired` | `{ x, z, rifle }` an officer / gunner fired | police → sound |
+| `input:radio` / `input:photo` | – (R / P keys, রেডিও touch button) | Input |
+| `radio:available` / `radio:changed` / `radio:set` | `{ on }` / `{ station }` (-1 = off) / `{ station }` | radio / radio / anyone → radio |
+| `settings:controls` | – control size or layout changed (save.data.settings) | settings → touchControls |
+| `reward:unlocked` | `{ id }` | rewardCodes → profileCard |
+| `screenshot:taken` | `{ width, height }` | screenshot |
 
 Add new events to this table.
 
@@ -458,10 +493,50 @@ version, add the field to `defaults()`. Features store live state with
 - Headless tests run game time slower than real time (frame time is capped at 50 ms): wait for
   events (e.g. `waitForFunction`) instead of fixed sleeps when checking timers.
 
+## 12e. Day/night, rain, sound and the polish features (Session 7)
+- **Sky** (`world/sky.js`): `enableCycle(renderer, skies)` paints the day and night skies (same
+  painter as the sunset) and patches the dome material to blend 3 textures (`setSkyMix(day, sunset,
+  night)`, `setTint(colour, mix)` for rain). `setSunDirection()` moves the disc, `setSunScale()`
+  (moon). **Graphics** gained `setSunDirection` (shadows: `SunShadows.setDirection`),
+  `refreshEnvironment()` (re-render the reflection map — dayNight does it every 25 s),
+  `setBloomStrength`, `setExposure`. `glow.js → setGlowLevel(k)` scales every `markGlow` material.
+- **dayNight** owns the lights/fog/exposure every frame. Others must NOT set `sky.sunLight`,
+  `hemi`, `ambient`, `scene.fog` or exposure directly — send an event to dayNight instead (rain
+  does: `weather:changed`). Its look is all in `data/dayNight.json → keys` (blended with smoothstep).
+- **City shading** (`world/cityShading.js`, `game.world.cityShading`): `onBeforeCompile` patches on
+  the shared facade, ground and sign materials (world position varyings). Windows: the lit areas
+  per facade tile are `WINDOW_RECTS` (UV rectangles measured on `assets/city/facades.jpg` — update
+  them if the facade atlas is re-baked with different window positions). `setWindows`,
+  `setSigns`, `setWet`, `setCut(rect)`, `patchCut(material)` for any other glowing material that
+  must go dark during load-shedding.
+- **Signboards** (`world/signboards.js`): `SignAtlas` (one canvas for all names, an emissive copy
+  with just the letters). `meshBuilding(…, signs)` adds a face per shop board into a 3rd GeoBuilder
+  per chunk (one extra draw call per chunk). The sign choice is a hash of building seed/bay/side,
+  so the city's Rng sequence (and look) is unchanged.
+- **Audio** (`src/audio/`): use `game.audio.play(id, { x, z })` for one-shots (positional = level +
+  stereo pan from the camera) and `game.audio.loop(id, bus)` → `{ set(level, pan), setRate, stop }`
+  for beds. New sound = an entry in `data/audio.json → sounds/loops` with an existing `kind`, or a
+  new recipe in `synth.js`. A real file = `data/assets.json → "sound.<id>"` (type sound) — played
+  instead of the recipe, no code change (horns: `sound.horn.<kind>`). The boombox and horns now use
+  the shared context (music / sfx buses). Settings → `audio.applySettings()`.
+- **Radio**: `RadioMusic` is a 16-step sequencer per style (pop / folk / synth). Real tracks:
+  add sound assets and list their ids in `data/radio.json → stations[].tracks`.
+- **Shared read-only state** added: `game.clock { hour, night }`, `game.weather { rain, wet }`,
+  `game.rewards { list(), lessonsDone(), copy() }`.
+- **Settings → reset** calls `save.wipe()` (keeps settings + `flags.ageOk`, blocks later writes) and
+  reloads the page.
+- **Age gate** skips itself with `?autostart=1` (all test tools) unless `&agegate=1`.
+
 ## 13. Notes for the next sessions
 - **Session 4 is done** (the old notes below are kept for reference).
 - **Session 5 is done** (notes below kept for reference).
-- **Session 6 is done.** For Session 7: the profile card can read `save.data.stats`
+- **Session 7 is done.** For Session 8: the service worker must cache `src/audio/`, `src/ui/vibe.css`
+  and the new data files (`audio`, `dayNight`, `weather`, `radio`, `profile`, `signboards`,
+  `rewards` — rewards is content: network-first like lessons/posters). The painted day/night skies
+  cost two 1024×512 textures + one PMREM refresh every 25 s — on weak phones (auto Low) consider
+  `environmentRefreshSeconds` 60+ and fewer rain drops. The age gate already blocks the game until
+  answered; the privacy page should mention that nothing is sent anywhere (save is local).
+- **Session 6 is done.** For Session 7 (done, kept for reference): the profile card can read `save.data.stats`
   (kills, policeKilled, carsDestroyed, longestChase seconds, busted, wasted, shotsFired) and should
   listen to `stats:changed`; Blood On/Off already exists in settings (keep it there); gunshot,
   siren and explosion sounds should listen to `weapon:fired`, `vehicle:horn { kind: 'siren' }`,

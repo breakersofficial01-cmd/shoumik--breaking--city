@@ -13,7 +13,7 @@
 import { events } from './events.js';
 import { log } from './debug.js';
 
-export const SAVE_VERSION = 4;
+export const SAVE_VERSION = 5;
 
 /** MIGRATIONS[n] upgrades a save from version n to n+1. */
 const MIGRATIONS = {
@@ -32,6 +32,9 @@ const MIGRATIONS = {
   // and the jail. Guns bought in Session 5 have no ammo entry yet: the weapons feature gives
   // them their starting ammo (data/weapons.json → startAmmo).
   3: (old) => ({ ...old, ammo: {}, weapon: null, armour: 0, wanted: null, jail: null, stats: old.stats || {} }),
+  // Version 5 (Session 7) added the time of day, unlocked reward codes and the sound /
+  // controls settings (filled in from defaults() by load()).
+  4: (old) => ({ ...old, clock: null, rewards: {}, playSeconds: old.playSeconds || 0 }),
 };
 
 function defaults({ startCash = 500 } = {}) {
@@ -42,7 +45,17 @@ function defaults({ startCash = 500 } = {}) {
     cash: startCash,
     player: null,                     // { x, z, heading } once the player has moved
     outfit: null,                     // id from data/outfits.json (null = the default outfit)
-    settings: { quality: null, language: null, blood: true },
+    settings: {
+      quality: null, language: null, blood: true,
+      sound: true,                    // Session 7: all sound on/off
+      volume: { master: 0.8, sfx: 1, music: 0.7, ambience: 0.8 }, // 0..1 each (data/audio.json → buses)
+      controlSize: 'normal',          // touch buttons: small | normal | large (data/controls.json → touch.sizes)
+      controlLayout: 'right',         // right = buttons on the right; left = mirrored for left-handed players
+      radio: 0,                       // last radio station index (-1 = off)
+    },
+    clock: null,                      // Session 7: time of day in hours (0-24); null = data/dayNight.json → startHour
+    rewards: {},                      // reward code id -> unlocked at (ms)
+    playSeconds: 0,                   // total time played (profile card)
     health: null,                     // Shoumik's health (null = full, data/player.json → health)
     home: null,                       // { id, x, z, heading } the home he sleeps in (shops feature)
     garage: null,                     // { col, row, dir } where owned vehicles park (null = data/vehicles.json → garage)
@@ -94,7 +107,7 @@ class SaveStore {
         log.info('save migrated to v' + v);
       }
       // Fill in any missing fields so later code can rely on them.
-      this.data = { ...fresh, ...obj, settings: { ...fresh.settings, ...obj.settings }, owned: { ...fresh.owned, ...obj.owned }, classes: { ...obj.classes } };
+      this.data = { ...fresh, ...obj, settings: { ...fresh.settings, ...obj.settings, volume: { ...fresh.settings.volume, ...obj.settings?.volume } }, owned: { ...fresh.owned, ...obj.owned }, classes: { ...obj.classes } };
     } catch (err) {
       log.warn('save was unreadable, keeping a backup and starting fresh', err);
       try { localStorage.setItem(this.key + '.broken', raw); } catch { /* ignore */ }
@@ -140,7 +153,21 @@ class SaveStore {
     window.removeEventListener('pagehide', this._onPageHide);
   }
 
-  /** Wipe progress (used by Settings → reset save in a later session). */
+  /**
+   * Settings → Reset save: delete the saved game and block every later write (the page is
+   * reloaded right after, so the live state of features cannot write the old game back).
+   * Keeps the age confirmation, language and sound settings so a reset does not ask again.
+   */
+  wipe(economyCfg) {
+    this.stopAutosave();
+    const keep = { settings: { ...this.data.settings }, flags: { ageOk: this.data.flags?.ageOk } };
+    this.data = { ...defaults(economyCfg), ...keep };
+    this.beforeSave = [];
+    try { localStorage.setItem(this.key, JSON.stringify(this.data)); } catch { /* ignore */ }
+    this.memoryOnly = true; // no more writes until the reload
+  }
+
+  /** Wipe progress in place (kept for tools; Settings uses wipe() + reload). */
   reset(economyCfg) {
     this.data = defaults(economyCfg);
     this.flush();

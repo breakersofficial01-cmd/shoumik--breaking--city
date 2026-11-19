@@ -4,6 +4,8 @@
 //   health:changed { value, max }   armour:changed { value, max }   district:entered { district }
 //   language:changed
 //   prompt:show { id, key, vars? }  /  prompt:hide { id }   a one-line hint at the bottom (e.g. "press to dance")
+//   toast:show { key, vars?, text?, seconds? }   a short message under the district name (Session 7:
+//              load-shedding, reward codes, radio station, screenshot saved…)
 // Sends:  profile:open  when the portrait is tapped (the profile card comes in Session 7).
 
 import { formatMoney, pickName, t } from '../../ui/i18n.js';
@@ -57,6 +59,26 @@ function renderHealth(h) {
   box.title = t('hud.health');
 }
 
+let toastQueue = [];
+let toastBusy = false;
+function showToast(msg) {
+  toastQueue.push(msg);
+  if (toastBusy) return;
+  const next = () => {
+    const m = toastQueue.shift();
+    const el = root?.querySelector('.hud-toast');
+    if (!m || !el) { toastBusy = false; return; }
+    toastBusy = true;
+    el.textContent = m.text || t(m.key, m.vars);
+    el.classList.add('show');
+    setTimeout(() => {
+      el?.classList.remove('show');
+      setTimeout(next, 350);
+    }, (m.seconds || game.config.get('ui').hud.toastSeconds || 3.5) * 1000);
+  };
+  next();
+}
+
 function showDistrict(district) {
   lastDistrict = district;
   const el = root.querySelector('.hud-district');
@@ -84,6 +106,7 @@ export default {
         </div>
       </div>
       <div class="hud-district"></div>
+      <div class="hud-toast"></div>
       <div class="hud-prompt" hidden></div>`;
     g.ui.appendChild(root);
 
@@ -106,6 +129,7 @@ export default {
       g.events.on('prompt:hide', ({ id }) => { prompts.delete(id); renderPrompt(); }),
       g.events.on('save:reset', renderCash),
       g.events.on('health:changed', renderHealth),
+      g.events.on('toast:show', showToast),
     ];
   },
 
@@ -116,6 +140,7 @@ export default {
     offs = [];
     clearTimeout(toastTimer);
     prompts.clear();
+    toastQueue = [];
     root?.remove();
     root = null;
   },

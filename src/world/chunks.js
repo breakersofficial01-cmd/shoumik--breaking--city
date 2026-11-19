@@ -64,6 +64,8 @@ export class ChunkManager {
     const { layout, world, shared, quality } = this;
     const facades = new GeoBuilder();
     const ground = new GeoBuilder();
+    const signGb = new GeoBuilder();
+    const signs = shared.signAtlas ? { gb: signGb, atlas: shared.signAtlas } : null;
     const lists = { poles: [], tanks: [], trees: [] };
     const wires = [];
     for (let j = chunk.j0; j <= chunk.j1; j++) {
@@ -73,7 +75,7 @@ export class ChunkManager {
         const c = p.content;
         if (!c) continue;
         const palette = layout.districts[p.district].palette;
-        for (const b of c.buildings) meshBuilding(facades, b, world.buildings, palette, p.y, quality);
+        for (const b of c.buildings) meshBuilding(facades, b, world.buildings, palette, p.y, quality, signs);
         for (const x of c.poles) lists.poles.push(x);
         for (const x of c.tanks) lists.tanks.push(x);
         for (const x of c.trees) lists.trees.push(x);
@@ -84,6 +86,7 @@ export class ChunkManager {
     node.name = `chunk-${chunk.ci}-${chunk.cj}`;
     if (!ground.isEmpty) node.add(new THREE.Mesh(ground.build(), shared.groundMaterial));
     if (!facades.isEmpty) node.add(new THREE.Mesh(facades.build(), shared.facadeMaterial));
+    if (!signGb.isEmpty) node.add(new THREE.Mesh(signGb.build(), shared.signAtlas.material)); // Bangla shop signs
     for (const mesh of buildProps(lists, world, shared, quality, layout.kerb)) node.add(mesh);
     const lines = buildWires(wires, world, shared, quality, hashInts(layout.seed, chunk.ci, chunk.cj, 9));
     if (lines) node.add(lines);

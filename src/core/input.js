@@ -2,7 +2,7 @@
 // into, so gameplay code never cares where input came from.
 //
 //   input.move      { x, y }   -1..1, y = forward
-//   input.held      { sprint, jump, action, attack, weapon, horn, open, aim }  (true while down)
+//   input.held      { sprint, jump, action, attack, weapon, horn, open, aim, radio, photo }  (true while down)
 //                   aim = right mouse button while the mouse is captured (desktop aiming)
 //   input.pressed   same names, true only on the frame the button went down
 //   input.look      { x, y }   camera turn collected this frame (radians)
@@ -11,7 +11,7 @@
 
 import { events } from './events.js';
 
-const ACTIONS = ['sprint', 'jump', 'action', 'attack', 'weapon', 'horn', 'open', 'aim'];
+const ACTIONS = ['sprint', 'jump', 'action', 'attack', 'weapon', 'horn', 'open', 'aim', 'radio', 'photo'];
 
 export class Input {
   constructor(controlsCfg, canvas) {

@@ -1,5 +1,5 @@
 {
-  "_comment": "Key bindings and touch-control layout. Touch button positions are distances from the bottom-right corner in px (before safe-area padding). 'action' names are used by the game code; labels are in data/strings.json under controls.* drivingLabel = the label shown on a button while Shoumik is in a vehicle.",
+  "_comment": "Key bindings and touch-control layout. Touch button positions are distances from the bottom-right corner in px (before safe-area padding). 'action' names are used by the game code; labels are in data/strings.json under controls.* drivingLabel = the label shown on a button while Shoumik is in a vehicle. drivingOnly = the button only shows while driving (radio). Settings can make the controls bigger/smaller (sizes) and mirror them for left-handed players (buttons on the left, joystick on the right).",
   "keyboard": {
     "forward": ["KeyW", "ArrowUp"],
     "back": ["KeyS", "ArrowDown"],
@@ -10,7 +10,9 @@
     "action": ["KeyE"],
     "weapon": ["KeyQ"],
     "horn": ["KeyH"],
-    "open": ["KeyF"]
+    "open": ["KeyF"],
+    "radio": ["KeyR"],
+    "photo": ["KeyP"]
   },
   "mouse": { "sensitivity": 0.0024, "invertY": false },
   "touch": {
@@ -22,7 +24,9 @@
       { "action": "jump", "label": "controls.jump", "right": 136, "bottom": 122, "size": 62, "drivingLabel": "controls.handbrake" },
       { "action": "action", "label": "controls.action", "right": 48, "bottom": 176, "size": 60, "drivingLabel": "controls.exit" },
       { "action": "weapon", "label": "controls.weapon", "right": 134, "bottom": 194, "size": 50 },
-      { "action": "horn", "label": "controls.horn", "right": 216, "bottom": 78, "size": 50 }
-    ]
+      { "action": "horn", "label": "controls.horn", "right": 216, "bottom": 78, "size": 50 },
+      { "action": "radio", "label": "controls.radio", "right": 216, "bottom": 150, "size": 46, "drivingOnly": true }
+    ],
+    "sizes": { "_comment": "Settings → control size: every button and the joystick are scaled by this.", "small": 0.82, "normal": 1, "large": 1.2 }
   }
 }

@@ -1,0 +1,9 @@
+{
+  "_comment": "Reward codes (Session 7). A code unlocks when the player has finished lessonsRequired lessons (a lesson counts once at least one of its questions was answered right). The player sees it in the profile card with a Copy button. Fields: id (unique), lessonsRequired (number), code (what they copy, e.g. a discount coupon), title {en, bn}, note {en, bn} (how to use it), link (optional: where to use it, opens in a new tab), active (false hides it), startDate / endDate (YYYY-MM-DD, empty = no limit). Loaded through the Content Service, so this list can later come from a Google Sheet. THE CODES BELOW ARE SAMPLES — replace them with real ones.",
+  "source": { "type": "local" },
+  "rewards": [
+    { "id": "first-lesson", "lessonsRequired": 1, "code": "BCITY-FIRST10", "title": { "en": "First lesson done!", "bn": "প্রথম লেসন শেষ!" }, "note": { "en": "Sample code: 10% off a Breaking School course (replace in data/rewards.json).", "bn": "নমুনা কোড: ব্রেকিং স্কুলের কোর্সে ১০% ছাড় (data/rewards.json-এ আসল কোড দিন)।" }, "link": "", "active": true, "startDate": "", "endDate": "" },
+    { "id": "three-lessons", "lessonsRequired": 3, "code": "BCITY-BIO3", "title": { "en": "3 lessons — keep going!", "bn": "৩টি লেসন — চালিয়ে যাও!" }, "note": { "en": "Sample code: free Breaking Biology note pack.", "bn": "নমুনা কোড: ব্রেকিং বায়োলজির ফ্রি নোট প্যাক।" }, "link": "", "active": true, "startDate": "", "endDate": "" },
+    { "id": "five-lessons", "lessonsRequired": 5, "code": "BCITY-STAR5", "title": { "en": "5 lessons — star student", "bn": "৫টি লেসন — সেরা ছাত্র" }, "note": { "en": "Sample code: 20% off any course.", "bn": "নমুনা কোড: যেকোনো কোর্সে ২০% ছাড়।" }, "link": "", "active": true, "startDate": "", "endDate": "" }
+  ]
+}

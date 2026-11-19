@@ -2,6 +2,8 @@
 // camera, plus the action buttons. Everything writes into game.input, exactly like the
 // keyboard does. Layout + sensitivity: data/controls.json → touch.
 // Shown on touch devices (or with ?touch=1 for testing on a computer).
+// Session 7: Settings → control size / left-handed layout (applyLayout, settings:controls event);
+// buttons with drivingOnly (radio) are hidden on foot.
 
 import { debug } from '../../core/debug.js';
 import { t } from '../../ui/i18n.js';
@@ -14,6 +16,7 @@ let stick = null; // { id, cx, cy } while a finger is on the joystick
 let lookId = null;
 let lookX = 0;
 let lookY = 0;
+let stickRadius = 58;
 
 function setKnob(dx, dy) {
   root.querySelector('.joy-knob').style.transform = `translate(${dx}px, ${dy}px)`;
@@ -47,9 +50,9 @@ function bindJoystick(zone) {
     let dx = dx0;
     let dy = dy0;
     const len = Math.hypot(dx, dy);
-    if (len > j.radius) { dx *= j.radius / len; dy *= j.radius / len; }
+    if (len > stickRadius) { dx *= stickRadius / len; dy *= stickRadius / len; }
     setKnob(dx, dy);
-    let mag = Math.min(1, len / j.radius);
+    let mag = Math.min(1, len / stickRadius);
     mag = mag < j.deadzone ? 0 : (mag - j.deadzone) / (1 - j.deadzone);
     // direction * strength; screen-up means forward
     const n = len || 1;
@@ -85,18 +88,39 @@ function bindLook(zone) {
   zone.addEventListener('pointercancel', end);
 }
 
+/** Settings → control size and left-handed layout (save.data.settings.controlSize / controlLayout). */
+function applyLayout() {
+  const st = game.save.data.settings;
+  const k = cfg.sizes?.[st.controlSize] ?? 1;
+  const left = st.controlLayout === 'left';
+  root.classList.toggle('mirrored', left);
+  for (const size of Object.keys(cfg.sizes || {})) root.classList.toggle(`size-${size}`, st.controlSize === size);
+  const j = cfg.joystick;
+  root.style.setProperty('--joy-size', `${j.radius * 2 * k}px`);
+  root.style.setProperty('--joy-knob', `${j.knob * 2 * k}px`);
+  root.style.setProperty('--joy-left', `${j.left * k}px`);
+  root.style.setProperty('--joy-bottom', `${j.bottom * k}px`);
+  root.querySelectorAll('.touch-btn').forEach((el) => {
+    const b = cfg.buttons.find((x) => x.action === el.dataset.action);
+    el.style.width = el.style.height = `${b.size * k}px`;
+    const side = `calc(env(safe-area-inset-${left ? 'left' : 'right'}, 0px) + ${b.right * k}px)`;
+    el.style.right = left ? '' : side;
+    el.style.left = left ? side : '';
+    el.style.bottom = `calc(env(safe-area-inset-bottom, 0px) + ${b.bottom * k}px)`;
+  });
+  stickRadius = j.radius * k;
+}
+
 function makeButtons() {
   for (const b of cfg.buttons) {
     const el = document.createElement('button');
     el.type = 'button';
-    el.className = `touch-btn touch-${b.action}`;
+    el.className = `touch-btn touch-${b.action}${b.drivingOnly ? ' driving-only' : ''}`;
+    el.dataset.action = b.action;
     el.dataset.label = b.label;
     el.dataset.onFoot = b.label;
     el.dataset.driving = b.drivingLabel || b.label;
     el.textContent = t(b.label);
-    el.style.width = el.style.height = `${b.size}px`;
-    el.style.right = `calc(env(safe-area-inset-right, 0px) + ${b.right}px)`;
-    el.style.bottom = `calc(env(safe-area-inset-bottom, 0px) + ${b.bottom}px)`;
     const set = (down) => (e) => {
       e.preventDefault();
       game.input.usingTouch = true; // phones aim with aim assist (weapons feature)
@@ -138,6 +162,7 @@ export default {
     bindJoystick(root.querySelector('.touch-move'));
     bindLook(root.querySelector('.touch-look'));
     makeButtons();
+    applyLayout();
 
     const isTouch = window.matchMedia('(pointer: coarse)').matches || debug.flag('touch') === '1';
     if (isTouch) { show(); g.input.usingTouch = true; }
@@ -145,6 +170,8 @@ export default {
     const relabel = () => root.querySelectorAll('.touch-btn').forEach((el) => { el.textContent = t(el.dataset.label); });
     offs = [
       g.events.on('language:changed', relabel),
+      g.events.on('settings:controls', applyLayout),
+      g.events.on('radio:available', ({ on }) => root.classList.toggle('radio', !!on)), // রেডিও button
       // In a vehicle the same buttons mean Exit / Gas / Handbrake (data/controls.json → drivingLabel).
       g.events.on('controls:mode', ({ mode }) => {
         root.classList.toggle('driving', mode === 'driving');

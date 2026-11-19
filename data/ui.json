@@ -18,7 +18,8 @@
   "hud": {
     "_comment": "digits: 'language' = Bangla digits when the game is in Bangla.",
     "digits": "language",
-    "districtToastSeconds": 3.5
+    "districtToastSeconds": 3.5,
+    "toastSeconds": 3.5
   },
   "minimap": {
     "_comment": "size in px on screen, range = metres shown from centre to edge, pixelsPerMetre = sharpness of the pre-drawn city map.",

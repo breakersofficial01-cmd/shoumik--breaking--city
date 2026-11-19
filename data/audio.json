@@ -1,0 +1,59 @@
+{
+  "_comment": "Sound (Session 7). Every sound is made in code (Web Audio synth, no files) unless data/assets.json has a 'sound.<id>' file for it — then the file is played instead (mp3/ogg/wav, royalty-free only). buses: how loud each group is at 100% in Settings (master multiplies all). hearDistance: metres after which a sound is silent. maxVoices: limit of short sounds playing at once (phones).",
+  "buses": { "master": 0.9, "sfx": 0.85, "music": 0.55, "ambience": 0.6 },
+  "maxVoices": 24,
+  "hearDistance": 140,
+  "panStrength": 0.7,
+  "sounds": {
+    "_comment": "One entry per sound id. kind = which synth recipe (src/audio/synth.js). gain = loudness. Other numbers shape the sound. hear = own hearing distance in metres (optional).",
+    "gun.pistol":   { "kind": "gun", "gain": 0.75, "body": 180, "crack": 2400, "length": 0.22, "hear": 220 },
+    "gun.revolver": { "kind": "gun", "gain": 0.95, "body": 130, "crack": 1900, "length": 0.32, "hear": 240 },
+    "gun.smg":      { "kind": "gun", "gain": 0.55, "body": 210, "crack": 2800, "length": 0.14, "hear": 220 },
+    "gun.shotgun":  { "kind": "gun", "gain": 1.0,  "body": 90,  "crack": 1400, "length": 0.45, "hear": 260 },
+    "gun.rifle":    { "kind": "gun", "gain": 0.8,  "body": 150, "crack": 3200, "length": 0.26, "hear": 260 },
+    "gun.sniper":   { "kind": "gun", "gain": 1.0,  "body": 110, "crack": 3600, "length": 0.55, "hear": 320 },
+    "explosion":    { "kind": "boom", "gain": 1.0, "length": 2.2, "hear": 380 },
+    "glass":        { "kind": "glass", "gain": 0.6, "length": 0.35 },
+    "punch":        { "kind": "thud", "gain": 0.7, "freq": 110, "length": 0.12, "hear": 40 },
+    "crash":        { "kind": "thud", "gain": 0.9, "freq": 70, "length": 0.35, "hear": 120 },
+    "crow":         { "kind": "crow", "gain": 0.35, "hear": 90 },
+    "hawker":       { "kind": "hawker", "gain": 0.28, "hear": 50 },
+    "thunder":      { "kind": "thunder", "gain": 0.9, "length": 3.5 },
+    "click":        { "kind": "click", "gain": 0.4 },
+    "reward":       { "kind": "chime", "gain": 0.45 },
+    "camera":       { "kind": "shutter", "gain": 0.5 }
+  },
+  "loops": {
+    "_comment": "Long sounds that fade in and out (beds). kind = synth recipe.",
+    "rain":      { "kind": "rain", "gain": 0.55 },
+    "crowd":     { "kind": "crowd", "gain": 0.32 },
+    "traffic":   { "kind": "trafficBed", "gain": 0.22 },
+    "engine":    { "kind": "engine", "gain": 0.32 },
+    "siren":     { "kind": "siren", "gain": 0.28 },
+    "generator": { "kind": "generator", "gain": 0.25 },
+    "fire":      { "kind": "fire", "gain": 0.3 }
+  },
+  "ambience": {
+    "_comment": "Random city sounds around Shoumik. everySeconds = [min, max] wait between two of them. crows only by day, hawkers only near crowds (day and evening). bellsEverySeconds: a nearby rickshaw rings its bell.",
+    "crowEverySeconds": [9, 26],
+    "hawkerEverySeconds": [14, 34],
+    "bellsEverySeconds": [4, 11],
+    "bellRange": 45,
+    "crowdPeople": 18,
+    "sirenRange": 110,
+    "fireRange": 40,
+    "hawkerLines": ["sound.hawker1", "sound.hawker2", "sound.hawker3", "sound.hawker4"]
+  },
+  "engine": {
+    "_comment": "Engine sound of the vehicle Shoumik drives. idle/top = pitch in Hz at standstill / top speed. Vehicle styles without an engine stay silent.",
+    "silentStyles": ["rickshaw", "bicycle"],
+    "idleHz": 38,
+    "topHz": 125,
+    "styles": { "cng": 1.5, "motorbike": 1.7, "leguna": 1.2, "bus": 0.7, "sports": 1.15 }
+  },
+  "weaponSounds": {
+    "_comment": "Which sound each weapon makes (weapon ids from data/weapons.json). police = police officers' guns.",
+    "pistol": "gun.pistol", "revolver": "gun.revolver", "smg": "gun.smg", "shotgun": "gun.shotgun",
+    "sawedOff": "gun.shotgun", "rifle": "gun.rifle", "sniper": "gun.sniper", "molotov": "glass", "police": "gun.pistol", "policeRifle": "gun.rifle", "helicopter": "gun.smg"
+  }
+}

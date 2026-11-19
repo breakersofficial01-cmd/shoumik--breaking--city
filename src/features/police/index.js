@@ -129,6 +129,7 @@ function staff(dt) {
 function shootFrom(x, y, z, accuracy, damage) {
   const p = game.player;
   if (!p || p.dead) return;
+  game.events.emit('police:fired', { x, z, rifle: damage >= cfg.officer.swatDamage }); // Session 7: the sound feature plays the shot
   const t = playerPos();
   const ty = (p.mode === 'onFoot' ? p.position.y : t.y || p.position.y) + 1.2;
   const dx = t.x - x, dz = t.z - z;

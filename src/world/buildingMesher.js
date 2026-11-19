@@ -52,8 +52,10 @@ function wallBox(gb, s, t0, t1, depth, y0, y1, cBottom, cTop, tile, withBottom) 
  * @param {object} palette   the district's palette (for sign colours)
  * @param {number} baseY     ground height under the building (kerb height)
  * @param {object} quality   current quality level (data/quality.json)
+ * @param {{gb: GeoBuilder, atlas: import('./signboards.js').SignAtlas}|null} signs
+ *        Session 7: where shop-sign faces go (Bangla names); null = blank boards as before
  */
-export function meshBuilding(gb, b, cfg, palette, baseY, quality) {
+export function meshBuilding(gb, b, cfg, palette, baseY, quality, signs = null) {
   const rng = new Rng(b.seed);
   const wallCol = hexToLinear(b.wall);
   const cBase = shade(wallCol, cfg.baseShade);        // darker at street level (grime)
@@ -98,10 +100,18 @@ export function meshBuilding(gb, b, cfg, palette, baseY, quality) {
           // One blank signboard per shop (1-2 bays wide), each shop its own colour.
           const span = Math.min(bays - k, rng.int(1, 2));
           signUntil = k + span;
-          const signCol = hexToLinear(rng.pick(palette.signs));
+          let signCol = hexToLinear(rng.pick(palette.signs));
           const pad = 0.12 / len;
-          wallBox(gb, s, t0 + pad, (k + span) / bays - pad, cfg.signDepth,
-            yGround - cfg.signHeight, yGround + rng.range(0, 0.35), shade(signCol, 0.82), signCol, FACADE.PLAIN, true);
+          const sy0 = yGround - cfg.signHeight, sy1 = yGround + rng.range(0, 0.35);
+          const ta = t0 + pad, tb = (k + span) / bays - pad;
+          // Session 7: a Bangla shop name on the board (same Rng calls as before: the city is unchanged).
+          const cell = signs?.atlas.pick(b.seed, k, s.bit);
+          if (cell) {
+            signCol = cell.bgLinear;
+            signs.atlas.face(signs.gb, cell, s.ax + (s.bx - s.ax) * ta, s.az + (s.bz - s.az) * ta,
+              s.ax + (s.bx - s.ax) * tb, s.az + (s.bz - s.az) * tb, s.ox, s.oz, cfg.signDepth + 0.015, sy0 + 0.04, sy1 - 0.04);
+          }
+          wallBox(gb, s, ta, tb, cfg.signDepth, sy0, sy1, shade(signCol, 0.82), signCol, FACADE.PLAIN, true);
         }
       } else if (!hero) {
         const tile = isFront && k === doorBay && s.bit === (1 << doorSide) ? FACADE.DOOR : b.style;

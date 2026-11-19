@@ -29,19 +29,10 @@ export class SunShadows {
     this.focus = new THREE.Vector3();
     scene.add(light.target);
 
-    // A very low sunset sun makes shadows many times longer than the area we can afford to
-    // shadow, so the shadow light never goes below cfg.minElevation (the sky still shows the
-    // real low sun). This also sets the direction of the sun's diffuse light.
-    this.dir = sunDir.clone();
-    const minY = Math.sin(cfg.minElevation);
-    if (this.dir.y < minY) {
-      const flat = Math.sqrt(1 - minY * minY);
-      const h = Math.hypot(this.dir.x, this.dir.z) || 1;
-      this.dir.set((this.dir.x / h) * flat, minY, (this.dir.z / h) * flat);
-    }
-    // Light-space axes (match how the shadow camera looks at its target) for texel snapping.
-    this.right = new THREE.Vector3().crossVectors(UP, this.dir).normalize();
-    this.up = new THREE.Vector3().crossVectors(this.dir, this.right).normalize();
+    this.dir = new THREE.Vector3();
+    this.right = new THREE.Vector3();
+    this.up = new THREE.Vector3();
+    this.setDirection(sunDir);
 
     const s = light.shadow;
     const e = cfg.extent;
@@ -50,6 +41,26 @@ export class SunShadows {
     s.bias = cfg.bias;
     s.normalBias = cfg.normalBias;
     this.place(this.focus);
+  }
+
+  /**
+   * Where the light comes from (unit vector ground → sun). Session 7: day/night moves it.
+   * A very low sunset sun makes shadows many times longer than the area we can afford to
+   * shadow, so the shadow light never goes below cfg.minElevation (the sky still shows the
+   * real low sun). This also sets the direction of the sun's diffuse light.
+   */
+  setDirection(sunDir) {
+    this.dir.copy(sunDir).normalize();
+    const minY = Math.sin(this.cfg.minElevation);
+    if (this.dir.y < minY) {
+      const flat = Math.sqrt(1 - minY * minY);
+      const h = Math.hypot(this.dir.x, this.dir.z) || 1;
+      this.dir.set((this.dir.x / h) * flat, minY, (this.dir.z / h) * flat);
+    }
+    // Light-space axes (match how the shadow camera looks at its target) for texel snapping.
+    this.right.crossVectors(UP, this.dir).normalize();
+    this.up.crossVectors(this.dir, this.right).normalize();
+    if (this.focus) this.place(this.focus);
   }
 
   /** Turn shadows on/off and pick the map size for a quality level. */

@@ -548,3 +548,85 @@ Known issues
 - Phone aim assist only locks on to people and the helicopter, not to vehicles (shoot vehicles by
   facing them).
 - Real-phone FPS with a 5-star chase is unmeasured.
+
+## 2026-11-19 — Session 7: Vibe and polish (Claude Opus 5.5)
+The city now lives through day and night, rains, loses power, and sounds like Dhaka.
+
+Day and night (`src/features/dayNight/`, `data/dayNight.json`)
+- 1 game day = 24 real minutes, saved. A new game starts at the golden sunset.
+- Three painted skies (blue day with clouds, the existing pink/orange sunset, purple night with
+  stars and a moon) blend smoothly; the sun crosses the sky (east → painted sunset side) and real
+  shadows follow it; a weak blue moon light at night.
+- Each hour has a look key: light colours, fog, exposure, neon strength, bloom, lit windows,
+  sign glow, reflections. Sunset pink/orange → purple dusk → neon night.
+- Night: ~40 % of windows glow warm, shops behind open shutters glow, neon and markers brighter,
+  3D tower glass glows softly.
+- **Load-shedding**: every 2.5–6 min one district (half the time yours) goes dark for 30 s:
+  windows, shop signs, LED screens, billboards; generators hum; a "লোডশেডিং!" toast.
+
+Monsoon rain (`src/features/weather/`, `data/weather.json`)
+- Rain comes and goes by itself (dry 3–7 min, rain 1.5–3.5 min). Drops around the camera (one draw
+  call; 900 / 2200 / 4000 by quality), darker wet roads with a sheen, grey fog, weaker sun, rain
+  sound, lightning flashes with thunder. Roads take a minute to dry.
+
+Bangla signboards (`src/world/signboards.js`, `data/signboards.json`)
+- The blank shop boards now show 40 Bangla shop names (রহমান স্টোর, চা ঘর, ফার্মেসি, ফটোকপি
+  এখানে…; some with a small English line), painted once after the Bangla font loads. Letters glow
+  at night. One extra draw call per city chunk.
+
+Sound (`src/audio/`, `src/features/sound/`, `data/audio.json`)
+- One shared Web Audio mixer (`game.audio`) with 4 buses (all, effects, music, city). Everything is
+  generated in code (no files to license): 6 gun types, police shots, explosions, molotov glass,
+  punches, crashes, engine of the vehicle you drive, horns, random rickshaw bells, crowd murmur,
+  traffic rumble, hawkers' calls, crows (by day), rain, thunder, sirens, fire, generators, clicks,
+  a reward chime, a camera shutter. Any sound can be swapped for a real file in `data/assets.json`.
+- Horns and the hangout boombox now play through the mixer (volume sliders apply).
+
+Radio (`src/features/radio/`, `data/radio.json`)
+- Cars, CNGs, legunas, bikes and buses: ঢাকা বিটস ১০১.৫ (pop), নদী এফএম ৯২.০ (folk), নিয়ন নাইট
+  ৮৮.৮ (synthwave). Code-made music (new random song every few minutes), DJ lines in Bangla /
+  English slide in at the top. R or the new রেডিও button (only while driving) → next station → off.
+
+Profile card, reward codes, screenshots, 17+ screen
+- Tap the portrait → profile card: শৌমিক কুমার, Sir Salimullah Medical College, Ex-Notre Dame
+  College, 14 stats (`data/profile.json`).
+- Reward codes (`data/rewards.json`, Content Service): unlock after N lessons, toast + chime, Copy
+  button in the profile card. **The 3 codes are samples.**
+- Camera button / P: screenshot with a BREAKING CITY watermark → Save or Share (phone share sheet).
+- 17+ screen on first launch (Bangla / English), game paused behind it, saved.
+
+Settings (rewritten)
+- Graphics, sound on/off + 4 volume sliders, বাংলা / English, button size (small / normal / large),
+  left-handed layout (buttons left, joystick right), blood, outfit, reset save (asks twice; keeps
+  settings and the 17+ answer).
+
+Under the hood
+- Save format **v5** (migration from v4): `clock`, `rewards`, `playSeconds`, new settings fields.
+- `world.cityShading` (shader patches: windows, sign glow, wet roads, power cut), `sky.enableCycle`,
+  `graphics.setSunDirection / refreshEnvironment / setBloomStrength / setExposure`,
+  `glow.setGlowLevel`, `SunShadows.setDirection`. New events listed in `docs/HANDOFF.md`.
+- New input actions `radio` (R) and `photo` (P); touch buttons can be `drivingOnly`.
+- HUD: generic `toast:show`. Posters: LED / billboards dark during load-shedding. Police send
+  `police:fired`. `?autostart=1` skips the 17+ screen (tests); `&agegate=1` shows it.
+- New tool `tools/vibe-check.js` (25+ checks + screenshots). `tools/class-check.js` expects save v5.
+
+Tests (headless Chromium, software rendering, served under the GitHub Pages sub-path): vibe check
+passes on Low and Medium (zero console errors); smoke test passes on Low (+touch), Medium and High
+(night + rain); class check (36 checks) and crime check pass on Low. Vehicle test on Low: driving,
+ramp, drift, carjacking and the rickshaw ride pass; the explosion step passes on its own but can
+time out in the full run — the Session 6 code does the same in this sandbox (fixed waits in a slow
+software renderer), so it is not a new problem. Pictures of every time of day, rain, load-shedding,
+signs, the settings, profile card, 17+ screen and a watermarked screenshot were checked by eye.
+**Not tested on a real phone; sounds could not be heard in the test machine.**
+
+Known issues
+- All sounds and radio music are code-made placeholders — they sound "retro synth", not like real
+  recordings. Real royalty-free files can replace any of them without code changes.
+- Night streets have no street lamps or car headlights yet (light comes from windows, signs and
+  neon). Pedestrians do not open umbrellas in the rain.
+- Lit windows are decided per 3 m cell, so on some buildings a window can be half lit.
+- The 3D kit towers' glass glows evenly at night (no single lit windows).
+- The reward codes in `data/rewards.json` are samples; `data/links.json` YouTube links are still
+  empty (the "under 17" screen shows lesson links once they are filled in).
+- Sharing a screenshot needs a browser with the share sheet (Chrome on Android: yes); otherwise
+  only Save is shown.

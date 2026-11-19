@@ -1,6 +1,7 @@
-// Boombox sound PLACEHOLDER: a simple drum-and-bass loop made with the Web Audio API (no
-// sound files). Session 7 replaces it with real royalty-free tracks through the asset
-// registry. Volume follows the distance to the nearest hangout spot.
+// Boombox: a simple drum-and-bass loop made with the Web Audio API (no sound files, so it is
+// royalty-free). Volume follows the distance to the nearest hangout spot.
+// Session 7: it plays through the shared mixer (game.audio → 'music' bus), so Settings →
+// sound and the music slider apply. Pausing is handled by game.audio (whole context).
 //
 // Browsers only allow sound after the player has touched the page, so the audio starts on
 // the first tap/key press.
@@ -10,7 +11,9 @@ const STEP_SNARE = [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0];
 const STEP_BASS = [0, 0, 3, 0, 0, 0, 5, 0, 0, 0, 3, 0, 7, 0, 5, 0]; // semitones above the root, 0 = rest (step 0 plays the root)
 
 export class Boombox {
-  constructor() {
+  /** @param {import('../../audio/audio.js').AudioManager} audio  game.audio */
+  constructor(audio) {
+    this.audio = audio;
     this.ctx = null;
     this.level = 0;
     this.bpm = 112;
@@ -23,23 +26,15 @@ export class Boombox {
   }
 
   ensure() {
-    if (this.ctx) {
-      if (this.ctx.state === 'suspended' && !this.paused) this.ctx.resume().catch(() => {});
-      return;
-    }
-    const AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return;
-    try {
-      this.ctx = new AC();
-    } catch {
-      return;
-    }
+    if (this.ctx) return;
+    this.ctx = this.audio?.ensure() || null;
+    if (!this.ctx) return;
     this.master = this.ctx.createGain();
     this.master.gain.value = 0;
     this.filter = this.ctx.createBiquadFilter();
     this.filter.type = 'lowpass';
     this.filter.frequency.value = 900;
-    this.master.connect(this.filter).connect(this.ctx.destination);
+    this.master.connect(this.filter).connect(this.audio.bus('music'));
     // One second of noise for snares and hi-hats.
     const len = this.ctx.sampleRate;
     this.noise = this.ctx.createBuffer(1, len, len);
@@ -66,10 +61,7 @@ export class Boombox {
   }
 
   setPaused(paused) {
-    this.paused = paused;
-    if (!this.ctx) return;
-    if (paused) this.ctx.suspend().catch(() => {});
-    else this.ctx.resume().catch(() => {});
+    this.paused = paused; // the shared context is suspended by game.audio
   }
 
   tone(type, f0, f1, t, dur, gain) {
@@ -120,7 +112,7 @@ export class Boombox {
     clearInterval(this.timer);
     window.removeEventListener('pointerdown', this.unlock);
     window.removeEventListener('keydown', this.unlock);
-    this.ctx?.close().catch(() => {});
+    try { this.filter?.disconnect(); } catch { /* gone */ }
     this.ctx = null;
   }
 }

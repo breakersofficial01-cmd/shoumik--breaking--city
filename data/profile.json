@@ -1,0 +1,9 @@
+{
+  "_comment": "Shoumik's profile card (tap the HUD portrait). Text is in both languages. facts = the lines under his name (more can be added later). stats = which numbers from the save are shown, in this order (ids: cash, lessonsDone, lessonEarned, quizEarned, kills, policeKilled, carsDestroyed, longestChase, busted, wasted, shotsFired, vehicles, homes, playTime).",
+  "name": { "en": "Shoumik Kumar", "bn": "শৌমিক কুমার" },
+  "facts": [
+    { "en": "Sir Salimullah Medical College", "bn": "স্যার সলিমুল্লাহ মেডিকেল কলেজ" },
+    { "en": "Ex-Notre Dame College", "bn": "সাবেক নটর ডেম কলেজ" }
+  ],
+  "stats": ["cash", "lessonsDone", "lessonEarned", "quizEarned", "playTime", "vehicles", "homes", "kills", "policeKilled", "carsDestroyed", "longestChase", "busted", "wasted", "shotsFired"]
+}

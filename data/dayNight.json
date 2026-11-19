@@ -1,0 +1,68 @@
+{
+  "_comment": "Day and night (Session 7). One game day = dayMinutes real minutes. startHour = time of day on a new game (17.2 = the golden sunset). The time is saved. keys = the look at certain hours; between two keys every value is blended. sky = how much of each painted sky shows (day / sunset / night, should add up to 1). sun = sun (or moon) light colour and strength. hemi = sky light from above / bounce from below. fog = fog and far-away colour. exposure = overall brightness. neon = extra glow on neon, signs and markers (1 = as set in graphics.json). windows = how many windows are lit (0-1). signs = how much Bangla shop signs light up at night. bloom = glow strength (Medium/High). env = strength of sky reflections on water and cars.",
+  "dayMinutes": 24,
+  "startHour": 17.2,
+  "sunPath": {
+    "_comment": "The sun rises in the east at 6:00 and sets in the west at 18:00. elevation = how high it climbs (1 = normal). The moon is the 'sun' light at night (opposite side, weak and blue).",
+    "riseHour": 6,
+    "setHour": 18,
+    "elevation": 1.5,
+    "updateSeconds": 1.0
+  },
+  "environmentRefreshSeconds": 25,
+  "keys": [
+    { "hour": 0,    "sky": [0, 0, 1],       "sun": ["#9fb2ff", 0.55], "hemi": ["#5560b8", "#2a1d3a", 1.25], "ambient": ["#5a66c0", 0.42], "fog": "#221d48", "exposure": 1.15, "neon": 1.3, "windows": 0.9, "signs": 1, "bloom": 0.8, "env": 0.35 },
+    { "hour": 4.8,  "sky": [0, 0, 1],       "sun": ["#9fb2ff", 0.5],  "hemi": ["#5560b8", "#2a1d3a", 1.2],  "ambient": ["#5a66c0", 0.4],  "fog": "#241f4a", "exposure": 1.15, "neon": 1.3,  "windows": 0.55, "signs": 1, "bloom": 0.8, "env": 0.35 },
+    { "hour": 6,    "sky": [0.15, 0.6, 0.25], "sun": ["#ffa868", 1.7], "hemi": ["#d6a0c8", "#8a5a48", 1.5], "ambient": ["#ff9a7a", 0.3], "fog": "#d4876a", "exposure": 1.2,  "neon": 1.2,  "windows": 0.2, "signs": 0.5, "bloom": 0.7, "env": 0.8 },
+    { "hour": 7.6,  "sky": [1, 0, 0],       "sun": ["#fff0d4", 3.3],  "hemi": ["#bcd6ff", "#8c7a62", 1.45], "ambient": ["#e8ecff", 0.22], "fog": "#c4d3e6", "exposure": 1.15, "neon": 1,    "windows": 0, "signs": 0, "bloom": 0.42, "env": 1.0 },
+    { "hour": 15.5, "sky": [1, 0, 0],       "sun": ["#ffe6b8", 3.4],  "hemi": ["#c8d4f2", "#9a7a5a", 1.4],  "ambient": ["#fff0e0", 0.22], "fog": "#d0cfd8", "exposure": 1.2,  "neon": 1,    "windows": 0, "signs": 0, "bloom": 0.45, "env": 1.0 },
+    { "hour": 16.6, "sky": [0.25, 0.75, 0], "sun": ["#ffc080", 3.4],  "hemi": ["#c79ad6", "#a8704a", 1.4],  "ambient": ["#ff9a7a", 0.22], "fog": "#d9784a", "exposure": 1.25, "neon": 1,    "windows": 0.05, "signs": 0.1, "bloom": 0.55, "env": 1.2 },
+    { "hour": 17.8, "sky": [0, 1, 0],       "sun": ["#ffb070", 3.2],  "hemi": ["#c79ad6", "#a8704a", 1.4],  "ambient": ["#ff9a7a", 0.22], "fog": "#d9784a", "exposure": 1.25, "neon": 1.1,  "windows": 0.25, "signs": 0.4, "bloom": 0.6, "env": 1.25 },
+    { "hour": 18.7, "sky": [0, 0.45, 0.55], "sun": ["#ff7aa8", 1.2],  "hemi": ["#9a6ac8", "#5a3848", 1.35], "ambient": ["#c07ab8", 0.35], "fog": "#5a3068", "exposure": 1.2,  "neon": 1.4,  "windows": 0.75, "signs": 0.85, "bloom": 0.85, "env": 0.7 },
+    { "hour": 19.8, "sky": [0, 0, 1],       "sun": ["#9fb2ff", 0.6],  "hemi": ["#5a60c0", "#2e1f40", 1.3],  "ambient": ["#6066c8", 0.42], "fog": "#26204e", "exposure": 1.15, "neon": 1.3, "windows": 1, "signs": 1, "bloom": 0.8, "env": 0.35 },
+    { "hour": 24,   "sky": [0, 0, 1],       "sun": ["#9fb2ff", 0.55], "hemi": ["#5560b8", "#2a1d3a", 1.25], "ambient": ["#5a66c0", 0.42], "fog": "#221d48", "exposure": 1.15, "neon": 1.3, "windows": 0.9, "signs": 1, "bloom": 0.8, "env": 0.35 }
+  ],
+  "windows": {
+    "_comment": "Lit windows at night on the code-built buildings: a share of window cells glow warm (colours picked at random per window). cell = window size in metres (across, up). dark = how dark a texture pixel must be to count as glass (0-1).",
+    "share": 0.42,
+    "cell": [3.0, 3.1],
+    "dark": 0.34,
+    "colors": ["#ffc46a", "#ffe3a0", "#ff9e4a", "#a8d0ff"],
+    "heroGlass": 0.05,
+    "strength": 0.95
+  },
+  "skies": {
+    "_comment": "The day and night skies are painted once at load like the sunset sky (data/world.json → sky.painted; same fields). width = texture size (smaller = less memory).",
+    "day": {
+      "sunDirection": [0.1, 0.9, 0.35],
+      "painted": {
+        "width": 1024,
+        "stops": [[-1, "#7a8090"], [0.0, "#c9d8ea"], [0.05, "#b4cdea"], [0.2, "#86b2e6"], [0.5, "#5a92dc"], [1, "#3d76cc"]],
+        "glow": { "color": "#ffffff", "strength": 0.12, "power": 1.0, "height": 0.06 },
+        "halo": { "color": "#fff6dc", "strength": 0.0, "power": 60 },
+        "clouds": { "lit": "#ffffff", "shade": "#b9c4d6", "rim": "#ffffff", "cover": 0.5, "softness": 0.25, "scale": 2.0, "stretch": 0.45, "opacity": 0.8, "from": 0.03, "to": 0.85, "seed": 8.1 },
+        "stars": { "density": 0.0, "brightness": 0.0, "from": 0.9 }
+      }
+    },
+    "night": {
+      "sunDirection": [0.6, 0.5, -0.3],
+      "painted": {
+        "width": 1024,
+        "stops": [[-1, "#0c0a18"], [0.0, "#3a2a5e"], [0.04, "#2e2860"], [0.15, "#1d1d50"], [0.45, "#11123a"], [1, "#080a24"]],
+        "glow": { "color": "#ff5aa0", "strength": 0.18, "power": 0.6, "height": 0.05 },
+        "halo": { "color": "#dfe6ff", "strength": 0.35, "power": 400 },
+        "clouds": { "lit": "#4a4a8a", "shade": "#141432", "rim": "#9aa0e0", "cover": 0.55, "softness": 0.25, "scale": 2.2, "stretch": 0.3, "opacity": 0.55, "from": 0.03, "to": 0.7, "seed": 5.3 },
+        "stars": { "density": 0.03, "brightness": 1.0, "from": 0.12 }
+      }
+    }
+  },
+  "moon": { "color": "#e8eeff", "size": 0.05 },
+  "loadShedding": {
+    "_comment": "Load-shedding: now and then one district loses power for 'seconds' (its lit windows, LED screens and billboards go dark and generators start humming). everyMinutes = [min, max] real minutes between two cuts. nightOnly: only after dark (when it is visible).",
+    "enabled": true,
+    "seconds": 30,
+    "everyMinutes": [2.5, 6],
+    "nightOnly": false,
+    "firstAfterSeconds": 90
+  }
+}

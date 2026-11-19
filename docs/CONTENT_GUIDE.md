@@ -86,6 +86,30 @@ Later as a Google Sheet tab "Posters" with the same column names (one row per po
 `districts` as a comma-separated list. (The sheet adapter for posters is not written yet —
 lessons first.)
 
+## 2b. Reward codes — `data/rewards.json` (Session 7)
+Codes players unlock by finishing lessons (shown in Shoumik's profile card with a Copy button).
+Each row: `id` (unique), `lessonsRequired` (whole number ≥ 1 — a lesson counts once one of its
+questions was answered right), `code` (the text they copy, e.g. a course coupon), `title` and `note`
+(`{ "en": "…", "bn": "…" }`), `link` (optional: where to use the code, opens in a new tab),
+`active`, `startDate` / `endDate` (`YYYY-MM-DD`, empty = no limit). Bad rows are skipped and logged.
+**The three codes in the file are samples — replace them with real ones.** Loaded through the
+Content Service, so it can become a Google Sheet tab "Rewards" with the same columns later.
+
+## 2c. Radio, shop signs, sounds and the profile card (Session 7)
+- **Radio** — `data/radio.json`: station names, style (`pop`, `folk`, `synth`), tempo, DJ lines
+  (`en` + `bn`). To use real songs: put royalty-free files in `assets/audio/radio/`, add each to
+  `data/assets.json` (`"sound.radio.myTrack": { "type": "sound", "url": "assets/audio/radio/my-track.mp3" }`)
+  and list the ids in the station's `tracks`. Never use songs you do not have the rights to.
+- **Shop signboards** — `data/signboards.json → names`: Bangla name + optional small English line
+  (max 64 names, keep them short). `styles` = board / letter colours.
+- **Sounds** — every sound is made in code. To replace one with a recording, add
+  `"sound.<id>"` to `data/assets.json` (ids are the keys in `data/audio.json → sounds`, e.g.
+  `sound.gun.pistol`, `sound.crow`, `sound.explosion`; horns: `sound.horn.bell`, `sound.horn.car`…).
+- **Profile card** — `data/profile.json`: Shoumik's name and the lines under it (`facts`), and
+  which stats are shown.
+- **Time of day, rain, load-shedding** — `data/dayNight.json`, `data/weather.json` (every number
+  has a `_comment`).
+
 ## 3. Everything else
 Prices, vehicles, weapons, places, text: `data/*.json`. Each file has a `_comment` field
 explaining it. Places and vehicles are described at the end of this guide.

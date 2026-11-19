@@ -11,6 +11,7 @@
 //   game.combatFx     (blood, bullet tracers, muzzle flashes: acquireCombatFx(game))
 //   game.ui           (the #ui element: put HUD / overlays here)
 //   game.graphics     (tone mapping, shadows, bloom: src/world/graphics/)
+//   game.audio        (one Web Audio context + volume buses: src/audio/audio.js)
 //   game.setPaused(reason, bool), game.setQuality(name)
 
 import * as THREE from 'three';
@@ -25,6 +26,7 @@ import { content } from '../content/ContentService.js';
 import { assets } from '../assets/registry.js';
 import { World } from '../world/world.js';
 import { Graphics } from '../world/graphics/index.js';
+import { AudioManager } from '../audio/audio.js';
 import { ChaseCamera } from '../entities/chaseCamera.js';
 import { loadFeatures } from '../features/index.js';
 
@@ -88,6 +90,7 @@ export class Game {
     document.addEventListener('visibilitychange', () => this.setPaused('hidden', document.hidden));
 
     initDebugPanel();
+    this.audio = new AudioManager(this); // before features: they create their sounds in init()
     this.features = await loadFeatures(this);
     onProgress(0.3);
 

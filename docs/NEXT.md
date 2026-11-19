@@ -123,3 +123,20 @@
 - Show the wanted level on the minimap (police dots, a red/blue flashing rim).
 - Phone aim assist cycling between targets with a swipe; lock on to vehicles too.
 - Profile card (Session 7) showing the Session 6 stats with Bangla digits.
+
+## Ideas noted during Session 7
+- Street lamps with light pools on the road at night (decals, not real lights) and car headlights
+  (cheap glowing cones / projected decal) — the night streets are lit only by windows and neon now.
+- Umbrellas for pedestrians and rickshaw plastic covers while it rains; puddle splashes; water
+  logging on some roads after heavy rain (slower driving).
+- Neon reflections in wet roads (screen-space or a mirrored neon pass on High).
+- Real recorded sounds (royalty-free packs): rickshaw bells, CNG engines, Bangla hawker calls,
+  azan-free ambient city loops; Doppler on sirens; police radio chatter in Bangla.
+- Real radio tracks from Bangladeshi indie artists (with written permission), a talk-show station
+  with Breaking School study tips, adverts for real courses between songs.
+- Load-shedding makes traffic lights go off too (junction chaos) and the MRT stop for 30 s.
+- Daily login reward and "study streak" codes in the reward system; codes per institute.
+- Photo mode: free camera, filters, Shoumik poses, stickers of the brands for social media posts.
+- Weather forecast on an LED screen; fog in winter mornings; heat haze in the afternoon.
+- Moon phases; fireworks at night on special dates (e.g. Pohela Boishakh, Victory Day) from data.
+

@@ -218,3 +218,39 @@ export function validatePosters(raw) {
   });
   return { items, defaults: raw?.settings || {}, skipped };
 }
+
+/**
+ * Reward codes (Session 7, data/rewards.json): unlocked after N finished lessons, shown in the
+ * profile card with a Copy button. Bad rows are skipped with a reason.
+ */
+export function validateRewards(raw) {
+  const skipped = [];
+  const items = [];
+  const list = Array.isArray(raw?.rewards) ? raw.rewards : [];
+  if (!Array.isArray(raw?.rewards)) skipped.push({ id: '(file)', reason: '"rewards" list is missing' });
+  const seen = new Set();
+  const name = (v) => (isText(v) ? { en: v.trim(), bn: v.trim() } : v && (isText(v.en) || isText(v.bn)) ? { en: (v.en || v.bn).trim(), bn: (v.bn || v.en).trim() } : null);
+  list.forEach((r, i) => {
+    const label = isText(r?.id) ? r.id : `reward #${i + 1}`;
+    const skip = (reason) => skipped.push({ id: label, reason });
+    if (!r || typeof r !== 'object') return skip('not an object');
+    if (!isText(r.id)) return skip('id is empty');
+    if (seen.has(r.id)) return skip('duplicate id');
+    const need = Number(r.lessonsRequired);
+    if (!Number.isInteger(need) || need < 1) return skip('lessonsRequired must be a whole number, 1 or more');
+    if (!isText(r.code)) return skip('code is empty');
+    const title = name(r.title);
+    if (!title) return skip('title is empty');
+    const link = isText(r.link) ? r.link.trim() : '';
+    if (link && !isHttpUrl(link)) return skip('link is not a valid http(s) address');
+    for (const key of ['startDate', 'endDate']) if (isText(r[key]) && !DATE.test(r[key].trim())) return skip(`${key} must look like 2026-12-31`);
+    seen.add(r.id);
+    items.push({
+      id: r.id.trim(), lessonsRequired: need, code: r.code.trim(), title, note: name(r.note) || { en: '', bn: '' }, link,
+      startDate: isText(r.startDate) ? r.startDate.trim() : '', endDate: isText(r.endDate) ? r.endDate.trim() : '',
+      active: r.active !== false,
+    });
+  });
+  items.sort((a, b) => a.lessonsRequired - b.lessonsRequired);
+  return { items, defaults: raw?.settings || {}, skipped };
+}

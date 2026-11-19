@@ -125,7 +125,7 @@ export default {
     await g.content.load('hotspots');
     settings = g.content.getDefaults('hotspots');
     crowd = await acquireCrowd(g);
-    boombox = new Boombox();
+    boombox = new Boombox(g.audio);
     materials = {
       lit: new THREE.MeshLambertMaterial({ vertexColors: true }),
       neon: markGlow(new THREE.MeshBasicMaterial({ vertexColors: true }), 'glow'), // unlit = glows

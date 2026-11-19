@@ -84,6 +84,11 @@ function makeMesh(s) {
   root.add(mesh);
 }
 
+// Session 7 load-shedding: LED screens and lit billboards inside the dark district show black.
+let cut = null;
+const darkMaterial = new THREE.MeshBasicMaterial({ color: '#0b0b12' });
+const powerCut = (s) => cut && (s.kind === 'led' || s.kind === 'billboard') && s.x >= cut.x0 && s.x <= cut.x1 && s.z >= cut.z0 && s.z <= cut.z1;
+
 /** Show the right picture on every near slot; load pictures that are getting close. */
 function refreshSlots(focus) {
   const far = game.quality.viewDistance;
@@ -100,7 +105,7 @@ function refreshSlots(focus) {
     if (visible && !s.mesh) makeMesh(s);
     if (!s.mesh) continue;
     s.mesh.visible = visible;
-    if (visible) s.mesh.material = library.material(s.poster?.id, s.shape);
+    if (visible) s.mesh.material = powerCut(s) ? darkMaterial : library.material(s.poster?.id, s.shape);
   }
   const lazy = Math.max(game.quality.posterDistance, settings.lazyLoadDistance);
   for (const s of vehicles.slots) {
@@ -218,6 +223,7 @@ export default {
       () => { g.canvas.removeEventListener('pointerdown', onDown); g.canvas.removeEventListener('pointerup', onUp); },
       g.events.on('input:open', () => openPoster(target)),
       g.events.on('language:changed', () => { button.textContent = t('poster.open'); }),
+      g.events.on('power:cut', ({ rect, on }) => { cut = on ? rect : null; if (g.player) refreshSlots(g.player.position); }),
     ];
   },
 

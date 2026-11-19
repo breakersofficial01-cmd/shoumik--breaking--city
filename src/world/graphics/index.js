@@ -56,7 +56,28 @@ export class Graphics {
     const pmrem = new THREE.PMREMGenerator(this.game.renderer);
     const target = pmrem.fromScene(envScene, 0.03, 0.1, 100, { size: this.cfg.environment.size });
     pmrem.dispose();
+    this.envTarget?.dispose();
+    this.envTarget = target;
     return target.texture;
+  }
+
+  /** Session 7 (day/night): the sun light (and shadows) come from this direction now. */
+  setSunDirection(dir) {
+    this.shadows.setDirection(dir);
+  }
+
+  /** Re-render the sky reflection map (the sky changed: day/night, rain). Medium/High only. */
+  refreshEnvironment() {
+    this.game.scene.environment = this.buildEnvironment(this.game.world.sky); // frees the old one
+  }
+
+  /** Glow strength (night = stronger). No effect on Low (no bloom there). */
+  setBloomStrength(strength) {
+    if (this.postfx?.bloom) this.postfx.bloom.strength = strength;
+  }
+
+  setExposure(exposure) {
+    this.game.renderer.toneMappingExposure = exposure;
   }
 
   setQuality(quality) {

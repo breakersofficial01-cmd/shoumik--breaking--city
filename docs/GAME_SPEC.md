@@ -4,9 +4,11 @@ What the game is and what exists **right now**. Updated at the end of every sess
 Rules live in `/CLAUDE.md`; the build plan in `docs/SESSIONS.md`; how the code is organised
 in `docs/HANDOFF.md`.
 
-Status: **Session 6 of 8 done** (+ Session 4.5 visual upgrade) (engine, city, foundations, Shoumik, people,
+Status: **Session 7 of 8 done** (+ Session 4.5 visual upgrade) (engine, city, foundations, Shoumik, people,
 vehicles, traffic, landmarks, MRT, posters; upgraded lighting, shadows, neon glow; classes, money,
-shops; weapons, wanted stars, police, busted / jail / wasted).
+shops; weapons, wanted stars, police, busted / jail / wasted; day/night, monsoon rain,
+load-shedding, sound, radio, Bangla signboards, profile card, reward codes, screenshots, full
+settings, 17+ screen).
 
 ---
 
@@ -19,7 +21,7 @@ A free-roam, Vice-City-flavoured open world set in a compressed Dhaka, made for
 
 Money only comes from answering lesson questions. YouTube links open outside the game.
 
-## 2. What you can do today (after Session 6)
+## 2. What you can do today (after Session 7)
 - Open the game → loading screen → "শুরু করতে ট্যাপ করুন" → you are Shoumik on a street corner
   in Shahbag at sunset.
 - Walk, run, sprint and jump around the whole city. Buildings, poles, trees, lake edges and
@@ -59,8 +61,19 @@ Money only comes from answering lesson questions. YouTube links open outside the
 - Posters everywhere (section 3c). Look at one that has a link and tap it (or the
   "পোস্টার খুলুন ↗" button, or F) to open the link.
 
-Not in yet: day/night, real sound, radio, the profile card (stats are already kept), 17+ age screen.
-See `docs/SESSIONS.md`.
+- Session 7 (section 4b): the first launch shows a **17+ screen**. Time passes (1 game day = 24
+  real minutes): golden sunset → purple dusk → neon night with lit windows and glowing Bangla shop
+  signs → sunrise → blue day. Monsoon rain comes and goes (wet shiny roads, thunder). Now and then
+  a district has **load-shedding** for 30 s (lights, signs and LED screens go dark, generators hum).
+- Sound everywhere: guns, explosions, engines, horns and rickshaw bells, crowds, hawkers, crows,
+  rain, thunder, police sirens. Volumes in Settings.
+- In a car / CNG / bus: **radio** with 3 stations and DJ lines (R or the রেডিও button changes it).
+- Tap Shoumik's portrait → **profile card** (name, colleges, stats, reward codes with Copy).
+- Camera button (or P) → **screenshot** with a "Breaking City" watermark → Save / Share.
+- Settings: graphics, sound + 4 volume sliders, বাংলা / English, button size, left-handed layout,
+  blood, outfit, reset save.
+
+Not in yet: offline/installable app, privacy and credits pages (Session 8). See `docs/SESSIONS.md`.
 
 ## 3. The city
 A fixed-seed grid: **14 × 16 big blocks**, each 82 m with 14 m roads (about 1.36 × 1.55 km).
@@ -164,11 +177,39 @@ Sky: our own painted 360° sunset (`data/world.json → sky.painted`, `src/world
   lakes and the river reflect the sunset sky. Every value is in `data/graphics.json`.
 - Two 512×64 texture atlases painted in code, nearest filtering up close, distance fog, blob
   shadow under Shoumik and people (kept for contact shadows).
-- Permanent warm sunset for now (purple → pink → orange sky, low orange sun). Day/night comes
-  in Session 7.
+- Day and night since Session 7 (section 4b). A new game starts at the golden sunset (17:12).
 - Buildings: window bays on street sides, blank plaster side walls, ground-floor shutters with
-  blank coloured signboards, balconies, roof stair rooms, black water tanks, poles with
+  Bangla shop signboards (Session 7), balconies, roof stair rooms, black water tanks, poles with
   sagging wire bundles, wires zig-zagging across Old Dhaka lanes.
+
+## 4b. Day, night, rain, load-shedding and sound (Session 7)
+- **Clock**: 1 game day = 24 real minutes (`data/dayNight.json → dayMinutes`), saved. Three painted
+  skies (blue day, the sunset, purple night with stars and moon) blend into each other; the sun
+  rises in the east and sets on the painted sunset side; at night a weak blue moon light.
+- Every hour has a look key (sky blend, sun/moon colour, sky light, fog, exposure, neon strength,
+  lit windows, shop-sign glow, bloom, reflections) — change them in `data/dayNight.json → keys`.
+- **Night**: 40 % of the windows on code-built buildings glow warm (random per window), shops
+  behind open shutters glow, Bangla shop-sign letters glow, neon and markers get brighter, bloom
+  is stronger; 3D kit towers' glass glows softly.
+- **Bangla signboards**: 40 shop names (`data/signboards.json`) painted once after the Bangla font
+  loads; each shop board in the city shows one (some with a small English line), same every visit.
+- **Monsoon rain** (`data/weather.json`): dry 3–7 min, rain 1.5–3.5 min, 14 s fade. Drops around
+  the camera (900 / 2200 / 4000 by quality, one draw call), roads and walls darken, roads shine
+  when looked along, grey fog closes in, weaker sun, thunder + lightning in heavy rain. Roads dry
+  over a minute.
+- **Load-shedding** (`data/dayNight.json → loadShedding`): every 2.5–6 min one district (half the
+  time the one you are in) loses power for 30 s: windows, shop signs, LED screens, billboards and
+  tower glass go dark there, a toast says "লোডশেডিং!", generators hum while you are inside.
+- **Sound** (`data/audio.json`, all made in code — no files, nothing to license): 6 gun sounds,
+  explosions, molotov glass, punches, crashes, engine of the vehicle you drive (pitch = speed),
+  horns and random rickshaw bells, crowd murmur (louder near people), distant traffic, hawkers'
+  calls, crows by day, rain, thunder, police sirens, fire, generators, UI clicks and a reward chime.
+  Any sound can be replaced by a real recording: `data/assets.json → "sound.<id>"`.
+- **Radio** (`data/radio.json`): in cars, CNGs, legunas, bikes and buses (not rickshaws/bicycles):
+  ঢাকা বিটস ১০১.৫ (pop), নদী এফএম ৯২.০ (folk), নিয়ন নাইট ৮৮.৮ (synthwave). Music is generated in
+  code; real tracks can be listed per station. A DJ line slides in every 22–40 s.
+- Volumes: 4 buses (all, effects, music & radio, city sounds) in Settings; the game's sound pauses
+  with the game.
 
 ## 5. Shoumik
 **Medium/High (since Session 4.5 Part B): the real 3D Shoumik** — the owner's Rodin/Mixamo model
@@ -281,6 +322,10 @@ In a vehicle (the same buttons, with new labels):
 | Handbrake (drift) | ব্রেক | Space |
 | Horn | হর্ন | H |
 | Get out (brakes first if moving) | নামো | E |
+| Radio: next station / off | রেডিও (only while driving) | R |
+
+Anywhere: screenshot = camera button (left, under the gear) or P. Settings can make the touch
+buttons small / normal / large and mirror them for left-handed players (buttons left, joystick right).
 
 Phones must be in landscape; in portrait a "rotate your phone" screen shows and the game
 pauses.
@@ -291,7 +336,9 @@ pauses.
 - Bangla font: Li Ador Noirrit when its licensed file is installed
   (`data/ui.json → fonts.bn.fileInstalled`); until then Hind Siliguri (Google Fonts), then
   the device's Bangla font.
-- The language switch button comes in Session 7 (`setLanguage()` already works).
+- Settings → ভাষা: বাংলা / English (saved). The 17+ screen has its own switch. Class Mode and the
+  jail quiz stay in Bangla whatever the game language is (CLAUDE.md quiz rule).
+- Shop signboards are always Bangla (with a small English line on some), like real Dhaka.
 
 ## 8. Performance budget
 Target: 30+ fps on a mid-range Android (4 GB RAM), landscape, Chrome.
@@ -301,6 +348,11 @@ Target: 30+ fps on a mid-range Android (4 GB RAM), landscape, Chrome.
 | কম (low) | 0.8× | 210 m | no balconies, fewer props and wires; tone mapping only (no shadows, no bloom) |
 | মাঝারি (medium, default) | 1.25× | 300 m | sun shadows (1024), bloom, colour grade |
 | বেশি (high) | 2× | 430 m | soft sun shadows (2048), bloom, colour grade, 4× anti-aliasing |
+
+Session 7 (headless, software rendering, Medium, Shahbag start corner): ~217 draw calls (+10: one
+Bangla-sign mesh per chunk), rain adds 1 draw call, the day/night look costs nothing per object
+(uniforms on shared materials) plus one small reflection-map refresh every 25 s. Sound runs on the
+browser's audio thread. **Real-phone FPS still to be measured by the owner.**
 
 Session 4.5 Part A (headless, software rendering): Shahbag start corner about 89 draw calls on
 Low, ~190 on Medium, ~210 on High (shadows draw nearby things a second time). In the software
@@ -322,8 +374,9 @@ heaviest), about 9,700 collision boxes, whole-city layout generated in ~25 ms, a
 in ~3 ms on a desktop CPU. Real-phone numbers still need to be measured by the owner.
 
 ## 9. Save
-`localStorage["breakingCity.save"]`, version 4: cash, player position, outfit, settings (quality,
-language, blood), owned vehicles (`owned.vehicles` = list of `{ type, color }`), owned homes /
+`localStorage["breakingCity.save"]`, version 5: cash, player position, outfit, settings (quality,
+language, blood, sound, volumes, control size, control layout, radio station), `clock` (time of
+day), `rewards` (unlocked reward codes), `playSeconds`, `flags.ageOk` (17+ accepted), owned vehicles (`owned.vehicles` = list of `{ type, color }`), owned homes /
 weapons / outfits, `health`, `home` (spawn point), `garage`, Lesson Check results per lesson
 (`lessons[id] = { attempts, paid: [question ids], earned, best }`), Quiz Class stats (`classes`),
 `ammo` (bullets per weapon), `weapon` (in his hand), `armour`, `wanted` (heat — a chase goes on
@@ -422,3 +475,20 @@ goes towards the bail and he answers Lesson Check questions (Bangla, Bangla digi
 every right answer pays ৳250 of the bail (progress bar) until he walks out. Jail is saved.
 **WASTED** (health 0): he wakes up at Dhaka Medical College, pays 10 % of his cash and loses his
 weapons (`data/economy.json → wasted`).
+
+## 10f. Profile card, reward codes, screenshots, 17+ (Session 7)
+- **Profile card** (tap the HUD portrait): portrait, শৌমিক কুমার / Shoumik Kumar, Sir Salimullah
+  Medical College, Ex-Notre Dame College (`data/profile.json`, more lines can be added), and stats:
+  cash, lessons done, Taka from Lesson Check and Quiz Class, time played, vehicles, homes, kills,
+  police, vehicles destroyed, longest chase, busted, wasted, shots fired.
+- **Reward codes** (`data/rewards.json`, Content Service → Google Sheet later): a code unlocks after
+  N lessons (a lesson counts once one of its questions was answered right). A toast + chime when
+  unlocked; the code shows in the profile card with Copy (and an optional ↗ link). Locked ones
+  show how many lessons are still needed. **The three codes in the file are samples.**
+- **Screenshot**: camera button / P → the game view (no buttons) with a BREAKING CITY watermark and
+  "Breaking School • Breaking Biology" → Save (download) or Share (phone share sheet, for
+  Facebook / Instagram / TikTok).
+- **17+ screen** on the first launch: what is in the game, "17 or older — play" / "under 17"
+  (friendly no + links to lessons from `data/links.json` when filled). The game is paused behind
+  it; it is saved and not asked again (even after a reset).
+

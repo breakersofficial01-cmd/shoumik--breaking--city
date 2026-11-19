@@ -85,7 +85,7 @@
 
 /* ------------------------------------------------------------ ?admin=1 */
 #admin-button {
-  position: absolute; top: calc(var(--safe-top) + 118px); left: calc(var(--safe-left) + 14px);
+  position: absolute; top: calc(var(--safe-top) + 164px); left: calc(var(--safe-left) + 14px); /* under the camera button */
   padding: 5px 10px; border: 2px solid var(--ink); border-radius: 8px; background: rgba(120, 10, 30, 0.8); font-size: 13px; font-weight: 700;
 }
 .admin-panel .panel { width: min(640px, 100%); }

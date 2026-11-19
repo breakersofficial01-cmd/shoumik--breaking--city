@@ -1,0 +1,35 @@
+{
+  "_comment": "Monsoon rain (Session 7). Rain comes and goes by itself: after a dry spell of dryMinutes [min, max] real minutes it rains for rainMinutes [min, max]. fadeSeconds = how long it takes to start / stop. startRaining: true = a new game starts in the rain (for testing).",
+  "enabled": true,
+  "dryMinutes": [3, 7],
+  "rainMinutes": [1.5, 3.5],
+  "fadeSeconds": 14,
+  "startRaining": false,
+  "drops": {
+    "_comment": "Rain drops: count per quality (low / medium / high), box = metres around the camera (width, height), speed m/s, length m, colour and opacity.",
+    "count": { "low": 900, "medium": 2200, "high": 4000 },
+    "box": [46, 26],
+    "speed": 24,
+    "length": 0.9,
+    "wind": [-2.5, 1.2],
+    "color": "#b8c8e8",
+    "opacity": 0.55
+  },
+  "wet": {
+    "_comment": "How rain changes the look: roads and walls darken (darken = 0-1 at full rain), fog comes closer (fogFactor) and greyer (fogColor mix), the sun gets weaker (sunFactor), the sky greys out (skyTint).",
+    "darken": 0.35,
+    "fogFactor": 0.55,
+    "fogColor": "#6e7488",
+    "fogMix": 0.55,
+    "sunFactor": 0.35,
+    "skyTint": "#8890a8",
+    "skyMix": 0.55,
+    "roadShine": 0.5
+  },
+  "thunder": {
+    "_comment": "Lightning flash + thunder during heavy rain. everySeconds = [min, max].",
+    "everySeconds": [16, 40],
+    "flash": 2.2,
+    "delaySeconds": [0.4, 2.5]
+  }
+}

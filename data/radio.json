@@ -1,0 +1,44 @@
+{
+  "_comment": "Vehicle radio (Session 7). 3 stations. Music is made in code (placeholder, royalty-free because it is generated) unless a station lists 'tracks' = asset ids from data/assets.json (type sound, e.g. 'sound.radio.dhakaBeats1' → assets/audio/radio/dhaka-beats-1.mp3); then those files play in a loop instead. style = which code-made music (src/features/radio/music.js). bpm = tempo. key = base note in Hz. djEverySeconds = how often the DJ talks (shown at the top of the screen). Vehicle styles in noRadio have no radio (rickshaw, bicycle). Press R (or the 📻 button while driving) to change station / switch off.",
+  "noRadio": ["rickshaw", "bicycle"],
+  "djEverySeconds": [22, 40],
+  "djShowSeconds": 5,
+  "stations": [
+    {
+      "id": "dhakaBeats",
+      "name": { "en": "Dhaka Beats 101.5", "bn": "ঢাকা বিটস ১০১.৫" },
+      "style": "pop", "bpm": 118, "key": 110,
+      "tracks": [],
+      "dj": [
+        { "en": "Dhaka Beats! Stuck in Farmgate traffic? Turn it up!", "bn": "ঢাকা বিটস! ফার্মগেটের জ্যামে আটকে? ভলিউম বাড়াও!" },
+        { "en": "Study first, party later — Breaking School says hi!", "bn": "আগে পড়া, পরে মজা — ব্রেকিং স্কুলের পক্ষ থেকে শুভেচ্ছা!" },
+        { "en": "Next song goes out to everyone at TSC tonight.", "bn": "পরের গানটা আজ রাতে টিএসসির সবার জন্য।" },
+        { "en": "It's hot in Breaking City, and so is this track!", "bn": "ব্রেকিং সিটিতে আজ গরম, আর এই গানটাও!" }
+      ]
+    },
+    {
+      "id": "nodiFm",
+      "name": { "en": "Nodi FM 92.0", "bn": "নদী এফএম ৯২.০" },
+      "style": "folk", "bpm": 92, "key": 146.8,
+      "tracks": [],
+      "dj": [
+        { "en": "Nodi FM — soft tunes from the banks of the Buriganga.", "bn": "নদী এফএম — বুড়িগঙ্গার তীর থেকে মিষ্টি সুর।" },
+        { "en": "Rain on the way? Cha and a song, that's the plan.", "bn": "বৃষ্টি আসছে? এক কাপ চা আর একটা গান — ব্যস।" },
+        { "en": "Shoutout to the rickshaw puller on Shahbag corner!", "bn": "শাহবাগ মোড়ের রিকশাওয়ালা ভাইকে শুভেচ্ছা!" },
+        { "en": "Did you finish today's Lesson Check? Taka is waiting!", "bn": "আজকের লেসন চেক শেষ করেছ? টাকা অপেক্ষা করছে!" }
+      ]
+    },
+    {
+      "id": "neon",
+      "name": { "en": "Neon Night 88.8", "bn": "নিয়ন নাইট ৮৮.৮" },
+      "style": "synth", "bpm": 100, "key": 82.4,
+      "tracks": [],
+      "dj": [
+        { "en": "Neon Night. City lights, open roads, no limits.", "bn": "নিয়ন নাইট। শহরের আলো, খোলা রাস্তা, কোনো সীমা নেই।" },
+        { "en": "Hatirjheel bridge at midnight — the best view in town.", "bn": "মাঝরাতে হাতিরঝিল ব্রিজ — শহরের সেরা দৃশ্য।" },
+        { "en": "Drive safe out there... or at least drive fast.", "bn": "সাবধানে চালাও... নাহলে অন্তত জোরে চালাও।" },
+        { "en": "Breaking Biology: bones, cells and Taka. Go learn!", "bn": "ব্রেকিং বায়োলজি: হাড়, কোষ আর টাকা। পড়তে যাও!" }
+      ]
+    }
+  ]
+}

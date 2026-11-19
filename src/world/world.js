@@ -7,6 +7,7 @@
 //   world.roads                 RoadNet: junctions, lanes, signals, routes, bus stops (roads.js)
 //   world.ramps                 stunt ramps; their height is already part of heightAt()
 //   world.landmarks             real Dhaka places, MRT / flyover, entrance markers (landmarks/index.js)
+//   world.cityShading           lit windows, glowing shop signs, wet roads, load-shedding (cityShading.js)
 
 import * as THREE from 'three';
 import { log, debugLine } from '../core/debug.js';
@@ -20,6 +21,9 @@ import { Ramps } from './ramps.js';
 import { makePoleGeometry, makeTankGeometry, makeTreeGeometry } from './props.js';
 import { Landmarks, landmarkBlocks } from './landmarks/index.js';
 import { HeroBuildings } from './hero/index.js';
+import { SignAtlas } from './signboards.js';
+import { fontsReady } from '../ui/fonts.js';
+import { CityShading } from './cityShading.js';
 
 export class World {
   /** @param {object} game  the Game (scene, camera, config, assets) */
@@ -63,6 +67,15 @@ export class World {
       wireMaterial: new THREE.LineBasicMaterial({ color: this.cfg.props.wire.color }),
       poleGeo, tankGeo, treeGeo,
     };
+    // Session 7: Bangla shop signs (fonts are loaded before the world) and the night/rain shading.
+    try {
+      this.shared.signAtlas = new SignAtlas(config.get('signboards'));
+      fontsReady().then(() => this.shared.signAtlas.repaint()); // in case the Bangla font came late
+    } catch (err) {
+      log.warn('signboards: could not paint the shop names, boards stay blank', err);
+    }
+    this.cityShading = new CityShading(this.shared, config.get('dayNight')?.windows);
+    if (this.shared.signAtlas) this.cityShading.patchSigns(this.shared.signAtlas.material);
 
     this.sky = new Sky(this.cfg, glow, scene, this.game.renderer);
     this.water = new Water(this.layout, water, this.root, config.get('graphics'));
