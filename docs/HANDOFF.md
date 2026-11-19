@@ -256,6 +256,14 @@ with a debug log until their folder and loader exist.
   Rotation was computed so the barrel points ahead in the `shoot` clip; check with
   `node tools/weapon-grip.js --three <dir> --out shots --clip shoot`.
 
+- City look (Session 4.5 C2): `texture.facades` and `texture.ground` are files baked from the
+  Downtown City MegaKit. Same tile layout as `proceduralTextures.js` (FACADE / GROUND columns),
+  just 256 px per tile; the code-painted atlases are the fallback. To change a wall tile, edit
+  `tools/city-kit/facade-recipes.json` (kit piece names and positions), run
+  `node tools/city-kit/bake-facades.js --three <dir> --kit "<kit>/Exports/glTF (Godot)" --out <png>`,
+  save it as `assets/city/facades.jpg`, and check with `node tools/street-shots.js`. Keep wall
+  materials grey (they are tinted per building). The kit download is needed to rebake.
+
 ## 10. How to change the save format
 See the header of `src/core/save.js`: bump `SAVE_VERSION`, add a migration from the old
 version, add the field to `defaults()`. Features store live state with

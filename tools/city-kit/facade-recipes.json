@@ -1,0 +1,145 @@
+{
+  "_comment": "How each facade-atlas tile is assembled from Downtown City MegaKit pieces (CC0, Quaternius). Order = the FACADE columns in src/assets/proceduralTextures.js. width/height = the slice of wall (metres) that becomes one tile; pieces = [kit file name, x, y, z, rotY degrees] (x = centre, metres). y0 = bottom of the slice (default 0). A tile is one bay x one floor in the game (3.2 x 3.1 m), so width 3.2 keeps proportions; 4 = a 4 m kit piece squeezed a little. tint=false keeps a material's own colour (default: wall materials are made grey so the game can tint them per building).",
+  "tileSize": 256,
+  "glass": {
+    "color": "#2a3f55",
+    "opacity": 0.72,
+    "reflectTop": "#5f88a6",
+    "reflectBottom": "#d9c7b5",
+    "mix": 0.55,
+    "glint": 0.25,
+    "_comment": "Glass pixels are mixed with a sky reflection gradient (top -> bottom of the tile) and a diagonal glint; mix can be set per tile with glassMix."
+  },
+  "flatten": 0.1,
+  "neutral": [
+    "Glass",
+    "FakeInterior",
+    "InteriorWall",
+    "InteriorFloor",
+    "InteriorRoof",
+    "Trim_Dark"
+  ],
+  "tiles": [
+    {
+      "name": "PLAIN",
+      "width": 3.2,
+      "height": 3,
+      "pieces": [
+        [
+          "Trim_Plain_3",
+          -1
+        ],
+        [
+          "Trim_Plain_3",
+          1
+        ],
+        [
+          "Trim_Plain_3",
+          -3
+        ],
+        [
+          "Trim_Plain_3",
+          3
+        ]
+      ]
+    },
+    {
+      "name": "RESIDENTIAL",
+      "width": 4,
+      "height": 3,
+      "pieces": [
+        [
+          "Brick_Inset_Window",
+          0
+        ]
+      ]
+    },
+    {
+      "name": "OFFICE",
+      "width": 4,
+      "height": 3,
+      "pieces": [
+        [
+          "Brick_RedWhite_DoubleWindow",
+          0
+        ]
+      ]
+    },
+    {
+      "name": "GLASS",
+      "width": 4,
+      "height": 3,
+      "pieces": [
+        [
+          "Metal_FullWindow",
+          -1
+        ],
+        [
+          "Metal_FullWindow",
+          1
+        ]
+      ],
+      "glassMix": 0.95,
+      "reflectTop": "#8fb3cc",
+      "reflectBottom": "#f0dccb"
+    },
+    {
+      "name": "SHUTTER",
+      "width": 3.2,
+      "height": 3,
+      "pieces": [
+        [
+          "@shutter",
+          0
+        ]
+      ]
+    },
+    {
+      "name": "OLD",
+      "width": 4,
+      "height": 3,
+      "pieces": [
+        [
+          "Brick_Window_CurvedDouble",
+          0
+        ]
+      ]
+    },
+    {
+      "name": "DOOR",
+      "width": 3.2,
+      "height": 3,
+      "pieces": [
+        [
+          "DoorFrame_Trim",
+          0
+        ],
+        [
+          "Door_2",
+          0.5
+        ],
+        [
+          "Trim_FirstFloor_Wall",
+          -2
+        ],
+        [
+          "Trim_FirstFloor_Wall",
+          2
+        ]
+      ]
+    },
+    {
+      "name": "RAIL",
+      "width": 2.6,
+      "height": 1.05,
+      "y0": 0,
+      "pieces": [
+        [
+          "@rail",
+          0
+        ]
+      ]
+    }
+  ],
+  "exposure": 1.13
+}

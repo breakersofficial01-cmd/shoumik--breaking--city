@@ -89,3 +89,12 @@
 - Headlight/tail-light materials of the real cars as glow materials for night (Session 7).
 - Ask the owner for CC0 / licensed models of a Dhaka-style bus, CNG and rickshaw if a better
   look is wanted; the code-built ones stay until then.
+
+## Ideas noted during Session 4.5 (Part C2: city kit)
+- Kit props as instanced street furniture: AC units on walls (very Dhaka), bollards, planters,
+  manholes, drains (`Prop_*` in the kit).
+- A few hero buildings built from real kit pieces (whole 3D modules) near the start area and
+  landmarks, where the extra triangles are worth it.
+- Lit windows at night: an emissive version of the facade atlas (Session 7).
+- 512 px facade tiles on High only (sharper up close), 256 px on Low/Medium.
+- Roof cornices and corner columns along the top edge of buildings (kit Cornice_* / Brick_CornerColumn_*).

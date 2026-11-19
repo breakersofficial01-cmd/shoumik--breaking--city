@@ -11,7 +11,7 @@ with real brand logos.
 | `assets/trains/` | Train Pack | Quaternius | CC0 1.0 |
 | `assets/weapons/` | Ultimate Gun Pack | Quaternius | CC0 1.0 |
 | `assets/shoumik/shoumik.glb` | Owner's Shoumik model rigged and animated with Mixamo | owner / Adobe Mixamo | owner's files; Mixamo animations are free for games |
-| Downtown City MegaKit (not added yet) | Quaternius | CC0 1.0 |
+| `assets/city/facades.jpg`, `assets/city/ground.jpg` (baked from kit pieces and textures) | Downtown City MegaKit (free Standard version) | Quaternius | CC0 1.0 |
 
 Converted from FBX to GLB in headless three.js (FBXLoader → GLTFExporter): FBX colours fixed
 (linear), opacity fixed, units in metres. No textures needed (flat colours).

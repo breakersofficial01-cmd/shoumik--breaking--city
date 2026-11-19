@@ -39,7 +39,7 @@ class AssetRegistry {
     return this.overrides[id]?.url || null;
   }
 
-  async loadFile({ type, url }) {
+  async loadFile({ type, url, wrapS, wrapT, anisotropy }) {
     switch (type) {
       case 'image':
         return new Promise((resolve, reject) => {
@@ -51,6 +51,12 @@ class AssetRegistry {
       case 'texture': {
         const tex = await new THREE.TextureLoader().loadAsync(url);
         tex.colorSpace = THREE.SRGBColorSpace;
+        // Optional per-file settings in data/assets.json: "wrapS"/"wrapT": "repeat" | "clamp",
+        // "anisotropy": sharper on walls/roads seen at an angle (capped by the GPU).
+        const wrap = { repeat: THREE.RepeatWrapping, clamp: THREE.ClampToEdgeWrapping };
+        if (wrap[wrapS]) tex.wrapS = wrap[wrapS];
+        if (wrap[wrapT]) tex.wrapT = wrap[wrapT];
+        if (anisotropy) tex.anisotropy = anisotropy;
         return tex;
       }
       case 'model': {

@@ -372,3 +372,29 @@ see `assets/CREDITS.md`.
 Tests: smoke test passes on Low / Medium / High; full vehicle test passes on Low. On Medium the
 four time-based checks (ramp, drift, pedalling, explosion) still fail in the slow software
 renderer only, as before this change.
+
+## 2026-11-19 — Session 4.5 Part C (2): Downtown City MegaKit on every building and street (Claude Opus 5.5)
+The owner's city pack (Quaternius Downtown City MegaKit, CC0) is now the look of the whole city,
+on every quality level, at the SAME cost as before (no extra triangles or draw calls).
+
+- **How:** the city's ~3,800 buildings are drawn as wall "bays" whose texture tile repeats once
+  per floor. Instead of placing thousands of kit pieces (far too heavy for phones), the kit's
+  real wall pieces are rendered into those tiles: `assets/city/facades.jpg` (8 tiles × 256 px,
+  96 KB). Wall materials are baked grey so each building is still tinted with its own colour
+  (red brick on campus, pastel plaster in Dhanmondi, ...).
+  - Residential: six-pane brick window · Office: quoined double windows · Glass towers: kit
+    curtain wall with a dusk-sky reflection and highlight · Old Dhaka: arched double windows ·
+    Doors: arched kit door · Plain walls: kit plaster panels.
+  - Shops: a Dhaka shop bay built for this (half-raised corrugated shutter over a lit shop
+    inside, kit interior texture) — the kit has no shutters.
+  - Balconies: concrete parapet with an iron grill.
+- **Ground:** `assets/city/ground.jpg` keeps every road marking, zebra and the red/grey Dhaka
+  pavers, now with the kit's real asphalt, concrete and dirt grain.
+- Asset registry: texture files can set `wrapS` / `wrapT` / `anisotropy` in `data/assets.json`.
+- Tools: `tools/city-kit/bake-facades.js` (+ `facade-recipes.json`: which kit pieces make each
+  tile), `tools/city-kit/bake-ground.js` (+ `ground_detail.py`), `tools/street-shots.js` (eye-level
+  photos of a building front in every district). The kit itself (244 MB) is not in the repo.
+- Landmarks share the facade texture and were checked (Curzon Hall, DMC, Notre Dame, SSMC,
+  Ahsan Manzil, Karwan Bazar).
+
+Tests: smoke test passes on Low and High; landmark photos checked.

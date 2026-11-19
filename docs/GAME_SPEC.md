@@ -84,6 +84,10 @@ row 15
 | Motijheel / Central | office canyon | 1 | 6–22 (+towers) |
 | Old Dhaka | dense, narrow lanes, shops everywhere | 3×3 | 2–6 |
 
+Building walls and streets use the look of the Downtown City MegaKit (CC0): real kit windows,
+brick, trim, doors and asphalt baked into the facade and ground textures
+(`assets/city/`, rebuilt with `tools/city-kit/`), tinted per building.
+
 Totals: about 3,800 buildings, 2,400 electric poles, 3,400 trees, 3,000 roof tanks.
 Everything about districts (size, colours, density, heights, lakes, parks, bridges) is in
 `data/districts.json`; grid, sky, fog, props in `data/world.json`.
