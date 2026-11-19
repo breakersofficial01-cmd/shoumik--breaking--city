@@ -398,3 +398,18 @@ on every quality level, at the SAME cost as before (no extra triangles or draw c
   Ahsan Manzil, Karwan Bazar).
 
 Tests: smoke test passes on Low and High; landmark photos checked.
+
+## 2026-11-19 — Session 4.5 Part C (3): 3D kit buildings in 4 zones (Claude Opus 5.5)
+- On Medium/High, buildings in 4 zones are real 3D Downtown City MegaKit buildings: start area
+  (Shahbag), Breaking Biology (Dhanmondi), Shapla Chattar (Motijheel), Ahsan Manzil (Old Dhaka).
+  Brick blocks with pediment windows (spaced window–wall–window), stone cornices, arched doors,
+  glass storefronts under the shop signs, and office curtain walls that reflect the sky.
+- Built on the normal footprints, so collisions, shops and signs stay the same. Towers (> 7 floors)
+  keep the textured look. Budget: 70–100k triangles per zone, one zone built at a time (built
+  within 520 m, dropped beyond 760 m), ~7 draw calls per zone. Low: unchanged.
+- Code: `src/world/hero/` (index.js = zones/merge/culling, design.js = pieces on a footprint);
+  `buildingMesher.js` skips walls of hero buildings; `data/heroBuildings.json` (zones, styles,
+  budgets); `data/quality.json → heroBuildings`. Pieces: `assets/city/kit-pieces.glb` (0.9 MB,
+  17 kit pieces, interiors removed, 512 px textures), made by `tools/city-kit/pack-pieces.js`.
+- Tool: `tools/hero-shots.js` (zone list + street/above photos).
+Tests: smoke test passes on Low / Medium / High; vehicle test passes on Low.

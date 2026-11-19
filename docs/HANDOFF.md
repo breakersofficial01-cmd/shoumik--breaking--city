@@ -264,6 +264,13 @@ with a debug log until their folder and loader exist.
   save it as `assets/city/facades.jpg`, and check with `node tools/street-shots.js`. Keep wall
   materials grey (they are tinted per building). The kit download is needed to rebake.
 
+- 3D hero buildings (`src/world/hero/`): `world.loadHero()` loads `model.city.kitPieces` during
+  loading (Medium/High), marks chosen buildings `b.hero = zoneId` (nearest first within each
+  zone's triangle budget); `buildingMesher.js` then draws only roof, stair room and shop signs
+  for them. Zone meshes are merged per kit material and built/dropped by distance. Add a zone or
+  change a style in `data/heroBuildings.json`; new kit pieces must be added to its `pieces` list
+  and repacked with `tools/city-kit/pack-pieces.js`. Check with `node tools/hero-shots.js`.
+
 ## 10. How to change the save format
 See the header of `src/core/save.js`: bump `SAVE_VERSION`, add a migration from the old
 version, add the field to `defaults()`. Features store live state with

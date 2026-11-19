@@ -88,6 +88,9 @@ Building walls and streets use the look of the Downtown City MegaKit (CC0): real
 brick, trim, doors and asphalt baked into the facade and ground textures
 (`assets/city/`, rebuilt with `tools/city-kit/`), tinted per building.
 
+On Medium/High, four zones (start area, Breaking Biology, Shapla Chattar, Ahsan Manzil) have
+real 3D kit buildings (`data/heroBuildings.json`).
+
 Totals: about 3,800 buildings, 2,400 electric poles, 3,400 trees, 3,000 roof tanks.
 Everything about districts (size, colours, density, heights, lakes, parks, bridges) is in
 `data/districts.json`; grid, sky, fog, props in `data/world.json`.

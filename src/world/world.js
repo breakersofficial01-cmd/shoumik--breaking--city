@@ -19,6 +19,7 @@ import { RoadNet } from './roads.js';
 import { Ramps } from './ramps.js';
 import { makePoleGeometry, makeTankGeometry, makeTreeGeometry } from './props.js';
 import { Landmarks, landmarkBlocks } from './landmarks/index.js';
+import { HeroBuildings } from './hero/index.js';
 
 export class World {
   /** @param {object} game  the Game (scene, camera, config, assets) */
@@ -71,6 +72,19 @@ export class World {
     await this.landmarks.build(this.shared, this.root, this.collision);
     const rampMesh = this.ramps.buildMesh();
     if (rampMesh) this.root.add(rampMesh);
+    // 3D kit buildings (Medium/High): load now, during the loading screen, before chunks are built.
+    this.hero = new HeroBuildings(this, config.get('heroBuildings'), this.root);
+    if (config.get('quality').levels[this.game.qualityName]?.heroBuildings) await this.loadHero();
+  }
+
+  /** Load the kit pieces for the 3D hero buildings (once). Chunks built before are rebuilt. */
+  async loadHero() {
+    const url = this.game.assets.url('model.city.kitPieces');
+    if (!url) return;
+    const fresh = !this.hero.loading;
+    await this.hero.load(url, this.game.config.get('player').spawn);
+    if (fresh && this.chunks.stats.built > 0) this.chunks.disposeAll();
+    this.hero.setEnabled(!!this.quality?.heroBuildings || !this.quality);
   }
 
   /** Register every static obstacle once. */
@@ -103,6 +117,8 @@ export class World {
   setQuality(quality) {
     this.quality = quality;
     this.chunks.setQuality(quality);
+    if (quality.heroBuildings && this.hero && !this.hero.lib) this.loadHero();
+    this.hero?.setEnabled(!!quality.heroBuildings);
     this.sky.setViewDistance(quality.viewDistance, this.game.camera);
   }
 
@@ -126,6 +142,7 @@ export class World {
     this.water.update(dt);
     this.sky.update(this.game.camera);
     this.landmarks.update(focus, this.quality.viewDistance);
+    this.hero.update(focus, this.quality.viewDistance);
     debugLine('chunks', `chunks ${this.chunks.stats.visible}/${this.chunks.stats.built} queue ${this.chunks.queue.length}`);
   }
 }

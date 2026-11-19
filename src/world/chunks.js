@@ -48,7 +48,7 @@ export class ChunkManager {
   setQuality(quality) {
     const rebuild = this.quality && (
       this.quality.propDensity !== quality.propDensity || this.quality.balconies !== quality.balconies ||
-      this.quality.wires !== quality.wires || this.quality.wireStrandScale !== quality.wireStrandScale);
+      this.quality.wires !== quality.wires || this.quality.heroBuildings !== quality.heroBuildings || this.quality.wireStrandScale !== quality.wireStrandScale);
     this.quality = quality;
     if (rebuild) this.disposeAll();
   }

@@ -1,0 +1,27 @@
+{
+  "_comment": "3D 'hero' buildings made of real Downtown City MegaKit pieces (CC0, assets/city/kit-pieces.glb) on the normal building footprints, in a few zones (start area, some landmarks). Other buildings keep the baked-texture boxes. Shown on the quality levels where data/quality.json → heroBuildings is true. zones: at = 'spawn' (Shoumik's start crossing) or a place id from data/places.json; radius in metres; maxTriangles = budget for the zone (nearest buildings first); buildings with fewer floors than minFloors or more than maxFloors are skipped (towers keep the textured look). A zone's 3D meshes are built when Shoumik comes within buildDistance and thrown away beyond dropDistance. styles: one per building style (blockgen.js): upper = window pieces (picked per building), side = blank side walls, ground / shop = ground floor, door = pieces making the front door [name, x offset], cornice = row along the top of street sides, every = 2 puts a plain 'between' piece after each window. glassColor = window glass (it also reflects the sky). pieces = every kit piece that gets packed (tools/city-kit/pack-pieces.js).",
+  "buildDistance": 520,
+  "dropDistance": 760,
+  "minFloors": 2,
+  "maxFloors": 7,
+  "outset": 0.03,
+  "glassColor": "#4a6680",
+  "brightness": 1.0,
+  "zones": [
+    { "id": "start", "at": "spawn", "radius": 130, "maxTriangles": 100000 },
+    { "id": "breaking-biology", "at": "breaking-biology", "radius": 110, "maxTriangles": 70000 },
+    { "id": "shapla-chattar", "at": "shapla-chattar", "radius": 110, "maxTriangles": 70000 },
+    { "id": "ahsan-manzil", "at": "ahsan-manzil", "radius": 110, "maxTriangles": 70000 }
+  ],
+  "styles": {
+    "residential": { "every": 2, "between": "Brick_Plain_3", "upper": ["Brick_Window_Square_Single", "Brick_Window_Trim_Single"], "side": "Brick_Plain_3", "ground": "Brick_BottomTrim", "shop": "Trim_FirstFloor_Window_001", "door": [["DoorFrame_Trim", 0], ["Door_2", 0.5]], "cornice": "Cornice_Trim_Center" },
+    "old": { "every": 2, "between": "Brick_Plain_3", "upper": ["Brick_Inset_Window_Curved_Small"], "side": "Brick_Plain_3", "ground": "Brick_BottomTrim", "shop": "Trim_FirstFloor_Window_001", "door": [["DoorFrame_Trim", 0], ["Door_2", 0.5]], "cornice": "Cornice_Brick_Center" },
+    "office": { "upper": ["Metal_Window_Half"], "side": "Metal_Plain_3", "ground": "Metal_FirstFloor_Window", "shop": "Metal_FirstFloor_Window", "door": [["DoorFrame_Metal_Single", 0], ["Door_3", 0.5]], "cornice": "Cornice_Metal_Center" },
+    "glass": { "upper": ["Metal_FullWindow"], "side": "Metal_Plain_3", "ground": "Metal_FirstFloor_Window", "shop": "Metal_FirstFloor_Window", "door": [["DoorFrame_Metal_Single", 0], ["Door_3", 0.5]], "cornice": "Cornice_Metal_Center" }
+  },
+  "pieces": [
+    "Brick_Window_Square_Single", "Brick_Window_Trim_Single", "Brick_Inset_Window_Curved_Small", "Brick_Plain_3", "Brick_BottomTrim",
+    "Trim_FirstFloor_Window_001", "DoorFrame_Trim", "Door_2", "Cornice_Trim_Center", "Cornice_Brick_Center",
+    "Metal_Window_Half", "Metal_FullWindow", "Metal_Plain_3", "Metal_FirstFloor_Window", "DoorFrame_Metal_Single", "Door_3", "Cornice_Metal_Center"
+  ]
+}

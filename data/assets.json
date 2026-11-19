@@ -13,6 +13,10 @@
       "wrapT": "repeat",
       "anisotropy": 4
     },
+    "model.city.kitPieces": {
+      "type": "model",
+      "url": "assets/city/kit-pieces.glb"
+    },
     "image.shoumik.portrait": {
       "type": "image",
       "url": "assets/shoumik/portrait.png"

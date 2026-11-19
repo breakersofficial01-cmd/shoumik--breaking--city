@@ -2,7 +2,7 @@
   "_comment": "Graphics quality levels. pixelRatioCap = sharpness limit (lower = faster). viewDistance in metres (fog hides the rest). propDensity = share of poles/trees/tanks drawn. chunkBuildMs = time budget per frame for building new city chunks. pedestrians = how many people walk around the player at once; pedLodDistance = beyond this (metres) people are drawn in a simpler way. traffic = AI vehicles driving around; parked = empty vehicles waiting at the roadside. posterDistance = posters further away than this (metres) are not drawn. postfx = bloom/colour-grade chain on or off. bloom = neon glow. shadowMapSize = real sun shadows (0 = off; bigger = sharper but slower). softShadows = softer shadow edges. msaa = anti-aliasing samples inside the effect chain (0 = off).",
   "default": "medium",
   "levels": {
-    "low": {
+    "low": { "heroBuildings": false,
       "pixelRatioCap": 1.0,
       "renderScale": 0.8,
       "viewDistance": 210,
@@ -24,7 +24,7 @@
       "softShadows": false,
       "msaa": 0
     },
-    "medium": {
+    "medium": { "heroBuildings": true,
       "pixelRatioCap": 1.25,
       "renderScale": 1.0,
       "viewDistance": 300,
@@ -46,7 +46,7 @@
       "softShadows": false,
       "msaa": 0
     },
-    "high": {
+    "high": { "heroBuildings": true,
       "pixelRatioCap": 2.0,
       "renderScale": 1.0,
       "viewDistance": 430,

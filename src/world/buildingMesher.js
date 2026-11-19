@@ -64,10 +64,13 @@ export function meshBuilding(gb, b, cfg, palette, baseY, quality) {
   const shutterCol = hexToLinear(b.shutter);
   const doorSide = rng.int(0, 3);
   let balconies = 0;
+  // 3D kit building here (src/world/hero/): skip the walls and balconies, keep roof and shop signs.
+  const hero = !!b.hero && quality.heroBuildings;
 
   for (const s of sidesOf(b)) {
     const len = Math.hypot(s.bx - s.ax, s.bz - s.az);
     const isFront = (b.front & s.bit) !== 0;
+    if (hero && !(b.shop && isFront)) continue;
     if (!isFront && !b.allSides) {
       // Blank side wall: one quad, floor lines only.
       const c = shade(wallCol, cfg.sideWallShade);
@@ -77,7 +80,7 @@ export function meshBuilding(gb, b, cfg, palette, baseY, quality) {
     const bays = Math.max(1, Math.round(len / cfg.bayWidth));
     const doorBay = rng.int(0, bays - 1);
     const shopSide = b.shop && isFront;
-    const balconySide = b.balcony && isFront && quality.balconies && upperFloors > 0;
+    const balconySide = !hero && b.balcony && isFront && quality.balconies && upperFloors > 0;
     let signUntil = 0;
 
     for (let k = 0; k < bays; k++) {
@@ -90,7 +93,7 @@ export function meshBuilding(gb, b, cfg, palette, baseY, quality) {
 
       // Ground floor: shutter, door or a normal window bay.
       if (shopSide) {
-        gb.wall(ax, az, bx, bz, baseY, yGround, shade(shutterCol, 0.75), shutterCol, FACADE.SHUTTER);
+        if (!hero) gb.wall(ax, az, bx, bz, baseY, yGround, shade(shutterCol, 0.75), shutterCol, FACADE.SHUTTER);
         if (k >= signUntil) {
           // One blank signboard per shop (1-2 bays wide), each shop its own colour.
           const span = Math.min(bays - k, rng.int(1, 2));
@@ -100,12 +103,12 @@ export function meshBuilding(gb, b, cfg, palette, baseY, quality) {
           wallBox(gb, s, t0 + pad, (k + span) / bays - pad, cfg.signDepth,
             yGround - cfg.signHeight, yGround + rng.range(0, 0.35), shade(signCol, 0.82), signCol, FACADE.PLAIN, true);
         }
-      } else {
+      } else if (!hero) {
         const tile = isFront && k === doorBay && s.bit === (1 << doorSide) ? FACADE.DOOR : b.style;
         gb.wall(ax, az, bx, bz, baseY, yGround, cBase, cMid, tile);
       }
       // Upper floors: one tall quad, the tile repeats once per floor.
-      if (upperFloors > 0) gb.wall(ax, az, bx, bz, yGround, yTop, cMid, wallCol, b.style, 0, upperFloors);
+      if (upperFloors > 0 && !hero) gb.wall(ax, az, bx, bz, yGround, yTop, cMid, wallCol, b.style, 0, upperFloors);
 
       // A column of balconies on some bays.
       if (balconySide && balconies < cfg.balcony.maxPerBuilding && rng.chance(0.45)) {
