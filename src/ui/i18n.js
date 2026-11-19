@@ -39,8 +39,13 @@ export function setLanguage(next, silent = false) {
 export const getLanguage = () => lang;
 
 export function t(key, vars) {
+  return tl(lang, key, vars);
+}
+
+/** Text in a FIXED language (Class Mode is always Bangla, whatever the game language is). */
+export function tl(language, key, vars) {
   const entry = strings[key];
-  let text = entry ? entry[lang] ?? entry.en ?? key : key;
+  let text = entry ? entry[language] ?? entry.en ?? key : key;
   if (vars) text = text.replace(/\{(\w+)\}/g, (_, k) => (k in vars ? vars[k] : `{${k}}`));
   return text;
 }
@@ -64,3 +69,11 @@ export function applyStrings(root) {
     el.textContent = t(el.dataset.i18n);
   });
 }
+
+/** Number in a fixed language: Bangla digits for 'bn' (Class Mode rule), western for 'en'. */
+export function numIn(language, n) {
+  const text = Math.round(n).toLocaleString('en-US');
+  return language === 'en' ? text : bn(text);
+}
+
+export const moneyIn = (language, n) => currency + numIn(language, n);

@@ -1,10 +1,56 @@
 {
-  "_comment": "All money numbers. Later sessions add prices, bail, rewards here.",
+  "_comment": "All money numbers (Taka). Class rewards, every shop price, bail later (Session 6). Lesson Check rewards are per lesson in data/lessons.json (rewardPerCorrect).",
   "startCash": 500,
   "currencySymbol": "৳",
   "rides": {
     "_comment": "Fare in Taka for one hired ride, by vehicle type (data/vehicles.json).",
     "rickshaw": 20,
     "cng": 100
+  },
+  "quizClass": {
+    "_comment": "Quiz Class (free practice in Class Mode). rewardPerCorrect per right answer; streakBonus is paid every time the streak reaches a multiple of streakLength; firstOfDayBonus once per calendar day (phone's date) for finishing a round; questionsPerRound (fewer if the institute has fewer questions); dailyCap = most Taka one player can earn from Quiz Class per day (0 = no limit).",
+    "rewardPerCorrect": 50,
+    "streakBonus": 200,
+    "streakLength": 5,
+    "firstOfDayBonus": 300,
+    "questionsPerRound": 10,
+    "timePerQuestionSec": 30,
+    "dailyCap": 0
+  },
+  "prices": {
+    "_comment": "Shop prices. Keys must match ids in data/vehicles.json (types), data/shops.json (homes, food), data/weapons.json and data/outfits.json. An item without a price is not sold.",
+    "vehicles": {
+      "bicycle": 2500,
+      "motorbike": 18000,
+      "taxi": 30000,
+      "sedan": 40000,
+      "suv": 65000,
+      "sports": 150000
+    },
+    "homes": {
+      "old-dhaka-mess": 12000,
+      "dhanmondi-flat": 60000,
+      "gulshan-house": 200000
+    },
+    "weapons": {
+      "pistol": 5000,
+      "revolver": 7000,
+      "sawedOff": 12000,
+      "smg": 15000,
+      "shotgun": 18000,
+      "rifle": 35000,
+      "sniper": 50000
+    },
+    "outfits": {
+      "polo_black": 800,
+      "panjabi_grey": 1500,
+      "doctor": 2500
+    },
+    "food": {
+      "tea": 10,
+      "biscuit": 15,
+      "fuchka": 50,
+      "chotpoti": 40
+    }
   }
 }

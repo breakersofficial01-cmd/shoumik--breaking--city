@@ -98,3 +98,16 @@
 - Lit windows at night: an emissive version of the facade atlas (Session 7).
 - 512 px facade tiles on High only (sharper up close), 256 px on Low/Medium.
 - Roof cornices and corner columns along the top edge of buildings (kit Cornice_* / Brick_CornerColumn_*).
+
+## Ideas noted during Session 5
+- Small 3D shop fronts / stall props (tea kettle, fuchka cart, showroom glass, a "To-Let" sign at
+  homes) at each ring; cars on display at the showroom that you can walk round before buying.
+- Pick the colour of a bought vehicle (swatches from `data/vehicles.json → colors`).
+- Sell vehicles back (half price) at the showroom; a garage menu at home to pick which vehicle
+  waits outside.
+- Fast travel between owned homes (taxi fare) and a minimap legend for the coloured dots.
+- Quiz Class leaderboards (best streak per day) and a "review my wrong answers" list.
+- Weekly bonus for finishing every lesson of a chapter; a certificate on the profile card.
+- Turn on `quizClass.dailyCap` (e.g. ৳2,000) once there are many lessons, so practice money
+  cannot be farmed with a few memorised questions.
+- Show which lessons are new since the last visit (badge on the ring).

@@ -13,7 +13,7 @@
 import { events } from './events.js';
 import { log } from './debug.js';
 
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;
 
 /** MIGRATIONS[n] upgrades a save from version n to n+1. */
 const MIGRATIONS = {
@@ -21,6 +21,13 @@ const MIGRATIONS = {
   0: (old) => ({ ...defaults({ startCash: old.cash ?? 500 }), cash: old.cash ?? 500 }),
   // Version 2 (Session 2) added the outfit Shoumik is wearing.
   1: (old) => ({ ...old, outfit: null }),
+  // Version 3 (Session 5) added health, the home Shoumik lives in, its garage and class
+  // progress. Outfits that became shop items are kept by players who were wearing them.
+  2: (old) => {
+    const outfits = old.owned?.outfits || [];
+    if (old.outfit && !outfits.includes(old.outfit)) outfits.push(old.outfit);
+    return { ...old, health: null, home: null, garage: null, classes: {}, owned: { ...old.owned, outfits } };
+  },
 };
 
 function defaults({ startCash = 500 } = {}) {
@@ -32,7 +39,11 @@ function defaults({ startCash = 500 } = {}) {
     player: null,                     // { x, z, heading } once the player has moved
     outfit: null,                     // id from data/outfits.json (null = the default outfit)
     settings: { quality: null, language: null, blood: true },
-    lessons: {},                      // lessonId -> result (Session 5)
+    health: null,                     // Shoumik's health (null = full, data/player.json → health)
+    home: null,                       // { id, x, z, heading } the home he sleeps in (shops feature)
+    garage: null,                     // { col, row, dir } where owned vehicles park (null = data/vehicles.json → garage)
+    lessons: {},                      // lessonId -> { attempts, paid: [questionIds], earned, best, lastAt }
+    classes: {},                      // Quiz Class: { lastDay, rounds, earned, bestStreak }
     owned: { vehicles: [], homes: [], weapons: [], outfits: [] },
     stats: {},
     flags: {},                        // misc one-off flags (age gate etc.)
@@ -74,7 +85,7 @@ class SaveStore {
         log.info('save migrated to v' + v);
       }
       // Fill in any missing fields so later code can rely on them.
-      this.data = { ...fresh, ...obj, settings: { ...fresh.settings, ...obj.settings }, owned: { ...fresh.owned, ...obj.owned } };
+      this.data = { ...fresh, ...obj, settings: { ...fresh.settings, ...obj.settings }, owned: { ...fresh.owned, ...obj.owned }, classes: { ...obj.classes } };
     } catch (err) {
       log.warn('save was unreadable, keeping a backup and starting fresh', err);
       try { localStorage.setItem(this.key + '.broken', raw); } catch { /* ignore */ }

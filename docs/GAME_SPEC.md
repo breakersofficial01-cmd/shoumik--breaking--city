@@ -4,7 +4,7 @@ What the game is and what exists **right now**. Updated at the end of every sess
 Rules live in `/CLAUDE.md`; the build plan in `docs/SESSIONS.md`; how the code is organised
 in `docs/HANDOFF.md`.
 
-Status: **Session 4 of 8 done + Session 4.5 Part A** (engine, city, foundations, Shoumik, people,
+Status: **Session 5 of 8 done** (+ Session 4.5 visual upgrade) (engine, city, foundations, Shoumik, people,
 vehicles, traffic, landmarks, MRT, posters; upgraded lighting, shadows, neon glow).
 
 ---
@@ -44,12 +44,16 @@ Money only comes from answering lesson questions. YouTube links open outside the
 - Watch MRT Line 6 trains run on the viaduct over Bijoy Sarani → Shahbag → Karwan Bazar →
   Motijheel and stop at its 4 stations; the elevated expressway runs down the east side.
 - Breaking School (campus, Shahbag) and Breaking Biology Institution (Dhanmondi) glow in neon
-  with their names in English and Bangla. Step into the pink ring at the door and press ঢোকো:
-  "classes open soon" (Class Mode is Session 5).
+  with their names in English and Bangla. Step into the pink ring at the door and press ঢোকো to
+  open **Class Mode** (section 10b).
+- Earn Taka in Class Mode (Lesson Check, Quiz Class) and spend it in 11 shops (section 10c):
+  cars, bikes, homes, weapons (used from Session 6), clothes, tea and fuchka (heal).
+- Health bar under the stars: punches and crashes lower it (never below 10 until Session 6), food
+  and sleeping at home fill it.
 - Posters everywhere (section 3c). Look at one that has a link and tap it (or the
   "পোস্টার খুলুন ↗" button, or F) to open the link.
 
-Not in yet: classes, shops, weapons, wanted stars and police, health, day/night, real sound.
+Not in yet: using weapons, wanted stars and police, knock-outs/hospital, day/night, real sound.
 See `docs/SESSIONS.md`.
 
 ## 3. The city
@@ -180,8 +184,9 @@ on the left wrist. About 2,000 triangles. Movement numbers in `data/player.json`
 | `doctor` | white apron, light shirt, stethoscope | yes |
 | `polo_black` | black polo, cream-striped collar and sleeves | yes |
 
-All are unlocked for now (`data/outfits.json → unlocked`); the clothes shop (Session 5) can
-lock and sell them.
+Free: `casual_maroon` and `panjabi_navy`. Sold in the clothes shop (Session 5): black polo ৳800,
+grey panjabi ৳1,500, doctor's apron ৳2,500. Players who already wore one keep it (save v3).
+Note: outfits only change the code-built model (Low); the 3D model on Medium/High has one outfit.
 
 Animations of the code-built model (shared with every pedestrian): idle, arms-crossed idle,
 walk, run, jump, fall, punch, melee swing, aim, shoot, enter/exit vehicle, sit, dance, knocked
@@ -310,9 +315,11 @@ heaviest), about 9,700 collision boxes, whole-city layout generated in ~25 ms, a
 in ~3 ms on a desktop CPU. Real-phone numbers still need to be measured by the owner.
 
 ## 9. Save
-`localStorage["breakingCity.save"]`, version 2: cash, player position, outfit, settings (quality,
-language, blood), owned vehicles (`owned.vehicles` = list of `{ type, color }`), plus empty slots
-for lessons, other owned items, stats and flags. Migrations in
+`localStorage["breakingCity.save"]`, version 3: cash, player position, outfit, settings (quality,
+language, blood), owned vehicles (`owned.vehicles` = list of `{ type, color }`), owned homes /
+weapons / outfits, `health`, `home` (spawn point), `garage`, Lesson Check results per lesson
+(`lessons[id] = { attempts, paid: [question ids], earned, best }`), Quiz Class stats (`classes`),
+stats and flags. Migrations in
 `src/core/save.js`. Unreadable saves are backed up to `breakingCity.save.broken`.
 
 ## 10. Content
@@ -323,3 +330,38 @@ for lessons, other owned items, stats and flags. Migrations in
 - Places (ride destinations + landmark plots): `data/places.json`, loaded at boot.
 - Posters: `data/posters.json` through the Content Service (local now, Google Sheet later).
 - Everything else that is tunable: `data/*.json` (each file starts with a `_comment`).
+
+## 10b. Class Mode (Session 5)
+At the pink ring of **Breaking School** (Shahbag) or **Breaking Biology Institution** (Dhanmondi):
+ঢোকো → a full-screen panel, always in Bangla with Bangla digits and the Bangla font; the game pauses.
+
+| Choice | What happens |
+|---|---|
+| লেসন চেক | Lessons of that institute grouped by subject · chapter, badge নতুন / আবার চেষ্টা করো / সম্পন্ন. Lesson screen: reward, earned so far, **ইউটিউবে দেখো** (opens YouTube outside the game), চেক শুরু করো: 3 random questions, options shuffled (ক খ গ ঘ), 30 s each, instant সঠিক!/ভুল! with the right answer and explanation. ৳150 per right answer, each question pays once per player; 2 tries per lesson (a try counts when it starts). |
+| কুইজ ক্লাস | Practice rounds of up to 10 questions from all that institute's lessons: ৳50 per right answer, ৳200 every 5 in a row, ৳300 for the first round of the day (`data/economy.json → quizClass`, optional daily cap). |
+| ভর্তি হও | Opens `data/links.json → enrollBreakingSchool / enrollBreakingBiology` (empty now → "coming soon"). |
+
+Today: one lesson (Breaking Biology, bone and cartilage, 3 questions); Breaking School has none
+yet and says so. Hidden check: add `?admin=1` to the address → red **অ্যাডমিন** button → lesson /
+question counts per institute, content sources, skipped rows with reasons.
+
+## 10c. Shops and homes (Session 5)
+Glowing rings with a floating name sign on sidewalk corners, coloured dots on the minimap
+(edge dots point the way). Stand in a ring, press ঢোকো. Places: `data/shops.json`; prices:
+`data/economy.json → prices`.
+
+| Shop | Where (junction) | Sells |
+|---|---|---|
+| গুলশান কার শোরুম | Gulshan (9,1) | yellow cab ৳30,000 · sedan ৳40,000 · SUV ৳65,000 · sports car ৳1,50,000 |
+| বাইক ও সাইকেলের দোকান | Karwan Bazar side (7,10) | bicycle ৳2,500 · motorbike ৳18,000 |
+| প্রপার্টি অফিস | Motijheel (11,10) | Old Dhaka mess ৳12,000 · Dhanmondi flat ৳60,000 · Gulshan house ৳2,00,000 |
+| গলির অস্ত্রের দোকান | Old Dhaka (6,14) | pistol ৳5,000 … sniper ৳50,000 (7 guns; usable from Session 6) |
+| পোশাকের দোকান | Nilkhet side (2,10) | the 3 locked outfits |
+| চায়ের দোকান ×3 | TSC (4,10), Dhanmondi lake (1,6), Old Dhaka (8,14) | tea ৳10 (+15 health), tea + biscuit ৳15 (+25) |
+| ফুচকার দোকান ×3 | Shahbag start (3,10), Dhanmondi (4,7), Motijheel (10,9) | fuchka ৳50 (+45), chotpoti ৳40 (+35) |
+
+Bought vehicles appear at the garage of your home (or south of the Shahbag start corner when you
+have none). A bought home gets a white ring: ঢোকো there = sleep (full health, game saved) and it
+becomes your home (spawn point if the saved spot is unusable, garage for your vehicles). With
+several homes, choose with "এখানে থাকো" in the property office or by sleeping there. Food is
+refused at full health so you never pay for nothing.

@@ -1,0 +1,298 @@
+{
+  "_comment": "Shops and homes (Session 5). Every shop is a glowing ring on a sidewalk corner of a road junction: col/row = the junction (see the map in docs/GAME_SPEC.md), corner = preferred corner (NE, NW, SE, SW; if it is blocked another corner is used). kind = what the shop sells: vehicles | homes | weapons | outfits | food. stock = item ids (prices are in data/economy.json → prices; food heal amounts below). Homes: owned homes get their own ring (sleep = full health + save + spawn point) and their garage is where owned vehicles park.",
+  "marker": {
+    "radius": 1.25,
+    "height": 2.2,
+    "spin": 0.3,
+    "enterRadius": 1.9,
+    "visibleDistance": 120,
+    "labelHeight": 3.1,
+    "labelWidth": 4.4,
+    "labelPixels": 256
+  },
+  "kinds": {
+    "vehicles": {
+      "color": "#4be3ff",
+      "icon": "🚗",
+      "minimap": "#4be3ff"
+    },
+    "homes": {
+      "color": "#7dff9b",
+      "icon": "🏠",
+      "minimap": "#7dff9b"
+    },
+    "weapons": {
+      "color": "#ff5050",
+      "icon": "🔫",
+      "minimap": "#ff5050"
+    },
+    "outfits": {
+      "color": "#ff5fa2",
+      "icon": "👕",
+      "minimap": "#ff5fa2"
+    },
+    "food": {
+      "color": "#ffd35a",
+      "icon": "☕",
+      "minimap": "#ffd35a"
+    },
+    "home": {
+      "color": "#7dff9b",
+      "icon": "🛏",
+      "minimap": "#ffffff"
+    },
+    "class": {
+      "minimap": "#ff4fb0"
+    }
+  },
+  "shops": [
+    {
+      "id": "car-showroom",
+      "kind": "vehicles",
+      "name": {
+        "en": "Gulshan Car Showroom",
+        "bn": "গুলশান কার শোরুম"
+      },
+      "col": 9,
+      "row": 1,
+      "corner": "SE",
+      "stock": [
+        "taxi",
+        "sedan",
+        "suv",
+        "sports"
+      ]
+    },
+    {
+      "id": "bike-shop",
+      "kind": "vehicles",
+      "name": {
+        "en": "Bike & Cycle Shop",
+        "bn": "বাইক ও সাইকেলের দোকান"
+      },
+      "col": 7,
+      "row": 10,
+      "corner": "NE",
+      "stock": [
+        "bicycle",
+        "motorbike"
+      ]
+    },
+    {
+      "id": "property-office",
+      "kind": "homes",
+      "name": {
+        "en": "Property Office",
+        "bn": "প্রপার্টি অফিস"
+      },
+      "col": 11,
+      "row": 10,
+      "corner": "SE",
+      "stock": [
+        "old-dhaka-mess",
+        "dhanmondi-flat",
+        "gulshan-house"
+      ]
+    },
+    {
+      "id": "weapon-shop",
+      "kind": "weapons",
+      "name": {
+        "en": "Back-lane Arms",
+        "bn": "গলির অস্ত্রের দোকান"
+      },
+      "col": 6,
+      "row": 14,
+      "corner": "SW",
+      "stock": [
+        "pistol",
+        "revolver",
+        "sawedOff",
+        "smg",
+        "shotgun",
+        "rifle",
+        "sniper"
+      ]
+    },
+    {
+      "id": "clothes-shop",
+      "kind": "outfits",
+      "name": {
+        "en": "Clothes Shop",
+        "bn": "পোশাকের দোকান"
+      },
+      "col": 2,
+      "row": 10,
+      "corner": "SE",
+      "stock": [
+        "polo_black",
+        "panjabi_grey",
+        "doctor"
+      ]
+    },
+    {
+      "id": "tea-tsc",
+      "kind": "food",
+      "name": {
+        "en": "Tea Stall",
+        "bn": "চায়ের দোকান"
+      },
+      "col": 4,
+      "row": 10,
+      "corner": "NW",
+      "stock": [
+        "tea",
+        "biscuit"
+      ]
+    },
+    {
+      "id": "tea-dhanmondi",
+      "kind": "food",
+      "name": {
+        "en": "Lakeside Tea Stall",
+        "bn": "লেকপাড়ের চায়ের দোকান"
+      },
+      "col": 1,
+      "row": 6,
+      "corner": "SE",
+      "stock": [
+        "tea",
+        "biscuit"
+      ]
+    },
+    {
+      "id": "tea-old-dhaka",
+      "kind": "food",
+      "name": {
+        "en": "Old Dhaka Tea Stall",
+        "bn": "পুরান ঢাকার চায়ের দোকান"
+      },
+      "col": 8,
+      "row": 14,
+      "corner": "NE",
+      "stock": [
+        "tea",
+        "biscuit"
+      ]
+    },
+    {
+      "id": "fuchka-shahbag",
+      "kind": "food",
+      "name": {
+        "en": "Fuchka Stall",
+        "bn": "ফুচকার দোকান"
+      },
+      "col": 3,
+      "row": 10,
+      "corner": "NW",
+      "stock": [
+        "fuchka",
+        "chotpoti"
+      ]
+    },
+    {
+      "id": "fuchka-dhanmondi",
+      "kind": "food",
+      "name": {
+        "en": "Fuchka Stall",
+        "bn": "ফুচকার দোকান"
+      },
+      "col": 4,
+      "row": 7,
+      "corner": "NE",
+      "stock": [
+        "fuchka",
+        "chotpoti"
+      ]
+    },
+    {
+      "id": "fuchka-motijheel",
+      "kind": "food",
+      "name": {
+        "en": "Fuchka Stall",
+        "bn": "ফুচকার দোকান"
+      },
+      "col": 10,
+      "row": 9,
+      "corner": "SW",
+      "stock": [
+        "fuchka",
+        "chotpoti"
+      ]
+    }
+  ],
+  "food": {
+    "tea": {
+      "name": {
+        "en": "Cup of tea",
+        "bn": "এক কাপ চা"
+      },
+      "heal": 15
+    },
+    "biscuit": {
+      "name": {
+        "en": "Tea + biscuit",
+        "bn": "চা আর বিস্কুট"
+      },
+      "heal": 25
+    },
+    "fuchka": {
+      "name": {
+        "en": "Plate of fuchka",
+        "bn": "এক প্লেট ফুচকা"
+      },
+      "heal": 45
+    },
+    "chotpoti": {
+      "name": {
+        "en": "Plate of chotpoti",
+        "bn": "এক প্লেট চটপটি"
+      },
+      "heal": 35
+    }
+  },
+  "homes": {
+    "old-dhaka-mess": {
+      "name": {
+        "en": "Old Dhaka mess room",
+        "bn": "পুরান ঢাকার মেস"
+      },
+      "col": 4,
+      "row": 14,
+      "corner": "SE",
+      "garage": {
+        "col": 4,
+        "row": 14,
+        "dir": "E"
+      }
+    },
+    "dhanmondi-flat": {
+      "name": {
+        "en": "Dhanmondi flat",
+        "bn": "ধানমন্ডির ফ্ল্যাট"
+      },
+      "col": 3,
+      "row": 6,
+      "corner": "SE",
+      "garage": {
+        "col": 3,
+        "row": 6,
+        "dir": "E"
+      }
+    },
+    "gulshan-house": {
+      "name": {
+        "en": "Gulshan house",
+        "bn": "গুলশানের বাড়ি"
+      },
+      "col": 12,
+      "row": 3,
+      "corner": "SW",
+      "garage": {
+        "col": 12,
+        "row": 3,
+        "dir": "W"
+      }
+    }
+  }
+}

@@ -424,3 +424,61 @@ Tests: smoke test passes on Low / Medium / High; vehicle test passes on Low.
 - The poster-style images the owner sent were not used as files (not a 360° sky, unclear
   licence); only their colours guided the painting.
 - Tool: `tools/sky-shots.js`. Tests: smoke test passes on Low and High.
+
+## 2026-11-19 — Session 5: Classes, Lesson Check, money and shops (Claude Opus 5.5)
+Shoumik can now study for Taka and spend it.
+
+Class Mode (`src/features/classes/`)
+- Opens from the pink ring at Breaking School and Breaking Biology Institution (pauses the game).
+  Everything in Bangla with the Bangla font and Bangla digits, even if the game language is
+  English (new `tl()`, `numIn()`, `moneyIn()` in `src/ui/i18n.js`).
+- **Lesson Check:** lessons of that institute grouped by subject · chapter with
+  নতুন / আবার চেষ্টা করো / সম্পন্ন badges. Lesson screen with reward and "earned so far", a big
+  **ইউটিউবে দেখো** link that opens YouTube outside the game (no embed, no tracking), and
+  চেক শুরু করো: 3 random questions, shuffled options (ক খ গ ঘ, real letters tracked), 30 s
+  timer with a bar, instant ✔ সঠিক! / ✘ ভুল! / ⏰ সময় শেষ! with the right answer and explanation.
+  Each question pays ৳150 once per player; 2 tries per lesson (a try counts when it starts, so
+  closing half-way cannot be used to peek). Results saved per lesson; sends `lesson:completed`.
+- **Quiz Class:** rounds of up to 10 questions from the institute's lessons; ৳50 per right
+  answer, ৳200 every 5 in a row, ৳300 for the first round of the day; optional daily cap
+  (`data/economy.json → quizClass.dailyCap`, 0 = none).
+- **Enroll** opens `data/links.json → enrollBreakingSchool / enrollBreakingBiology` (still empty →
+  "coming soon").
+- **`?admin=1`**: red অ্যাডমিন button → lessons and questions per institute, where each content
+  type loaded from, and every skipped row with its reason.
+- The test lesson `bio-bone-cartilage-01` works end to end.
+
+Shops (`src/features/shops/`, `data/shops.json`, prices in `data/economy.json → prices`)
+- 11 shops as glowing rings with a floating Bangla name sign on sidewalk corners and coloured
+  dots on the minimap (new `map:blips` event; far dots sit on the rim): car showroom (Gulshan),
+  bike shop, property office (Motijheel), weapon shop (Old Dhaka), clothes shop, 3 tea stalls and
+  3 fuchka stalls.
+- Buying: vehicles (`vehicle:grant`), outfits (black polo, grey panjabi and doctor's apron are now
+  sold; maroon tee and navy panjabi stay free; old saves keep the one they wore), weapons (owned
+  list for Session 6), homes (Old Dhaka mess, Dhanmondi flat, Gulshan house), food (heals).
+- Homes: a white ring at each owned home; sleeping there = full health + save + spawn point;
+  owned vehicles park at that home's garage (`garage:changed`). Choose between homes in the
+  property office.
+- **Health:** new bar under the wanted stars. Punches and crashes lower it but never below 10 for
+  now (knock-outs come with Session 6); food and sleep fill it.
+
+Under the hood
+- Save format **v3** (migration from v2): `health`, `home`, `garage`, `classes`; lesson results.
+- `src/ui/overlay.js` (shared full-screen panel: pause, Esc, save on close, HTML escaping);
+  `src/ui/panels.css` for the new screens (styles.css was over 400 lines).
+- Settings rebuilds its outfit list when one is bought (`outfit:owned`).
+- Fixed: `player:hit` without a position made Shoumik's position NaN (now only the hurt animation).
+- New tool `tools/class-check.js` (Class Mode and shops end to end, 40+ checks).
+
+Tests (headless Chromium, software rendering): class check passes on Low and Medium with no
+console errors; smoke test passes on Low and Medium; vehicle test passes fully on Low (Medium
+still shows the 4 known time-based failures of the slow software renderer).
+
+Known issues
+- Breaking School has no lessons yet (Class Mode says so); Breaking Biology has one lesson with
+  3 questions, so Quiz Class repeats the same 3 questions. More lessons are needed in
+  `data/lessons.json` (or the Google Sheet).
+- Enroll links and the Li Ador Noirrit font file are still missing (Hind Siliguri is used).
+- Bought outfits only show on Low (the 3D Shoumik has one outfit); guns can be bought but not used
+  until Session 6; weapon names are shown as ids (pistol, smg…).
+- No daily cap on Quiz Class by default — a player can practise the same questions for money.

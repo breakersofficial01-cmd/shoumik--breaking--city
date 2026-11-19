@@ -1,4 +1,4 @@
-# Handoff — how Breaking City is built (v4, after Session 4)
+# Handoff — how Breaking City is built (v5, after Session 5)
 
 For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, then
 `docs/GAME_SPEC.md` (what exists) and `docs/CHANGELOG.md` (what changed last).
@@ -21,6 +21,11 @@ For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, th
 - Posters + gameplay: `node tools/poster-check.js --three <dir> --out <folder>` stands Shoumik
   at one slot of each kind, tests tap-to-open (F), LED rotation, the MRT train, the Breaking
   School entrance and the bus/rickshaw adverts.
+- Class Mode + shops (Session 5): `node tools/class-check.js --three <dir> --out <folder> [--quality low]`
+  walks into the Breaking Biology ring, runs two Lesson Checks, two Quiz Class rounds and a
+  time-out, buys food / a bicycle / an outfit / a pistol / a home, sleeps at home, opens the
+  admin panel and reloads. Checks every Taka amount. Run it after touching classes, shops,
+  economy, save or lessons.
 - See what you changed: `node tools/character-shots.js --three <dir> --out <folder>` saves
   close-ups of Shoumik in every outfit and animation (`--only front,punch,doctor`). (Cloud sandboxes usually cannot reach the CDN, hence
   `--three`.) Run it before every commit.
@@ -32,6 +37,9 @@ For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, th
   Vehicles: `BC.fleet.vehicles`, `BC.player.vehicle`, `BC.fleet.create('bus', { x, z, heading })`,
   `BC.fleet.damage(v, 100)`, `BC.events.emit('vehicle:grant', { type: 'sports' })`, `BC.world.roads`.
   Session 4: `BC.world.landmarks` (sites, markers, viaducts), `BC.posters.slots`, `BC.metro.trains`.
+  Session 5: `BC.features.get('classes').open({ id: 'breaking-biology' })`,
+  `BC.events.emit('shop:open', { id: 'car-showroom' })`, `BC.features.get('shops').spots`,
+  `BC.player.health`, `BC.save.data.lessons`, `?admin=1` (content report button).
 
 ## 2. Boot order (`src/main.js`)
 1. `config.loadSome` (ui, strings, game, economy) → `save.load` → `initI18n`
@@ -81,10 +89,15 @@ src/features/ index.js (registry) + player/ (index.js, actions.js) pedestrians/ 
              vehicles/ (index.js, boarding.js, rides.js, parked.js, horn.js) traffic/ (index.js, shelters.js)
              posters/ (index.js, slots.js, frames.js, library.js, schedule.js, vehicles.js)
              metro/ (MRT trains)  entrances/ (glowing markers at Breaking School / Biology)
+             classes/ (index.js Class Mode controller, screens.js HTML, quiz.js engine,
+               progress.js money rules + save, admin.js ?admin=1 report)
+             shops/ (index.js rings + panels + homes, catalog.js what is sold / buy effects,
+               markers.js ring + name sign + corner finder)
              pedestrians/roadSense.js (people vs vehicles)
-src/ui/      fonts.js, i18n.js, loading.js, styles.css
+src/ui/      fonts.js, i18n.js (t, tl = fixed language, numIn/moneyIn), loading.js, overlay.js
+             (createOverlay: pause + Esc + save on close, esc()), styles.css, panels.css (Session 5)
 data/        every tunable number and all content
-tools/       smoke-test.js, character-shots.js, vehicle-shots.js, landmark-shots.js, poster-check.js
+tools/       smoke-test.js, class-check.js, character-shots.js, vehicle-shots.js, landmark-shots.js, poster-check.js
 posters/     poster pictures + README.md (how to add one)
 ```
 
@@ -144,7 +157,17 @@ posters/     poster pictures + README.md (how to add one)
 | `traffic:adopt` | `{ id }` take over a vehicle that has a driver | vehicles → traffic |
 | `controls:mode` | `{ mode: 'driving' \| 'onFoot' }` | vehicles → touchControls |
 | `wanted:changed` | `{ stars }` | *listened to by hud; police feature will send it* |
-| `lesson:completed` | *(Session 5)* | classes |
+| `lesson:completed` | `{ id, institute, correct, total, earned, attempt }` a Lesson Check finished | classes |
+| `class:opened` / `class:closed` / `class:quizStarted` | `{ institute }` | classes |
+| `player:heal` | `{ amount }` or `{ full: true }` | shops (food, sleeping) → player |
+| `health:changed` | `{ value, max, delta }` | player → hud |
+| `shop:open` | `{ id }` open a shop panel (tools / console) | anyone → shops |
+| `shop:opened` / `shop:purchased` | `{ id, kind }` / `{ shop, kind, item, price }` | shops |
+| `outfit:owned` | `{ id }` an outfit was bought (settings rebuilds its list) | shops → settings |
+| `weapon:owned` | `{ id }` a gun was bought → *weapons (Session 6)* | shops |
+| `home:owned` / `home:changed` / `home:slept` | `{ id }` | shops |
+| `garage:changed` | `{ col, row, dir }` owned vehicles move to the new home's garage | shops → vehicles |
+| `map:blips` | `{ id, points: [{ x, z, color }] }` coloured dots on the minimap ([] removes) | shops (anyone) → minimap |
 | `input:open` | – (F key) open the poster being looked at | Input → posters |
 | `poster:opened` | `{ id, slot, link }` | posters |
 | `metro:arrived` | `{ line, station }` a train stopped at a station | metro |
@@ -350,9 +373,36 @@ version, add the field to `defaults()`. Features store live state with
 - Renderer counters (`renderer.info`) are reset once per frame by Graphics (several passes).
 - Look check: `node tools/look-shots.js --three <three dir> --out shots --quality medium`.
 
+## 12c. Classes, money and shops (Session 5)
+- **Class Mode** opens on `entrance:enter { id }` (id = institute). Screens are HTML strings
+  (`classes/screens.js`) with `data-act` buttons handled in one click handler (`classes/index.js`).
+  Language is FIXED per screen: `L = lesson.language || ui.questionLanguage` and every text goes
+  through `tl(L, key)`, numbers through `numIn(L, n)` / `moneyIn(L, n)` — never `t()` or
+  `formatMoney()` there (they follow the game language). Font: `.class-mode .panel` uses
+  `var(--font-bn)`.
+- **Money rules** are all in `classes/progress.js`: per-question pay-once (`paid` ids), attempts
+  counted at start (`beginLesson`), Quiz Class streak/daily/cap. Change numbers in
+  `data/lessons.json → defaults` and `data/economy.json → quizClass`, not in code.
+- **Timer** uses real time (`setInterval` + `performance.now`) because the game loop is paused
+  while an overlay is open.
+- **Shops**: `data/shops.json` (places, stock, food heal, homes) + `data/economy.json → prices`.
+  `catalog.js` turns a buy into events (see the table). New shop kind = a case in
+  `Catalog.nameOf / stateOf / buy` + a colour in `shops.json → kinds`.
+- **Health** lives in the player feature (`game.player.health`, `save.data.health`, null = full);
+  `player:hit` lowers it but never below `data/player.json → health.minFromHits` — Session 6
+  should drop that floor and add knock-out / hospital.
+- **Homes**: `save.data.home = { id, x, z }` (set when sleeping) and `save.data.garage` (used by
+  `spawnOwned` in the vehicles feature). The player spawns at home only when the saved position
+  is unusable — Session 6 should use `save.data.home` after being busted / knocked out.
+
 ## 13. Notes for the next sessions
 - **Session 4 is done** (the old notes below are kept for reference).
-- **Session 5 (classes):** listen to `entrance:enter { id }` (`breaking-school` /
+- **Session 5 is done** (notes below kept for reference).
+- **Session 6 (weapons):** owned guns are in `save.data.owned.weapons` (ids from
+  `data/weapons.json`); the weapon shop already sells them (`weapon:owned`). Give them names in
+  strings and use the `Q` / অস্ত্র button to cycle owned guns. Jail: Lesson Check/Quiz Class can be
+  reused for "study to earn bail" — open Class Mode with `classes.open({ id })`.
+- **Session 5 (classes, historical):** listen to `entrance:enter { id }` (`breaking-school` /
   `breaking-biology`) to open Class Mode; the entrances feature shows a "coming soon" note only
   while `game.features.get('classes')` is null. Markers are in `world.landmarks.markers`.
   Shops can be landmark blocks too (a new builder + a `landmark` on a place).

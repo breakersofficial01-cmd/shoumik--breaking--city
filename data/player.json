@@ -162,5 +162,11 @@
     "Digit8": "down",
     "Digit9": "cower",
     "Digit0": "shout"
+  },
+  "health": {
+    "_comment": "Health (Session 5: food stalls heal it, punches and crashes lower it). minFromHits keeps him alive until Session 6 adds getting knocked out / hospital. damagePerPower = health lost per point of player:hit power.",
+    "max": 100,
+    "minFromHits": 10,
+    "damagePerPower": 6
   }
 }

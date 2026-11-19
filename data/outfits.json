@@ -1,41 +1,92 @@
 {
-  "_comment": "Shoumik's outfits (look: docs/CHARACTER.md). style = which clothes shape the game builds: tee | polo | panjabi | doctor. colors: top = main colour; pants, shoes, sole; trim/cuff/buttons/pattern for panjabis; stripe for the polo; shirt/stethoscope/metal for the doctor outfit. 'unlocked': true = the player can wear it without buying (the clothes shop in Session 5 will sell the locked ones). No brand logos on any outfit.",
+  "_comment": "Shoumik's outfits (look: docs/CHARACTER.md). style = which clothes shape the game builds: tee | polo | panjabi | doctor. colors: top = main colour; pants, shoes, sole; trim/cuff/buttons/pattern for panjabis; stripe for the polo; shirt/stethoscope/metal for the doctor outfit. 'unlocked': true = the player can wear it without buying ; locked ones are sold in the clothes shop (prices: data/economy.json → prices.outfits). No brand logos on any outfit.",
   "default": "casual_maroon",
   "outfits": [
     {
       "id": "casual_maroon",
-      "name": { "en": "Maroon T-shirt", "bn": "মেরুন টি-শার্ট" },
+      "name": {
+        "en": "Maroon T-shirt",
+        "bn": "মেরুন টি-শার্ট"
+      },
       "style": "tee",
       "unlocked": true,
-      "colors": { "top": "#7E1C24", "pants": "#C9B79C", "shoes": "#EDEDED", "sole": "#b9b9b9" }
+      "colors": {
+        "top": "#7E1C24",
+        "pants": "#C9B79C",
+        "shoes": "#EDEDED",
+        "sole": "#b9b9b9"
+      }
     },
     {
       "id": "panjabi_navy",
-      "name": { "en": "Navy Panjabi", "bn": "নেভি পাঞ্জাবি" },
+      "name": {
+        "en": "Navy Panjabi",
+        "bn": "নেভি পাঞ্জাবি"
+      },
       "style": "panjabi",
       "unlocked": true,
-      "colors": { "top": "#1B3A5C", "trim": "#142c47", "cuff": "#5A1E2A", "buttons": "#d9d2c0", "pants": "#E9E6DC", "shoes": "#5A3B28", "sole": "#2e1f15" }
+      "colors": {
+        "top": "#1B3A5C",
+        "trim": "#142c47",
+        "cuff": "#5A1E2A",
+        "buttons": "#d9d2c0",
+        "pants": "#E9E6DC",
+        "shoes": "#5A3B28",
+        "sole": "#2e1f15"
+      }
     },
     {
       "id": "panjabi_grey",
-      "name": { "en": "Grey Panjabi", "bn": "ধূসর পাঞ্জাবি" },
+      "name": {
+        "en": "Grey Panjabi",
+        "bn": "ধূসর পাঞ্জাবি"
+      },
       "style": "panjabi",
-      "unlocked": true,
-      "colors": { "top": "#8E9490", "pattern": "#7b827d", "trim": "#1C1C1C", "cuff": "#1C1C1C", "buttons": "#f2f2f2", "pants": "#F1EFE8", "shoes": "#2a2420", "sole": "#151210" }
+      "unlocked": false,
+      "colors": {
+        "top": "#8E9490",
+        "pattern": "#7b827d",
+        "trim": "#1C1C1C",
+        "cuff": "#1C1C1C",
+        "buttons": "#f2f2f2",
+        "pants": "#F1EFE8",
+        "shoes": "#2a2420",
+        "sole": "#151210"
+      }
     },
     {
       "id": "doctor",
-      "name": { "en": "Doctor's Apron", "bn": "ডাক্তারের অ্যাপ্রন" },
+      "name": {
+        "en": "Doctor's Apron",
+        "bn": "ডাক্তারের অ্যাপ্রন"
+      },
       "style": "doctor",
-      "unlocked": true,
-      "colors": { "top": "#F2F2F0", "shirt": "#D8E2EE", "stethoscope": "#111111", "metal": "#b9bcc2", "pants": "#2A2D34", "shoes": "#15151a", "sole": "#0a0a0c" }
+      "unlocked": false,
+      "colors": {
+        "top": "#F2F2F0",
+        "shirt": "#D8E2EE",
+        "stethoscope": "#111111",
+        "metal": "#b9bcc2",
+        "pants": "#2A2D34",
+        "shoes": "#15151a",
+        "sole": "#0a0a0c"
+      }
     },
     {
       "id": "polo_black",
-      "name": { "en": "Black Polo", "bn": "কালো পোলো" },
+      "name": {
+        "en": "Black Polo",
+        "bn": "কালো পোলো"
+      },
       "style": "polo",
-      "unlocked": true,
-      "colors": { "top": "#141414", "stripe": "#E8DCC0", "pants": "#2B3443", "shoes": "#EDEDED", "sole": "#b9b9b9" }
+      "unlocked": false,
+      "colors": {
+        "top": "#141414",
+        "stripe": "#E8DCC0",
+        "pants": "#2B3443",
+        "shoes": "#EDEDED",
+        "sole": "#b9b9b9"
+      }
     }
   ]
 }

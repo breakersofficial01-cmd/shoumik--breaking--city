@@ -16,6 +16,7 @@
 // Events
 //   listens  input:action, input:horn
 //            vehicle:grant { type, color? }   Shoumik now OWNS a vehicle (shops, Session 5)
+//            garage:changed { col, row, dir } he moved home: parked owned vehicles move there
 //            vehicle:exploded { id }          he is thrown out if he was inside
 //            vehicle:horn { x, z, kind, ai }  play a horn (AI drivers send these)
 //   sends    prompt:show / prompt:hide, vehicle:horn, player:hit, and everything listed in
@@ -56,7 +57,8 @@ function setPrompt(key, vars) {
 
 /** Vehicles Shoumik owns wait at the garage spot (data/vehicles.json → garage). */
 function spawnOwned(entry, index) {
-  const g = cfg.garage;
+  // The home's garage (save.data.garage, set by the shops feature) or the default spot.
+  const g = { ...cfg.garage, ...(game.save.data.garage || {}) };
   const T = cfg.types[entry.type];
   if (!T) return null;
   const roads = game.world.roads;
@@ -69,6 +71,14 @@ function spawnOwned(entry, index) {
   v.tags.owned = true;
   v.input.handbrake = true;
   return v;
+}
+
+/** Move every owned vehicle nobody is using to the (new) garage. */
+function reparkOwned() {
+  for (const v of [...fleet.vehicles]) {
+    if (v.tags.owned && !v.driver && v !== boarding.vehicle) fleet.remove(v);
+  }
+  game.save.data.owned.vehicles.forEach((entry, i) => entry && spawnOwned(entry, i));
 }
 
 function grant({ type, color }) {
@@ -172,6 +182,7 @@ export default {
       g.events.on('input:action', onAction),
       g.events.on('input:horn', onHornButton),
       g.events.on('vehicle:grant', (p) => grant(p || {})),
+      g.events.on('garage:changed', reparkOwned),
       g.events.on('vehicle:horn', ({ x, z, kind, ai }) => horn.play(kind, x, z, ai)),
       g.events.on('vehicle:exploded', ({ id, x, z }) => {
         if (boarding.vehicle?.id !== id) return;

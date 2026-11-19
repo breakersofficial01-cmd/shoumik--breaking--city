@@ -1,6 +1,6 @@
 // Feature: HUD. Cash + wanted stars + Shoumik's portrait (top-left) and the district name
 // toast. Listens to events only:
-//   cash:changed { cash }      wanted:changed { stars }      district:entered { district }
+//   cash:changed { cash }      wanted:changed { stars }      health:changed { value, max }      district:entered { district }
 //   language:changed
 //   prompt:show { id, key, vars? }  /  prompt:hide { id }   a one-line hint at the bottom (e.g. "press to dance")
 // Sends:  profile:open  when the portrait is tapped (the profile card comes in Session 7).
@@ -38,6 +38,15 @@ function renderStars() {
   }
 }
 
+function renderHealth(h) {
+  const box = root.querySelector('.hud-health');
+  if (!h) return;
+  const share = h.max > 0 ? h.value / h.max : 1;
+  box.firstChild.style.width = `${Math.round(share * 100)}%`;
+  box.classList.toggle('low', share < 0.3);
+  box.title = t('hud.health');
+}
+
 function showDistrict(district) {
   lastDistrict = district;
   const el = root.querySelector('.hud-district');
@@ -60,6 +69,7 @@ export default {
         <div class="hud-stats">
           <div class="hud-cash"></div>
           <div class="hud-stars"></div>
+          <div class="hud-health"><i></i></div>
         </div>
       </div>
       <div class="hud-district"></div>
@@ -73,6 +83,7 @@ export default {
 
     renderCash();
     renderStars();
+    renderHealth(g.player?.health);
     offs = [
       g.events.on('cash:changed', renderCash),
       g.events.on('wanted:changed', ({ stars: n }) => { stars = n || 0; renderStars(); }),
@@ -81,6 +92,7 @@ export default {
       g.events.on('prompt:show', ({ id, key, vars }) => { prompts.delete(id); prompts.set(id, { key, vars }); renderPrompt(); }),
       g.events.on('prompt:hide', ({ id }) => { prompts.delete(id); renderPrompt(); }),
       g.events.on('save:reset', renderCash),
+      g.events.on('health:changed', renderHealth),
     ];
   },
 

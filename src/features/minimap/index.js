@@ -1,6 +1,9 @@
 // Feature: minimap (top-right). The whole city is painted once onto a hidden canvas from
 // the layout data; every tick a rotated window of it is copied to the screen, with the
 // player arrow in the middle. Look + size: data/ui.json → minimap.
+// Other features add coloured dots (shops, homes...) with
+//   map:blips { id, points: [{ x, z, color }] }   (same id again replaces the list; [] removes it)
+// Dots outside the map circle are pinned to its edge so you can see which way to go.
 
 import { t, getLanguage } from '../../ui/i18n.js';
 import { fontStack, fontsReady } from '../../ui/fonts.js';
@@ -16,6 +19,7 @@ let margin = 0;       // metres of empty border around the city on the map
 let timer = 0;
 let dpr = 1;
 let offs = [];
+const blips = new Map(); // id -> points
 
 /** Paint the whole city once. */
 function drawCityMap() {
@@ -77,6 +81,30 @@ function draw() {
   ctx.drawImage(map, -(player.position.x - L.minX + margin) * mapScale, -(player.position.z - L.minZ + margin) * mapScale);
   ctx.restore();
 
+  // Blips (shops, homes, ...): rotate the offset like the map, pin far ones to the rim.
+  const edge = r - 9 * dpr;
+  const ca = Math.cos(mapAngle), sa = Math.sin(mapAngle);
+  const ppm = r / cfg.range;
+  for (const points of blips.values()) {
+    for (const b of points) {
+      const dx = (b.x - player.position.x) * ppm;
+      const dz = (b.z - player.position.z) * ppm;
+      let sx = dx * ca - dz * sa;
+      let sy = dx * sa + dz * ca;
+      const len = Math.hypot(sx, sy);
+      const far = len > edge;
+      if (far && len > cfg.range * ppm * 4) continue; // very far away: no dot
+      if (far) { sx *= edge / len; sy *= edge / len; }
+      ctx.beginPath();
+      ctx.arc(r + sx, r + sy, (far ? 3 : 4.5) * dpr, 0, Math.PI * 2);
+      ctx.fillStyle = b.color;
+      ctx.strokeStyle = cfg.colors.border;
+      ctx.lineWidth = 1.5 * dpr;
+      ctx.fill();
+      ctx.stroke();
+    }
+  }
+
   // Player arrow.
   ctx.save();
   ctx.translate(r, r);
@@ -128,7 +156,10 @@ export default {
     g.ui.appendChild(canvas);
     drawCityMap();
     await fontsReady(); // canvas text must wait for the Bangla font (CLAUDE.md rule 7)
-    offs = [g.events.on('game:ready', draw)];
+    offs = [
+      g.events.on('game:ready', draw),
+      g.events.on('map:blips', ({ id, points }) => { if (points?.length) blips.set(id, points); else blips.delete(id); }),
+    ];
   },
 
   update(dt) {

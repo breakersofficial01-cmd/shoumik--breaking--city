@@ -3,6 +3,10 @@
 // this file). Numbers: data/player.json.
 //
 // Events sent:  player:spawned { x, z }   district:entered { district }
+//               health:changed { value, max, delta }
+// Events heard: player:heal { amount | full }  (food stalls, sleeping at home)
+//               player:hit { power }            lowers health (never below health.minFromHits
+//                                               until Session 6 adds being knocked out)
 // Punches, dancing, outfits and animation requests live in ./actions.js (events listed there).
 //
 // Movement is relative to the camera: stick up = away from the camera.
@@ -41,7 +45,20 @@ const state = {
   model: null,         // THREE.Group
   action: null,        // name of the animation he is doing (punch, dance…) or null
   outfit: null,        // id from data/outfits.json
+  health: { value: 100, max: 100 },  // data/player.json → health; saved in save.data.health
 };
+
+let offs = [];
+
+function setHealth(value) {
+  const h = state.health;
+  const next = Math.max(0, Math.min(h.max, Math.round(value)));
+  if (next === h.value) return;
+  const delta = next - h.value;
+  h.value = next;
+  game.save.data.health = next >= h.max ? null : next;
+  game.events.emit('health:changed', { value: next, max: h.max, delta });
+}
 
 function spawnPoint() {
   const L = game.world.layout;
@@ -109,7 +126,20 @@ export default {
     const L = g.world.layout;
     const savedOk = saved && Number.isFinite(saved.x) && Number.isFinite(saved.z) &&
       L.pieceAt(saved.x, saved.z) && !g.world.collision.isBlocked(saved.x, saved.z, cfg.radius);
-    placeAt(savedOk ? saved : spawnPoint());
+    // No usable saved spot: start at home (bought at the property office) or the spawn corner.
+    const home = g.save.data.home;
+    const homeOk = home && Number.isFinite(home.x) && Number.isFinite(home.z) && !g.world.collision.isBlocked(home.x, home.z, cfg.radius);
+    placeAt(savedOk ? saved : homeOk ? home : spawnPoint());
+
+    const hc = cfg.health;
+    state.health = { value: Number.isFinite(g.save.data.health) ? Math.min(hc.max, g.save.data.health) : hc.max, max: hc.max };
+    offs = [
+      g.events.on('player:heal', ({ amount = 0, full = false } = {}) => setHealth(full ? hc.max : state.health.value + amount)),
+      g.events.on('player:hit', ({ power = 1 } = {}) => {
+        const floor = Math.min(state.health.value, hc.minFromHits);
+        setHealth(Math.max(floor, state.health.value - power * hc.damagePerPower));
+      }),
+    ];
     g.player = state;
     g.cameraRig.setTarget(state, 'onFoot', true);
     g.save.onBeforeSave((data) => {
@@ -214,6 +244,8 @@ export default {
   },
 
   dispose() {
+    offs.forEach((off) => off());
+    offs = [];
     actions?.dispose();
     model?.dispose();
     game.player = null;

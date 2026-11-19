@@ -22,6 +22,20 @@ Fields per lesson: `id` (unique, never change once live), `institute`
 Fields per question: `id`, `question`, `options` (A, B, C, D), `answer` (one letter),
 `explanation` (shown after answering).
 
+How the game uses them (Session 5, Class Mode):
+- A lesson shows only at its institute's entrance and only while `active` is true.
+- **Lesson Check:** each try picks `questionsPerAttempt` (3) random questions, shuffles the
+  options, `timePerQuestionSec` (30) each. Every question pays `rewardPerCorrect` **once per
+  player** — a retry only pays for questions not yet answered right. `maxAttempts` (2) tries
+  per lesson; a try counts as soon as it starts. **Never change a question `id` once live**
+  (paid questions are stored by id). Write at least 3 questions per lesson; more is better —
+  the extra ones make each try different and feed Quiz Class.
+- **Quiz Class** uses every question of the institute's active lessons. Money: `data/economy.json
+  → quizClass`.
+- Enroll button: `data/links.json → enrollBreakingSchool` / `enrollBreakingBiology` (empty = "coming soon").
+- Check what loaded: open the game with `?admin=1` and tap the red **অ্যাডমিন** button — it
+  lists lessons and questions per institute, the source, and every skipped row with the reason.
+
 ### Later: Google Sheet (to be connected with Claude Opus)
 Make one Google Sheet with **two tabs**:
 
@@ -96,7 +110,16 @@ music is are in `settings` in the same file.
 
 ## Shoumik's outfits — `data/outfits.json`
 Change colours freely (hex codes). `style` must be one of `tee`, `polo`, `panjabi`, `doctor`.
-`"unlocked": false` hides an outfit until it is owned (shop comes in Session 5).
+`"unlocked": false` hides an outfit until it is bought in the clothes shop; give it a price in
+`data/economy.json → prices.outfits` and add its id to the clothes shop's `stock` in `data/shops.json`.
+
+## Shops, prices and homes — `data/shops.json` + `data/economy.json → prices`
+- A shop = `id`, `kind` (`vehicles`, `homes`, `weapons`, `outfits`, `food`), `name` (en + bn), the
+  road junction `col`/`row` and the `corner` it stands on (NE/NW/SE/SW), and `stock` (ids).
+- Prices live in `data/economy.json → prices.<kind>.<id>`; an item without a price is not sold.
+- Food: name and `heal` in `data/shops.json → food`. Homes: name, ring position and `garage`
+  (junction + road direction where owned vehicles park) in `data/shops.json → homes`.
+- Ring look and colours: `marker` and `kinds` in the same file.
 
 ## Places (ride destinations) — `data/places.json`
 Every row is a named place. A hired rickshaw or CNG can take Shoumik to any place with

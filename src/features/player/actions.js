@@ -65,11 +65,13 @@ export class PlayerActions {
   onHit({ x, z, power = 1 }) {
     const s = this.state;
     if (s.mode !== 'onFoot') return; // safe inside a vehicle (health arrives in Session 6)
-    const dx = s.position.x - x, dz = s.position.z - z;
-    const len = Math.hypot(dx, dz) || 1;
-    const k = this.cfg.actions.hit.knockback * power;
-    s.velocity.x += (dx / len) * k;
-    s.velocity.z += (dz / len) * k;
+    if (Number.isFinite(x) && Number.isFinite(z)) { // no position = no push (only the hurt animation)
+      const dx = s.position.x - x, dz = s.position.z - z;
+      const len = Math.hypot(dx, dz) || 1;
+      const k = this.cfg.actions.hit.knockback * power;
+      s.velocity.x += (dx / len) * k;
+      s.velocity.z += (dz / len) * k;
+    }
     this.pendingHit = -1;
     this.animator.play('hit', { duration: this.cfg.actions.hit.duration });
   }

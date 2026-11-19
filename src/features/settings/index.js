@@ -48,8 +48,9 @@ export default {
     g.ui.appendChild(button);
 
     const levels = Object.keys(g.config.get('quality').levels);
-    const owned = g.save.data.owned.outfits;
-    const outfits = g.config.get('outfits').outfits.filter((o) => o.unlocked === true || owned.includes(o.id));
+    // Free outfits + the ones bought in the clothes shop (rebuilt on outfit:owned).
+    const wearable = () => g.config.get('outfits').outfits.filter((o) => o.unlocked === true || g.save.data.owned.outfits.includes(o.id));
+    let outfits = wearable();
     panel = document.createElement('div');
     panel.id = 'settings-panel';
     panel.className = 'overlay';
@@ -66,15 +67,17 @@ export default {
         <p class="panel-note" data-i18n="settings.qualityNote"></p>
         <div class="panel-row panel-row-stack">
           <span class="panel-label" data-i18n="settings.outfit"></span>
-          <div class="choices">
-            ${outfits.map((o) => `<button type="button" data-outfit="${o.id}"></button>`).join('')}
-          </div>
+          <div class="choices"></div>
         </div>
         <button type="button" class="panel-close" data-i18n="settings.close"></button>
       </div>`;
-    const nameOutfits = () => panel.querySelectorAll('[data-outfit]').forEach((b) => {
-      b.textContent = pickName(outfits.find((o) => o.id === b.dataset.outfit)?.name);
-    });
+    const nameOutfits = () => {
+      outfits = wearable();
+      panel.querySelector('.choices').innerHTML = outfits.map((o) => `<button type="button" data-outfit="${o.id}"></button>`).join('');
+      panel.querySelectorAll('[data-outfit]').forEach((b) => {
+        b.textContent = pickName(outfits.find((o) => o.id === b.dataset.outfit)?.name);
+      });
+    };
     applyStrings(panel);
     nameOutfits();
     button.setAttribute('aria-label', t('settings.title'));
@@ -93,7 +96,10 @@ export default {
         close();
       }
     });
-    offs = [g.events.on('language:changed', () => { applyStrings(panel); nameOutfits(); })];
+    offs = [
+      g.events.on('language:changed', () => { applyStrings(panel); nameOutfits(); }),
+      g.events.on('outfit:owned', nameOutfits),
+    ];
   },
 
   update() {},
