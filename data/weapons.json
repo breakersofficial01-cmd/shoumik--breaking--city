@@ -1,0 +1,16 @@
+{
+  "_comment": "Weapon models (CC0 Quaternius 'Ultimate Gun Pack', assets/weapons/, already in metres). Gameplay numbers (damage, ammo, price) come in Session 6. weapons = the guns the game uses: id, asset (data/assets.json), grip (how it sits in Shoumik's right hand). grips = offset from the right-hand bone of the real model: position in metres, rotation in degrees (x, y, z), scale. Check a grip with: node tools/weapon-grip.js --three <three dir> --out shots.",
+  "grips": {
+    "pistol": { "position": [0.0, 0.07, 0.0], "rotation": [-165.5, -40.1, -84.8], "scale": 1 },
+    "rifle": { "position": [0.0, 0.07, 0.0], "rotation": [-165.5, -40.1, -84.8], "scale": 1 }
+  },
+  "weapons": [
+    { "id": "pistol", "asset": "model.weapon.pistol1", "grip": "pistol" },
+    { "id": "revolver", "asset": "model.weapon.revolver1", "grip": "pistol" },
+    { "id": "smg", "asset": "model.weapon.submachineGun1", "grip": "pistol" },
+    { "id": "shotgun", "asset": "model.weapon.shotgun1", "grip": "rifle" },
+    { "id": "sawedOff", "asset": "model.weapon.shotgunSawedOff", "grip": "rifle" },
+    { "id": "rifle", "asset": "model.weapon.assaultRifle1", "grip": "rifle" },
+    { "id": "sniper", "asset": "model.weapon.sniperRifle1", "grip": "rifle" }
+  ]
+}

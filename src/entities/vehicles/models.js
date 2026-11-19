@@ -3,13 +3,14 @@
 //
 // To add a vehicle: add a type to data/vehicles.json using an existing `style`. A brand-new
 // style needs a builder function here (BUILDERS) — see modelsCars.js / modelsSmall.js.
-// Real 3D models can replace these later through the asset registry
-// (ids `geometry.vehicle.<type>`); the code-made ones are the placeholders.
+// Real 3D models (GLB) replace the bodies on Medium/High: see realModels.js and
+// data/vehicles.json → types.<id>.model. The code-made bodies are the fallback and Low quality.
 
 import * as THREE from 'three';
 import { VBuilder, makeWheelGeometry } from './shapes.js';
 import { buildCar, buildPickup, buildVan, buildBus, buildLeguna } from './modelsCars.js';
 import { buildCng, buildRickshaw, buildBicycle, buildMotorbike } from './modelsSmall.js';
+import { buildRealVehicle } from './realModels.js';
 
 const BUILDERS = {
   car: buildCar, pickup: buildPickup, van: buildVan, bus: buildBus, leguna: buildLeguna,
@@ -73,6 +74,7 @@ export class VehicleLibrary {
   constructor(cfg) {
     this.cfg = cfg;
     this.cache = new Map();
+    this.real = new Map();   // typeId -> loaded model templates (setRealModels)
     this.material = new THREE.MeshLambertMaterial({ vertexColors: true });
     this.wreckMaterial = new THREE.MeshLambertMaterial({ color: cfg.palette.wreck });
     this.wheelGeometry = makeWheelGeometry(cfg.palette.tyre, cfg.palette.hub);
@@ -80,10 +82,29 @@ export class VehicleLibrary {
     this.panelMaterials = [0, 1, 2].map((i) => new THREE.MeshLambertMaterial({ map: paintArtPanel(i) }));
   }
 
+  /** Real model templates per type (from realModels.loadVehicleModels). */
+  setRealModels(map) {
+    this.real = map || new Map();
+  }
+
   /** @returns {{geometry:THREE.BufferGeometry, wheels:Array, triangles:number}} */
   get(typeId, paint, second) {
     const key = `${typeId}|${paint}|${second || ''}`;
     let entry = this.cache.get(key);
+    const models = this.real.get(typeId);
+    if (!entry && models?.length) {
+      // Pick one of the type's models from the paint colour, so colours and shapes both vary.
+      const T = this.cfg.types[typeId];
+      let h = 0;
+      for (const ch of paint) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+      try {
+        const r = buildRealVehicle(models[h % models.length], T, this.cfg.palette, paint, second);
+        entry = { geometry: r.geometry, wheels: r.wheels || wheelLayout(T), triangles: r.triangles };
+        this.cache.set(key, entry);
+      } catch (err) {
+        console.warn(`vehicle "${typeId}": real model failed, using the built one`, err);
+      }
+    }
     if (!entry) {
       const T = this.cfg.types[typeId];
       const vb = new VBuilder(T.dent || 0, key.length + paint.charCodeAt(2));

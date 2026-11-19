@@ -9,11 +9,14 @@
 import * as THREE from 'three';
 import { GeoBuilder } from '../../world/geoBuilder.js';
 import { Kit } from '../../world/landmarks/kit.js';
+import { loadMetroModels } from './model.js';
+import { log } from '../../core/debug.js';
 
 let game = null;
 let trains = [];
 let root = null;
 let geometry = null;
+let real = null;   // { front, wagon, material } once the real 3D cars are loaded (Medium/High)
 const at = {};
 
 /** One MRT car, centred on the origin, nose towards +z. */
@@ -70,6 +73,17 @@ class Train {
     root.add(this.group);
   }
 
+  /** Swap the code-built cars for the real models: fronts at both ends, wagons between. */
+  useModels(m) {
+    const last = this.cars.length - 1;
+    this.cars.forEach((car, i) => {
+      const end = i === 0 || i === last;
+      car.geometry = end ? m.front : m.wagon;
+      car.material = m.material;
+      car.userData.flip = i === last && last > 0;
+    });
+  }
+
   /** Next place to stop: the next station ahead, or the end of the line. */
   nextStop() {
     const ahead = this.stops.filter((s) => (s - this.s) * this.dir > 1).sort((a, b) => (a - b) * this.dir);
@@ -106,7 +120,7 @@ class Train {
       const s = this.s + (((T.cars - 1) / 2 - i) * pitch);
       this.path.at(s, at, this.side);
       car.position.set(at.x, this.y, at.z);
-      car.rotation.set(0, at.heading, 0);
+      car.rotation.set(0, at.heading + (car.userData.flip ? Math.PI : 0), 0);
       car.updateMatrix();
     });
   }
@@ -127,6 +141,16 @@ export default {
       for (let i = 0; i < v.line.train.count; i++) trains.push(new Train(v, i));
     }
     g.metro = { trains }; // read-only handle for debug tools
+    // Real 3D cars (data/landmarks.json → train.model). Loaded in the background; the code-built
+    // cars stay until it is ready, and stay for good on Low quality or if loading fails.
+    const first = trains[0];
+    if (first) {
+      loadMetroModels(g, first.T).then((m) => {
+        if (!m || !trains.length) return;
+        real = m;
+        for (const t of trains) t.useModels(m);
+      }).catch((err) => log.warn(`metro: real model failed, keeping the built cars (${err.message})`));
+    }
   },
 
   update(dt) {
@@ -138,6 +162,7 @@ export default {
     root?.removeFromParent();
     geometry?.dispose();
     geometry = null;
+    if (real) { real.front.dispose(); real.wagon.dispose(); real.material.dispose(); real = null; }
     trains = [];
   },
 };

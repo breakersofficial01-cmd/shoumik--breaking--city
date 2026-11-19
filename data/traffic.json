@@ -49,11 +49,11 @@
     "default": { "shirt_pant_man": 3, "office_man": 1, "panjabi_man": 1 }
   },
   "mix": {
-    "default": { "density": 0.8, "types": {"sedan": 4, "rickshaw": 3, "cng": 3, "motorbike": 2, "bus": 1, "suv": 1} },
+    "default": { "density": 0.8, "types": {"sedan": 4, "taxi": 0.6, "rickshaw": 3, "cng": 3, "motorbike": 2, "bus": 1, "suv": 1} },
     "old-dhaka": { "density": 1.0, "types": {"rickshaw": 12, "bicycle": 3, "cng": 2, "motorbike": 2, "leguna": 1, "sedan": 1} },
     "shahbag-campus": { "density": 1.0, "types": {"rickshaw": 6, "cng": 3, "sedan": 3, "bus": 2, "motorbike": 2, "bicycle": 2, "leguna": 1, "ambulance": 0.4, "suv": 1} },
-    "motijheel-central": { "density": 1.0, "types": {"bus": 3, "sedan": 4, "cng": 4, "rickshaw": 3, "leguna": 2, "motorbike": 3, "suv": 1, "police_pickup": 0.5} },
-    "gulshan-banani": { "density": 0.8, "types": {"sedan": 5, "suv": 4, "sports": 1.5, "cng": 2, "motorbike": 2, "bus": 1, "rickshaw": 1} },
+    "motijheel-central": { "density": 1.0, "types": {"bus": 3, "sedan": 4, "taxi": 1, "cng": 4, "rickshaw": 3, "leguna": 2, "motorbike": 3, "suv": 1, "police_pickup": 0.5} },
+    "gulshan-banani": { "density": 0.8, "types": {"sedan": 5, "taxi": 1, "suv": 4, "sports": 1.5, "cng": 2, "motorbike": 2, "bus": 1, "rickshaw": 1} },
     "dhanmondi-hatirjheel": { "density": 0.9, "types": {"sedan": 4, "suv": 2, "rickshaw": 4, "cng": 3, "motorbike": 2, "bus": 1, "bicycle": 1, "sports": 0.5} },
     "sher-e-bangla-nagar": { "density": 0.6, "types": {"sedan": 4, "suv": 2, "bus": 2, "cng": 2, "motorbike": 1, "police_pickup": 0.5, "ambulance": 0.5} }
   },

@@ -1,6 +1,10 @@
 {
   "_comment": "Everything about vehicles. Sizes in metres, speeds in metres per second (1 m/s = 3.6 km/h), mass in kg. TYPES: name, style (which model the code builds: car / pickup / van / bus / leguna / cng / rickshaw / bicycle / motorbike), size [length, width, height], wheel (radius, width, track = distance between left and right wheels, base = distance between front and rear wheels, layout '4' / '3' (one front wheel) / '2'), maxSpeed, acceleration, brake, handling 0-1 (1 = sharp steering and lots of grip, 0 = heavy and slidy), mass, health, colors (paint choices), seat [left/right, height, forward] where the driver's hips are, closed (true = the driver is hidden inside), camera (how far the chase camera sits, 1 = normal), horn (sound kind), lane (which lane AI drivers use: inner / outer), cruise (AI driving speed). ride = this type can be hired as a taxi (fare in data/economy.json → rides). busStops = AI stops at bus stops. shape = proportions of car-like models (fractions of the length are measured from the middle). maxVehicles = the most vehicles that can exist at once (AI + parked + owned).",
   "maxVehicles": 56,
+  "realModels": {
+    "_comment": "Real 3D bodies (CC0 Quaternius packs, assets/vehicles/) on these quality levels; code-built bodies otherwise or if a file fails. Per type: model.assets (one picked per paint colour), up (file's up axis), paint / second (materials painted with the vehicle's colours), colors (material -> palette key or hex). The body is fitted to the type's size; its wheel positions come from the model.",
+    "useOn": ["medium", "high"]
+  },
   "palette": {
     "glass": "#1d2a36",
     "trim": "#1b1b1e",
@@ -137,12 +141,34 @@
       "horn": "car",
       "lane": "inner",
       "cruise": 11,
-      "shape": { "clearance": 0.2, "belt": 0.86, "cabFront": 0.16, "cabBack": -0.3, "slopeFront": 0.55, "slopeBack": 0.45, "roofInset": 0.1 }
+      "shape": { "clearance": 0.2, "belt": 0.86, "cabFront": 0.16, "cabBack": -0.3, "slopeFront": 0.55, "slopeBack": 0.45, "roofInset": 0.1 },
+      "model": { "assets": ["model.vehicle.normalCar1"], "up": "z", "paint": ["Blue"], "colors": { "Windows": "glass", "Yellow": "headlight", "DarkOrange": "taillight" } }
+    },
+    "taxi": {
+      "name": { "en": "Yellow cab", "bn": "ইয়েলো ক্যাব" },
+      "style": "car",
+      "size": [4.35, 1.8, 1.45],
+      "wheel": { "radius": 0.32, "width": 0.22, "track": 1.5, "base": 2.6, "layout": "4" },
+      "maxSpeed": 29,
+      "acceleration": 7,
+      "brake": 15,
+      "handling": 0.68,
+      "mass": 1250,
+      "health": 200,
+      "colors": ["#f2c200"],
+      "seat": [-0.38, 0.62, 0.05],
+      "closed": true,
+      "camera": 1.0,
+      "horn": "car",
+      "lane": "inner",
+      "cruise": 11,
+      "shape": { "clearance": 0.2, "belt": 0.86, "cabFront": 0.16, "cabBack": -0.3, "slopeFront": 0.55, "slopeBack": 0.45, "roofInset": 0.1 },
+      "model": { "assets": ["model.vehicle.taxi"], "up": "z", "paint": ["Yellow"], "colors": { "Windows": "glass", "DarkOrange": "trim" } }
     },
     "suv": {
       "name": { "en": "SUV", "bn": "এসইউভি" },
       "style": "car",
-      "size": [4.75, 1.95, 1.82],
+      "size": [4.6, 2.05, 1.8],
       "wheel": { "radius": 0.39, "width": 0.27, "track": 1.65, "base": 2.8, "layout": "4" },
       "maxSpeed": 28,
       "acceleration": 6.6,
@@ -157,7 +183,8 @@
       "horn": "car",
       "lane": "inner",
       "cruise": 11,
-      "shape": { "clearance": 0.3, "belt": 1.12, "cabFront": 0.18, "cabBack": -0.47, "slopeFront": 0.4, "slopeBack": 0.12, "roofInset": 0.08 }
+      "shape": { "clearance": 0.3, "belt": 1.12, "cabFront": 0.18, "cabBack": -0.47, "slopeFront": 0.4, "slopeBack": 0.12, "roofInset": 0.08 },
+      "model": { "assets": ["model.vehicle.suv"], "up": "z", "paint": ["White"], "colors": { "Windows": "glass" } }
     },
     "sports": {
       "name": { "en": "Sports car", "bn": "স্পোর্টস কার" },
@@ -177,7 +204,8 @@
       "horn": "car",
       "lane": "inner",
       "cruise": 13,
-      "shape": { "clearance": 0.13, "belt": 0.72, "cabFront": 0.1, "cabBack": -0.26, "slopeFront": 0.7, "slopeBack": 0.6, "roofInset": 0.16, "spoiler": true }
+      "shape": { "clearance": 0.13, "belt": 0.72, "cabFront": 0.1, "cabBack": -0.26, "slopeFront": 0.7, "slopeBack": 0.6, "roofInset": 0.16, "spoiler": true },
+      "model": { "assets": ["model.vehicle.sportsCar", "model.vehicle.sportsCar2"], "up": "z", "paint": ["Orange", "White"], "colors": { "Windows": "glass", "DarkOrange": "trim" } }
     },
     "bus": {
       "name": { "en": "Local bus", "bn": "লোকাল বাস" },
@@ -205,7 +233,7 @@
     "police_pickup": {
       "name": { "en": "Police pickup", "bn": "পুলিশের পিকআপ" },
       "style": "pickup",
-      "size": [5.0, 1.9, 1.78],
+      "size": [4.6, 1.95, 1.7],
       "wheel": { "radius": 0.37, "width": 0.26, "track": 1.6, "base": 3.1, "layout": "4" },
       "maxSpeed": 35,
       "acceleration": 9,
@@ -221,12 +249,13 @@
       "camera": 1.15,
       "horn": "siren",
       "lane": "inner",
-      "cruise": 12
+      "cruise": 12,
+      "model": { "assets": ["model.vehicle.cop"], "up": "z", "paint": ["Black"], "colors": { "Windows": "glass", "White": "#f2f2f2", "BlueLights": "lightBlue", "TailLights": "lightRed" } }
     },
     "ambulance": {
       "name": { "en": "Ambulance", "bn": "অ্যাম্বুলেন্স" },
       "style": "van",
-      "size": [5.2, 1.98, 2.35],
+      "size": [5.3, 2.2, 2.45],
       "wheel": { "radius": 0.36, "width": 0.25, "track": 1.65, "base": 3.2, "layout": "4" },
       "maxSpeed": 30,
       "acceleration": 6.8,
@@ -242,7 +271,8 @@
       "camera": 1.3,
       "horn": "siren",
       "lane": "inner",
-      "cruise": 13
+      "cruise": 13,
+      "model": { "assets": ["model.vehicle.ambulance"], "paint": ["White"], "colors": { "Red": "#d0202a", "Windows": "glass", "Grey": "#8f9298", "Bumper": "trim", "Lights": "headlight", "Material": "tyre" } }
     }
   },
   "physics": {

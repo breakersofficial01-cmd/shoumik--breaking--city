@@ -19,6 +19,7 @@ import { acquireCrowd } from '../people/crowd.js';
 import { Particles } from '../effects/particles.js';
 import { Vehicle } from './vehicle.js';
 import { VehicleLibrary } from './models.js';
+import { loadVehicleModels } from './realModels.js';
 import { VehiclePhysics } from './physics.js';
 import { DamageModel } from './damage.js';
 
@@ -51,7 +52,11 @@ export class Fleet {
     this.wheelMesh.count = 0;
     this.group.add(this.wheelMesh);
 
-    this.ready = Promise.all([acquireCrowd(game), game.assets.load('texture.glow')]).then(([crowd, glow]) => {
+    // Real 3D bodies (Medium/High) are loaded before the first vehicle is made; if they fail,
+    // the code-built bodies are used.
+    const real = loadVehicleModels(game, cfg).catch(() => new Map());
+    this.ready = Promise.all([acquireCrowd(game), game.assets.load('texture.glow'), real]).then(([crowd, glow, models]) => {
+      this.lib.setRealModels(models);
       this.crowd = crowd;
       this.fx = new Particles(game.scene, glow, cfg.effects.maxParticles);
       this.damageModel = new DamageModel(this, cfg);

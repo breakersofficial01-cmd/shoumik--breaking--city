@@ -205,12 +205,17 @@ dance, dance2, talk, dismiss, wave, victory. Which clip plays for each game acti
 | CNG | 50 km/h | green three-wheeler; can be hired (৳100) |
 | Leguna | 58 km/h | stops at bus stops |
 | Motorbike | 112 km/h | leans into corners |
-| Sedan | 108 km/h | |
-| SUV | 101 km/h | heavy, tough |
-| Sports car | 155 km/h | fastest, best grip |
+| Sedan | 108 km/h | real 3D body on Medium/High |
+| Yellow cab | 104 km/h | real 3D body on Medium/High |
+| SUV | 101 km/h | heavy, tough; real 3D body |
+| Sports car | 155 km/h | fastest, best grip; 2 real 3D shapes |
 | Local bus | 61 km/h | very heavy, dented, stops at bus stops |
-| Police pickup | 126 km/h | no logos; police AI comes in Session 6 |
-| Ambulance | 108 km/h | |
+| Police car | 126 km/h | navy/white real 3D car on Medium/High (pickup on Low); no logos; police AI in Session 6 |
+| Ambulance | 108 km/h | real 3D body |
+
+Real 3D bodies come from free CC0 packs (`assets/CREDITS.md`), switched by
+`data/vehicles.json → realModels.useOn`. The MRT Line 6 trains also use a real 3D model on
+Medium/High. Gun models are ready for Session 6 (`data/weapons.json`).
 
 - **Driving**: arcade physics made for this game (no physics engine). Handbrake = drift.
   Buildings, poles, trees and lake edges are solid; kerbs are not. Kerb-high steps are driven

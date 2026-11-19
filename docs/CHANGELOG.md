@@ -342,3 +342,33 @@ Known issues
 - 4.2 MB extra download on Medium/High (loads once, then cached by the browser).
 - The owner's city kit (Quaternius Downtown City MegaKit, CC0) is received but not used yet
   (Part C).
+
+## 2026-11-19 — Session 4.5 Part C (1): real cars, MRT train and gun models (Claude Opus 5.5)
+Owner's asset packs, checked for licences first. Only free CC0 packs (Quaternius) are used;
+see `assets/CREDITS.md`.
+
+- **Real cars on Medium/High.** Sedan, yellow cab (new type `taxi`), SUV, sports car (2 shapes),
+  police car and ambulance now use real 3D bodies (`assets/vehicles/*.glb`). Each body is merged
+  into one mesh (same draw cost as before), painted from `data/vehicles.json`, fitted to the
+  type's size, and its wheel positions come from the model (the game still spins its own
+  wheels). Low quality and any failed file keep the code-built bodies. New code:
+  `src/entities/vehicles/realModels.js`; switch: `data/vehicles.json → realModels.useOn`.
+- Police type is now 4.6 m long (fits the police car model); SUV 4.6 × 2.05 m; ambulance
+  5.3 × 2.2 m. Yellow cabs drive in the default mix, Motijheel and Gulshan.
+- Bus, rickshaw, CNG, leguna, motorbike and bicycle stay code-built (no pack has a good Dhaka
+  version; the bus keeps its poster panel).
+- **MRT Line 6** cars use the train pack's high-speed model, recoloured to the Dhaka MRT
+  livery from `data/landmarks.json → train.model` (front cars at both ends). Low = built cars.
+- **Gun models**: 55 CC0 models (40 guns + accessories) in `assets/weapons/`, registered as
+  `model.weapon.*`. `data/weapons.json` lists the 7 guns the game will use and how they sit in
+  Shoumik's right hand (tuned on the `shoot` pose). Weapons gameplay is still Session 6.
+- Train pack (steam, cargo, high-speed, track) and public-transport extras registered as
+  `model.train.*` for later.
+- Tools: `tools/metro-shots.js` (photos of the MRT), `tools/weapon-grip.js` (gun in hand).
+- **Not used:** the "car 3d model" pack (21 vehicles). Most are extracted from commercial games
+  (Forza Horizon, F1 2014/2015, FlatOut 2) or a company website; the rest have no licence and
+  copy real brands. Kept out of the repo.
+
+Tests: smoke test passes on Low / Medium / High; full vehicle test passes on Low. On Medium the
+four time-based checks (ramp, drift, pedalling, explosion) still fail in the slow software
+renderer only, as before this change.

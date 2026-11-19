@@ -149,7 +149,14 @@
         "_comment": "count = trains (each shuttles up and down its own track). Speeds in metres per second.",
         "count": 2, "cars": 4, "carLength": 15.5, "carWidth": 2.9, "carHeight": 3.5, "gap": 0.7, "trackOffset": 1.9,
         "speed": 17, "acceleration": 2.4, "stopSeconds": 7, "visibleDistance": 420,
-        "body": "#eef0f2", "stripeA": "#c62828", "stripeB": "#1e8a4c", "window": "#1d2a36", "roof": "#b9bcc2", "under": "#2b2b2e", "headlight": "#fff3c4"
+        "body": "#eef0f2", "stripeA": "#c62828", "stripeB": "#1e8a4c", "window": "#1d2a36", "roof": "#b9bcc2", "under": "#2b2b2e", "headlight": "#fff3c4",
+        "model": {
+          "_comment": "Real 3D cars on these quality levels (asset ids in data/assets.json); the code-built car is used otherwise. Fronts at both ends, wagons between. Model materials are recoloured with this train's colours. noseAt = which end of the model is the nose (+x/-x). heightScale = height stretch relative to width.",
+          "useOn": ["medium", "high"],
+          "front": "model.train.highSpeedFront", "wagon": "model.train.highSpeedWagon",
+          "noseAt": "+x", "heightScale": 1.15, "roughness": 0.4, "metalness": 0.3,
+          "recolor": { "White": "body", "Blue": "stripeB", "DarkBlue": "stripeA", "Black": "window", "Grey": "roof", "Wheels": "under" }
+        }
       }
     },
     {

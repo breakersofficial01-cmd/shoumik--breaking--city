@@ -12,6 +12,318 @@
     "model.player.glb": {
       "type": "model",
       "url": "assets/shoumik/shoumik.glb"
+    },
+    "model.weapon.assaultRifle1": {
+      "type": "model",
+      "url": "assets/weapons/assault-rifle-1.glb"
+    },
+    "model.weapon.assaultRifle2": {
+      "type": "model",
+      "url": "assets/weapons/assault-rifle-2.glb"
+    },
+    "model.weapon.assaultRifle3": {
+      "type": "model",
+      "url": "assets/weapons/assault-rifle-3.glb"
+    },
+    "model.weapon.assaultRifle4": {
+      "type": "model",
+      "url": "assets/weapons/assault-rifle-4.glb"
+    },
+    "model.weapon.assaultRifle5": {
+      "type": "model",
+      "url": "assets/weapons/assault-rifle-5.glb"
+    },
+    "model.weapon.assaultRifle21": {
+      "type": "model",
+      "url": "assets/weapons/assault-rifle2-1.glb"
+    },
+    "model.weapon.assaultRifle22": {
+      "type": "model",
+      "url": "assets/weapons/assault-rifle2-2.glb"
+    },
+    "model.weapon.assaultRifle23": {
+      "type": "model",
+      "url": "assets/weapons/assault-rifle2-3.glb"
+    },
+    "model.weapon.assaultRifle24": {
+      "type": "model",
+      "url": "assets/weapons/assault-rifle2-4.glb"
+    },
+    "model.weapon.bayonet2": {
+      "type": "model",
+      "url": "assets/weapons/bayonet-2.glb"
+    },
+    "model.weapon.bayonet": {
+      "type": "model",
+      "url": "assets/weapons/bayonet.glb"
+    },
+    "model.weapon.bipod": {
+      "type": "model",
+      "url": "assets/weapons/bipod.glb"
+    },
+    "model.weapon.bullpup1": {
+      "type": "model",
+      "url": "assets/weapons/bullpup-1.glb"
+    },
+    "model.weapon.bullpup2": {
+      "type": "model",
+      "url": "assets/weapons/bullpup-2.glb"
+    },
+    "model.weapon.bullpup3": {
+      "type": "model",
+      "url": "assets/weapons/bullpup-3.glb"
+    },
+    "model.weapon.flashlight": {
+      "type": "model",
+      "url": "assets/weapons/flashlight.glb"
+    },
+    "model.weapon.grip": {
+      "type": "model",
+      "url": "assets/weapons/grip.glb"
+    },
+    "model.weapon.pistol1": {
+      "type": "model",
+      "url": "assets/weapons/pistol-1.glb"
+    },
+    "model.weapon.pistol2": {
+      "type": "model",
+      "url": "assets/weapons/pistol-2.glb"
+    },
+    "model.weapon.pistol3": {
+      "type": "model",
+      "url": "assets/weapons/pistol-3.glb"
+    },
+    "model.weapon.pistol4": {
+      "type": "model",
+      "url": "assets/weapons/pistol-4.glb"
+    },
+    "model.weapon.pistol5": {
+      "type": "model",
+      "url": "assets/weapons/pistol-5.glb"
+    },
+    "model.weapon.pistol6": {
+      "type": "model",
+      "url": "assets/weapons/pistol-6.glb"
+    },
+    "model.weapon.revolver1": {
+      "type": "model",
+      "url": "assets/weapons/revolver-1.glb"
+    },
+    "model.weapon.revolver2": {
+      "type": "model",
+      "url": "assets/weapons/revolver-2.glb"
+    },
+    "model.weapon.revolver3": {
+      "type": "model",
+      "url": "assets/weapons/revolver-3.glb"
+    },
+    "model.weapon.revolver4": {
+      "type": "model",
+      "url": "assets/weapons/revolver-4.glb"
+    },
+    "model.weapon.revolver5": {
+      "type": "model",
+      "url": "assets/weapons/revolver-5.glb"
+    },
+    "model.weapon.scope1": {
+      "type": "model",
+      "url": "assets/weapons/scope-1.glb"
+    },
+    "model.weapon.scope2": {
+      "type": "model",
+      "url": "assets/weapons/scope-2.glb"
+    },
+    "model.weapon.scope3": {
+      "type": "model",
+      "url": "assets/weapons/scope-3.glb"
+    },
+    "model.weapon.shotgun1": {
+      "type": "model",
+      "url": "assets/weapons/shotgun-1.glb"
+    },
+    "model.weapon.shotgun2": {
+      "type": "model",
+      "url": "assets/weapons/shotgun-2.glb"
+    },
+    "model.weapon.shotgun3": {
+      "type": "model",
+      "url": "assets/weapons/shotgun-3.glb"
+    },
+    "model.weapon.shotgun4": {
+      "type": "model",
+      "url": "assets/weapons/shotgun-4.glb"
+    },
+    "model.weapon.shotgunSawedOff": {
+      "type": "model",
+      "url": "assets/weapons/shotgun-sawed-off.glb"
+    },
+    "model.weapon.shotgunShortStock": {
+      "type": "model",
+      "url": "assets/weapons/shotgun-short-stock.glb"
+    },
+    "model.weapon.silencer1": {
+      "type": "model",
+      "url": "assets/weapons/silencer-1.glb"
+    },
+    "model.weapon.silencer2": {
+      "type": "model",
+      "url": "assets/weapons/silencer-2.glb"
+    },
+    "model.weapon.silencer3": {
+      "type": "model",
+      "url": "assets/weapons/silencer-3.glb"
+    },
+    "model.weapon.silencerLong": {
+      "type": "model",
+      "url": "assets/weapons/silencer-long.glb"
+    },
+    "model.weapon.silencerShort": {
+      "type": "model",
+      "url": "assets/weapons/silencer-short.glb"
+    },
+    "model.weapon.sniperRifle1": {
+      "type": "model",
+      "url": "assets/weapons/sniper-rifle-1.glb"
+    },
+    "model.weapon.sniperRifle2": {
+      "type": "model",
+      "url": "assets/weapons/sniper-rifle-2.glb"
+    },
+    "model.weapon.sniperRifle3": {
+      "type": "model",
+      "url": "assets/weapons/sniper-rifle-3.glb"
+    },
+    "model.weapon.sniperRifle4": {
+      "type": "model",
+      "url": "assets/weapons/sniper-rifle-4.glb"
+    },
+    "model.weapon.sniperRifle5": {
+      "type": "model",
+      "url": "assets/weapons/sniper-rifle-5.glb"
+    },
+    "model.weapon.sniperRifle6": {
+      "type": "model",
+      "url": "assets/weapons/sniper-rifle-6.glb"
+    },
+    "model.weapon.stock": {
+      "type": "model",
+      "url": "assets/weapons/stock.glb"
+    },
+    "model.weapon.submachineGun1": {
+      "type": "model",
+      "url": "assets/weapons/submachine-gun-1.glb"
+    },
+    "model.weapon.submachineGun2": {
+      "type": "model",
+      "url": "assets/weapons/submachine-gun-2.glb"
+    },
+    "model.weapon.submachineGun3": {
+      "type": "model",
+      "url": "assets/weapons/submachine-gun-3.glb"
+    },
+    "model.weapon.submachineGun4": {
+      "type": "model",
+      "url": "assets/weapons/submachine-gun-4.glb"
+    },
+    "model.weapon.submachineGun5": {
+      "type": "model",
+      "url": "assets/weapons/submachine-gun-5.glb"
+    },
+    "model.weapon.tripod": {
+      "type": "model",
+      "url": "assets/weapons/tripod.glb"
+    },
+    "model.train.cargoTrainCoalContainer": {
+      "type": "model",
+      "url": "assets/trains/cargo-train-coal-container.glb"
+    },
+    "model.train.cargoTrainContainer": {
+      "type": "model",
+      "url": "assets/trains/cargo-train-container.glb"
+    },
+    "model.train.cargoTrainFront": {
+      "type": "model",
+      "url": "assets/trains/cargo-train-front.glb"
+    },
+    "model.train.cargoTrainWagonEmpty": {
+      "type": "model",
+      "url": "assets/trains/cargo-train-wagon-empty.glb"
+    },
+    "model.train.cargoTrainWagonOpenContainer": {
+      "type": "model",
+      "url": "assets/trains/cargo-train-wagon-open-container.glb"
+    },
+    "model.train.cargoTrainWagon": {
+      "type": "model",
+      "url": "assets/trains/cargo-train-wagon.glb"
+    },
+    "model.train.highSpeedFront": {
+      "type": "model",
+      "url": "assets/trains/high-speed-front.glb"
+    },
+    "model.train.highSpeedWagon": {
+      "type": "model",
+      "url": "assets/trains/high-speed-wagon.glb"
+    },
+    "model.train.locomotiveCoalTender": {
+      "type": "model",
+      "url": "assets/trains/locomotive-coal-tender.glb"
+    },
+    "model.train.locomotiveFront": {
+      "type": "model",
+      "url": "assets/trains/locomotive-front.glb"
+    },
+    "model.train.locomotivePassengerWagon": {
+      "type": "model",
+      "url": "assets/trains/locomotive-passenger-wagon.glb"
+    },
+    "model.train.locomotiveWagon": {
+      "type": "model",
+      "url": "assets/trains/locomotive-wagon.glb"
+    },
+    "model.train.railwayTrackCurve": {
+      "type": "model",
+      "url": "assets/trains/railway-track-curve.glb"
+    },
+    "model.train.railwayTrackStraight": {
+      "type": "model",
+      "url": "assets/trains/railway-track-straight.glb"
+    },
+    "model.vehicle.normalCar1": {
+      "type": "model",
+      "url": "assets/vehicles/normal-car1.glb"
+    },
+    "model.vehicle.normalCar2": {
+      "type": "model",
+      "url": "assets/vehicles/normal-car2.glb"
+    },
+    "model.vehicle.suv": {
+      "type": "model",
+      "url": "assets/vehicles/suv.glb"
+    },
+    "model.vehicle.sportsCar": {
+      "type": "model",
+      "url": "assets/vehicles/sports-car.glb"
+    },
+    "model.vehicle.sportsCar2": {
+      "type": "model",
+      "url": "assets/vehicles/sports-car2.glb"
+    },
+    "model.vehicle.cop": {
+      "type": "model",
+      "url": "assets/vehicles/cop.glb"
+    },
+    "model.vehicle.taxi": {
+      "type": "model",
+      "url": "assets/vehicles/taxi.glb"
+    },
+    "model.vehicle.ambulance": {
+      "type": "model",
+      "url": "assets/vehicles/ambulance.glb"
+    },
+    "model.vehicle.bus": {
+      "type": "model",
+      "url": "assets/vehicles/bus.glb"
     }
   }
 }

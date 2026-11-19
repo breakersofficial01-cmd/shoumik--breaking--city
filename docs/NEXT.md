@@ -77,3 +77,15 @@
 - Turn-on-the-spot clips (turnLeft/turnRight) when he rotates while standing.
 - Compress the GLB (quantised animation keys, meshopt) to cut 4.2 MB to ~1.5 MB.
 - Pedestrians could share Mixamo animations too (needs rigged NPC models).
+
+## Ideas noted during Session 4.5 (Part C: vehicle, train and gun packs)
+- A ground railway (Kamalapur–Tejgaon–Banani) with the cargo and locomotive models and the
+  track pieces already in `assets/trains/`.
+- Traffic lights, road signs and cones from the public-transport pack (converted in the work
+  folder, not added yet) as street props.
+- Two-handed rifle hold (left hand on the fore-grip) and gun-specific grips in Session 6.
+- NormalCar2 (a small hatchback) as its own "compact" type; the bicycle models from the
+  public-transport pack (needs the rider to fit).
+- Headlight/tail-light materials of the real cars as glow materials for night (Session 7).
+- Ask the owner for CC0 / licensed models of a Dhaka-style bus, CNG and rickshaw if a better
+  look is wanted; the code-built ones stay until then.

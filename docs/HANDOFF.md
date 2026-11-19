@@ -246,6 +246,16 @@ with a debug log until their folder and loader exist.
   rigged .glb cannot simply be dropped in: it would need a small adapter that maps our pose
   (see `skeleton.js`) onto its bones.
 
+- Session 4.5 C: `model.vehicle.*` (assets/vehicles), `model.train.*` (assets/trains),
+  `model.weapon.*` (assets/weapons). Licences in `assets/CREDITS.md` — only CC0 / clearly
+  licensed packs; never game rips.
+- MRT: `src/features/metro/model.js` merges the front/wagon train models into one recoloured
+  geometry each (`data/landmarks.json → viaducts[].line.train.model`); photo check:
+  `node tools/metro-shots.js --three <dir> --out shots`.
+- Guns: `data/weapons.json → grips` place a gun on the right-hand bone (metres, degrees).
+  Rotation was computed so the barrel points ahead in the `shoot` clip; check with
+  `node tools/weapon-grip.js --three <dir> --out shots --clip shoot`.
+
 ## 10. How to change the save format
 See the header of `src/core/save.js`: bump `SAVE_VERSION`, add a migration from the old
 version, add the field to `defaults()`. Features store live state with
@@ -297,6 +307,13 @@ version, add the field to `defaults()`. Features store live state with
 - **New vehicle type**: add a block to `data/vehicles.json → types` with an existing `style`,
   then add it to a `mix` in `data/traffic.json` / `parked.mix`. A new `style` = a builder
   function in `modelsCars.js` / `modelsSmall.js` + one line in `BUILDERS` (`models.js`).
+- **Real 3D bodies** (`realModels.js`): types with `model` in `data/vehicles.json` get a GLB body
+  on the qualities in `realModels.useOn`. `acquireFleet` waits for them (`loadVehicleModels`),
+  then `VehicleLibrary.get()` builds body + wheel layout per paint colour: meshes named *Wheel*
+  are dropped and become the wheel layout; the rest is merged with vertex colours (`paint`,
+  `second`, `colors` per material name), turned so the 'Headlights' are at +z, and fitted to
+  `size` (width and length exactly). New model = file in `assets/vehicles/`, id in
+  `data/assets.json`, `model` block on the type. Check with `node tools/vehicle-shots.js --only gallery`.
 - **Ramps** are part of the ground: `world.heightAt()` already includes them.
 - **Particles**: `game.fleet.fx.emit('smoke' | 'fire', { x, y, z, vx, vy, vz, life, size: [from, to], color })`.
 
