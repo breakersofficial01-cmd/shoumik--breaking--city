@@ -36,6 +36,87 @@
       "brightness": 1.08,
       "cheekWidth": 0.77,
       "chinY": 0.925
+    },
+    "glb": {
+      "_comment": "Real 3D Shoumik (assets/shoumik/shoumik.glb, built from the owner's Mixamo files). useOn = quality levels that load it (others use the code-built model; takes effect after a reload). height in metres; nativeHeight = height of the file. clips = which clip plays for each movement; idle is his signature arms-crossed pose. speeds: game speeds (walk/run/sprint, m/s) and the natural speed of each clip (walkClip/runClip/sprintClip) so feet do not slide. actions = clip for each animator action (loop = repeats; variants = picked by the action's variant number). jumpHoldAt = seconds into the jump clip used as the in-air pose; fallAfterSpeed = falling faster than this (m/s) switches to the fall clip. brightness multiplies the texture colours (lower = darker; his beige trousers glare in strong sun above ~0.9).",
+      "useOn": [
+        "medium",
+        "high"
+      ],
+      "height": 1.76,
+      "nativeHeight": 1.9,
+      "brightness": 0.8,
+      "clips": {
+        "idle": "idleCrossed",
+        "walk": "walk",
+        "run": "run",
+        "sprint": "sprint",
+        "jump": "jump",
+        "fall": "fall"
+      },
+      "speeds": {
+        "walk": 1.9,
+        "run": 4.6,
+        "sprint": 8.2,
+        "walkClip": 1.69,
+        "runClip": 6.0,
+        "sprintClip": 6.3
+      },
+      "jumpHoldAt": 0.95,
+      "fallAfterSpeed": 3.0,
+      "actions": {
+        "punch": {
+          "clip": "punch"
+        },
+        "melee": {
+          "clip": "batSwing",
+          "span": 0.35
+        },
+        "aim": {
+          "clip": "pistolAim",
+          "loop": true
+        },
+        "shoot": {
+          "clip": "shoot"
+        },
+        "enterVehicle": {
+          "clip": "drive",
+          "loop": true
+        },
+        "exitVehicle": {
+          "clip": "drive",
+          "loop": true
+        },
+        "sit": {
+          "clip": "sitIdle",
+          "loop": true
+        },
+        "dance": {
+          "clip": "dance",
+          "loop": true,
+          "variants": [
+            "dance",
+            "dance2"
+          ]
+        },
+        "down": {
+          "clip": "fallOver"
+        },
+        "cower": {
+          "clip": "hit",
+          "loop": true
+        },
+        "shout": {
+          "clip": "dismiss"
+        },
+        "hit": {
+          "clip": "hit"
+        },
+        "clap": {
+          "clip": "victory",
+          "loop": true
+        }
+      }
     }
   },
   "animation": {

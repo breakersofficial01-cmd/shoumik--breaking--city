@@ -54,6 +54,13 @@ No real brand logos on any outfit. The `doctor` outfit fits his medical-college 
 - `assets/shoumik/portrait.png` — 512×512 head-and-shoulders crop for the HUD portrait and the
   profile card (show it in a circle).
 
+## Real 3D model (Session 4.5 Part B)
+- `assets/shoumik/shoumik.glb`: owner-made 3D model (maroon short-sleeve camp-collar shirt,
+  beige trousers, cream loafers, black watch), Mixamo rig, used on Medium/High.
+- Idle = signature arms-crossed pose (always, not only after 3.5 s). Arm directions for the
+  pose: `tools/shoumik-pipeline/clipmap.json → idleCrossed`.
+- One outfit so far; the outfits below still apply to the code-built model (Low).
+
 ## In-game model notes (Session 2)
 - Built in code: `src/entities/shoumik/` (about 2,000 triangles). Colours come from
   `data/player.json → model`, outfits from `data/outfits.json`.

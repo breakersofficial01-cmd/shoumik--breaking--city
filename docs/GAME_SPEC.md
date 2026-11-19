@@ -153,9 +153,15 @@ Posters come from `data/posters.json` (dates, districts, weights, links; guide i
   sagging wire bundles, wires zig-zagging across Old Dhaka lanes.
 
 ## 5. Shoumik
-Low-poly model made in code from `docs/CHARACTER.md`: stocky, round face with his photo as a
-small face texture, black quiff, full beard, black watch on the left wrist. About 2,000
-triangles. Movement numbers in `data/player.json`: walk 1.9, run 4.6, sprint 8.2 m/s, jump
+**Medium/High (since Session 4.5 Part B): the real 3D Shoumik** — the owner's Rodin/Mixamo model
+(maroon camp-collar shirt, beige trousers, cream loafers, black watch, quiff and full beard),
+reduced from 618,812 to 20,000 triangles with a 1024² texture, rigged on the Mixamo skeleton,
+32 animation clips, 4.2 MB (`assets/shoumik/shoumik.glb`). His idle is the **signature
+arms-crossed pose** (built on Mixamo's breathing idle). Height 1.76 m. Rebuild tools:
+`tools/shoumik-pipeline/`.
+**Low (and if the file fails to load):** low-poly model made in code from `docs/CHARACTER.md`:
+stocky, round face with his photo as a small face texture, black quiff, full beard, black watch
+on the left wrist. About 2,000 triangles. Movement numbers in `data/player.json`: walk 1.9, run 4.6, sprint 8.2 m/s, jump
 5.4 m/s.
 
 | Outfit id | What | Unlocked |
@@ -169,9 +175,15 @@ triangles. Movement numbers in `data/player.json`: walk 1.9, run 4.6, sprint 8.2
 All are unlocked for now (`data/outfits.json → unlocked`); the clothes shop (Session 5) can
 lock and sell them.
 
-Animations (shared with every pedestrian): idle, arms-crossed idle, walk, run, jump, fall,
-punch, melee swing, aim, shoot, enter/exit vehicle, sit, dance, knocked down, cower, shout,
-hit, clap. Guns, melee weapons and vehicles that use them arrive in Sessions 3 and 6.
+Animations of the code-built model (shared with every pedestrian): idle, arms-crossed idle,
+walk, run, jump, fall, punch, melee swing, aim, shoot, enter/exit vehicle, sit, dance, knocked
+down, cower, shout, hit, clap. Guns, melee weapons and vehicles that use them arrive in Sessions 3 and 6.
+
+Clips in the real 3D model (Mixamo, owner-supplied): idleCrossed (signature), idle, walk, run,
+sprint, jump, fall, land, fallOver, turnLeft/Right, punch, hit, hitWalking, batSwing,
+pistolIdle, pistolAim, gunplay, shoot, throw, death, enterCar, exitCar, drive, sit, sitIdle,
+dance, dance2, talk, dismiss, wave, victory. Which clip plays for each game action:
+`data/player.json → model.glb.actions`. Outfits only change the code-built model for now.
 
 ## 5b. People
 - **Pedestrians**: lungi, panjabi, shirt-pant, office wear, saree, salwar kameez, hijab,

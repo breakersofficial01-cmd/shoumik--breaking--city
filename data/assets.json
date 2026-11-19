@@ -1,7 +1,17 @@
 {
   "_comment": "Asset registry overrides. Every model/texture/sound in the game has an id. By default the game builds a placeholder in code. To swap in real art, add the id here with a file path — no code change. type: image | texture | model (glTF .glb) | sound.",
   "assets": {
-    "image.shoumik.portrait": { "type": "image", "url": "assets/shoumik/portrait.png" },
-    "image.shoumik.face": { "type": "image", "url": "assets/shoumik/face.png" }
+    "image.shoumik.portrait": {
+      "type": "image",
+      "url": "assets/shoumik/portrait.png"
+    },
+    "image.shoumik.face": {
+      "type": "image",
+      "url": "assets/shoumik/face.png"
+    },
+    "model.player.glb": {
+      "type": "model",
+      "url": "assets/shoumik/shoumik.glb"
+    }
   }
 }

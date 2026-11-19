@@ -309,3 +309,36 @@ Known issues
   buildings).
 
 Next: Session 4.5 Part B (real Shoumik GLB) when the owner sends the Mixamo files, else Session 5.
+
+## 2026-11-19 — Session 4.5 Part B: the real 3D Shoumik (Claude Opus 5.5)
+The owner sent Shoumik's 3D model rigged on Mixamo plus 31 animations (9 zips, ~2.6 GB of FBX).
+
+- New `assets/shoumik/shoumik.glb` (4.2 MB): mesh reduced 618,812 → 20,000 triangles with a
+  new 1024² texture baked from the 4K original, Mixamo skeleton, 32 clips (forward travel
+  removed from walk/run/sprint etc.). New signature idle `idleCrossed`: arms crossed, built on
+  top of Mixamo's breathing idle.
+- New `src/entities/shoumik/glbModel.js`: plays the clips from the existing Animator's state
+  (idle ↔ walk ↔ run ↔ sprint by speed with clip speed matched to his real speed, jump/fall,
+  actions with their fades; upper-body-only actions while walking).
+- `data/player.json → model.glb`: which qualities use it (Medium, High), height, brightness,
+  clip names, action → clip map. `data/assets.json` registers `model.player.glb`. Low keeps the
+  code-built Shoumik (no 4 MB download on weak phones). If the file fails, the code-built
+  model is used.
+- `src/entities/shoumik/model.js` exports `makeShoumikDims` (shared by both models).
+- Tools: `tools/shoumik-shots.js` (close-ups of each state), `tools/shoumik-pipeline/` (the
+  conversion: own mesh simplifier `qem.cpp`, UV/texture bake `bake.py`, clip export and GLB
+  assembly).
+- Save format unchanged.
+
+Tested (headless Chromium, software rendering): smoke test passes on Low, Medium and High with
+no console errors; close-ups of idle (arms crossed), walk, run, punch, aim, dance, jump and
+seated on Medium and High; vehicle test passes fully on Low (19/19). On Medium the same
+time-based vehicle checks as in Part A time out in the software renderer (not new).
+
+Known issues
+- Outfits do not change the 3D model yet (one outfit in the file).
+- In vehicles he uses the driving pose even as a rickshaw passenger; enter/exit are short
+  blends, not the long Mixamo door clips.
+- 4.2 MB extra download on Medium/High (loads once, then cached by the browser).
+- The owner's city kit (Quaternius Downtown City MegaKit, CC0) is received but not used yet
+  (Part C).

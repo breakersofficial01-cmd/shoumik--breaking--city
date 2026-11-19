@@ -68,3 +68,12 @@
 - Glass towers with a reflective MeshStandardMaterial (they would pick up the sky map).
 - Make the vehicle/poster test tools use game time instead of real time, so they also pass on
   Medium/High in the software renderer.
+
+## Ideas noted during Session 4.5 (Part B: real Shoumik)
+- Outfits on the 3D model: recolour the shirt/trouser areas of the texture per outfit (mask by
+  colour in the atlas), or ask the owner for one Mixamo export per outfit.
+- Use the real enterCar/exitCar clips (5 s, they walk to the door) once boarding has time for
+  them; use `sit` instead of `drive` when he is a rickshaw/CNG passenger.
+- Turn-on-the-spot clips (turnLeft/turnRight) when he rotates while standing.
+- Compress the GLB (quantised animation keys, meshopt) to cut 4.2 MB to ~1.5 MB.
+- Pedestrians could share Mixamo animations too (needs rigged NPC models).

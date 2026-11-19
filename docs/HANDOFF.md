@@ -235,6 +235,13 @@ with a debug log until their folder and loader exist.
   picture — an override in `data/assets.json` replaces the file without touching posters.json.
 - Real 3D models should use MeshStandardMaterial (GLB default) so they pick up the sky
   reflections and tone mapping; they get shadows automatically.
+- `model.player.glb` (Session 4.5 B) is the real rigged Shoumik. `src/features/player/index.js`
+  loads it on the qualities in `data/player.json → model.glb.useOn` and wraps it in
+  `GlbShoumikModel` (`src/entities/shoumik/glbModel.js`), which keeps the procedural Animator as
+  the brain and turns its state (move, air, current action and its fade weight) into
+  AnimationMixer weights; upper-body actions use split upper/lower copies of each clip. New
+  game action → add it to `model.glb.actions`. Rebuild the GLB with `tools/shoumik-pipeline/`.
+  Check it with `node tools/shoumik-shots.js --three <dir> --out shots --quality medium`.
 - `model.player` is a factory object `{ create(outfit) }` returning a `ShoumikModel`. A
   rigged .glb cannot simply be dropped in: it would need a small adapter that maps our pose
   (see `skeleton.js`) onto its bones.

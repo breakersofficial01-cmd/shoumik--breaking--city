@@ -7,12 +7,15 @@
 //
 // Movement is relative to the camera: stick up = away from the camera.
 //
-// The model comes from the asset registry as `model.player`: a small factory object
-// { create(outfit) } that builds the code-made Shoumik (src/entities/shoumik/). His face
-// photo is `texture.shoumik.face`, prepared from `image.shoumik.face`.
+// The model comes from the asset registry. On the qualities in data/player.json →
+// model.glb.useOn it is the real rigged 3D Shoumik (`model.player.glb`, src/entities/shoumik/
+// glbModel.js); otherwise, or if that file fails, `model.player`: a small factory object
+// { create(outfit) } that builds the code-made Shoumik. His face photo for the code-made one is
+// `texture.shoumik.face`, prepared from `image.shoumik.face`.
 
 import { debugLine, log } from '../../core/debug.js';
-import { ShoumikModel } from '../../entities/shoumik/model.js';
+import { ShoumikModel, makeShoumikDims } from '../../entities/shoumik/model.js';
+import { GlbShoumikModel } from '../../entities/shoumik/glbModel.js';
 import { makeFaceTexture } from '../../entities/shoumik/faceTexture.js';
 import { Animator } from '../../entities/people/animator.js';
 import { PlayerActions } from './actions.js';
@@ -57,6 +60,19 @@ function placeAt(p) {
   state.velocity.x = state.velocity.y = state.velocity.z = 0;
 }
 
+/** The rigged 3D Shoumik on Medium/High (null = use the code-built one). */
+async function loadRealModel(g) {
+  const glb = cfg.model.glb;
+  if (!glb || !glb.useOn.includes(g.qualityName) || !g.assets.url('model.player.glb')) return null;
+  try {
+    const rig = await g.assets.load('model.player.glb');
+    return new GlbShoumikModel(rig, cfg.model, makeShoumikDims(cfg.model), animator);
+  } catch (err) {
+    log.warn('real 3D Shoumik not available, using the code-built one', err.message);
+    return null;
+  }
+}
+
 export default {
   id: 'player',
 
@@ -80,7 +96,8 @@ export default {
     animator = new Animator(null, { crossAfter: cfg.animation.idleCrossAfterSeconds, runAt: cfg.animation.runAtSpeed });
     actions = new PlayerActions(g, cfg, state, animator, { setOutfit: (o) => model.setOutfit(o) });
     const outfit = actions.startOutfit();
-    model = factory.create(outfit);
+    model = (await loadRealModel(g)) || factory.create(outfit);
+    model.setOutfit?.(outfit);
     animator.dims = model.dims;
     state.outfit = outfit.id;
     state.model = model.group;
@@ -108,7 +125,7 @@ export default {
     const ground = game.world.heightAt(p.x, p.z);
     const walking = state.mode === 'onFoot';
     const pose = animator.update(dt, { speed: walking ? state.speed : 0, grounded: walking ? state.grounded : true, vy: state.velocity.y });
-    model.update(p.x, p.y, p.z, state.heading, pose, ground);
+    model.update(p.x, p.y, p.z, state.heading, pose, ground, { dt, speed: walking ? state.speed : 0, vy: state.velocity.y });
   },
 
   update(dt) {

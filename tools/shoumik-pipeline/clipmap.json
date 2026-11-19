@@ -1,0 +1,179 @@
+[
+ {
+  "file": "Idle",
+  "name": "idle",
+  "preview": 0.3
+ },
+ {
+  "name": "idleCrossed",
+  "preview": 0.3,
+  "crossed": {
+   "base": "idle",
+   "L": {
+    "upper": [
+     0.2,
+     -1,
+     0.62
+    ],
+    "fore": [
+     -1,
+     0.2,
+     0.32
+    ]
+   },
+   "R": {
+    "upper": [
+     -0.2,
+     -1,
+     0.68
+    ],
+    "fore": [
+     1,
+     0.32,
+     0.4
+    ]
+   }
+  }
+ },
+ {
+  "file": "Walk",
+  "name": "walk",
+  "inPlace": true,
+  "preview": 0.25
+ },
+ {
+  "file": "Run",
+  "name": "run",
+  "inPlace": true,
+  "preview": 0.25
+ },
+ {
+  "file": "Sprint",
+  "name": "sprint",
+  "inPlace": true
+ },
+ {
+  "file": "Jump",
+  "name": "jump",
+  "preview": 0.45
+ },
+ {
+  "file": "Falling_Idle",
+  "name": "fall"
+ },
+ {
+  "file": "Falling_To_Landing",
+  "name": "land"
+ },
+ {
+  "file": "Fall_Over",
+  "name": "fallOver"
+ },
+ {
+  "file": "Left_Turn",
+  "name": "turnLeft"
+ },
+ {
+  "file": "Right_Turn",
+  "name": "turnRight"
+ },
+ {
+  "file": "Punching",
+  "name": "punch",
+  "preview": 0.45
+ },
+ {
+  "file": "Hit_Reaction",
+  "name": "hit"
+ },
+ {
+  "file": "Walking_Hit_Reaction",
+  "name": "hitWalking",
+  "inPlace": true
+ },
+ {
+  "file": "Heavy_Weapon_Swing",
+  "name": "batSwing",
+  "preview": 0.4
+ },
+ {
+  "file": "Pistol_Idle",
+  "name": "pistolIdle"
+ },
+ {
+  "file": "Pistol_Aim",
+  "name": "pistolAim",
+  "preview": 0.3
+ },
+ {
+  "file": "Gunplay",
+  "name": "gunplay",
+  "preview": 0.5
+ },
+ {
+  "file": "Gunplay_2",
+  "name": "shoot",
+  "preview": 0.5
+ },
+ {
+  "file": "Throw",
+  "name": "throw"
+ },
+ {
+  "file": "Dying",
+  "name": "death",
+  "preview": 0.9
+ },
+ {
+  "file": "Entering_Car",
+  "name": "enterCar",
+  "inPlace": true
+ },
+ {
+  "file": "Exiting_Car",
+  "name": "exitCar",
+  "inPlace": true
+ },
+ {
+  "file": "Driving",
+  "name": "drive",
+  "preview": 0.3
+ },
+ {
+  "file": "Sitting",
+  "name": "sit"
+ },
+ {
+  "file": "Sitting_Idle",
+  "name": "sitIdle",
+  "preview": 0.3
+ },
+ {
+  "file": "Hip_Hop_Dancing",
+  "name": "dance",
+  "inPlace": true,
+  "preview": 0.4
+ },
+ {
+  "file": "Tut_Hip_Hop_Dance",
+  "name": "dance2"
+ },
+ {
+  "file": "Talking",
+  "name": "talk"
+ },
+ {
+  "file": "Dismissing_Gesture",
+  "name": "dismiss"
+ },
+ {
+  "file": "Waving",
+  "name": "wave",
+  "preview": 0.4
+ },
+ {
+  "file": "Victory",
+  "name": "victory",
+  "preview": 0.5
+ }
+]

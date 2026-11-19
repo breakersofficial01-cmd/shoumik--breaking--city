@@ -15,6 +15,15 @@ import { BONE, BONE_COUNT, makeBones, makeDims, computeBones, setRoot } from '..
 import { buildHead, buildFacePatch } from './head.js';
 import { outfitColors, buildTorso, buildPelvis, buildUpperArm, buildForearm, buildThigh, buildShin } from './body.js';
 
+/** Skeleton proportions the Animator uses for Shoumik (shared with the GLB model). */
+export function makeShoumikDims(body) {
+  const ws = body.torsoWidthScale / 1.15;
+  return makeDims({
+    hipY: 0.9, waist: 0.1, neck: 0.5, shoulderX: 0.262 * ws, shoulderY: 0.375,
+    upperArm: 0.28, hipX: 0.11, thigh: 0.43,
+  });
+}
+
 export class ShoumikModel {
   /**
    * @param {object} body     data/player.json → model
@@ -25,10 +34,7 @@ export class ShoumikModel {
     this.body = body;
     this.ws = body.torsoWidthScale / 1.15; // 1.15 = the stocky build the shapes were drawn for
     this.scale = body.heightScale;
-    this.dims = makeDims({
-      hipY: 0.9, waist: 0.1, neck: 0.5, shoulderX: 0.262 * this.ws, shoulderY: 0.375,
-      upperArm: 0.28, hipX: 0.11, thigh: 0.43,
-    });
+    this.dims = makeShoumikDims(body);
     this.group = new THREE.Group();
     this.group.name = 'shoumik';
     this.material = new THREE.MeshLambertMaterial({ vertexColors: true });
