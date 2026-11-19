@@ -1,0 +1,134 @@
+{
+  "_comment": "Text of the Privacy (privacy.html) and Credits (credits.html) pages (Session 8). Every text has 'en' and 'bn'; 'body' is a list of paragraphs. Edit freely — no code change needed. updated = the date shown at the top (YYYY-MM-DD). The 'follow' block on the Credits page builds its buttons from data/links.json (empty links are hidden).",
+  "updated": "2026-11-19",
+  "privacy": {
+    "title": { "en": "Privacy policy", "bn": "প্রাইভেসি পলিসি" },
+    "intro": {
+      "en": "Breaking City is a free browser game by Breaking School and Breaking Biology. We wrote this page in plain words so you know exactly what happens with your information.",
+      "bn": "ব্রেকিং সিটি হলো ব্রেকিং স্কুল আর ব্রেকিং বায়োলজির একটি ফ্রি ব্রাউজার গেম। তোমার তথ্যের সাথে ঠিক কী হয়, সেটা সহজ ভাষায় এখানে লেখা আছে।"
+    },
+    "sections": [
+      {
+        "heading": { "en": "The short version", "bn": "সংক্ষেপে" },
+        "body": {
+          "en": ["We do not ask for your name, phone number or email. There is no account and no login. We do not show ads, and we do not track you or sell anything about you."],
+          "bn": ["আমরা তোমার নাম, ফোন নম্বর বা ইমেইল চাই না। কোনো অ্যাকাউন্ট বা লগইন নেই। কোনো বিজ্ঞাপন নেই, আমরা তোমাকে ট্র্যাক করি না, তোমার কোনো তথ্য বিক্রিও করি না।"]
+        }
+      },
+      {
+        "heading": { "en": "Your saved game stays on your device", "bn": "সেভ করা গেম তোমার ফোনেই থাকে" },
+        "body": {
+          "en": [
+            "Your progress (Taka, vehicles, homes, lessons answered, settings and the 17+ answer) is saved only in your browser's own storage on this device (localStorage). It is never sent to us or anyone else.",
+            "To play offline, the browser also keeps a copy of the game files and lessons on your device. Settings → Reset save deletes your progress; clearing this site's data in your browser deletes everything."
+          ],
+          "bn": [
+            "তোমার অগ্রগতি (টাকা, গাড়ি, বাড়ি, কোন লেসনের উত্তর দিয়েছ, সেটিংস আর ১৭+ এর উত্তর) শুধু এই ডিভাইসের ব্রাউজারের নিজস্ব স্টোরেজে (localStorage) সেভ থাকে। এটা আমাদের বা অন্য কারো কাছে কখনো পাঠানো হয় না।",
+            "ইন্টারনেট ছাড়া খেলার জন্য ব্রাউজার গেমের ফাইল আর লেসনের একটা কপিও তোমার ডিভাইসে রাখে। সেটিংস → সেভ মুছে নতুন করে শুরু চাপলে অগ্রগতি মুছে যায়; ব্রাউজারে এই সাইটের ডেটা মুছলে সবকিছু মুছে যায়।"
+          ]
+        }
+      },
+      {
+        "heading": { "en": "Files loaded from other websites", "bn": "অন্য ওয়েবসাইট থেকে যা লোড হয়" },
+        "body": {
+          "en": [
+            "Like most websites, the game downloads some files from other services: the 3D engine (three.js) from jsDelivr, the Bangla font from Google Fonts, and the game itself from GitHub Pages. These services see your device's internet (IP) address when the files are downloaded, as with any website visit. Their own privacy policies apply.",
+            "Later, lessons may be loaded from a Google Sheet that we publish. Only the lesson list is downloaded; nothing about you is sent."
+          ],
+          "bn": [
+            "বেশিরভাগ ওয়েবসাইটের মতো গেমটিও কিছু ফাইল অন্য সার্ভিস থেকে নামায়: থ্রিডি ইঞ্জিন (three.js) jsDelivr থেকে, বাংলা ফন্ট Google Fonts থেকে, আর গেমটি নিজে GitHub Pages থেকে। ফাইল নামানোর সময় এই সার্ভিসগুলো তোমার ডিভাইসের ইন্টারনেট (IP) ঠিকানা দেখতে পায়, যেমনটা যেকোনো ওয়েবসাইটে ঢুকলে হয়। তাদের নিজস্ব প্রাইভেসি পলিসি প্রযোজ্য।",
+            "পরে লেসনগুলো আমাদের প্রকাশ করা একটি Google Sheet থেকে লোড হতে পারে। তখন শুধু লেসনের তালিকা নামানো হবে; তোমার কোনো তথ্য পাঠানো হবে না।"
+          ]
+        }
+      },
+      {
+        "heading": { "en": "YouTube and social media links", "bn": "ইউটিউব আর সোশ্যাল মিডিয়ার লিংক" },
+        "body": {
+          "en": ["The game never plays or embeds YouTube videos and never pays you for watching. Lesson videos, our YouTube, Facebook, Instagram and TikTok pages and poster links open outside the game, in a new tab or the app. Those sites have their own privacy policies."],
+          "bn": ["গেমের ভেতরে কখনো ইউটিউব ভিডিও চলে না বা বসানো থাকে না, আর ভিডিও দেখার জন্য কোনো টাকা দেওয়া হয় না। লেসনের ভিডিও, আমাদের ইউটিউব, ফেসবুক, ইনস্টাগ্রাম, টিকটক পেজ আর পোস্টারের লিংক গেমের বাইরে, নতুন ট্যাবে বা অ্যাপে খোলে। সেই সাইটগুলোর নিজস্ব প্রাইভেসি পলিসি আছে।"]
+        }
+      },
+      {
+        "heading": { "en": "Screenshots", "bn": "স্ক্রিনশট" },
+        "body": {
+          "en": ["Screenshots you take in the game are made on your device. They are only saved or shared when you press Save or Share yourself."],
+          "bn": ["গেমে তোলা স্ক্রিনশট তোমার ডিভাইসেই তৈরি হয়। তুমি নিজে সেভ বা শেয়ার চাপলেই কেবল সেটা সেভ বা শেয়ার হয়।"]
+        }
+      },
+      {
+        "heading": { "en": "Age", "bn": "বয়স" },
+        "body": {
+          "en": ["The game has Vice-City-style violence and is meant for players aged 17 and over. The answer to the age question is saved only on your device. Younger students can learn with our free YouTube lessons instead."],
+          "bn": ["গেমটিতে ভাইস সিটির মতো মারামারি আছে, তাই এটা ১৭ বছর বা তার বেশি বয়সীদের জন্য। বয়সের প্রশ্নের উত্তর শুধু তোমার ডিভাইসেই সেভ থাকে। ছোটরা আমাদের ফ্রি ইউটিউব লেসন দিয়ে পড়তে পারো।"]
+        }
+      },
+      {
+        "heading": { "en": "Changes and contact", "bn": "পরিবর্তন ও যোগাযোগ" },
+        "body": {
+          "en": ["If the game ever starts to collect information (for example an online leaderboard), this page will be updated first and the game will ask you before anything is sent. Questions? Message Breaking School or Breaking Biology on Facebook (links on the Credits page)."],
+          "bn": ["গেম কখনো কোনো তথ্য নেওয়া শুরু করলে (যেমন অনলাইন লিডারবোর্ড), আগে এই পেজ আপডেট হবে আর কিছু পাঠানোর আগে গেম তোমার অনুমতি চাইবে। কোনো প্রশ্ন? ফেসবুকে ব্রেকিং স্কুল বা ব্রেকিং বায়োলজিকে মেসেজ করো (লিংক ক্রেডিট পেজে)।"]
+        }
+      }
+    ]
+  },
+  "credits": {
+    "title": { "en": "Credits", "bn": "ক্রেডিট" },
+    "intro": {
+      "en": "Breaking City is made by Breaking School (SSC) and Breaking Biology (HSC) for students in Bangladesh: study, earn Taka and explore a Vice-City-style Dhaka.",
+      "bn": "ব্রেকিং সিটি বানিয়েছে ব্রেকিং স্কুল (এসএসসি) আর ব্রেকিং বায়োলজি (এইচএসসি), বাংলাদেশের শিক্ষার্থীদের জন্য: পড়ো, টাকা আয় করো আর ঘুরে বেড়াও ভাইস সিটির মতো এক ঢাকায়।"
+    },
+    "sections": [
+      {
+        "heading": { "en": "Game", "bn": "গেম" },
+        "body": {
+          "en": ["Idea, lessons and Shoumik: the Breaking School and Breaking Biology team.", "Programming: built with Claude Code (Anthropic) together with the team.", "Shoumik's 3D model: the owner's model, rigged and animated with Adobe Mixamo."],
+          "bn": ["আইডিয়া, লেসন আর শৌমিক: ব্রেকিং স্কুল ও ব্রেকিং বায়োলজি টিম।", "প্রোগ্রামিং: টিমের সাথে মিলে Claude Code (Anthropic) দিয়ে তৈরি।", "শৌমিকের থ্রিডি মডেল: মালিকের নিজের মডেল, Adobe Mixamo দিয়ে রিগ ও অ্যানিমেশন করা।"]
+        }
+      },
+      {
+        "heading": { "en": "3D models", "bn": "থ্রিডি মডেল" },
+        "body": {
+          "en": ["Cars Pack, Public Transport Pack, Train Pack, Ultimate Gun Pack and Downtown City MegaKit by Quaternius (quaternius.com) — CC0 1.0 (public domain). Thank you!", "Rickshaws, CNGs, legunas, people and the Dhaka landmarks are built in code for this game."],
+          "bn": ["Cars Pack, Public Transport Pack, Train Pack, Ultimate Gun Pack আর Downtown City MegaKit — Quaternius (quaternius.com), CC0 1.0 (পাবলিক ডোমেইন)। ধন্যবাদ!", "রিকশা, সিএনজি, লেগুনা, মানুষ আর ঢাকার ল্যান্ডমার্কগুলো এই গেমের জন্য কোডে বানানো।"]
+        }
+      },
+      {
+        "heading": { "en": "Software and fonts", "bn": "সফটওয়্যার ও ফন্ট" },
+        "body": {
+          "en": ["three.js — MIT licence, by the three.js authors.", "Hind Siliguri — SIL Open Font License, by the Indian Type Foundry (via Google Fonts).", "All sounds and radio music are made in code for this game."],
+          "bn": ["three.js — MIT লাইসেন্স, three.js এর লেখকরা।", "Hind Siliguri — SIL Open Font License, Indian Type Foundry (Google Fonts এর মাধ্যমে)।", "সব শব্দ আর রেডিওর গান এই গেমের জন্য কোডে বানানো।"]
+        }
+      },
+      {
+        "heading": { "en": "Please note", "bn": "দয়া করে খেয়াল করো" },
+        "body": {
+          "en": ["Breaking City is a fictional game. Real Dhaka place names are used only as a setting; the game is not made, approved or sponsored by any college, university or institution, and uses none of their logos. Crime in the game is fantasy — please never copy it in real life."],
+          "bn": ["ব্রেকিং সিটি একটি কাল্পনিক গেম। ঢাকার আসল জায়গার নাম শুধু পটভূমি হিসেবে ব্যবহার করা হয়েছে; কোনো কলেজ, বিশ্ববিদ্যালয় বা প্রতিষ্ঠান এই গেম বানায়নি, অনুমোদন বা স্পনসর করেনি, আর তাদের কোনো লোগো ব্যবহার করা হয়নি। গেমের অপরাধ শুধুই কল্পনা — বাস্তবে কখনো এমন কোরো না।"]
+        }
+      }
+    ],
+    "follow": {
+      "heading": { "en": "Follow us", "bn": "আমাদের ফলো করো" },
+      "groups": [
+        {
+          "name": { "en": "Breaking School (SSC)", "bn": "ব্রেকিং স্কুল (এসএসসি)" },
+          "links": [
+            { "label": "YouTube", "key": "breakingSchoolYoutube" },
+            { "label": "Facebook", "key": "breakingSchoolFacebook" },
+            { "label": "Instagram", "key": "breakingSchoolInstagram" },
+            { "label": "TikTok", "key": "breakingSchoolTiktok" }
+          ]
+        },
+        {
+          "name": { "en": "Breaking Biology (HSC)", "bn": "ব্রেকিং বায়োলজি (এইচএসসি)" },
+          "links": [
+            { "label": "YouTube", "key": "breakingBiologyYoutube" },
+            { "label": "Facebook", "key": "breakingBiologyFacebook" },
+            { "label": "Instagram", "key": "breakingBiologyInstagram" },
+            { "label": "TikTok", "key": "breakingBiologyTiktok" }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "_comment": "Installable app + offline play (Session 8). The service worker (sw.js) gets these values in its URL, so changing ANY value here makes every player's browser install the new service worker on its next visit. cacheVersion: change it (e.g. '2') only to throw away every old offline copy (normally not needed: code and content are always fetched fresh when online). networkTimeoutMs: when the internet is very slow, wait this long before using the offline copy. cacheFirstHosts: other sites whose files never change (three.js pinned by version) — taken from the offline copy first. staleHosts: other sites (Google Fonts) — offline copy first, refreshed in the background. heavyExtensions: our own big files (3D models, pictures, sounds, fonts) — offline copy first, refreshed in the background, so they are not downloaded on every launch. precache: files saved for offline right when the app is installed (everything else is saved the first time it is used). register: false = no service worker at all (emergency switch).",
+  "register": true,
+  "cacheVersion": "1",
+  "networkTimeoutMs": 8000,
+  "cacheFirstHosts": ["cdn.jsdelivr.net"],
+  "staleHosts": ["fonts.googleapis.com", "fonts.gstatic.com"],
+  "heavyExtensions": ["glb", "gltf", "jpg", "jpeg", "png", "webp", "ktx2", "mp3", "ogg", "wav", "m4a", "ttf", "otf", "woff", "woff2"],
+  "precache": [
+    "./",
+    "index.html",
+    "manifest.webmanifest",
+    "privacy.html",
+    "credits.html",
+    "assets/icons/icon-192.png",
+    "assets/icons/icon-512.png",
+    "assets/icons/favicon-32.png"
+  ]
+}

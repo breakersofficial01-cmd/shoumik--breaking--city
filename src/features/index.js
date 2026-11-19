@@ -42,6 +42,8 @@ const LOADERS = {
   profileCard: () => import('./profileCard/index.js'),
   screenshot: () => import('./screenshot/index.js'),
   ageGate: () => import('./ageGate/index.js'),
+  // Session 8: lowers the graphics quality by itself when the phone is too slow.
+  autoQuality: () => import('./autoQuality/index.js'),
   touchControls: () => import('./touchControls/index.js'),
   hud: () => import('./hud/index.js'),
   minimap: () => import('./minimap/index.js'),

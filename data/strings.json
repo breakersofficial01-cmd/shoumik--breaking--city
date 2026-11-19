@@ -223,6 +223,22 @@
     "settings.layout.left": { "en": "Left (left-handed)", "bn": "বামে (বাঁহাতি)" },
     "settings.reset": { "en": "Reset save", "bn": "সেভ মুছে নতুন করে শুরু" },
     "settings.resetConfirm": { "en": "Tap again: delete ALL progress", "bn": "আবার চাপো: সব অগ্রগতি মুছে যাবে" },
-    "settings.resetNote": { "en": "Deletes cash, vehicles, homes, lessons and stats. Cannot be undone.", "bn": "টাকা, গাড়ি, বাড়ি, লেসন আর পরিসংখ্যান সব মুছে যাবে। ফেরত আনা যাবে না।" }
+    "settings.resetNote": { "en": "Deletes cash, vehicles, homes, lessons and stats. Cannot be undone.", "bn": "টাকা, গাড়ি, বাড়ি, লেসন আর পরিসংখ্যান সব মুছে যাবে। ফেরত আনা যাবে না।" },
+    "autoQuality.lowered": { "en": "Graphics lowered so the game runs smoothly", "bn": "গেম মসৃণ রাখতে গ্রাফিক্স কমানো হলো" },
+    "autoQuality.resolution": { "en": "Picture sharpness lowered so the game runs smoothly", "bn": "গেম মসৃণ রাখতে ছবির শার্পনেস কমানো হলো" },
+    "contextLost.title": { "en": "Graphics paused", "bn": "গ্রাফিক্স থেমে গেছে" },
+    "contextLost.message": { "en": "Your phone needed its memory back. Your game is saved — tap Reload to carry on right where you were.", "bn": "ফোনের মেমোরি কম পড়েছে। তোমার গেম সেভ করা আছে — রিলোড চাপলেই যেখানে ছিলে সেখান থেকে খেলতে পারবে।" },
+    "contextLost.reload": { "en": "Reload", "bn": "রিলোড" },
+    "settings.app": { "en": "App", "bn": "অ্যাপ" },
+    "settings.install": { "en": "Install the game", "bn": "গেমটি ইনস্টল করো" },
+    "settings.installNote": { "en": "Adds Breaking City to your home screen. It then opens full screen and also plays offline.", "bn": "হোম স্ক্রিনে ব্রেকিং সিটি যোগ হবে। তখন ফুল স্ক্রিনে খুলবে, ইন্টারনেট ছাড়াও খেলা যাবে।" },
+    "settings.installIOS": { "en": "iPhone: tap Share, then “Add to Home Screen”.", "bn": "আইফোন: শেয়ার বাটনে চাপো, তারপর “Add to Home Screen”।" },
+    "settings.installed": { "en": "Installed — playing as an app.", "bn": "ইনস্টল করা আছে — অ্যাপ হিসেবে চলছে।" },
+    "settings.installLater": { "en": "To install: open the browser menu (⋮) → “Install app” or “Add to Home screen”.", "bn": "ইনস্টল করতে: ব্রাউজারের মেনু (⋮) → “Install app” বা “Add to Home screen” চাপো।" },
+    "settings.privacy": { "en": "Privacy", "bn": "প্রাইভেসি" },
+    "settings.credits": { "en": "Credits", "bn": "ক্রেডিট" },
+    "page.back": { "en": "Back to the game", "bn": "গেমে ফিরে যাও" },
+    "page.updated": { "en": "Last updated: {date}", "bn": "সর্বশেষ আপডেট: {date}" },
+    "page.switch": { "en": "বাংলা", "bn": "English" }
   }
 }

@@ -25,5 +25,6 @@
   "profileCard": true,
   "rewardCodes": true,
   "screenshot": true,
-  "ageGate": true
+  "ageGate": true,
+  "autoQuality": true
 }

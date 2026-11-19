@@ -140,3 +140,12 @@
 - Weather forecast on an LED screen; fog in winter mornings; heat haze in the afternoon.
 - Moon phases; fireworks at night on special dates (e.g. Pohela Boishakh, Victory Day) from data.
 
+## Ideas noted during Session 8 (release)
+- "Update ready" toast when a new version was downloaded in the background (now it simply shows
+  on the next launch).
+- A "Download everything for offline" button in Settings (precache all GLBs for Medium/High).
+- Self-host the Hind Siliguri font files (OFL allows it) so Bangla text looks the same offline.
+- Play Store listing assets: feature graphic, screenshots from the screenshot feature, 17+ rating.
+- Share-to-install: a "Play Breaking City" QR code poster in the city and on social posts.
+- Auto-raise quality on strong phones (the watchdog only lowers today).
+

@@ -12,6 +12,7 @@ import { registerProceduralTextures } from './assets/proceduralTextures.js';
 import { loadFonts } from './ui/fonts.js';
 import { initI18n, setLanguage, getLanguage } from './ui/i18n.js';
 import { loading } from './ui/loading.js';
+import { registerServiceWorker } from './core/pwa.js';
 
 /** Phones: go fullscreen + landscape when the player taps Start (best effort). */
 async function enterFullscreen() {
@@ -73,6 +74,8 @@ async function boot() {
   }
   loading.hide();
   game.start();
+  // 6) Offline play + install (Session 8). After the start so it never slows the first load.
+  registerServiceWorker(config.get('pwa'));
 }
 
 boot().catch((err) => loading.fail(err));

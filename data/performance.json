@@ -1,0 +1,17 @@
+{
+  "_comment": "Automatic graphics quality (Session 8). On the very first launch (and until the player picks a quality in Settings) the game guesses the right level from the device, then watches the frame rate and steps down if the phone struggles. weakDevice: a device is 'weak' (starts on Low) when ANY test matches: maxMemoryGB = phones reporting this much RAM or less (Chrome on Android tells us, rounded: 0.5, 1, 2, 4, 8); maxCores = this many CPU cores or fewer; gpuPatterns = graphics chips known to be slow (matched against the WebGL renderer name, case-insensitive). watchdog: warmupSeconds = ignore the first seconds of play (city still building); sampleSeconds = measure the average FPS over this long; downgradeBelowFps = if the average is lower, drop one level (High → Medium → Low) and show a short message; on Low, the picture resolution is lowered instead, in renderScaleStep steps, down to minRenderScale. maxChecks = stop watching after this many samples that were fine. Automated test browsers skip all of this unless the URL has ?autoquality=1; ?quality=low|medium|high also switches it off. contextLostReloadSeconds: after the graphics chip was reset by the phone, reload automatically after this many seconds (0 = only with the button).",
+  "weakDevice": {
+    "maxMemoryGB": 2,
+    "maxCores": 4,
+    "gpuPatterns": ["mali-4", "mali-t6", "mali-t7", "mali-g31", "mali-g51", "mali-g52", "adreno \\(tm\\) [3-5]\\d\\d", "adreno \\(tm\\) 6[01]\\d", "powervr", "sgx", "videocore", "swiftshader", "llvmpipe", "software"]
+  },
+  "watchdog": {
+    "warmupSeconds": 8,
+    "sampleSeconds": 6,
+    "downgradeBelowFps": 26,
+    "renderScaleStep": 0.1,
+    "minRenderScale": 0.6,
+    "maxChecks": 12
+  },
+  "contextLostReloadSeconds": 0
+}

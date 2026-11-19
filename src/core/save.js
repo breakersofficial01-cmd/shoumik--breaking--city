@@ -47,6 +47,8 @@ function defaults({ startCash = 500 } = {}) {
     outfit: null,                     // id from data/outfits.json (null = the default outfit)
     settings: {
       quality: null, language: null, blood: true,
+      qualityAuto: false,             // Session 8: true while the game (not the player) picked the quality
+      resolutionScale: 1,             // Session 8: < 1 when the autoQuality watchdog lowered the resolution on Low
       sound: true,                    // Session 7: all sound on/off
       volume: { master: 0.8, sfx: 1, music: 0.7, ambience: 0.8 }, // 0..1 each (data/audio.json → buses)
       controlSize: 'normal',          // touch buttons: small | normal | large (data/controls.json → touch.sizes)

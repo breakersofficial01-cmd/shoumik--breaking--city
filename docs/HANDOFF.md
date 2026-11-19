@@ -1,14 +1,30 @@
-# Handoff — how Breaking City is built (v6, after Session 6)
+# Handoff — how Breaking City is built (v8, after Session 8 — Release)
 
 For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, then
 `docs/GAME_SPEC.md` (what exists) and `docs/CHANGELOG.md` (what changed last).
+
+All eight build sessions are done. From now on the owner sends **daily update prompts**
+(`docs/SESSIONS.md → Daily update prompts`): one feature, one fix, a poster or a lesson at a
+time. Quick map of this file:
+- Run and test → §1 · boot → §2 · folders → §3 · gotchas → §4 · events → §5
+- **Add a feature → §6 · a content type → §7 · a poster → §8 + `posters/README.md` ·
+  a lesson → §7b + `docs/CONTENT_GUIDE.md` · an asset → §9 · change the save → §10**
+- Release: offline app, automatic quality, privacy/credits pages, publishing → §12f, `docs/DEPLOY.md`
+- Roadmap → §14
 
 ## 1. Run and test
 - No build step. Any static server from the repo root works: `python3 -m http.server 8000`
   → `http://localhost:8000/?debug=1`.
 - URL flags: `?debug=1` (FPS panel, logs, `window.BC` = the Game object), `?autostart=1`
-  (skip the Tap-to-start button), `?quality=low|medium|high`, `?touch=1` (show touch controls
-  on a computer).
+  (skip the Tap-to-start button), `?quality=low|medium|high` (also switches automatic quality
+  off), `?touch=1` (show touch controls on a computer). Session 8: `?sw=0` (no service worker),
+  `?sw=1` (service worker even in a test browser), `?autoquality=1` (automatic quality even in a
+  test browser). Automated browsers (`navigator.webdriver`) get neither by default, so the older
+  tools behave exactly as before.
+- **Service worker while developing:** after the first visit the browser is controlled by `sw.js`.
+  Code is network-first, so edits show on a normal reload; but big files (GLB, JPG, PNG, sounds)
+  come from the offline copy first and only refresh in the background — reload twice after
+  replacing one, or use `?sw=0`, or DevTools → Application → "Update on reload".
 - Automated check: `node tools/smoke-test.js --three <path to an npm copy of three@0.170.0>
   --shot out.png`. It boots the game headless under the GitHub Pages sub-path, walks forward,
   and fails on any console error or if no pedestrians appear.
@@ -34,6 +50,11 @@ For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, th
   reward code, opens the profile card (Copy), takes a watermarked screenshot, and tests the 17+
   screen on a fresh save (`&agegate=1`; `?autostart=1` skips it so the other tools keep working).
   Run it after touching sky, graphics, audio, settings or any Session 7 feature.
+- Release (Session 8): `node tools/release-check.js --three <dir> --out <folder> [--only pwa,pages,auto,lost]`
+  registers the service worker (`?sw=1`), checks the offline copy and boots the game again with the
+  network OFF; renders privacy/credits in both languages and the Settings → App row; checks the
+  automatic quality (`?autoquality=1`) and the "graphics paused" screen after a lost WebGL context.
+  Run it after touching `sw.js`, `src/core/pwa.js`, `data/pwa.json`, the pages or the boot.
 - Class Mode + shops (Session 5): `node tools/class-check.js --three <dir> --out <folder> [--quality low]`
   walks into the Breaking Biology ring, runs two Lesson Checks, two Quiz Class rounds and a
   time-out, buys food / a bicycle / an outfit / a pistol / a home, sleeps at home, opens the
@@ -72,6 +93,8 @@ For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, th
    plan, roads, materials, sky, water, chunks, collision, then landmark meshes — async, they
    wait for the fonts), `Input`, `ChaseCamera`, features, first chunks built
 6. autosave starts → "Tap to start" → `game.start()` (frame loop)
+7. Session 8: `registerServiceWorker(config.get('pwa'))` — after the start, so it never slows
+   the first load. `Game.pickQuality()` runs inside step 5 (device check, see §12f).
 
 Feature order (`src/features/index.js`): traffic → vehicles → player → pedestrians → hotspots →
 posters → metro → entrances → classes → shops → weapons → crime → police → jail → dayNight →
@@ -85,13 +108,20 @@ Frame order (`Game.frame`): input → camera look → `features.update(dt)` → 
 
 ## 3. Folder map
 ```
-index.html                 import map (three@0.170.0 pinned), canvas, loading + rotate screens
+index.html                 import map (three@0.170.0 pinned), canvas, loading + rotate screens,
+                           manifest + icon links (Session 8)
+manifest.webmanifest       installable app: name, icons, landscape, fullscreen, relative start_url
+sw.js                      service worker (offline + updates), settings from data/pwa.json via its URL
+privacy.html credits.html  static pages drawn by src/pages/page.js from data/pages.json
+src/pages/page.js          Session 8 pages (fonts + strings + links, no 3D)
 src/main.js                boot
 src/core/   events.js      event bus            config.js   loads data/*.json
             save.js        versioned save       economy.js  wallet → cash:changed
             game.js        renderer + loop      input.js    keyboard/mouse/touch state
             rng.js         seeded random        debug.js    ?debug=1 panel + log
             targets.js     everything that can be shot (game.targets)
+            pwa.js         service worker registration + install prompt (Session 8)
+            deviceCheck.js weak-device guess for the first quality (Session 8)
 src/content/ ContentService.js, validators.js, csv.js, adapters/{LocalJson,GoogleSheetCsv}Adapter.js
 src/assets/  registry.js (asset ids + overrides), proceduralTextures.js (atlases)
 src/audio/   audio.js (AudioManager = game.audio: one context, buses, play/loop, file overrides),
@@ -133,12 +163,14 @@ src/features/ index.js (registry) + player/ (index.js, actions.js) pedestrians/ 
              weather/ (rain drops, wetness, thunder)   sound/ (events + street → game.audio)
              radio/ (index.js stations + DJ banner, music.js code-made music)
              rewardCodes/  profileCard/  screenshot/  ageGate/  settings/ (rewritten in Session 7)
+             autoQuality/ (Session 8: FPS watchdog that lowers quality / resolution)
 src/ui/      fonts.js, i18n.js (t, tl = fixed language, numIn/moneyIn), loading.js, overlay.js
              (createOverlay: pause + Esc + save on close, esc()), styles.css, panels.css (Session 5),
              combat.css (Session 6), vibe.css (Session 7), quiz.js + quizScreens.js (quiz engine + question screens, shared
-             by classes and jail), bubbles.js (speech bubbles, shared by pedestrians and police)
+             by classes and jail), bubbles.js (speech bubbles, shared by pedestrians and police),
+             release.css + contextLost.js (Session 8), pages.css (privacy / credits pages)
 data/        every tunable number and all content
-tools/       smoke-test.js, vibe-check.js, crime-check.js, class-check.js, character-shots.js, vehicle-shots.js, landmark-shots.js, poster-check.js
+tools/       release-check.js, make-icons.js (Session 8), smoke-test.js, vibe-check.js, crime-check.js, class-check.js, character-shots.js, vehicle-shots.js, landmark-shots.js, poster-check.js
 posters/     poster pictures + README.md (how to add one)
 ```
 
@@ -167,7 +199,8 @@ posters/     poster pictures + README.md (how to add one)
 |---|---|---|
 | `game:ready`, `game:started` | – | Game |
 | `game:paused` | `{ paused }` | Game (`setPaused(reason, bool)`) |
-| `quality:changed` | `{ quality }` | Game |
+| `quality:changed` | `{ quality, auto }` (`auto` = lowered by the autoQuality watchdog) | Game |
+| `pwa:installable` | `{ can }` the browser offers (or stopped offering) "install app" | `src/core/pwa.js` → settings |
 | `screen:resized` | `{ width, height }` | Game |
 | `cash:changed` | `{ cash, delta, reason }` | `economy.addCash / spend` |
 | `save:written`, `save:reset` | `{ at }` / – | save |
@@ -276,6 +309,22 @@ with a debug log until their folder and loader exist.
    extend `GoogleSheetCsvAdapter`); caching and fallback are already handled by
    `ContentService.loadRemote`.
 5. Document the columns in `docs/CONTENT_GUIDE.md`.
+
+## 7b. How to add a lesson (the most common daily task)
+1. Owner prompt: `Add a lesson to data/lessons.json: title …, institute …, chapter …, YouTube …,
+   reward …, questions: …`. Format and every field: `docs/CONTENT_GUIDE.md`.
+2. Questions, options and explanations in **Bangla** (CLAUDE.md quiz rule); `language: "bn"`.
+3. The YouTube link only opens externally — never embed it (CLAUDE.md YouTube rule).
+4. Check: `?admin=1` → content report shows the lesson with 0 skipped rows, and
+   `node tools/class-check.js` still passes. No service-worker step is needed: content is
+   network-first, players get it on their next online launch.
+5. Google Sheet instead of JSON: `data/lessons.json → source` (adapter already written, §7).
+
+## 7c. How to add a poster
+Owner prompt: `Add poster posters/<file>, shape <wide|16:9|tall>, link <url>, from <date> to
+<date>, districts <all|names>.` → add a row to `data/posters.json` exactly as
+`posters/README.md` describes (picture in `posters/`, size per shape as in that README, .jpg under ~150 KB).
+Check with `node tools/poster-check.js`. Like lessons, no release step is needed.
 
 ## 8. Posters and landmarks: how it fits together
 **Posters** (`src/features/posters/`):
@@ -527,7 +576,44 @@ version, add the field to `defaults()`. Features store live state with
   reloads the page.
 - **Age gate** skips itself with `?autostart=1` (all test tools) unless `&agegate=1`.
 
-## 13. Notes for the next sessions
+## 12f. Release: offline app, automatic quality, pages (Session 8)
+- **Service worker** (`sw.js`, registered by `src/core/pwa.js`): its settings are passed in its own
+  URL (`sw.js?cfg=<data/pwa.json as JSON>`), so any change to `data/pwa.json` makes browsers
+  install the new worker; `skipWaiting` + `clients.claim` → it takes over at once. Strategies:
+  our HTML/JS/CSS/JSON = **network first** (8 s timeout → offline copy); our big files
+  (`heavyExtensions`) = offline copy first + background refresh; `cacheFirstHosts` (three.js CDN,
+  version-pinned) = offline copy only; `staleHosts` (Google Fonts) = copy first + refresh;
+  everything else (YouTube, Google Sheets) is not touched. Old caches (other `cacheVersion`) are
+  deleted on activate. **Releasing needs no version bump** — merge to main and players get the
+  new code on their next online launch. Bump `cacheVersion` only to wipe every offline copy.
+  A file that a Low player never loads (e.g. a Medium-only GLB) is not in their offline copy; the
+  game's normal fallbacks (code-built models) cover that offline.
+- **Install**: `beforeinstallprompt` is caught in `pwa.js` (imported at boot) → Settings → App
+  shows the Install button (`pwa.install()`), else an iPhone hint (Share → Add to Home Screen) or
+  the Chrome-menu hint. Icons: `assets/icons/*` from `tools/make-icons.js` (replace freely,
+  same names/sizes). Manifest: fullscreen, landscape.
+- **Automatic quality**: `Game.pickQuality()` → `?quality` > saved quality > device guess
+  (`src/core/deviceCheck.js`, rules in `data/performance.json → weakDevice`: RAM, cores, slow GPU
+  names) > `quality.json → default`. `save.data.settings.qualityAuto` is true while the game chose;
+  only then does the `autoQuality` feature measure real FPS (after `warmupSeconds`, every
+  `sampleSeconds`) and step High → Medium → Low, then lower `settings.resolutionScale` on Low
+  (multiplies the pixel ratio in `Game.applyQuality`). A player's choice in Settings
+  (`setQuality(name)` without `{auto:true}`) switches this off and resets the resolution.
+  Both settings fields are filled in by `save.load()` defaults (no save-format bump needed).
+- **Performance knobs added**: `quality.json → environmentRefreshSeconds` (Low 75 s: the PMREM
+  sky-reflection refresh is the biggest periodic hitch). Everything else per level was already
+  in `quality.json` (see its `_comment`).
+- **Lost WebGL context** (phone reclaimed GPU memory): `Game.watchContextLoss()` saves, pauses and
+  shows `src/ui/contextLost.js` (Reload button; optional auto reload:
+  `data/performance.json → contextLostReloadSeconds`).
+- **Privacy / Credits**: `privacy.html`, `credits.html` → `src/pages/page.js` loads `ui`,
+  `strings`, `links`, `pages` (+ the save, read-only, for the language), fonts through `fonts.js`,
+  and draws `data/pages.json`. `?lang=bn|en`. Linked from Settings → App. When the game starts
+  collecting anything (leaderboards, analytics) update `data/pages.json → privacy` FIRST.
+- **Publishing**: `docs/DEPLOY.md` (GitHub Pages from `main`, root folder; merge the session
+  branch with a pull request).
+
+## 13. Notes for the next sessions (historical)
 - **Session 4 is done** (the old notes below are kept for reference).
 - **Session 5 is done** (notes below kept for reference).
 - **Links (2026-11-19):** `data/links.json` now has both brands' YouTube, Facebook and Instagram
@@ -581,3 +667,31 @@ version, add the field to `defaults()`. Features store live state with
   `setLanguage()` and the `language:changed` event already work; settings panel lives in
   `src/features/settings/`.
 - Known rough edges are listed at the end of `docs/CHANGELOG.md`'s Session 1 entry.
+
+## 14. Roadmap (after the release)
+Ordered by value for the owner. Each is one or a few daily prompts.
+1. **Lessons from a Google Sheet** — `GoogleSheetCsvAdapter` + `mapSheetRowsToLessons` already
+   exist and are tested; the owner publishes two tabs as CSV and sends
+   `Connect lessons to the Google Sheet. Lessons CSV: <url>. Questions CSV: <url>.` Then set
+   `data/lessons.json → source.type` to `"googleSheet"` and fill in the two CSV URLs. Same pattern later for posters
+   (add a poster mapper) and reward codes.
+2. **Real phone tuning** — once the owner reports FPS from their phone (`?debug=1`), tune
+   `data/quality.json` / `data/performance.json` (weak GPU list, thresholds). Ideas: a
+   "Medium-lite" level (bloom, no shadows), simpler far chunks, compressing `shoumik.glb`
+   (meshopt/quantised keys, 4.2 MB → ~1.5 MB), hosting three.js in `/vendor/` (needs the
+   owner's OK — tech rule says CDN).
+3. **Android app (Capacitor)** — wrap the same static files: `npm create @capacitor/app`, copy the
+   repo into `www/`, `npx cap add android`, set landscape + fullscreen in `AndroidManifest.xml`,
+   open external links with the Browser plugin (keep the YouTube rule), build an AAB for the Play
+   Store (17+ rating: violence). The service worker is not needed inside the app (files are local).
+4. **PC polish** — key rebinding menu, gamepad support, mouse sensitivity slider, a pause menu
+   on Esc, higher "Ultra" quality level for desktop GPUs.
+5. **Better models** — Shoumik outfits on the GLB (texture recolour per outfit), rigged NPCs that
+   share Mixamo clips, real rickshaw/CNG models from a licensed pack (record in
+   `assets/CREDITS.md`), landmark details.
+6. **Online save + leaderboards** — Supabase (free tier): anonymous auth, a `saves` table keyed by
+   user, a weekly "Top student" board from Lesson Check results (server-side checks before any
+   real prize). Needs: a privacy page update first, a consent screen, and an owner-approved
+   data plan. Keep localStorage as the offline save and sync on top (merge by `updatedAt`).
+7. Smaller ideas live in `docs/NEXT.md`.
+

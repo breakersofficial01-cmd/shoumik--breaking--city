@@ -4,11 +4,13 @@ What the game is and what exists **right now**. Updated at the end of every sess
 Rules live in `/CLAUDE.md`; the build plan in `docs/SESSIONS.md`; how the code is organised
 in `docs/HANDOFF.md`.
 
-Status: **Session 7 of 8 done** (+ Session 4.5 visual upgrade) (engine, city, foundations, Shoumik, people,
+Status: **all 8 sessions done — release 1.0** (+ Session 4.5 visual upgrade) (engine, city, foundations, Shoumik, people,
 vehicles, traffic, landmarks, MRT, posters; upgraded lighting, shadows, neon glow; classes, money,
 shops; weapons, wanted stars, police, busted / jail / wasted; day/night, monsoon rain,
 load-shedding, sound, radio, Bangla signboards, profile card, reward codes, screenshots, full
-settings, 17+ screen).
+settings, 17+ screen; installable offline app, automatic quality, privacy and credits pages).
+Live at https://breakersofficial01-cmd.github.io/shoumik--breaking--city/ once `main` is published
+(`docs/DEPLOY.md`).
 
 ---
 
@@ -21,7 +23,7 @@ A free-roam, Vice-City-flavoured open world set in a compressed Dhaka, made for
 
 Money only comes from answering lesson questions. YouTube links open outside the game.
 
-## 2. What you can do today (after Session 7)
+## 2. What you can do today (after Session 8)
 - Open the game → loading screen → "শুরু করতে ট্যাপ করুন" → you are Shoumik on a street corner
   in Shahbag at sunset.
 - Walk, run, sprint and jump around the whole city. Buildings, poles, trees, lake edges and
@@ -73,7 +75,12 @@ Money only comes from answering lesson questions. YouTube links open outside the
 - Settings: graphics, sound + 4 volume sliders, বাংলা / English, button size, left-handed layout,
   blood, outfit, reset save.
 
-Not in yet: offline/installable app, privacy and credits pages (Session 8). See `docs/SESSIONS.md`.
+- Settings → অ্যাপ: **install the game** on the home screen (Chrome/Edge; iPhone: Share → Add to
+  Home Screen), open the **Privacy** and **Credits** pages.
+- Installed or not, after one online visit the game **plays offline**; new versions and new
+  lessons arrive by themselves on the next online launch.
+
+What comes next: daily update prompts and the roadmap in `docs/HANDOFF.md §14`.
 
 ## 3. The city
 A fixed-seed grid: **14 × 16 big blocks**, each 82 m with 14 m roads (about 1.36 × 1.55 km).
@@ -343,6 +350,15 @@ pauses.
 ## 8. Performance budget
 Target: 30+ fps on a mid-range Android (4 GB RAM), landscape, Chrome.
 
+**Automatic quality (Session 8).** Until the player picks a quality in Settings, the game chooses:
+weak devices (≤2 GB RAM, ≤4 CPU cores, or a known slow graphics chip — `data/performance.json`)
+start on কম (Low), others on মাঝারি (Medium). While playing, a watchdog measures the real frame
+rate every 6 s (after 8 s of warm-up); under 26 fps it steps down one level (High → Medium →
+Low) and then lowers the picture resolution on Low in 10 % steps down to 60 %, each time with a
+short toast. On Low the sky reflections are refreshed every 75 s instead of 25 s. A lost
+graphics context (phone short on memory) shows a "Graphics paused — Reload" screen; the game is
+saved first.
+
 | Quality | Sharpness cap | View distance | Notes |
 |---|---|---|---|
 | কম (low) | 0.8× | 210 m | no balconies, fewer props and wires; tone mapping only (no shadows, no bloom) |
@@ -375,7 +391,7 @@ in ~3 ms on a desktop CPU. Real-phone numbers still need to be measured by the o
 
 ## 9. Save
 `localStorage["breakingCity.save"]`, version 5: cash, player position, outfit, settings (quality,
-language, blood, sound, volumes, control size, control layout, radio station), `clock` (time of
+`qualityAuto` + `resolutionScale` (Session 8, automatic quality), language, blood, sound, volumes, control size, control layout, radio station), `clock` (time of
 day), `rewards` (unlocked reward codes), `playSeconds`, `flags.ageOk` (17+ accepted), owned vehicles (`owned.vehicles` = list of `{ type, color }`), owned homes /
 weapons / outfits, `health`, `home` (spawn point), `garage`, Lesson Check results per lesson
 (`lessons[id] = { attempts, paid: [question ids], earned, best }`), Quiz Class stats (`classes`),
@@ -491,4 +507,18 @@ weapons (`data/economy.json → wasted`).
 - **17+ screen** on the first launch: what is in the game, "17 or older — play" / "under 17"
   (friendly no + links to lessons from `data/links.json` when filled). The game is paused behind
   it; it is saved and not asked again (even after a reset).
+
+## 11. Release: app, offline, pages (Session 8)
+- **Installable app** (`manifest.webmanifest`, icons in `assets/icons/`): name Breaking City,
+  landscape, fullscreen, purple/sunset "BC" icon. Settings → অ্যাপ → install button when the
+  browser offers it, otherwise a hint (iPhone: Share → Add to Home Screen; Chrome menu → Install app).
+- **Offline play** (`sw.js`, settings in `data/pwa.json`): game code, data and content (lessons,
+  posters, links, rewards) are fetched fresh when online (network first, 8 s timeout) and saved for
+  offline; 3D models, pictures and sounds come from the saved copy first and refresh in the
+  background; three.js (pinned version) is saved once. Releases need no version bump.
+- **Privacy policy** (`privacy.html`) and **Credits** (`credits.html`), Bangla and English, text in
+  `data/pages.json`, social buttons from `data/links.json`. Privacy in short: no accounts, no ads,
+  no tracking; the save stays in the browser; third-party files (jsDelivr, Google Fonts, GitHub
+  Pages) see the IP address like any website.
+- **Publishing**: `docs/DEPLOY.md` (GitHub Pages from `main`).
 

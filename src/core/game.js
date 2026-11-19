@@ -21,6 +21,8 @@ import { save } from './save.js';
 import { economy } from './economy.js';
 import { debug, log, tickDebug, initDebugPanel } from './debug.js';
 import { Input } from './input.js';
+import { checkDevice } from './deviceCheck.js';
+import { showContextLost } from '../ui/contextLost.js';
 import { Targets } from './targets.js';
 import { content } from '../content/ContentService.js';
 import { assets } from '../assets/registry.js';
@@ -52,11 +54,32 @@ export class Game {
     this.resize = this.resize.bind(this);
   }
 
-  /** Which quality level to use: ?quality=low  >  saved setting  >  data/quality.json default. */
+  /**
+   * Which quality level to use: ?quality=low  >  saved setting  >  automatic guess (Session 8:
+   * weak devices start on Low, data/performance.json)  >  data/quality.json default.
+   * save.data.settings.qualityAuto is true while the game (not the player) chose the level;
+   * only then may the autoQuality feature lower it.
+   */
   pickQuality() {
     const q = config.get('quality');
-    const wanted = debug.flag('quality') || save.data.settings.quality || q.default;
+    const st = save.data.settings;
+    let wanted = debug.flag('quality') || st.quality;
+    if (!wanted) {
+      wanted = q.default;
+      st.qualityAuto = this.autoQualityAllowed();
+      if (st.qualityAuto) {
+        const device = checkDevice(config.get('performance').weakDevice);
+        if (device.weak) wanted = 'low';
+        log.info(`auto quality: ${wanted} (${device.reason})`);
+      }
+    }
     return q.levels[wanted] ? wanted : q.default;
+  }
+
+  /** Automatic quality is off with ?quality=… and in automated test browsers (unless ?autoquality=1). */
+  autoQualityAllowed() {
+    if (debug.flag('quality')) return false;
+    return !navigator.webdriver || debug.flag('autoquality') === '1';
   }
 
   /** @param {(fraction:number)=>void} onProgress */
@@ -73,6 +96,7 @@ export class Game {
       powerPreference: 'high-performance',
       stencil: false,
     });
+    this.watchContextLoss();
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(camCfg.fov, 1, camCfg.near, 1000);
 
@@ -108,22 +132,53 @@ export class Game {
 
   applyQuality() {
     const q = this.quality;
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, q.pixelRatioCap) * q.renderScale);
+    // resolutionScale < 1 only when the autoQuality watchdog had to go below Low (saved).
+    const extra = save.data.settings.resolutionScale || 1;
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, q.pixelRatioCap) * q.renderScale * extra);
     this.world.setQuality(q);
     this.graphics.setQuality(q);
   }
 
-  /** Switch Low / Medium / High at any time. Saved for next launch. */
-  setQuality(name) {
+  /**
+   * Switch Low / Medium / High at any time. Saved for next launch.
+   * @param {string} name
+   * @param {{auto?:boolean}} [opts] auto = chosen by the autoQuality watchdog, not the player
+   *   (a player's choice switches the watchdog off for good and restores full resolution).
+   */
+  setQuality(name, { auto = false } = {}) {
     const levels = config.get('quality').levels;
     if (!levels[name]) return;
     this.qualityName = name;
     this.quality = levels[name];
     save.data.settings.quality = name;
+    save.data.settings.qualityAuto = auto;
+    if (!auto) save.data.settings.resolutionScale = 1;
     this.applyQuality();
     this.resize();
-    events.emit('quality:changed', { quality: name });
-    log.info('quality', name);
+    events.emit('quality:changed', { quality: name, auto });
+    log.info('quality', name, auto ? '(auto)' : '');
+  }
+
+  /** autoQuality watchdog on Low: render fewer pixels (1 = normal). Saved. */
+  setResolutionScale(scale) {
+    save.data.settings.resolutionScale = scale;
+    this.applyQuality();
+    this.resize();
+  }
+
+  /**
+   * The phone took the graphics chip away (low memory, app switch). The 3D scene cannot be
+   * recovered in place, so save and offer a reload (data/strings.json → contextLost.*).
+   */
+  watchContextLoss() {
+    this.canvas.addEventListener('webglcontextlost', (e) => {
+      e.preventDefault();
+      log.warn('WebGL context lost');
+      save.flush();
+      this.setPaused('contextLost', true);
+      showContextLost(config.get('performance').contextLostReloadSeconds);
+    });
+    this.canvas.addEventListener('webglcontextrestored', () => window.location.reload());
   }
 
   resize() {
