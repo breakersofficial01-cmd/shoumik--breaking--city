@@ -771,3 +771,8 @@ Known issues
   its local files (content). Sign-up needs the sheet, so new accounts cannot be made until the
   script works — fix the deployment before merging to main.
 - `?autostart=1` (test tools) no longer uses the live sheet unless `&sheet=1` is added.
+- Later the same day: the owner redeployed the script (new link in `data/sheet.json`). Checked live:
+  content (45 products, 1 class, 3 questions, no player data), sign-up, duplicate number refused,
+  wrong PIN refused, sign-in returns the save, save updates the Players row (phone keeps its 0,
+  PIN only as a hash). The test player was deleted. The game loads content from the live sheet
+  with no errors. `Code.gs` now opens the sheet by id (`SHEET_ID`).
