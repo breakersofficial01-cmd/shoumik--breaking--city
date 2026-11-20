@@ -12,6 +12,8 @@ const FILES = [
   'game', 'ui', 'strings', 'features', 'economy', 'world', 'districts',
   'quality', 'controls', 'player', 'camera', 'assets', 'links', 'outfits', 'pedestrians', 'vehicles', 'traffic', 'landmarks', 'posterSlots', 'graphics', 'heroBuildings', 'shops', 'combat', 'police', 'weapons',
   'audio', 'dayNight', 'weather', 'radio', 'profile', 'signboards',
+  'pwa', 'performance',
+  'sheet', 'accounts', 'healthPacks', 'mapView',
 ];
 
 const store = new Map();

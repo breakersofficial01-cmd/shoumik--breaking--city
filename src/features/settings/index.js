@@ -7,9 +7,11 @@
 //   Blood On/Off                                    → settings:blood { on }  (Session 6)
 //   Shoumik's outfit                                → outfit:set { id } (player answers outfit:changed)
 //   Reset save (asks twice)                         → save.wipe() + reload  (Session 7)
+//   App: Install button (or iPhone hint), Privacy + Credits pages  (Session 8, src/core/pwa.js)
 // Everything is saved in save.data.settings. Texts: data/strings.json → settings.*.
 
 import { t, applyStrings, pickName, setLanguage, getLanguage } from '../../ui/i18n.js';
+import { pwa } from '../../core/pwa.js';
 
 let game = null;
 let button = null;
@@ -39,6 +41,12 @@ function markActive() {
     if (input) input.value = Math.round((st.volume?.[v] ?? 1) * 100);
   }
   panel.querySelector('.volumes').classList.toggle('muted', st.sound === false);
+  // App row: the install button only when the browser offers it; otherwise a hint.
+  const canInstall = pwa.canInstall();
+  panel.querySelector('[data-install]').hidden = !canInstall;
+  const note = panel.querySelector('.install-note');
+  note.textContent = t(pwa.installed() ? 'settings.installed' : canInstall ? 'settings.installNote' : pwa.isIOS() ? 'settings.installIOS' : 'settings.installLater');
+  panel.querySelectorAll('[data-page]').forEach((a) => { a.href = `${a.dataset.page}.html?lang=${getLanguage()}`; });
   const reset = panel.querySelector('[data-reset]');
   reset.textContent = t(resetArmed ? 'settings.resetConfirm' : 'settings.reset');
   reset.classList.toggle('armed', resetArmed);
@@ -98,6 +106,8 @@ export default {
         ${row('settings.controlLayout', segmented('layout', ['right', 'left'], (v) => `settings.layout.${v}`))}
         ${row('settings.blood', segmented('blood', ['on', 'off'], (v) => `settings.${v}`))}
         ${row('settings.outfit', '<div class="choices"></div>', true)}
+        ${row('settings.app', '<div class="segmented"><button type="button" data-install data-i18n="settings.install"></button><a class="panel-link" data-page="privacy" target="_blank" rel="noopener" data-i18n="settings.privacy"></a><a class="panel-link" data-page="credits" target="_blank" rel="noopener" data-i18n="settings.credits"></a></div>')}
+        <p class="panel-note install-note"></p>
         <div class="panel-row panel-row-stack">
           <button type="button" class="panel-danger" data-reset></button>
           <p class="panel-note" data-i18n="settings.resetNote"></p>
@@ -126,6 +136,10 @@ export default {
     panel.addEventListener('click', (e) => {
       const pick = (attr) => e.target.closest(`[data-${attr}]`);
       let b;
+      if ((b = pick('install'))) {
+        pwa.install().then(() => { if (!panel.hidden) markActive(); });
+        return;
+      }
       if ((b = pick('reset'))) {
         if (!resetArmed) { resetArmed = true; markActive(); return; }
         g.save.wipe(g.config.get('economy'));
@@ -163,6 +177,7 @@ export default {
     offs = [
       g.events.on('language:changed', () => { applyStrings(panel); nameOutfits(); button.setAttribute('aria-label', t('settings.title')); if (!panel.hidden) markActive(); }),
       g.events.on('outfit:owned', nameOutfits),
+      g.events.on('pwa:installable', () => { if (!panel.hidden) markActive(); }),
     ];
   },
 

@@ -5,6 +5,21 @@ Game code never reads these files directly; everything goes through
 `src/content/ContentService.js`, so the storage can change (JSON → Google Sheet) without
 touching gameplay code.
 
+## 0. The Google Sheet (Update 9) — the easiest way
+Everything below can now be edited in the shared sheet **Breaking City — Game Data**
+(https://docs.google.com/spreadsheets/d/1fIEDXo3xX3RwOJR04mcujVnXGp9Iw8fmHygVqw6Q0lE/edit) once it
+is connected (`tools/sheets/README.md`, 5 minutes, once).
+- **Products**: `product_id | kind | name_en | name_bn | price | image_url | model_url | description | active | notes`.
+  kind = vehicles, weapons, outfits, food, homes, health. Only ids the game knows work (the rows
+  already there). `model_url` is noted for Claude (3D models need a code step).
+- **Classes**: `class_id | institute | subject | chapter | title | youtube_link | thumbnail_url | description | reward_per_correct | language | active | notes`.
+  institute = `breaking-school` or `breaking-biology`. One row = one class on the landing page.
+- **Questions**: `class_id | topic | question_id | question | option_a | option_b | option_c | option_d | answer | explanation | active`.
+  Bangla text; answer = A/B/C/D; at least 3 questions per class (a Lesson Check asks 3).
+- **Players**: written by the game — do not edit by hand.
+Players get changes on their next online launch (cached for `data/sheet.json → refreshMinutes`).
+Bad rows are skipped (see `?admin=1`), never crash the game.
+
 ## 1. Lessons and questions
 
 **Language:** write questions, options and explanations in **Bangla**. The game shows them in

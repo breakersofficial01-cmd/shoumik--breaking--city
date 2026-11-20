@@ -1,71 +1,74 @@
 {
-  "schemaVersion": 1,
-  "_comment": "Lessons for Lesson Check. Questions are written in Bangla (language: bn). Later this file is replaced by a Google Sheet (see docs/CONTENT_GUIDE.md). Keep this file as the offline fallback.",
-  "source": {
-    "type": "local",
-    "googleSheet": {
-      "lessonsCsvUrl": "",
-      "questionsCsvUrl": "",
-      "refreshMinutes": 60
-    }
-  },
-  "defaults": {
-    "language": "bn",
-    "rewardPerCorrect": 150,
-    "questionsPerAttempt": 3,
-    "maxAttempts": 2,
-    "timePerQuestionSec": 30,
-    "shuffleOptions": true
-  },
-  "lessons": [
+ "schemaVersion": 1,
+ "_comment": "Lessons for Lesson Check. Questions are written in Bangla (language: bn). Later this file is replaced by a Google Sheet (see docs/CONTENT_GUIDE.md). Keep this file as the offline fallback.",
+ "source": {
+  "type": "sheetApi",
+  "_comment": "Session 9: 'sheetApi' = read the Classes + Questions tabs of the Google Sheet (link in data/sheet.json → apiUrl). While apiUrl is empty, or offline, this file is used. 'googleSheet' (two published CSV links) and 'local' still work.",
+  "googleSheet": {
+   "lessonsCsvUrl": "",
+   "questionsCsvUrl": "",
+   "refreshMinutes": 60
+  }
+ },
+ "defaults": {
+  "language": "bn",
+  "rewardPerCorrect": 150,
+  "questionsPerAttempt": 3,
+  "maxAttempts": 2,
+  "timePerQuestionSec": 30,
+  "shuffleOptions": true
+ },
+ "lessons": [
+  {
+   "id": "bio-bone-cartilage-01",
+   "institute": "breaking-biology",
+   "language": "bn",
+   "subject": "জীববিজ্ঞান",
+   "chapter": "অস্থি ও তরুণাস্থি",
+   "title": "অস্থি ও তরুণাস্থি — ক্লাস ১",
+   "youtubeUrl": "https://youtu.be/n9wUkCiCyD8",
+   "rewardPerCorrect": 150,
+   "active": true,
+   "questions": [
     {
-      "id": "bio-bone-cartilage-01",
-      "institute": "breaking-biology",
-      "language": "bn",
-      "subject": "জীববিজ্ঞান",
-      "chapter": "অস্থি ও তরুণাস্থি",
-      "title": "অস্থি ও তরুণাস্থি — ক্লাস ১",
-      "youtubeUrl": "https://youtu.be/n9wUkCiCyD8",
-      "rewardPerCorrect": 150,
-      "active": true,
-      "questions": [
-        {
-          "id": "q1",
-          "question": "কশেরুকার মাঝের চাকতি (ইন্টারভার্টিব্রাল ডিস্ক) কোন ধরনের তরুণাস্থি দিয়ে গঠিত?",
-          "options": {
-            "A": "হায়ালিন তরুণাস্থি",
-            "B": "স্থিতিস্থাপক (ইলাস্টিক) তরুণাস্থি",
-            "C": "তন্তুময় তরুণাস্থি (ফাইব্রোকার্টিলেজ)",
-            "D": "চুনময় (ক্যালসিফাইড) তরুণাস্থি"
-          },
-          "answer": "C",
-          "explanation": "ইন্টারভার্টিব্রাল ডিস্ক তন্তুময় তরুণাস্থি দিয়ে গঠিত, যা শক্ত এবং চাপ সহ্য করতে পারে।"
-        },
-        {
-          "id": "q2",
-          "question": "কোন কোষ অস্থি টিস্যু ভেঙে ফেলে (অস্থি শোষণ করে)?",
-          "options": {
-            "A": "অস্টিওব্লাস্ট",
-            "B": "অস্টিওসাইট",
-            "C": "অস্টিওক্লাস্ট",
-            "D": "কন্ড্রোসাইট"
-          },
-          "answer": "C",
-          "explanation": "অস্টিওক্লাস্ট অস্থি শোষণ করে; অস্টিওব্লাস্ট নতুন অস্থি গঠন করে।"
-        },
-        {
-          "id": "q3",
-          "question": "ঘন অস্থির (কম্প্যাক্ট বোন) গঠনগত একক কোনটি?",
-          "options": {
-            "A": "অস্টিওন (হ্যাভারসিয়ান তন্ত্র)",
-            "B": "ল্যাকুনা",
-            "C": "ট্র্যাবেকুলা",
-            "D": "পেরিকন্ড্রিয়াম"
-          },
-          "answer": "A",
-          "explanation": "ঘন অস্থি অসংখ্য অস্টিওন দিয়ে গঠিত; প্রতিটির কেন্দ্রে একটি হ্যাভারসিয়ান নালী থাকে।"
-        }
-      ]
+     "id": "q1",
+     "question": "কশেরুকার মাঝের চাকতি (ইন্টারভার্টিব্রাল ডিস্ক) কোন ধরনের তরুণাস্থি দিয়ে গঠিত?",
+     "options": {
+      "A": "হায়ালিন তরুণাস্থি",
+      "B": "স্থিতিস্থাপক (ইলাস্টিক) তরুণাস্থি",
+      "C": "তন্তুময় তরুণাস্থি (ফাইব্রোকার্টিলেজ)",
+      "D": "চুনময় (ক্যালসিফাইড) তরুণাস্থি"
+     },
+     "answer": "C",
+     "explanation": "ইন্টারভার্টিব্রাল ডিস্ক তন্তুময় তরুণাস্থি দিয়ে গঠিত, যা শক্ত এবং চাপ সহ্য করতে পারে।"
+    },
+    {
+     "id": "q2",
+     "question": "কোন কোষ অস্থি টিস্যু ভেঙে ফেলে (অস্থি শোষণ করে)?",
+     "options": {
+      "A": "অস্টিওব্লাস্ট",
+      "B": "অস্টিওসাইট",
+      "C": "অস্টিওক্লাস্ট",
+      "D": "কন্ড্রোসাইট"
+     },
+     "answer": "C",
+     "explanation": "অস্টিওক্লাস্ট অস্থি শোষণ করে; অস্টিওব্লাস্ট নতুন অস্থি গঠন করে।"
+    },
+    {
+     "id": "q3",
+     "question": "ঘন অস্থির (কম্প্যাক্ট বোন) গঠনগত একক কোনটি?",
+     "options": {
+      "A": "অস্টিওন (হ্যাভারসিয়ান তন্ত্র)",
+      "B": "ল্যাকুনা",
+      "C": "ট্র্যাবেকুলা",
+      "D": "পেরিকন্ড্রিয়াম"
+     },
+     "answer": "A",
+     "explanation": "ঘন অস্থি অসংখ্য অস্টিওন দিয়ে গঠিত; প্রতিটির কেন্দ্রে একটি হ্যাভারসিয়ান নালী থাকে।"
     }
-  ]
+   ],
+   "description": "অস্থি ও তরুণাস্থির গঠন, প্রকারভেদ আর কোষগুলো সহজ ভাষায়।",
+   "thumbnail": ""
+  }
+ ]
 }

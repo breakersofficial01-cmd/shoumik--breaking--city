@@ -27,6 +27,9 @@ const LOADERS = {
   entrances: () => import('./entrances/index.js'),
   classes: () => import('./classes/index.js'),
   shops: () => import('./shops/index.js'),
+  // Session 9: health packs on the streets; the earn offer + class landing page.
+  healthPacks: () => import('./healthPacks/index.js'),
+  earn: () => import('./earn/index.js'),
   // Session 6: weapons in his hand, wanted stars + stats, the police, busted / jail / wasted.
   weapons: () => import('./weapons/index.js'),
   crime: () => import('./crime/index.js'),
@@ -42,6 +45,8 @@ const LOADERS = {
   profileCard: () => import('./profileCard/index.js'),
   screenshot: () => import('./screenshot/index.js'),
   ageGate: () => import('./ageGate/index.js'),
+  // Session 8: lowers the graphics quality by itself when the phone is too slow.
+  autoQuality: () => import('./autoQuality/index.js'),
   touchControls: () => import('./touchControls/index.js'),
   hud: () => import('./hud/index.js'),
   minimap: () => import('./minimap/index.js'),

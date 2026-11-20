@@ -4,11 +4,13 @@ What the game is and what exists **right now**. Updated at the end of every sess
 Rules live in `/CLAUDE.md`; the build plan in `docs/SESSIONS.md`; how the code is organised
 in `docs/HANDOFF.md`.
 
-Status: **Session 7 of 8 done** (+ Session 4.5 visual upgrade) (engine, city, foundations, Shoumik, people,
+Status: **all 8 sessions done — release 1.0** (+ Session 4.5 visual upgrade) (engine, city, foundations, Shoumik, people,
 vehicles, traffic, landmarks, MRT, posters; upgraded lighting, shadows, neon glow; classes, money,
 shops; weapons, wanted stars, police, busted / jail / wasted; day/night, monsoon rain,
 load-shedding, sound, radio, Bangla signboards, profile card, reward codes, screenshots, full
-settings, 17+ screen).
+settings, 17+ screen; installable offline app, automatic quality, privacy and credits pages).
+Live at https://breakersofficial01-cmd.github.io/shoumik--breaking--city/ once `main` is published
+(`docs/DEPLOY.md`).
 
 ---
 
@@ -21,13 +23,22 @@ A free-roam, Vice-City-flavoured open world set in a compressed Dhaka, made for
 
 Money only comes from answering lesson questions. YouTube links open outside the game.
 
-## 2. What you can do today (after Session 7)
+## 2. What you can do today (after Update 9, 2026-11-20)
+- **Update 9:** sign up with your name, Bangladeshi phone number, class and a 4-digit PIN (one
+  account per number), or sign in. New players start with **৳১,০০০ and a pistol with ৩০ bullets**.
+  Your name is top-left (tap → your profile: health, money, vehicles, weapons, homes, lessons,
+  Sign out). Tap the minimap (M) → **full map** with every shop, hospital, health pack and the two
+  institutes; "show the way" draws a yellow GPS line. Police show on the maps while you are wanted.
+  44 shops (16 weapon shops, restaurants, clothes, clinics); a price card at each shop; not enough
+  money → YouTube classes / quiz offer + the way to Breaking School / Biology; class landing page;
+  health packs (+25 %). Content and players live in the Google Sheet (section 12).
+
 - Open the game → loading screen → "শুরু করতে ট্যাপ করুন" → you are Shoumik on a street corner
   in Shahbag at sunset.
 - Walk, run, sprint and jump around the whole city. Buildings, poles, trees, lake edges and
   the city limits are solid.
 - Look around with the chase camera; it swings back behind you when you let go.
-- HUD: Shoumik's portrait, cash (starts at **৳৫০০**), 5 empty wanted stars, a rotating
+- HUD: the player's name (Update 9; was Shoumik's portrait), cash (starts at **৳১,০০০**), 5 empty wanted stars, a rotating
   minimap, and the district name when you enter a new district.
 - Gear button → graphics quality কম / মাঝারি / বেশি.
 - Punch with আঘাত / mouse click. People fall, run, shout — and some hit back.
@@ -73,7 +84,12 @@ Money only comes from answering lesson questions. YouTube links open outside the
 - Settings: graphics, sound + 4 volume sliders, বাংলা / English, button size, left-handed layout,
   blood, outfit, reset save.
 
-Not in yet: offline/installable app, privacy and credits pages (Session 8). See `docs/SESSIONS.md`.
+- Settings → অ্যাপ: **install the game** on the home screen (Chrome/Edge; iPhone: Share → Add to
+  Home Screen), open the **Privacy** and **Credits** pages.
+- Installed or not, after one online visit the game **plays offline**; new versions and new
+  lessons arrive by themselves on the next online launch.
+
+What comes next: daily update prompts and the roadmap in `docs/HANDOFF.md §14`.
 
 ## 3. The city
 A fixed-seed grid: **14 × 16 big blocks**, each 82 m with 14 m roads (about 1.36 × 1.55 km).
@@ -343,6 +359,15 @@ pauses.
 ## 8. Performance budget
 Target: 30+ fps on a mid-range Android (4 GB RAM), landscape, Chrome.
 
+**Automatic quality (Session 8).** Until the player picks a quality in Settings, the game chooses:
+weak devices (≤2 GB RAM, ≤4 CPU cores, or a known slow graphics chip — `data/performance.json`)
+start on কম (Low), others on মাঝারি (Medium). While playing, a watchdog measures the real frame
+rate every 6 s (after 8 s of warm-up); under 26 fps it steps down one level (High → Medium →
+Low) and then lowers the picture resolution on Low in 10 % steps down to 60 %, each time with a
+short toast. On Low the sky reflections are refreshed every 75 s instead of 25 s. A lost
+graphics context (phone short on memory) shows a "Graphics paused — Reload" screen; the game is
+saved first.
+
 | Quality | Sharpness cap | View distance | Notes |
 |---|---|---|---|
 | কম (low) | 0.8× | 210 m | no balconies, fewer props and wires; tone mapping only (no shadows, no bloom) |
@@ -375,7 +400,7 @@ in ~3 ms on a desktop CPU. Real-phone numbers still need to be measured by the o
 
 ## 9. Save
 `localStorage["breakingCity.save"]`, version 5: cash, player position, outfit, settings (quality,
-language, blood, sound, volumes, control size, control layout, radio station), `clock` (time of
+`qualityAuto` + `resolutionScale` (Session 8, automatic quality), language, blood, sound, volumes, control size, control layout, radio station), `clock` (time of
 day), `rewards` (unlocked reward codes), `playSeconds`, `flags.ageOk` (17+ accepted), owned vehicles (`owned.vehicles` = list of `{ type, color }`), owned homes /
 weapons / outfits, `health`, `home` (spawn point), `garage`, Lesson Check results per lesson
 (`lessons[id] = { attempts, paid: [question ids], earned, best }`), Quiz Class stats (`classes`),
@@ -492,3 +517,36 @@ weapons (`data/economy.json → wasted`).
   (friendly no + links to lessons from `data/links.json` when filled). The game is paused behind
   it; it is saved and not asked again (even after a reset).
 
+## 11. Release: app, offline, pages (Session 8)
+- **Installable app** (`manifest.webmanifest`, icons in `assets/icons/`): name Breaking City,
+  landscape, fullscreen, purple/sunset "BC" icon. Settings → অ্যাপ → install button when the
+  browser offers it, otherwise a hint (iPhone: Share → Add to Home Screen; Chrome menu → Install app).
+- **Offline play** (`sw.js`, settings in `data/pwa.json`): game code, data and content (lessons,
+  posters, links, rewards) are fetched fresh when online (network first, 8 s timeout) and saved for
+  offline; 3D models, pictures and sounds come from the saved copy first and refresh in the
+  background; three.js (pinned version) is saved once. Releases need no version bump.
+- **Privacy policy** (`privacy.html`) and **Credits** (`credits.html`), Bangla and English, text in
+  `data/pages.json`, social buttons from `data/links.json`. Privacy in short: no accounts, no ads,
+  no tracking; the save stays in the browser; third-party files (jsDelivr, Google Fonts, GitHub
+  Pages) see the IP address like any website.
+- **Publishing**: `docs/DEPLOY.md` (GitHub Pages from `main`).
+
+
+## 12. Accounts, the Google Sheet, map and help (Update 9)
+- **Accounts** (`src/core/account.js`, `src/ui/signIn.js`, `data/accounts.json`): sign up = name +
+  BD mobile (`01[3-9]` + 8 digits) + class + 4-digit PIN ×2; sign in = phone + PIN. One account per
+  number (checked on the phone and, when connected, in the sheet). Save key per account
+  `breakingCity.save.<phone>`. `?autostart=1` plays as a local test player (`testAccount`).
+- **Google Sheet** "Breaking City — Game Data"
+  (https://docs.google.com/spreadsheets/d/1fIEDXo3xX3RwOJR04mcujVnXGp9Iw8fmHygVqw6Q0lE/edit):
+  Products, Classes, Questions, Players, README. Connected through the Apps Script web app
+  (`tools/sheets/Code.gs`) whose URL goes in `data/sheet.json → apiUrl` (empty = local files only).
+- **Products** override name / price / picture / on-sale of shop items (content type `products`).
+- **Full map** (`src/features/minimap/bigMap.js`, `data/mapView.json`), **GPS route** (`route.js`),
+  **police on the map** (police feature → `map:blips` id `police`).
+- **Shops**: 44 (16 weapons, 14 food incl. 8 restaurants, 5 clothes, 6 health, 2 vehicles, 1 property).
+  Price card in the ring; unaffordable items → `earn:offer`.
+- **earn feature**: the offer (YouTube classes, quiz, way to the institutes, way to the nearest
+  weapon shop when out of bullets) and the class landing page → `class:start`.
+- **Health**: 36 packs (+25 %, respawn 90 s), clinics (+25 % / +50 % / full).
+- **Start**: ৳1,000 + pistol with 30 bullets (`data/economy.json → startCash, starter`).

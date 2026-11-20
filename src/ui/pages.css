@@ -1,0 +1,46 @@
+/* Privacy + Credits pages (Session 8). Fonts only through the CSS variables set by
+   src/ui/fonts.js (CLAUDE.md rule 7). Colours match the game's loading screen. */
+:root {
+  --font-ui: sans-serif;
+  --pink: #ff5fa2;
+  --cyan: #4be3ff;
+  --gold: #ffd35a;
+  --ink: #140d26;
+}
+* { box-sizing: border-box; }
+html { background: #1b1238; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: #fff;
+  font-family: var(--font-ui);
+  background: linear-gradient(180deg, #1b1238 0%, #3a1f55 60%, #5a2a5e 100%) fixed;
+}
+#page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 16px) calc(env(safe-area-inset-right, 0px) + 16px) calc(env(safe-area-inset-bottom, 0px) + 40px) calc(env(safe-area-inset-left, 0px) + 16px);
+  line-height: 1.6;
+}
+header { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.back, .lang, .social {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  color: var(--ink);
+  background: var(--gold);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.lang { background: var(--cyan); }
+h1 { margin: 22px 0 4px; font-size: clamp(28px, 6vw, 40px); color: var(--gold); text-shadow: 3px 3px 0 var(--pink); }
+h2 { margin: 26px 0 6px; font-size: 21px; color: var(--cyan); }
+h3 { margin: 14px 0 8px; font-size: 17px; }
+.updated { margin: 0; opacity: 0.7; font-size: 14px; }
+.intro { font-size: 18px; }
+p { margin: 0 0 10px; }
+.follow-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.social { background: var(--pink); color: #fff; }

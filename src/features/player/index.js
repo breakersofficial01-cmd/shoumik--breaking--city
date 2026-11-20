@@ -5,7 +5,7 @@
 // Events sent:  player:spawned { x, z }   district:entered { district }
 //               health:changed { value, max, delta }   armour:changed { value, max }
 //               player:died { x, z, by }               health reached 0 (the jail feature takes over)
-// Events heard: player:heal { amount | full }  (food stalls, sleeping at home)
+// Events heard: player:heal { amount | share | full }  (food stalls, sleeping at home)
 //               player:hit { power }            punches, crashes (power × health.damagePerPower)
 //               player:damage { amount, x?, z?, by? }  bullets, fire, blasts (armour takes a share first)
 //               player:armour { amount | full } body armour from the weapon shop
@@ -180,7 +180,8 @@ export default {
     state.armour = { value: Math.min(cc.armourMax, g.save.data.armour || 0), max: cc.armourMax };
     state.dead = state.frozen = false;
     offs = [
-      g.events.on('player:heal', ({ amount = 0, full = false } = {}) => { if (!state.dead) setHealth(full ? hc.max : state.health.value + amount); }),
+      // Session 9: share = part of max health (health packs and clinics: 0.25 = 25%).
+      g.events.on('player:heal', ({ amount = 0, full = false, share = 0 } = {}) => { if (!state.dead) setHealth(full ? hc.max : state.health.value + amount + share * hc.max); }),
       g.events.on('player:hit', ({ power = 1, by = null } = {}) => hurt(power * hc.damagePerPower, by)),
       g.events.on('player:damage', ({ amount = 0, by = null, x = null, z = null } = {}) => hurt(amount, by, x, z)),
       g.events.on('player:armour', ({ amount = 0, full = false } = {}) => setArmour(full ? state.armour.max : state.armour.value + amount)),

@@ -1,0 +1,19 @@
+{
+  "_comment": "Session 9: the full-screen map (tap the minimap or press M). zoom = screen pixels per metre (start, min, max). labelZoom = names of shops are written from this zoom up (big places always). colors for the route line and the police dots. policeEvery = seconds between police position updates on the maps. routeArriveMetres = the route is cleared this close to the target. legend = which groups are listed (ids: school, shops by kind, health, healthpack, police).",
+  "zoom": { "start": 0.55, "min": 0.18, "max": 2.4 },
+  "labelZoom": 0.5,
+  "iconSize": 20,
+  "bigIconSize": 30,
+  "colors": {
+    "route": "#ffe14d",
+    "routeEdge": "#7a2b00",
+    "police": "#3d7bff",
+    "policeCar": "#ff3355",
+    "school": "#ff4fb0",
+    "label": "#ffffff",
+    "labelShadow": "rgba(0,0,0,0.85)"
+  },
+  "policeEvery": 0.5,
+  "routeArriveMetres": 14,
+  "institutes": ["breaking-school", "breaking-biology"]
+}

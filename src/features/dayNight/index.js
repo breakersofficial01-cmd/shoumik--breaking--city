@@ -90,12 +90,15 @@ function apply(force) {
   }
 }
 
+/** How often sky reflections are re-made: per quality (Session 8: rarer on Low), else dayNight.json. */
+const envSeconds = () => game.quality?.environmentRefreshSeconds ?? cfg.environmentRefreshSeconds;
+
 function setHour(h, emit = true) {
   hour = ((h % 24) + 24) % 24;
   game.clock.hour = hour;
   apply(true);
   game.graphics.refreshEnvironment();
-  envTimer = cfg.environmentRefreshSeconds;
+  envTimer = envSeconds();
   if (emit) game.events.emit('time:changed', { hour, night });
 }
 
@@ -129,7 +132,7 @@ export default {
     apply(false);
     envTimer -= dt;
     if (envTimer <= 0) {
-      envTimer = cfg.environmentRefreshSeconds;
+      envTimer = envSeconds();
       game.graphics.refreshEnvironment();
     }
     const minute = Math.floor(hour * 60);

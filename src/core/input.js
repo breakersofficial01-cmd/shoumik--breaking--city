@@ -11,7 +11,7 @@
 
 import { events } from './events.js';
 
-const ACTIONS = ['sprint', 'jump', 'action', 'attack', 'weapon', 'horn', 'open', 'aim', 'radio', 'photo'];
+const ACTIONS = ['sprint', 'jump', 'action', 'attack', 'weapon', 'horn', 'open', 'aim', 'radio', 'photo', 'map']; // map: Session 9 (M)
 
 export class Input {
   constructor(controlsCfg, canvas) {

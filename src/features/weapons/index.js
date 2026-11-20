@@ -13,7 +13,7 @@
 //   listens  input:weapon, weapon:owned { id } (shop: a new weapon → its starting ammo),
 //            weapon:ammo { id, amount } (shop: an ammo box), weapons:lose {} (wasted),
 //            vehicle:entered / vehicle:exited (weapon hidden while in a vehicle)
-//   sends    weapon:changed { id, ammo }   weapon:fired { id, x, z }   player:action (aim/shoot/melee)
+//   sends    weapon:changed { id, ammo }   weapon:fired { id, x, z }   weapon:empty { id } (Session 9: no bullets left)   player:action (aim/shoot/melee)
 //            player:attack (bat / machete swings, like a punch)   danger:raised (gunshots)
 //            crime:committed { type: 'shotsFired' }   combat:hit (firing.js)
 
@@ -116,7 +116,7 @@ function toPoint(o, tx, ty, tz, target) {
 
 function fireGun(w) {
   const left = ammoOf(w);
-  if (left <= 0) return;
+  if (left <= 0) { game.events.emit('weapon:empty', { id: w.id }); return; } // Session 9: shops show the way to buy bullets
   const aim = aimDirection(w);
   game.player.aimHeading = aim.heading;
   aimTimer = cfg.aim.holdSeconds;
@@ -130,7 +130,10 @@ function fireGun(w) {
     shotsCrimeIn = cfg.aim.shotsFiredEvery;
     game.events.emit('crime:committed', { type: 'shotsFired', x: p.x, z: p.z });
   }
-  if (left - 1 <= 0) game.events.emit('weapon:changed', { id: w.id, ammo: 0 });
+  if (left - 1 <= 0) {
+    game.events.emit('weapon:changed', { id: w.id, ammo: 0 });
+    game.events.emit('weapon:empty', { id: w.id });
+  }
 }
 
 function swing(w) {

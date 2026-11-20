@@ -85,7 +85,7 @@ export function makeMarker(game, spot, cfg, look) {
   );
   beam.position.y = cfg.height / 2;
   for (const m of [ring, beam]) m.userData.noCastShadow = true;
-  const label = makeLabel(pickName(spot.name), look.icon, look.color, cfg);
+  const label = makeLabel(pickName(spot.name), spot.icon || look.icon, look.color, cfg);
   label.sprite.position.y = cfg.labelHeight;
   group.add(ring, beam, label.sprite);
   group.position.set(spot.x, game.world.heightAt(spot.x, spot.z) + 0.04, spot.z);

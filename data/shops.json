@@ -1,5 +1,5 @@
 {
-  "_comment": "Shops and homes (Session 5). Every shop is a glowing ring on a sidewalk corner of a road junction: col/row = the junction (see the map in docs/GAME_SPEC.md), corner = preferred corner (NE, NW, SE, SW; if it is blocked another corner is used). kind = what the shop sells: vehicles | homes | weapons | outfits | food. stock = item ids (prices are in data/economy.json → prices; food heal amounts below). Homes: owned homes get their own ring (sleep = full health + save + spawn point) and their garage is where owned vehicles park.",
+  "_comment": "Shops and homes (Session 5). Every shop is a glowing ring on a sidewalk corner of a road junction: col/row = the junction (see the map in docs/GAME_SPEC.md), corner = preferred corner (NE, NW, SE, SW; if it is blocked another corner is used). kind = what the shop sells: vehicles | homes | weapons | outfits | food. stock = item ids (prices are in data/economy.json → prices; food heal amounts below). Homes: owned homes get their own ring (sleep = full health + save + spawn point) and their garage is where owned vehicles park. Session 9: a shop can have its own 'icon' (shown on its sign and on the map). kind 'health' = clinics/hospitals (stock ids from 'health' below: share = part of max health healed, 1 = full). Every shop is listed on the full map (tap the minimap). ammoOfferSeconds = after running out of bullets, the 'go to the weapon shop' offer comes back at most this often.",
   "marker": {
     "radius": 1.25,
     "height": 2.2,
@@ -33,7 +33,7 @@
     },
     "food": {
       "color": "#ffd35a",
-      "icon": "☕",
+      "icon": "🍛",
       "minimap": "#ffd35a"
     },
     "home": {
@@ -43,6 +43,11 @@
     },
     "class": {
       "minimap": "#ff4fb0"
+    },
+    "health": {
+      "color": "#2ee6c8",
+      "icon": "🏥",
+      "minimap": "#2ee6c8"
     }
   },
   "shops": [
@@ -154,7 +159,8 @@
       "stock": [
         "tea",
         "biscuit"
-      ]
+      ],
+      "icon": "☕"
     },
     {
       "id": "tea-dhanmondi",
@@ -169,7 +175,8 @@
       "stock": [
         "tea",
         "biscuit"
-      ]
+      ],
+      "icon": "☕"
     },
     {
       "id": "tea-old-dhaka",
@@ -184,7 +191,8 @@
       "stock": [
         "tea",
         "biscuit"
-      ]
+      ],
+      "icon": "☕"
     },
     {
       "id": "fuchka-shahbag",
@@ -199,7 +207,8 @@
       "stock": [
         "fuchka",
         "chotpoti"
-      ]
+      ],
+      "icon": "🥟"
     },
     {
       "id": "fuchka-dhanmondi",
@@ -214,7 +223,8 @@
       "stock": [
         "fuchka",
         "chotpoti"
-      ]
+      ],
+      "icon": "🥟"
     },
     {
       "id": "fuchka-motijheel",
@@ -229,6 +239,774 @@
       "stock": [
         "fuchka",
         "chotpoti"
+      ],
+      "icon": "🥟"
+    },
+    {
+      "id": "gun-farmgate",
+      "kind": "weapons",
+      "name": {
+        "en": "Farmgate Gun House",
+        "bn": "ফার্মগেট গান হাউস"
+      },
+      "col": 1,
+      "row": 2,
+      "corner": "NE",
+      "stock": [
+        "pistol",
+        "revolver",
+        "smg",
+        "sawedOff",
+        "shotgun",
+        "rifle",
+        "sniper",
+        "bat",
+        "machete",
+        "molotov",
+        "armour",
+        "ammo-pistol",
+        "ammo-revolver",
+        "ammo-smg",
+        "ammo-sawedOff",
+        "ammo-shotgun",
+        "ammo-rifle",
+        "ammo-sniper"
+      ]
+    },
+    {
+      "id": "gun-agargaon",
+      "kind": "weapons",
+      "name": {
+        "en": "Agargaon Arms",
+        "bn": "আগারগাঁও আর্মস"
+      },
+      "col": 5,
+      "row": 3,
+      "corner": "SW",
+      "stock": [
+        "pistol",
+        "revolver",
+        "smg",
+        "sawedOff",
+        "shotgun",
+        "rifle",
+        "sniper",
+        "bat",
+        "machete",
+        "molotov",
+        "armour",
+        "ammo-pistol",
+        "ammo-revolver",
+        "ammo-smg",
+        "ammo-sawedOff",
+        "ammo-shotgun",
+        "ammo-rifle",
+        "ammo-sniper"
+      ]
+    },
+    {
+      "id": "gun-banani",
+      "kind": "weapons",
+      "name": {
+        "en": "Banani Armoury",
+        "bn": "বনানী অস্ত্রাগার"
+      },
+      "col": 10,
+      "row": 3,
+      "corner": "SE",
+      "stock": [
+        "pistol",
+        "revolver",
+        "smg",
+        "sawedOff",
+        "shotgun",
+        "rifle",
+        "sniper",
+        "bat",
+        "machete",
+        "molotov",
+        "armour",
+        "ammo-pistol",
+        "ammo-revolver",
+        "ammo-smg",
+        "ammo-sawedOff",
+        "ammo-shotgun",
+        "ammo-rifle",
+        "ammo-sniper"
+      ]
+    },
+    {
+      "id": "gun-hatirjheel",
+      "kind": "weapons",
+      "name": {
+        "en": "Hatirjheel Ammo Point",
+        "bn": "হাতিরঝিল গুলির দোকান"
+      },
+      "col": 13,
+      "row": 6,
+      "corner": "NW",
+      "stock": [
+        "pistol",
+        "revolver",
+        "smg",
+        "sawedOff",
+        "shotgun",
+        "rifle",
+        "sniper",
+        "bat",
+        "machete",
+        "molotov",
+        "armour",
+        "ammo-pistol",
+        "ammo-revolver",
+        "ammo-smg",
+        "ammo-sawedOff",
+        "ammo-shotgun",
+        "ammo-rifle",
+        "ammo-sniper"
+      ]
+    },
+    {
+      "id": "gun-kalabagan",
+      "kind": "weapons",
+      "name": {
+        "en": "Kalabagan Arms",
+        "bn": "কলাবাগান আর্মস"
+      },
+      "col": 7,
+      "row": 7,
+      "corner": "NE",
+      "stock": [
+        "pistol",
+        "revolver",
+        "smg",
+        "sawedOff",
+        "shotgun",
+        "rifle",
+        "sniper",
+        "bat",
+        "machete",
+        "molotov",
+        "armour",
+        "ammo-pistol",
+        "ammo-revolver",
+        "ammo-smg",
+        "ammo-sawedOff",
+        "ammo-shotgun",
+        "ammo-rifle",
+        "ammo-sniper"
+      ]
+    },
+    {
+      "id": "gun-dhanmondi",
+      "kind": "weapons",
+      "name": {
+        "en": "Dhanmondi Gun Shop",
+        "bn": "ধানমন্ডি গান শপ"
+      },
+      "col": 2,
+      "row": 8,
+      "corner": "SW",
+      "stock": [
+        "pistol",
+        "revolver",
+        "smg",
+        "sawedOff",
+        "shotgun",
+        "rifle",
+        "sniper",
+        "bat",
+        "machete",
+        "molotov",
+        "armour",
+        "ammo-pistol",
+        "ammo-revolver",
+        "ammo-smg",
+        "ammo-sawedOff",
+        "ammo-shotgun",
+        "ammo-rifle",
+        "ammo-sniper"
+      ]
+    },
+    {
+      "id": "gun-motijheel",
+      "kind": "weapons",
+      "name": {
+        "en": "Motijheel Arms",
+        "bn": "মতিঝিল আর্মস"
+      },
+      "col": 12,
+      "row": 9,
+      "corner": "SE",
+      "stock": [
+        "pistol",
+        "revolver",
+        "smg",
+        "sawedOff",
+        "shotgun",
+        "rifle",
+        "sniper",
+        "bat",
+        "machete",
+        "molotov",
+        "armour",
+        "ammo-pistol",
+        "ammo-revolver",
+        "ammo-smg",
+        "ammo-sawedOff",
+        "ammo-shotgun",
+        "ammo-rifle",
+        "ammo-sniper"
+      ]
+    },
+    {
+      "id": "gun-palashi",
+      "kind": "weapons",
+      "name": {
+        "en": "Palashi Ammo House",
+        "bn": "পলাশী গুলির ঘর"
+      },
+      "col": 9,
+      "row": 12,
+      "corner": "NW",
+      "stock": [
+        "pistol",
+        "revolver",
+        "smg",
+        "sawedOff",
+        "shotgun",
+        "rifle",
+        "sniper",
+        "bat",
+        "machete",
+        "molotov",
+        "armour",
+        "ammo-pistol",
+        "ammo-revolver",
+        "ammo-smg",
+        "ammo-sawedOff",
+        "ammo-shotgun",
+        "ammo-rifle",
+        "ammo-sniper"
+      ]
+    },
+    {
+      "id": "gun-chawkbazar",
+      "kind": "weapons",
+      "name": {
+        "en": "Chawkbazar Arms",
+        "bn": "চকবাজার আর্মস"
+      },
+      "col": 2,
+      "row": 14,
+      "corner": "NE",
+      "stock": [
+        "pistol",
+        "revolver",
+        "smg",
+        "sawedOff",
+        "shotgun",
+        "rifle",
+        "sniper",
+        "bat",
+        "machete",
+        "molotov",
+        "armour",
+        "ammo-pistol",
+        "ammo-revolver",
+        "ammo-smg",
+        "ammo-sawedOff",
+        "ammo-shotgun",
+        "ammo-rifle",
+        "ammo-sniper"
+      ]
+    },
+    {
+      "id": "gun-sadarghat",
+      "kind": "weapons",
+      "name": {
+        "en": "Sadarghat Gun Store",
+        "bn": "সদরঘাট গান স্টোর"
+      },
+      "col": 11,
+      "row": 14,
+      "corner": "SW",
+      "stock": [
+        "pistol",
+        "revolver",
+        "smg",
+        "sawedOff",
+        "shotgun",
+        "rifle",
+        "sniper",
+        "bat",
+        "machete",
+        "molotov",
+        "armour",
+        "ammo-pistol",
+        "ammo-revolver",
+        "ammo-smg",
+        "ammo-sawedOff",
+        "ammo-shotgun",
+        "ammo-rifle",
+        "ammo-sniper"
+      ]
+    },
+    {
+      "id": "rest-kacchi",
+      "kind": "food",
+      "icon": "🍛",
+      "name": {
+        "en": "Kacchi Ghar",
+        "bn": "কাচ্চি ঘর"
+      },
+      "col": 4,
+      "row": 1,
+      "corner": "SW",
+      "stock": [
+        "kacchi",
+        "borhani",
+        "khichuri"
+      ]
+    },
+    {
+      "id": "rest-banani",
+      "kind": "food",
+      "icon": "🍔",
+      "name": {
+        "en": "Banani Food Court",
+        "bn": "বনানী ফুড কোর্ট"
+      },
+      "col": 8,
+      "row": 2,
+      "corner": "SE",
+      "stock": [
+        "burger",
+        "fries",
+        "lassi"
+      ]
+    },
+    {
+      "id": "rest-gulshan",
+      "kind": "food",
+      "icon": "🍔",
+      "name": {
+        "en": "Gulshan Burger Lab",
+        "bn": "গুলশান বার্গার ল্যাব"
+      },
+      "col": 12,
+      "row": 1,
+      "corner": "NW",
+      "stock": [
+        "burger",
+        "fries",
+        "lassi"
+      ]
+    },
+    {
+      "id": "rest-panthapath",
+      "kind": "food",
+      "icon": "🍢",
+      "name": {
+        "en": "Panthapath Kabab House",
+        "bn": "পান্থপথ কাবাব হাউস"
+      },
+      "col": 6,
+      "row": 6,
+      "corner": "NE",
+      "stock": [
+        "kabab",
+        "porota",
+        "lassi"
+      ]
+    },
+    {
+      "id": "rest-tejgaon",
+      "kind": "food",
+      "icon": "🍲",
+      "name": {
+        "en": "Tejgaon Bhuna Khichuri",
+        "bn": "তেজগাঁও ভুনা খিচুড়ি"
+      },
+      "col": 11,
+      "row": 7,
+      "corner": "SW",
+      "stock": [
+        "khichuri",
+        "porota",
+        "borhani"
+      ]
+    },
+    {
+      "id": "rest-karwan",
+      "kind": "food",
+      "icon": "🍛",
+      "name": {
+        "en": "Karwan Bazar Hotel",
+        "bn": "কারওয়ান বাজার হোটেল"
+      },
+      "col": 8,
+      "row": 11,
+      "corner": "SE",
+      "stock": [
+        "kacchi",
+        "khichuri",
+        "porota"
+      ]
+    },
+    {
+      "id": "rest-nazira",
+      "kind": "food",
+      "icon": "🍛",
+      "name": {
+        "en": "Nazira Bazar Biryani House",
+        "bn": "নাজিরা বাজার বিরিয়ানি হাউস"
+      },
+      "col": 5,
+      "row": 15,
+      "corner": "NW",
+      "stock": [
+        "kacchi",
+        "kabab",
+        "borhani"
+      ]
+    },
+    {
+      "id": "rest-nilkhet",
+      "kind": "food",
+      "icon": "🍲",
+      "name": {
+        "en": "Nilkhet Khichuri Corner",
+        "bn": "নীলক্ষেত খিচুড়ি কর্নার"
+      },
+      "col": 1,
+      "row": 10,
+      "corner": "NE",
+      "stock": [
+        "khichuri",
+        "porota",
+        "lassi"
+      ]
+    },
+    {
+      "id": "cloth-gulshan",
+      "kind": "outfits",
+      "name": {
+        "en": "Gulshan Fashion House",
+        "bn": "গুলশান ফ্যাশন হাউস"
+      },
+      "col": 10,
+      "row": 2,
+      "corner": "SE",
+      "stock": [
+        "polo_black",
+        "panjabi_grey",
+        "doctor"
+      ]
+    },
+    {
+      "id": "cloth-dhanmondi",
+      "kind": "outfits",
+      "name": {
+        "en": "Dhanmondi Boutique",
+        "bn": "ধানমন্ডি বুটিক"
+      },
+      "col": 3,
+      "row": 8,
+      "corner": "NW",
+      "stock": [
+        "polo_black",
+        "panjabi_grey",
+        "doctor"
+      ]
+    },
+    {
+      "id": "cloth-newmarket",
+      "kind": "outfits",
+      "name": {
+        "en": "New Market Clothes",
+        "bn": "নিউ মার্কেট পোশাক"
+      },
+      "col": 9,
+      "row": 10,
+      "corner": "NE",
+      "stock": [
+        "polo_black",
+        "panjabi_grey",
+        "doctor"
+      ]
+    },
+    {
+      "id": "cloth-islampur",
+      "kind": "outfits",
+      "name": {
+        "en": "Islampur Cloth Market",
+        "bn": "ইসলামপুর কাপড়ের বাজার"
+      },
+      "col": 7,
+      "row": 13,
+      "corner": "SW",
+      "stock": [
+        "polo_black",
+        "panjabi_grey",
+        "doctor"
+      ]
+    },
+    {
+      "id": "clinic-agargaon",
+      "kind": "health",
+      "icon": "🏥",
+      "name": {
+        "en": "Agargaon Health Centre",
+        "bn": "আগারগাঁও স্বাস্থ্যকেন্দ্র"
+      },
+      "col": 5,
+      "row": 2,
+      "corner": "NW",
+      "stock": [
+        "healthpack",
+        "firstaid",
+        "treatment"
+      ]
+    },
+    {
+      "id": "clinic-gulshan",
+      "kind": "health",
+      "icon": "🏥",
+      "name": {
+        "en": "Gulshan General Hospital",
+        "bn": "গুলশান জেনারেল হাসপাতাল"
+      },
+      "col": 12,
+      "row": 5,
+      "corner": "NE",
+      "stock": [
+        "healthpack",
+        "firstaid",
+        "treatment"
+      ]
+    },
+    {
+      "id": "clinic-dhanmondi",
+      "kind": "health",
+      "icon": "🏥",
+      "name": {
+        "en": "Dhanmondi Clinic",
+        "bn": "ধানমন্ডি ক্লিনিক"
+      },
+      "col": 1,
+      "row": 8,
+      "corner": "SW",
+      "stock": [
+        "healthpack",
+        "firstaid",
+        "treatment"
+      ]
+    },
+    {
+      "id": "clinic-motijheel",
+      "kind": "health",
+      "icon": "🏥",
+      "name": {
+        "en": "Motijheel Health Centre",
+        "bn": "মতিঝিল স্বাস্থ্যকেন্দ্র"
+      },
+      "col": 10,
+      "row": 11,
+      "corner": "SE",
+      "stock": [
+        "healthpack",
+        "firstaid",
+        "treatment"
+      ]
+    },
+    {
+      "id": "clinic-lalbagh",
+      "kind": "health",
+      "icon": "🏥",
+      "name": {
+        "en": "Lalbagh Community Clinic",
+        "bn": "লালবাগ কমিউনিটি ক্লিনিক"
+      },
+      "col": 4,
+      "row": 13,
+      "corner": "NW",
+      "stock": [
+        "healthpack",
+        "firstaid",
+        "treatment"
+      ]
+    },
+    {
+      "id": "hospital-dmc",
+      "kind": "health",
+      "icon": "🏥",
+      "name": {
+        "en": "Dhaka Medical Emergency",
+        "bn": "ঢাকা মেডিকেল জরুরি বিভাগ"
+      },
+      "col": 7,
+      "row": 12,
+      "corner": "NE",
+      "stock": [
+        "healthpack",
+        "firstaid",
+        "treatment"
+      ]
+    },
+    {
+      "id": "gun-gulshan2",
+      "kind": "weapons",
+      "name": {
+        "en": "Gulshan-2 Arms",
+        "bn": "গুলশান-২ আর্মস"
+      },
+      "col": 13,
+      "row": 2,
+      "corner": "NW",
+      "stock": [
+        "pistol",
+        "revolver",
+        "smg",
+        "sawedOff",
+        "shotgun",
+        "rifle",
+        "sniper",
+        "bat",
+        "machete",
+        "molotov",
+        "armour",
+        "ammo-pistol",
+        "ammo-revolver",
+        "ammo-smg",
+        "ammo-sawedOff",
+        "ammo-shotgun",
+        "ammo-rifle",
+        "ammo-sniper"
+      ]
+    },
+    {
+      "id": "gun-dhanmondi27",
+      "kind": "weapons",
+      "name": {
+        "en": "Dhanmondi 27 Gun House",
+        "bn": "ধানমন্ডি ২৭ গান হাউস"
+      },
+      "col": 4,
+      "row": 5,
+      "corner": "SE",
+      "stock": [
+        "pistol",
+        "revolver",
+        "smg",
+        "sawedOff",
+        "shotgun",
+        "rifle",
+        "sniper",
+        "bat",
+        "machete",
+        "molotov",
+        "armour",
+        "ammo-pistol",
+        "ammo-revolver",
+        "ammo-smg",
+        "ammo-sawedOff",
+        "ammo-shotgun",
+        "ammo-rifle",
+        "ammo-sniper"
+      ]
+    },
+    {
+      "id": "gun-kamalapur",
+      "kind": "weapons",
+      "name": {
+        "en": "Kamalapur Arms",
+        "bn": "কমলাপুর আর্মস"
+      },
+      "col": 11,
+      "row": 12,
+      "corner": "NE",
+      "stock": [
+        "pistol",
+        "revolver",
+        "smg",
+        "sawedOff",
+        "shotgun",
+        "rifle",
+        "sniper",
+        "bat",
+        "machete",
+        "molotov",
+        "armour",
+        "ammo-pistol",
+        "ammo-revolver",
+        "ammo-smg",
+        "ammo-sawedOff",
+        "ammo-shotgun",
+        "ammo-rifle",
+        "ammo-sniper"
+      ]
+    },
+    {
+      "id": "gun-sutrapur",
+      "kind": "weapons",
+      "name": {
+        "en": "Sutrapur Ammo Store",
+        "bn": "সূত্রাপুর গুলির দোকান"
+      },
+      "col": 8,
+      "row": 15,
+      "corner": "SW",
+      "stock": [
+        "pistol",
+        "revolver",
+        "smg",
+        "sawedOff",
+        "shotgun",
+        "rifle",
+        "sniper",
+        "bat",
+        "machete",
+        "molotov",
+        "armour",
+        "ammo-pistol",
+        "ammo-revolver",
+        "ammo-smg",
+        "ammo-sawedOff",
+        "ammo-shotgun",
+        "ammo-rifle",
+        "ammo-sniper"
+      ]
+    },
+    {
+      "id": "gun-azimpur",
+      "kind": "weapons",
+      "name": {
+        "en": "Azimpur Arms",
+        "bn": "আজিমপুর আর্মস"
+      },
+      "col": 0,
+      "row": 12,
+      "corner": "NE",
+      "stock": [
+        "pistol",
+        "revolver",
+        "smg",
+        "sawedOff",
+        "shotgun",
+        "rifle",
+        "sniper",
+        "bat",
+        "machete",
+        "molotov",
+        "armour",
+        "ammo-pistol",
+        "ammo-revolver",
+        "ammo-smg",
+        "ammo-sawedOff",
+        "ammo-shotgun",
+        "ammo-rifle",
+        "ammo-sniper"
       ]
     }
   ],
@@ -260,6 +1038,62 @@
         "bn": "এক প্লেট চটপটি"
       },
       "heal": 35
+    },
+    "kacchi": {
+      "name": {
+        "en": "Kacchi biryani",
+        "bn": "কাচ্চি বিরিয়ানি"
+      },
+      "heal": 60
+    },
+    "khichuri": {
+      "name": {
+        "en": "Bhuna khichuri",
+        "bn": "ভুনা খিচুড়ি"
+      },
+      "heal": 50
+    },
+    "kabab": {
+      "name": {
+        "en": "Kabab platter",
+        "bn": "কাবাব প্লেটার"
+      },
+      "heal": 55
+    },
+    "porota": {
+      "name": {
+        "en": "Porota + egg",
+        "bn": "পরোটা আর ডিম"
+      },
+      "heal": 20
+    },
+    "borhani": {
+      "name": {
+        "en": "Glass of borhani",
+        "bn": "এক গ্লাস বোরহানি"
+      },
+      "heal": 15
+    },
+    "lassi": {
+      "name": {
+        "en": "Glass of lassi",
+        "bn": "এক গ্লাস লাচ্ছি"
+      },
+      "heal": 15
+    },
+    "burger": {
+      "name": {
+        "en": "Beef burger",
+        "bn": "বিফ বার্গার"
+      },
+      "heal": 50
+    },
+    "fries": {
+      "name": {
+        "en": "French fries",
+        "bn": "ফ্রেঞ্চ ফ্রাই"
+      },
+      "heal": 20
     }
   },
   "homes": {
@@ -305,5 +1139,30 @@
         "dir": "W"
       }
     }
-  }
+  },
+  "health": {
+    "_comment": "Clinic / hospital items. share = part of max health that is healed (0.25 = 25%, 1 = full).",
+    "healthpack": {
+      "name": {
+        "en": "Health pack (+25%)",
+        "bn": "হেলথ প্যাক (+২৫%)"
+      },
+      "share": 0.25
+    },
+    "firstaid": {
+      "name": {
+        "en": "First aid (+50%)",
+        "bn": "প্রাথমিক চিকিৎসা (+৫০%)"
+      },
+      "share": 0.5
+    },
+    "treatment": {
+      "name": {
+        "en": "Full treatment (100%)",
+        "bn": "পূর্ণ চিকিৎসা (১০০%)"
+      },
+      "share": 1
+    }
+  },
+  "ammoOfferSeconds": 25
 }

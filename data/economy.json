@@ -1,6 +1,6 @@
 {
-  "_comment": "All money numbers (Taka). Class rewards, every shop price, wanted stars, bail, hospital and jail. Lesson Check rewards are per lesson in data/lessons.json (rewardPerCorrect).",
-  "startCash": 500,
+  "_comment": "All money numbers (Taka). Class rewards, every shop price, wanted stars, bail, hospital and jail. Lesson Check rewards are per lesson in data/lessons.json (rewardPerCorrect). startCash = Taka of a NEW player (Session 9: 1000). The Products tab of the Google Sheet can override any price (data/sheet.json).",
+  "startCash": 1000,
   "currencySymbol": "৳",
   "rides": {
     "_comment": "Fare in Taka for one hired ride, by vehicle type (data/vehicles.json).",
@@ -62,7 +62,20 @@
       "tea": 10,
       "biscuit": 15,
       "fuchka": 50,
-      "chotpoti": 40
+      "chotpoti": 40,
+      "kacchi": 250,
+      "khichuri": 150,
+      "kabab": 180,
+      "porota": 40,
+      "borhani": 50,
+      "lassi": 60,
+      "burger": 220,
+      "fries": 90
+    },
+    "health": {
+      "healthpack": 300,
+      "firstaid": 600,
+      "treatment": 1200
     }
   },
   "wanted": {
@@ -104,5 +117,10 @@
     "feeShare": 0.1,
     "loseWeapons": true,
     "hospitalPlace": "dhaka-medical"
+  },
+  "starter": {
+    "_comment": "What a NEW player starts with (Session 9): a gun in hand and its bullets.",
+    "weapon": "pistol",
+    "ammo": 30
   }
 }

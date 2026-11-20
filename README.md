@@ -10,6 +10,8 @@ Drive around a Vice-City-style Dhaka, study real lessons to earn Taka, and spend
 - What the game is right now: `docs/GAME_SPEC.md`
 - How the code is organised (for developers / Claude): `docs/HANDOFF.md`
 
+- Publishing on GitHub Pages: `docs/DEPLOY.md`
+
 Run locally: `python3 -m http.server 8000` in this folder, then open `http://localhost:8000/?debug=1`.
 
 Play (after GitHub Pages is on): `https://breakersofficial01-cmd.github.io/shoumik--breaking--city/`

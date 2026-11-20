@@ -14,7 +14,7 @@
 // Everything in Class Mode is in Bangla (lesson.language for a lesson; data/ui.json →
 // questionLanguage elsewhere) with the Bangla font and Bangla digits.
 //
-// Events  listens entrance:enter      sends cash:changed (via economy), lesson:completed,
+// Events  listens entrance:enter, class:start { lesson } (Session 9: landing page)      sends cash:changed (via economy), lesson:completed,
 //         class:opened { institute }, class:closed { institute }
 
 import { tl, moneyIn, numIn } from '../../ui/i18n.js';
@@ -212,6 +212,21 @@ function open({ id, place: p }) {
   game.events.emit('class:opened', { institute });
 }
 
+/** Open Class Mode straight on one lesson's Lesson Check (or its page when it cannot start). */
+function startFromLanding(id) {
+  const lesson = game.content.get('lessons').find((l) => l.id === id && l.active);
+  if (!lesson) return;
+  if (!ov.isOpen) {
+    institute = lesson.institute;
+    place = game.content.get('places').find((x) => x.id === institute) || null;
+    ov.open();
+    game.events.emit('class:opened', { institute });
+  }
+  institute = lesson.institute;
+  if (progress.canStart(lesson)) startLesson(id);
+  else openLesson(id);
+}
+
 export default {
   id: 'classes',
 
@@ -223,7 +238,11 @@ export default {
       onClose: () => { stopTimer(); run = null; game.events.emit('class:closed', { institute }); },
     });
     ov.panel.addEventListener('click', onClick);
-    offs = [g.events.on('entrance:enter', (p) => open(p || {}))];
+    offs = [
+      g.events.on('entrance:enter', (p) => open(p || {})),
+      // Session 9: the class landing page (earn feature) starts one class's quiz from anywhere.
+      g.events.on('class:start', ({ lesson } = {}) => startFromLanding(lesson)),
+    ];
     if (debug.flag('admin') === '1') admin = new AdminCheck(g);
     log.info(`classes: ${g.content.get('lessons').length} lessons loaded`);
   },
