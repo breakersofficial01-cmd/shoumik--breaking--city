@@ -12,7 +12,7 @@ Sheet.prototype={getLastRow(){return this.rows.length;},appendRow(r){this.rows.p
 const tabs={Products:new Sheet([['product_id','kind','price'],['tea','food','10']]),Classes:new Sheet([['class_id','title'],['a','A']]),Questions:new Sheet([['class_id','question'],['a','Q?']]),Players:new Sheet([['phone','name','class_level','cash','health','vehicles','weapons','homes','lessons_done','created_at','last_seen','pin_salt','pin_hash','token_hash','failed_logins','save_json']])};
 const props={};
 const ctx={
- SpreadsheetApp:{getActive:()=>({getSheetByName:n=>tabs[n],insertSheet:n=>(tabs[n]=new Sheet([]))})},
+ SpreadsheetApp:{openById:()=>({getSheetByName:n=>tabs[n],insertSheet:n=>(tabs[n]=new Sheet([]))})},
  ContentService:{createTextOutput:t=>({setMimeType(){return JSON.parse(t);}}),MimeType:{JSON:1}},
  LockService:{getScriptLock:()=>({tryLock:()=>true,releaseLock(){}})},
  PropertiesService:{getScriptProperties:()=>({getProperty:k=>props[k]||null,setProperty:(k,v)=>props[k]=v})},

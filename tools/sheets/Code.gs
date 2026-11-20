@@ -18,6 +18,11 @@
  * token (only its hash is stored); saves need that token. Keep the sheet itself private.
  */
 
+// The game's sheet "Breaking City — Game Data". Opening it by id works even if this script
+// was created from another spreadsheet or on its own at script.google.com.
+var SHEET_ID = '1fIEDXo3xX3RwOJR04mcujVnXGp9Iw8fmHygVqw6Q0lE';
+function book_() { return SpreadsheetApp.openById(SHEET_ID); }
+
 var TABS = { products: 'Products', classes: 'Classes', questions: 'Questions', players: 'Players' };
 var PLAYER_COLS = ['phone', 'name', 'class_level', 'cash', 'health', 'vehicles', 'weapons', 'homes',
   'lessons_done', 'created_at', 'last_seen', 'pin_salt', 'pin_hash', 'token_hash', 'failed_logins', 'save_json'];
@@ -30,7 +35,7 @@ function json_(obj) {
 }
 
 function tabRows_(name) {
-  var sh = SpreadsheetApp.getActive().getSheetByName(name);
+  var sh = book_().getSheetByName(name);
   if (!sh) return [];
   var values = sh.getDataRange().getDisplayValues();
   if (values.length < 2) return [];
@@ -93,7 +98,7 @@ function safe_(text, max) {
 }
 
 function playersSheet_() {
-  var ss = SpreadsheetApp.getActive();
+  var ss = book_();
   var sh = ss.getSheetByName(TABS.players) || ss.insertSheet(TABS.players);
   if (sh.getLastRow() === 0) sh.appendRow(PLAYER_COLS);
   return sh;
