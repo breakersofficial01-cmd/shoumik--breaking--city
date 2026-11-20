@@ -173,7 +173,9 @@ const BN = /[০-৯]/;
 
     // ---- shops
     const spots = await page.evaluate(() => window.BC.features.get('shops').spots.map((s) => ({ id: s.id, kind: s.kind, x: s.x, z: s.z })));
-    check(spots.length === 11, `all 11 shops placed (${spots.length})`);
+    const listed = await page.evaluate(() => window.BC.config.get('shops').shops.length);
+    check(spots.length === listed, `all ${listed} shops placed (${spots.length})`);
+    if (spots.length !== listed) console.log('     missing:', (await page.evaluate(() => window.BC.config.get('shops').shops.map((s) => s.id))).filter((id) => !spots.some((s) => s.id === id)).join(', '));
     await page.evaluate(() => window.BC.economy.addCash(300000));
     // food: full health → refused; hurt → heals
     await page.evaluate(() => window.BC.events.emit('shop:open', { id: 'fuchka-shahbag' }));
@@ -202,8 +204,9 @@ const BN = /[০-৯]/;
     await click('#shop-panel .panel-close');
     // weapon
     await page.evaluate(() => window.BC.events.emit('shop:open', { id: 'weapon-shop' }));
-    await click('[data-buy="pistol"]');
-    check(await page.evaluate(() => window.BC.save.data.owned.weapons.includes('pistol')), 'pistol bought');
+    // (Session 9: every new player already owns a pistol, so buy the revolver)
+    await click('[data-buy="revolver"]');
+    check(await page.evaluate(() => window.BC.save.data.owned.weapons.includes('revolver')), 'revolver bought');
     await click('#shop-panel .panel-close');
     // home
     await page.evaluate(() => window.BC.events.emit('shop:open', { id: 'property-office' }));

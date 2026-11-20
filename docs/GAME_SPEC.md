@@ -23,13 +23,22 @@ A free-roam, Vice-City-flavoured open world set in a compressed Dhaka, made for
 
 Money only comes from answering lesson questions. YouTube links open outside the game.
 
-## 2. What you can do today (after Session 8)
+## 2. What you can do today (after Update 9, 2026-11-20)
+- **Update 9:** sign up with your name, Bangladeshi phone number, class and a 4-digit PIN (one
+  account per number), or sign in. New players start with **৳১,০০০ and a pistol with ৩০ bullets**.
+  Your name is top-left (tap → your profile: health, money, vehicles, weapons, homes, lessons,
+  Sign out). Tap the minimap (M) → **full map** with every shop, hospital, health pack and the two
+  institutes; "show the way" draws a yellow GPS line. Police show on the maps while you are wanted.
+  44 shops (16 weapon shops, restaurants, clothes, clinics); a price card at each shop; not enough
+  money → YouTube classes / quiz offer + the way to Breaking School / Biology; class landing page;
+  health packs (+25 %). Content and players live in the Google Sheet (section 12).
+
 - Open the game → loading screen → "শুরু করতে ট্যাপ করুন" → you are Shoumik on a street corner
   in Shahbag at sunset.
 - Walk, run, sprint and jump around the whole city. Buildings, poles, trees, lake edges and
   the city limits are solid.
 - Look around with the chase camera; it swings back behind you when you let go.
-- HUD: Shoumik's portrait, cash (starts at **৳৫০০**), 5 empty wanted stars, a rotating
+- HUD: the player's name (Update 9; was Shoumik's portrait), cash (starts at **৳১,০০০**), 5 empty wanted stars, a rotating
   minimap, and the district name when you enter a new district.
 - Gear button → graphics quality কম / মাঝারি / বেশি.
 - Punch with আঘাত / mouse click. People fall, run, shout — and some hit back.
@@ -522,3 +531,22 @@ weapons (`data/economy.json → wasted`).
   Pages) see the IP address like any website.
 - **Publishing**: `docs/DEPLOY.md` (GitHub Pages from `main`).
 
+
+## 12. Accounts, the Google Sheet, map and help (Update 9)
+- **Accounts** (`src/core/account.js`, `src/ui/signIn.js`, `data/accounts.json`): sign up = name +
+  BD mobile (`01[3-9]` + 8 digits) + class + 4-digit PIN ×2; sign in = phone + PIN. One account per
+  number (checked on the phone and, when connected, in the sheet). Save key per account
+  `breakingCity.save.<phone>`. `?autostart=1` plays as a local test player (`testAccount`).
+- **Google Sheet** "Breaking City — Game Data"
+  (https://docs.google.com/spreadsheets/d/1fIEDXo3xX3RwOJR04mcujVnXGp9Iw8fmHygVqw6Q0lE/edit):
+  Products, Classes, Questions, Players, README. Connected through the Apps Script web app
+  (`tools/sheets/Code.gs`) whose URL goes in `data/sheet.json → apiUrl` (empty = local files only).
+- **Products** override name / price / picture / on-sale of shop items (content type `products`).
+- **Full map** (`src/features/minimap/bigMap.js`, `data/mapView.json`), **GPS route** (`route.js`),
+  **police on the map** (police feature → `map:blips` id `police`).
+- **Shops**: 44 (16 weapons, 14 food incl. 8 restaurants, 5 clothes, 6 health, 2 vehicles, 1 property).
+  Price card in the ring; unaffordable items → `earn:offer`.
+- **earn feature**: the offer (YouTube classes, quiz, way to the institutes, way to the nearest
+  weapon shop when out of bullets) and the class landing page → `class:start`.
+- **Health**: 36 packs (+25 %, respawn 90 s), clinics (+25 % / +50 % / full).
+- **Start**: ৳1,000 + pistol with 30 bullets (`data/economy.json → startCash, starter`).

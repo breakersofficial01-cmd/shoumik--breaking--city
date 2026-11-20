@@ -149,3 +149,14 @@
 - Share-to-install: a "Play Breaking City" QR code poster in the city and on social posts.
 - Auto-raise quality on strong phones (the watchdog only lowers today).
 
+
+## Ideas noted during Update 9 (accounts, sheet, map)
+- "Forgot PIN": reset by SMS OTP (needs an SMS gateway like SSL Wireless / a BD provider + budget),
+  or the owner resets it from the Players tab with a helper menu in the Apps Script.
+- Leaderboard board in the city (LED screen): top students this week from the Players tab.
+- Shop pictures from the Products tab shown on the 3D shop signs too (now only in the panel).
+- 3D models from `model_url` (GLB) for new products through the asset registry.
+- Map: waypoints by long-press anywhere; voice-free turn arrows on the HUD while a route is set.
+- Health pack pickup sound + green screen flash; hospital "heal for free once a day" for new players.
+- Quiz by topic: pick a topic (Questions → topic) and get questions from every class with it.
+- Admin page (owner only) listing players and totals, read from the sheet.

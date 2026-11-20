@@ -1,4 +1,5 @@
-// Feature: HUD. Cash + wanted stars + Shoumik's portrait (top-left) and the district name
+// Feature: HUD. Cash + wanted stars + the PLAYER'S NAME (top-left; Session 9 — it replaced Shoumik's
+// portrait because every player has an account) and the district name
 // toast. Listens to events only:
 //   cash:changed { cash }      wanted:changed { stars, seen }  (stars blink while seen is false)
 //   health:changed { value, max }   armour:changed { value, max }   district:entered { district }
@@ -6,7 +7,7 @@
 //   prompt:show { id, key, vars? }  /  prompt:hide { id }   a one-line hint at the bottom (e.g. "press to dance")
 //   toast:show { key, vars?, text?, seconds? }   a short message under the district name (Session 7:
 //              load-shedding, reward codes, radio station, screenshot saved…)
-// Sends:  profile:open  when the portrait is tapped (the profile card comes in Session 7).
+// Sends:  profile:open  when the name is tapped (the profile card shows the player's details).
 
 import { formatMoney, pickName, t } from '../../ui/i18n.js';
 
@@ -97,7 +98,7 @@ export default {
     root.id = 'hud';
     root.innerHTML = `
       <div class="hud-topleft">
-        <button class="hud-portrait" type="button" aria-label="Shoumik"><img alt="" draggable="false"></button>
+        <button class="hud-name" type="button"><i></i><span></span></button>
         <div class="hud-stats">
           <div class="hud-cash"></div>
           <div class="hud-stars"></div>
@@ -110,10 +111,14 @@ export default {
       <div class="hud-prompt" hidden></div>`;
     g.ui.appendChild(root);
 
-    const img = root.querySelector('.hud-portrait img');
-    const url = g.assets.url('image.shoumik.portrait');
-    if (url) img.src = url;
-    root.querySelector('.hud-portrait').addEventListener('click', () => g.events.emit('profile:open', {}));
+    // Session 9: the signed-in player's name (src/core/account.js); first letter in the badge.
+    const me = g.account?.current;
+    const name = me?.name || t('hud.player');
+    const nameBtn = root.querySelector('.hud-name');
+    nameBtn.querySelector('span').textContent = name;
+    nameBtn.querySelector('i').textContent = [...name.trim()][0]?.toUpperCase() || '?';
+    nameBtn.setAttribute('aria-label', t('hud.profile'));
+    nameBtn.addEventListener('click', () => g.events.emit('profile:open', {}));
 
     renderCash();
     renderStars();

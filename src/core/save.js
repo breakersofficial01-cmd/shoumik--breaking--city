@@ -37,7 +37,9 @@ const MIGRATIONS = {
   4: (old) => ({ ...old, clock: null, rewards: {}, playSeconds: old.playSeconds || 0 }),
 };
 
-function defaults({ startCash = 500 } = {}) {
+function defaults({ startCash = 500, starter = null } = {}) {
+  // Session 9: a new player starts with data/economy.json → starter (a pistol + 30 bullets in hand).
+  const gun = starter?.weapon || null;
   return {
     version: SAVE_VERSION,
     createdAt: Date.now(),
@@ -63,9 +65,9 @@ function defaults({ startCash = 500 } = {}) {
     garage: null,                     // { col, row, dir } where owned vehicles park (null = data/vehicles.json → garage)
     lessons: {},                      // lessonId -> { attempts, paid: [questionIds], earned, best, lastAt }
     classes: {},                      // Quiz Class: { lastDay, rounds, earned, bestStreak }
-    owned: { vehicles: [], homes: [], weapons: [], outfits: [] },
-    ammo: {},                         // weapon id -> bullets (molotovs: bottles)
-    weapon: null,                     // weapon id in his hand (null = fists)
+    owned: { vehicles: [], homes: [], weapons: gun ? [gun] : [], outfits: [] },
+    ammo: gun ? { [gun]: starter.ammo || 0 } : {}, // weapon id -> bullets (molotovs: bottles)
+    weapon: gun,                     // weapon id in his hand (null = fists)
     armour: 0,                        // body armour points (data/combat.json → player.armourMax)
     wanted: null,                     // { heat } — a chase goes on after a reload
     jail: null,                       // { owed, paid } while he studies his way out of jail
@@ -84,8 +86,9 @@ class SaveStore {
   }
 
   /** @param {{saveKey:string}} gameCfg  @param {{startCash:number}} economyCfg */
-  load(gameCfg, economyCfg) {
-    this.key = gameCfg.saveKey || this.key;
+  load(gameCfg, economyCfg, key = null) {
+    // Session 9: every account has its own key ("<saveKey>.<phone>", src/core/account.js).
+    this.key = key || gameCfg.saveKey || this.key;
     const fresh = defaults(economyCfg);
     let raw = null;
     try {
@@ -96,8 +99,10 @@ class SaveStore {
     }
     if (!raw) {
       this.data = fresh;
+      this.isNew = true;              // Session 9: a brand-new player (tutorial hints)
       return this.data;
     }
+    this.isNew = false;
     try {
       let obj = JSON.parse(raw);
       let v = Number.isInteger(obj.version) ? obj.version : 0;

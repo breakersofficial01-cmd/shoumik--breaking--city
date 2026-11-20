@@ -26,5 +26,7 @@
   "rewardCodes": true,
   "screenshot": true,
   "ageGate": true,
-  "autoQuality": true
+  "autoQuality": true,
+  "healthPacks": true,
+  "earn": true
 }

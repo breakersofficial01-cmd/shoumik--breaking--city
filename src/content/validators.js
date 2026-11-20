@@ -46,6 +46,7 @@ function cleanQuestion(q, index) {
       options,
       answer,
       explanation: isText(q.explanation) ? q.explanation.trim() : '',
+      topic: isText(q.topic) ? q.topic.trim() : '',     // Session 9: Questions tab → topic
     },
   };
 }
@@ -94,6 +95,9 @@ export function validateLessons(raw) {
       chapter: isText(lesson.chapter) ? lesson.chapter.trim() : '',
       title: lesson.title.trim(),
       youtubeUrl: lesson.youtubeUrl.trim(),
+      // Session 9 (Classes tab): picture + text for the class landing page. Optional.
+      thumbnail: isHttpUrl(lesson.thumbnail) || /^[\w./-]+\.(jpe?g|png|webp)$/i.test(lesson.thumbnail || '') ? lesson.thumbnail.trim() : '',
+      description: isText(lesson.description) ? lesson.description.trim() : '',
       rewardPerCorrect: Number.isFinite(reward) && reward >= 0 ? reward : defaults.rewardPerCorrect,
       active: lesson.active !== false,
       questions,
@@ -253,4 +257,38 @@ export function validateRewards(raw) {
   });
   items.sort((a, b) => a.lessonsRequired - b.lessonsRequired);
   return { items, defaults: raw?.settings || {}, skipped };
+}
+
+const PRODUCT_KINDS = ['vehicles', 'weapons', 'outfits', 'food', 'homes', 'health'];
+
+/**
+ * Validate products (Session 9: the Products tab of the Google Sheet, or data/products.json).
+ * A product row overrides the name / price / picture of an item the game already sells
+ * (id must match data/economy.json → prices.<kind>). active=false stops selling it.
+ * @param {{products?:any[]}} raw
+ */
+export function validateProducts(raw) {
+  const skipped = [];
+  const items = [];
+  const seen = new Set();
+  (Array.isArray(raw?.products) ? raw.products : []).forEach((r, i) => {
+    const id = isText(r?.id) ? r.id.trim() : '';
+    const label = id || `product #${i + 1}`;
+    if (!id) return skipped.push({ id: label, reason: 'product_id is empty' });
+    if (!PRODUCT_KINDS.includes(r.kind)) return skipped.push({ id: label, reason: `kind must be one of ${PRODUCT_KINDS.join(', ')}` });
+    const key = `${r.kind}/${id}`;
+    if (seen.has(key)) return skipped.push({ id: label, reason: 'duplicate product' });
+    const price = r.price === '' || r.price == null ? null : Number(r.price);
+    if (price !== null && !(Number.isFinite(price) && price >= 0)) return skipped.push({ id: label, reason: `price "${r.price}" is not a number` });
+    seen.add(key);
+    items.push({
+      id, kind: r.kind, price,
+      name: { en: isText(r.name_en) ? r.name_en.trim() : '', bn: isText(r.name_bn) ? r.name_bn.trim() : '' },
+      image: isHttpUrl(r.image_url) ? r.image_url.trim() : '',
+      model: isText(r.model_url) ? r.model_url.trim() : '',
+      description: isText(r.description) ? r.description.trim() : '',
+      active: r.active !== false && !/^(false|0|no|off)$/i.test(String(r.active ?? '')),
+    });
+  });
+  return { items, defaults: {}, skipped };
 }

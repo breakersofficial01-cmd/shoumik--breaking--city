@@ -688,3 +688,78 @@ Known issues
 - Google Fonts is not saved if it failed to load online; offline the phone's own Bangla font is used.
 - Credits name "Claude Code (Anthropic)" for programming — edit `data/pages.json` if you prefer
   otherwise. Li Ador Noirrit is still not installed (licence), TikTok/enroll links still empty.
+
+## 2026-11-20 — Update 9: accounts, Google Sheet, full map, more shops, health (Claude Opus 5.5)
+The owner's 13 changes in one update.
+
+Accounts and the Google Sheet
+- **Sign up / sign in** before the game (new `src/ui/signIn.js`, `src/core/account.js`): name,
+  Bangladeshi mobile number (01XXXXXXXXX, also +880… / Bangla digits), class (list in the new
+  `data/accounts.json`), 4-digit PIN twice. One account per phone number. Only a salted SHA-256
+  hash of the PIN is kept. Several players can share a phone: each account has its own save
+  (`breakingCity.save.<phone>`). Players already on the phone are quick buttons on Sign in.
+  The first account made on a phone takes over the old single-player save (the owner's progress).
+- New shared Google Sheet **"Breaking City — Game Data"** (owner's Drive, editable by owner and
+  Claude): tabs **Products** (45 items: names en/bn, price, image, active), **Classes** (YouTube
+  class link, thumbnail, description, reward), **Questions** (per class and topic), **Players**
+  (written by the game), README.
+- `tools/sheets/Code.gs`: the Apps Script web app the owner deploys once (`tools/sheets/README.md`).
+  It serves Products/Classes/Questions to the game (the sheet itself stays private), creates
+  accounts (refuses a phone number that already exists), signs in (salt + secret pepper hash,
+  5 wrong PINs = 15 min wait, a random token per sign-in) and saves progress (cash, health,
+  vehicles, weapons, homes, lessons done + the whole save JSON).
+- New content adapter `SheetApiAdapter` (`data/sheet.json → apiUrl`, one place for the link):
+  lessons come from Classes + Questions, the new content type **products** overrides shop names,
+  prices and pictures. Until the link is set everything works from the local files.
+- Progress is sent to the Players tab every 60 s and when the game is hidden; signing in on
+  another phone brings the newer save.
+- HUD: **the player's name** (initial badge + name) replaces Shoumik's portrait; tap it →
+  **profile** with name, masked phone, class, online-save state, health / armour / cash bars,
+  owned vehicles, weapons (with bullets), homes, clothes, completed lessons, stats, reward codes and
+  **Sign out** (asks twice).
+- Privacy page rewritten for accounts (`data/pages.json`).
+
+Map
+- **Tap the minimap (or M) → full-screen map**: drag, pinch / wheel zoom, ◎ back to you, legend
+  with on/off groups, every shop with its icon and name, clinics, health packs. Breaking School and
+  Breaking Biology are big pink 🎓 pins with "show the way" buttons at the top.
+- **GPS route**: tap any place → "পথ দেখাও" → a yellow line along the roads on both maps; it
+  follows you and clears when you arrive.
+- **Police on the map** while wanted: officers (blue), police cars 🚓 and the helicopter 🚁 blink on
+  the minimap (pinned to the rim when far) and the full map.
+
+Shops, money and health
+- 44 shops (was 11): **16 weapon shops** (the most), 8 restaurants (kacchi, khichuri, kabab,
+  burgers…), 6 tea/fuchka stalls, 5 clothes shops, 6 **hospitals and clinics**, car/bike shops and
+  the property office. Each has its own icon on its sign and the maps.
+- Walk into a shop ring → a **price card** (red = you cannot pay). In the shop, an item you cannot
+  afford shows "আরও ৳X লাগবে" → the **earn offer**: 📺 YouTube classes, 📝 quiz for money, and the
+  way to Breaking School / Breaking Biology.
+- **Class landing page** (a small neon-sunset website inside the game): all classes with thumbnail,
+  description, reward and status, filter by institute; "ইউটিউবে দেখো" opens YouTube outside the
+  game, "কুইজের উত্তর দাও" starts that class's Lesson Check (pays per right answer, once).
+- **36 health packs** on sidewalks (+25 % health each, back after 90 s); clinics sell +25 %, +50 %
+  and full treatment (`data/shops.json → health`, `data/healthPacks.json`).
+- **New players start with ৳1,000 and a pistol with 30 bullets** (`data/economy.json → starter`).
+  When the bullets run out: the way to the nearest weapon shop + its ammo price, and if the money
+  is not enough, the classes / quiz offer.
+
+Code
+- New features `earn` (offer + landing page), `healthPacks`; minimap split into `cityMap.js`,
+  `bigMap.js`, `route.js`. New events: `earn:offer`, `earn:landing`, `class:start`, `route:set`,
+  `route:clear`, `map:open`, `input:map`, `weapon:empty`; `player:heal { share }`;
+  `map:blips` points can carry `icon, label, group, big, small, pin, blink, routeable`.
+- `save.load()` takes the account's key; new saves get the starter gun (no format change, still v5).
+- Tests: new `tools/session9-check.js` (mocks the Apps Script: sign-up, duplicate number, wrong PIN,
+  sync, sign-in on a "new phone", map, route, shops, earn offer, landing → quiz pays, ammo help,
+  health pack, police on map) — passes. `class-check` and `crime-check` updated for the starter
+  pistol and 44 shops — pass. `smoke-test` passes.
+
+Known issues
+- The sheet link is not live until the owner deploys the Apps Script and sends the `/exec` URL
+  (5 minutes, `tools/sheets/README.md`). Until then accounts live on each phone only.
+- A 4-digit PIN is short; the sheet slows guessing (5 tries / 15 min) but it is not bank-grade.
+- Signing in on a second phone makes the first phone's online saves stop (it keeps saving locally)
+  until it signs in again.
+- Thumbnails need direct image links; none are filled in yet (a colour card with the subject shows).
+- Not tested on a real phone yet.

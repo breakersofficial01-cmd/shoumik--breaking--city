@@ -1,0 +1,8 @@
+{
+ "_comment": "Session 9: the shared Google Sheet 'Breaking City — Game Data' (tabs Products, Classes, Questions, Players). apiUrl = the Apps Script web-app link (tools/sheets/README.md shows how to make it, 5 minutes). While apiUrl is empty the game uses the local data files and keeps accounts on this device only. refreshMinutes = how long content from the sheet is cached. syncSeconds = how often a signed-in player's progress is sent to the Players tab.",
+ "spreadsheetUrl": "https://docs.google.com/spreadsheets/d/1fIEDXo3xX3RwOJR04mcujVnXGp9Iw8fmHygVqw6Q0lE/edit",
+ "apiUrl": "",
+ "refreshMinutes": 30,
+ "timeoutMs": 9000,
+ "syncSeconds": 60
+}

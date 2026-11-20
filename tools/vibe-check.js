@@ -214,11 +214,11 @@ const check = (ok, what) => { console.log(`${ok ? 'ok  ' : 'FAIL'} ${what}`); if
       const unlocked = await page.evaluate(() => Object.keys(window.BC.save.data.rewards || {}));
       check(unlocked.includes('first-lesson'), `reward code unlocked after one lesson (${unlocked.join(', ')})`);
       // Profile card.
-      await page.click('.hud-portrait');
+      await page.click('.hud-name'); // Update 9: the player's name replaced the portrait
       await settle(400);
       await shot('profile-card');
       const card = await page.evaluate(() => document.querySelector('#profile-card').textContent);
-      check(/Shoumik|শৌমিক/.test(card) && /BCITY-FIRST10/.test(card), 'profile card shows his name and the unlocked code');
+      check(/Test Player/.test(card) && /BCITY-FIRST10/.test(card), 'profile card shows the player name and the unlocked code');
       await page.click('#profile-card [data-copy]');
       await settle(300);
       const copied = await page.evaluate(() => document.querySelector('#profile-card [data-copy]').textContent);

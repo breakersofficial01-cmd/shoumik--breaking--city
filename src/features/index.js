@@ -27,6 +27,9 @@ const LOADERS = {
   entrances: () => import('./entrances/index.js'),
   classes: () => import('./classes/index.js'),
   shops: () => import('./shops/index.js'),
+  // Session 9: health packs on the streets; the earn offer + class landing page.
+  healthPacks: () => import('./healthPacks/index.js'),
+  earn: () => import('./earn/index.js'),
   // Session 6: weapons in his hand, wanted stars + stats, the police, busted / jail / wasted.
   weapons: () => import('./weapons/index.js'),
   crime: () => import('./crime/index.js'),

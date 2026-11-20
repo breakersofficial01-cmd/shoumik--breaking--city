@@ -16,7 +16,8 @@ import { log } from '../core/debug.js';
 import { events } from '../core/events.js';
 import { LocalJsonAdapter } from './adapters/LocalJsonAdapter.js';
 import { GoogleSheetCsvAdapter } from './adapters/GoogleSheetCsvAdapter.js';
-import { validateLessons, validatePlaces } from './validators.js';
+import { SheetApiAdapter } from './adapters/SheetApiAdapter.js';
+import { validateLessons, validatePlaces, validateProducts } from './validators.js';
 
 const CACHE_PREFIX = 'breakingCity.content.';
 
@@ -27,9 +28,18 @@ class ContentService {
     this.loaded = new Map();   // type -> { items, defaults, report }
     this.registerAdapter(new LocalJsonAdapter());
     this.registerAdapter(new GoogleSheetCsvAdapter());
+    this.registerAdapter(new SheetApiAdapter());
+    this.sheet = null;          // data/sheet.json (Session 9), set by configureSheet()
     this.registerType('lessons', { localPath: 'data/lessons.json', validate: validateLessons });
     // Places are needed while the city is laid out (landmark plots), so they load at boot too.
     this.registerType('places', { localPath: 'data/places.json', validate: validatePlaces });
+    // Session 9: product names / prices / pictures (Products tab of the Google Sheet).
+    this.registerType('products', { localPath: 'data/products.json', validate: validateProducts });
+  }
+
+  /** Session 9: the shared Google Sheet settings (data/sheet.json). Call before loadAll(). */
+  configureSheet(sheetCfg) {
+    this.sheet = sheetCfg || null;
   }
 
   registerAdapter(adapter) {
@@ -92,9 +102,15 @@ class ContentService {
     const local = await this.adapters.get('local').load(typeDef);
     let raw = local;
     let source = 'local';
-    const wanted = local?.source?.type || 'local';
+    let wanted = local?.source?.type || 'local';
+    let sourceCfg = local?.source;
+    if (wanted === 'sheetApi') {
+      // The sheet's web-app link lives in ONE place (data/sheet.json) for every content type.
+      if (!this.sheet?.apiUrl) { wanted = 'local'; source = 'local (sheet not connected yet)'; }
+      else sourceCfg = { type: 'sheetApi', sheetApi: { url: this.sheet.apiUrl, refreshMinutes: this.sheet.refreshMinutes, timeoutMs: this.sheet.timeoutMs } };
+    }
     if (wanted !== 'local') {
-      const remote = await this.loadRemote(typeDef, local.source);
+      const remote = await this.loadRemote(typeDef, sourceCfg);
       if (remote) {
         // Remote data carries rows only; settings like `defaults` stay in the local file.
         raw = { ...local, ...remote.raw };

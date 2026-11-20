@@ -1,0 +1,13 @@
+{
+  "_comment": "Session 9: health packs lying on sidewalks all over the city. count = how many (placed on random road-junction corners, the same every game: seed). heal = share of max health one pack gives (0.25 = 25%). respawnSeconds = when a taken pack comes back. pickupRadius in metres. visibleDistance = drawn within this distance. A pack is only taken when health is not full.",
+  "count": 36,
+  "seed": 9025,
+  "heal": 0.25,
+  "respawnSeconds": 90,
+  "pickupRadius": 1.3,
+  "visibleDistance": 90,
+  "size": 0.55,
+  "color": "#2ee66b",
+  "crossColor": "#ffffff",
+  "minimapColor": "#2ee66b"
+}

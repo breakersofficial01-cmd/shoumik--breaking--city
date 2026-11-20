@@ -17,7 +17,8 @@
 //   listens  wanted:changed { stars }, player:attack (punches / bat / machete on officers),
 //            explosion { x, z, radius, by }, vehicle:driverEjected { police: true } (a police
 //            driver dragged out becomes an officer), vehicle:entered (he took a police car)
-//   sends    police:sight { seen }   police:killed { by }   player:busted { stars }
+//   sends    map:blips { id: 'police' } (Session 9: where the police are, while wanted)
+//            police:sight { seen }   police:killed { by }   player:busted { stars }
 //            player:damage / player:hit   danger:raised   crime:committed (destroyPolice, stealPolice)
 //            combat:hit (melee on officers)
 
@@ -282,6 +283,29 @@ function onWanted({ stars: n }) {
   seen = null; // report sight again at the next check, whatever it is
 }
 
+// Session 9: while he is wanted, every officer, police pickup and the helicopter are shown on
+// the minimap and the full map (blue dots / red cars), so the player sees where the police are.
+let blipIn = 0;
+let blipsShown = false;
+function sendMapBlips(dt) {
+  blipIn -= dt;
+  if (blipIn > 0) return;
+  const mv = game.config.get('mapView');
+  blipIn = mv?.policeEvery || 0.5;
+  if (stars <= 0) {
+    if (blipsShown) game.events.emit('map:blips', { id: 'police', points: [] });
+    blipsShown = false;
+    return;
+  }
+  const c = mv?.colors || {};
+  const points = [];
+  for (const o of officers) if (o.state !== 'dead') points.push({ x: o.x, z: o.z, color: c.police || '#3d7bff', group: 'police', pin: true, small: true, blink: true });
+  for (const k of cars) if (k.alive) points.push({ x: k.v.x, z: k.v.z, color: c.policeCar || '#ff3355', icon: '🚓', group: 'police', pin: true, blink: true });
+  if (heli) points.push({ x: heli.x, z: heli.z, color: c.policeCar || '#ff3355', icon: '🚁', group: 'police', pin: true, blink: true });
+  game.events.emit('map:blips', { id: 'police', points });
+  blipsShown = true;
+}
+
 export default {
   id: 'police',
 
@@ -342,6 +366,7 @@ export default {
       return !gone;
     });
     if (heli && (heli.state === 'gone' || Math.hypot(heli.x - p.x, heli.z - p.z) > far * 1.5)) { heli.dispose(); heli = null; heliKiller = null; }
+    sendMapBlips(dt);
     debugLine('police', `stars ${stars} officers ${officers.length} cars ${cars.length}${heli ? ' heli' : ''} ${seen ? 'SEEN' : 'hidden'} bust ${bust.toFixed(1)}`);
   },
 
@@ -356,5 +381,6 @@ export default {
     heli?.dispose();
     heli = null;
     bubbles?.dispose();
+    game.events.emit('map:blips', { id: 'police', points: [] });
   },
 };

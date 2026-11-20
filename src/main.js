@@ -13,6 +13,8 @@ import { loadFonts } from './ui/fonts.js';
 import { initI18n, setLanguage, getLanguage } from './ui/i18n.js';
 import { loading } from './ui/loading.js';
 import { registerServiceWorker } from './core/pwa.js';
+import { account } from './core/account.js';
+import { showSignIn } from './ui/signIn.js';
 
 /** Phones: go fullscreen + landscape when the player taps Start (best effort). */
 async function enterFullscreen() {
@@ -33,24 +35,63 @@ function watchOrientation(game) {
   apply();
 }
 
+/** Language of the save from before accounts existed (so the sign-in screen matches it). */
+function oldSaveLanguage(gameCfg) {
+  try { return JSON.parse(localStorage.getItem(gameCfg.saveKey) || '{}').settings?.language || null; } catch { return null; }
+}
+
+/**
+ * Put the right save under the player's key before it is loaded:
+ *  - the first account made on this phone takes over the old single-player save (owner's progress);
+ *  - a sign-in that brought a save from the Google Sheet wins when it is newer than this phone's copy.
+ */
+function prepareSave(oldKey, key, signed) {
+  try {
+    if (signed?.adoptOldSave) {
+      const old = localStorage.getItem(oldKey);
+      if (old && !localStorage.getItem(key)) localStorage.setItem(key, old);
+      if (!signed.test) account.markOldSaveAdopted(); // the test player only borrows it
+    }
+    if (signed?.save) {
+      const remote = JSON.parse(signed.save);
+      const local = JSON.parse(localStorage.getItem(key) || 'null');
+      if (remote?.version && (!local || (remote.updatedAt || 0) > (local.updatedAt || 0))) localStorage.setItem(key, signed.save);
+    }
+  } catch (err) {
+    log.warn('could not prepare the save', err);
+  }
+}
+
 async function boot() {
   const started = performance.now();
   loading.set(0.03);
 
-  // 1) The few files the loading screen itself needs, then the saved game.
-  await config.loadSome(['ui', 'strings', 'game', 'economy']);
+  // 1) The few files the loading screen and the sign-in screen need.
+  await config.loadSome(['ui', 'strings', 'game', 'economy', 'sheet', 'accounts']);
   const ui = config.get('ui');
-  save.load(config.get('game'), config.get('economy'));
-  initI18n({ stringsCfg: config.get('strings'), uiCfg: ui, economyCfg: config.get('economy'), savedLanguage: save.data.settings.language });
+  const gameCfg = config.get('game');
+  account.init(config.get('sheet'), config.get('accounts'));
+  initI18n({ stringsCfg: config.get('strings'), uiCfg: ui, economyCfg: config.get('economy'), savedLanguage: account.language || oldSaveLanguage(gameCfg) });
   loading.set(0.08, 'loading.fonts');
 
   // 2) Fonts and the rest of the settings files, side by side.
-  await Promise.all([
-    loadFonts(ui).then(() => setLanguage(getLanguage(), true)), // re-apply so the UI picks up the loaded font
-    config.loadAll(),
-  ]);
+  const settingsLoaded = config.loadAll();
+  await loadFonts(ui).then(() => setLanguage(getLanguage(), true)); // re-apply so the UI picks up the loaded font
+
+  // 2b) Session 9: who is playing? Every player has their own save (src/core/account.js).
+  let signed = null;
+  if (!account.current) {
+    if (debug.flag('autostart') === '1') { await account.useTestAccount(); signed = { adoptOldSave: true, test: true }; } // test tools never wait here
+    else signed = await showSignIn({ account, accountsCfg: config.get('accounts') });
+  }
+  const key = account.saveKey(gameCfg.saveKey);
+  prepareSave(gameCfg.saveKey, key, signed);
+  save.load(gameCfg, config.get('economy'), key);
+  if (save.data.settings.language) setLanguage(save.data.settings.language, true);
+  await settingsLoaded;
   assets.configure(config.get('assets'));
   registerProceduralTextures(assets);
+  content.configureSheet(config.get('sheet'));
 
   // 3) Content (lessons) through the Content Service.
   loading.set(0.2, 'loading.content');
@@ -59,8 +100,10 @@ async function boot() {
   // 4) The 3D world and all features.
   loading.set(0.25, 'loading.city');
   const game = new Game(document.getElementById('game'));
+  game.account = account; // Session 9: who is playing (HUD name, profile card, sign out)
   await game.init((f) => loading.set(0.25 + f * 0.75));
-  save.startAutosave(config.get('game').autosaveSeconds);
+  save.startAutosave(gameCfg.autosaveSeconds);
+  account.startSync(save, game);
   watchOrientation(game);
 
   // 5) Ready. Wait for a tap (needed on phones for fullscreen and, later, sound).

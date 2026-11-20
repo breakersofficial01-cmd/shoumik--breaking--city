@@ -1,0 +1,8 @@
+{
+ "schemaVersion": 1,
+ "_comment": "Session 9: product overrides. Normally empty: the Products tab of the Google Sheet (data/sheet.json) fills it in. A row { id, kind, name_en, name_bn, price, image_url, active } changes the name / price / picture of an item the game already sells (ids: data/economy.json → prices).",
+ "source": {
+  "type": "sheetApi"
+ },
+ "products": []
+}

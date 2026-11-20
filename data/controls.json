@@ -12,7 +12,8 @@
     "horn": ["KeyH"],
     "open": ["KeyF"],
     "radio": ["KeyR"],
-    "photo": ["KeyP"]
+    "photo": ["KeyP"],
+    "map": ["KeyM"]
   },
   "mouse": { "sensitivity": 0.0024, "invertY": false },
   "touch": {

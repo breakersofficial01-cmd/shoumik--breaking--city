@@ -122,6 +122,10 @@ const BN = /[০-৯]/;
     const W = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/weapons.json'), 'utf8'));
     const E = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/economy.json'), 'utf8'));
     const pistol = W.weapons.find((w) => w.id === 'pistol');
+    // Session 9: new players start with a pistol + 30 bullets. This test checks buying one, so
+    // it takes the starter gun away first (the session9-check tests the starter itself).
+    await page.evaluate(() => { window.BC.events.emit('weapons:lose', {}); });
+    await page.waitForTimeout(300);
     check(await page.evaluate(() => window.BC.player.weapon === null), 'starts with fists');
 
     // ---- weapon shop

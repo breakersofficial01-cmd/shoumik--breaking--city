@@ -188,6 +188,21 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   box-shadow: 0 0 0 2px var(--pink);
 }
 .hud-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+/* Session 9: the player's name replaces the portrait (tap = profile). */
+.hud-name {
+  pointer-events: auto;
+  display: flex; align-items: center; gap: 7px;
+  max-width: 150px; height: 46px; padding: 0 14px 0 4px;
+  border: 3px solid var(--ink); border-radius: 26px;
+  background: linear-gradient(135deg, #3a2a55, #5a2a6a);
+  box-shadow: 0 0 0 2px var(--pink), 0 3px 8px rgba(0, 0, 0, 0.4);
+  color: #fff; font: 700 15px var(--font-ui); cursor: pointer;
+}
+.hud-name i {
+  flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+  font-style: normal; font-size: 18px; background: var(--pink); color: var(--ink);
+}
+.hud-name span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-shadow: 1px 1px 0 var(--ink); }
 
 .hud-cash {
   font-size: 27px;
@@ -227,7 +242,8 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   right: calc(var(--safe-right) + 12px);
   border-radius: 50%;
   box-shadow: 0 0 0 2px var(--pink), 0 3px 8px rgba(0, 0, 0, 0.45);
-  pointer-events: none !important;
+  pointer-events: auto !important;   /* Session 9: tap = the full map */
+  cursor: pointer;
 }
 
 #settings-button {

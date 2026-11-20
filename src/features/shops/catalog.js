@@ -11,9 +11,14 @@
 //   ammo-<w> → weapon:ammo { id: w }  (needs the gun)   armour → player:armour { full: true }
 //   molotov  → weapon:owned { id } every time (each buy = data/weapons.json ammoPack bottles)
 //   food     → player:heal { amount }
+//   health   → player:heal { share }  (clinics / hospitals, Session 9; data/shops.json → health)
 // Every purchase also sends shop:purchased { shop, kind, item, price }.
+//
+// Session 9: the Products tab of the Google Sheet (content type 'products') can override the
+// name, price and picture of any item, or stop selling it (active = FALSE). price(kind, id) and
+// nameOf() read those overrides first, then data/economy.json / the item's data file.
 
-import { pickName, t, formatNumber } from '../../ui/i18n.js';
+import { pickName, t, formatNumber, getLanguage } from '../../ui/i18n.js';
 
 export class Catalog {
   constructor(game, shopsCfg) {
@@ -24,12 +29,30 @@ export class Catalog {
 
   get owned() { return this.game.save.data.owned; }
 
+  /** Products-tab row for an item (or null). */
+  product(kind, id) {
+    return this.game.content.get('products').find((p) => p.kind === kind && p.id === id) || null;
+  }
+
+  /** Price in Taka, or NaN when it is not sold (no price, or switched off in the sheet). */
+  price(kind, id) {
+    const p = this.product(kind, id);
+    if (p && !p.active) return NaN;
+    if (p && Number.isFinite(p.price)) return p.price;
+    const v = this.prices[kind]?.[id];
+    return Number.isFinite(v) ? v : NaN;
+  }
+
   nameOf(kind, id) {
+    const over = this.product(kind, id)?.name;
+    const L = getLanguage();
+    if (over && (over[L] || over.en)) return over[L] || over.en;
     const c = this.game.config;
     if (kind === 'vehicles') return pickName(c.get('vehicles').types[id]?.name) || id;
     if (kind === 'outfits') return pickName(c.get('outfits').outfits.find((o) => o.id === id)?.name) || id;
     if (kind === 'homes') return pickName(this.cfg.homes[id]?.name) || id;
     if (kind === 'food') return pickName(this.cfg.food[id]?.name) || id;
+    if (kind === 'health') return pickName(this.cfg.health?.[id]?.name) || id;
     if (kind === 'weapons') {
       if (id === 'armour') return t('shop.armour');
       const ammo = id.startsWith('ammo-') ? id.slice(5) : null;
@@ -42,7 +65,7 @@ export class Catalog {
 
   stateOf(kind, id) {
     const o = this.owned;
-    if (kind === 'food') return 'eat';
+    if (kind === 'food' || kind === 'health') return 'eat';
     if (kind === 'outfits') {
       if (!o.outfits.includes(id)) return 'buy';
       return this.game.player?.outfit === id ? 'wearing' : 'wear';
@@ -62,27 +85,28 @@ export class Catalog {
   }
 
   items(shop) {
-    const prices = this.prices[shop.kind] || {};
-    return shop.stock.filter((id) => Number.isFinite(prices[id])).map((id) => ({
+    return shop.stock.filter((id) => Number.isFinite(this.price(shop.kind, id))).map((id) => ({
       id,
       name: this.nameOf(shop.kind, id),
-      price: prices[id],
+      price: this.price(shop.kind, id),
       state: this.stateOf(shop.kind, id),
       heal: shop.kind === 'food' ? this.cfg.food[id]?.heal || 0 : 0,
+      healShare: shop.kind === 'health' ? this.cfg.health?.[id]?.share || 0 : 0,
+      image: this.product(shop.kind, id)?.image || '',
     }));
   }
 
   buy(shop, id) {
     const g = this.game;
-    const price = this.prices[shop.kind]?.[id];
+    const price = this.price(shop.kind, id);
     if (!Number.isFinite(price) || !shop.stock.includes(id)) return { ok: false, msg: null };
     const state = this.stateOf(shop.kind, id);
     if (state !== 'buy' && state !== 'eat') return { ok: false, msg: null };
-    if (shop.kind === 'food') {
+    if (shop.kind === 'food' || shop.kind === 'health') {
       const h = g.player?.health;
       if (h && h.value >= h.max) return { ok: false, msg: 'shop.fullHealth' };
     }
-    if (!g.economy.spend(price, `shop:${shop.id}:${id}`)) return { ok: false, msg: 'shop.noMoney' };
+    if (!g.economy.spend(price, `shop:${shop.id}:${id}`)) return { ok: false, msg: 'shop.noMoney', need: price - g.economy.getCash(), price, name: this.nameOf(shop.kind, id) };
 
     switch (shop.kind) {
       case 'vehicles':
@@ -108,6 +132,9 @@ export class Catalog {
         break;
       case 'food':
         g.events.emit('player:heal', { amount: this.cfg.food[id]?.heal || 0 });
+        break;
+      case 'health':
+        g.events.emit('player:heal', { share: this.cfg.health?.[id]?.share || 0 });
         break;
       default:
     }

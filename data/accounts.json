@@ -1,0 +1,16 @@
+{
+  "_comment": "Session 9: sign-up / sign-in. classes = the choices for 'Which class do you study in?' (en + bn). testAccount = the local player used by the test tools (?autostart=1); it is never sent to the sheet. Phone rule: Bangladeshi mobile 01[3-9]XXXXXXXX (also +880… / 880…). PIN = exactly 4 digits; only a hash is stored.",
+  "classes": [
+    { "id": "class-6", "en": "Class 6", "bn": "ষষ্ঠ শ্রেণি" },
+    { "id": "class-7", "en": "Class 7", "bn": "সপ্তম শ্রেণি" },
+    { "id": "class-8", "en": "Class 8", "bn": "অষ্টম শ্রেণি" },
+    { "id": "class-9", "en": "Class 9", "bn": "নবম শ্রেণি" },
+    { "id": "class-10", "en": "Class 10 / SSC", "bn": "দশম শ্রেণি / এসএসসি" },
+    { "id": "hsc-1", "en": "HSC 1st year", "bn": "এইচএসসি ১ম বর্ষ" },
+    { "id": "hsc-2", "en": "HSC 2nd year", "bn": "এইচএসসি ২য় বর্ষ" },
+    { "id": "admission", "en": "Admission candidate", "bn": "ভর্তি পরীক্ষার্থী" },
+    { "id": "university", "en": "University / Medical", "bn": "বিশ্ববিদ্যালয় / মেডিকেল" },
+    { "id": "other", "en": "Other", "bn": "অন্যান্য" }
+  ],
+  "testAccount": { "phone": "01700000000", "name": "Test Player", "classLevel": "hsc-2" }
+}

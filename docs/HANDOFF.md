@@ -1,4 +1,4 @@
-# Handoff — how Breaking City is built (v8, after Session 8 — Release)
+# Handoff — how Breaking City is built (v9, after Update 9 — accounts, Google Sheet, map)
 
 For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, then
 `docs/GAME_SPEC.md` (what exists) and `docs/CHANGELOG.md` (what changed last).
@@ -10,6 +10,7 @@ time. Quick map of this file:
 - **Add a feature → §6 · a content type → §7 · a poster → §8 + `posters/README.md` ·
   a lesson → §7b + `docs/CONTENT_GUIDE.md` · an asset → §9 · change the save → §10**
 - Release: offline app, automatic quality, privacy/credits pages, publishing → §12f, `docs/DEPLOY.md`
+- **Update 9: accounts, the Google Sheet, full map + GPS, earn offer, health packs → §12g**
 - Roadmap → §14
 
 ## 1. Run and test
@@ -274,6 +275,13 @@ posters/     poster pictures + README.md (how to add one)
 | `settings:controls` | – control size or layout changed (save.data.settings) | settings → touchControls |
 | `reward:unlocked` | `{ id }` | rewardCodes → profileCard |
 | `screenshot:taken` | `{ width, height }` | screenshot |
+| `earn:offer` | `{ reason: 'money'\|'ammo', need?, price?, item?, target? }` show the "earn Taka" panel | shops → earn |
+| `earn:landing` | `{ mode?: 'watch'\|'quiz', need? }` open the class landing page | anyone → earn |
+| `class:start` | `{ lesson }` open Class Mode on that lesson's Lesson Check | earn (landing) → classes |
+| `route:set` / `route:clear` | `{ x, z, label?, icon? }` / – GPS line on both maps | earn, shops, big map → minimap |
+| `map:open` / `input:map` | – open the full map (M key) | earn / Input → minimap |
+| `weapon:empty` | `{ id }` the gun in his hand has no bullets | weapons → shops (way to the nearest weapon shop) |
+| `map:blips` (Update 9) | points may also have `icon, label {en,bn}, group, big, small, pin, blink, routeable, id` | shops, healthPacks, police, minimap (institutes) |
 
 Add new events to this table.
 
@@ -613,6 +621,41 @@ version, add the field to `defaults()`. Features store live state with
 - **Publishing**: `docs/DEPLOY.md` (GitHub Pages from `main`, root folder; merge the session
   branch with a pull request).
 
+## 12g. Accounts, the Google Sheet, map, earn, health (Update 9)
+- **Boot** (`src/main.js`): `loadSome(ui, strings, game, economy, sheet, accounts)` → `account.init`
+  → fonts → if nobody is signed in: `showSignIn()` (or the test account with `?autostart=1`) →
+  `prepareSave()` (first account adopts the old `breakingCity.save`; a newer save from the sheet
+  wins) → `save.load(gameCfg, economyCfg, account.saveKey(...))` → `content.configureSheet()` →
+  content → `game.account = account` → Game.init → `account.startSync(save, game)`.
+- **`src/core/account.js`** (`game.account`): `current { phone, name, classLevel, token }`,
+  `signUp / signIn / signOut / syncNow / startSync`, local store `breakingCity.accounts` (salted
+  SHA-256 of the PIN). With `data/sheet.json → apiUrl` it POSTs `text/plain` JSON (no CORS
+  pre-flight) to the Apps Script: `signup`, `signin`, `save`. Error codes → `account.error.*` strings.
+- **Apps Script** `tools/sheets/Code.gs` (owner deploys; steps `tools/sheets/README.md`). Test it
+  without Google: `node tools/sheets/test-code-gs.js tools/sheets/Code.gs` (fake SpreadsheetApp) —
+  run it after any change to the script. Players tab columns are `PLAYER_COLS` in the script.
+- **Content from the sheet**: `src/content/adapters/SheetApiAdapter.js` (one GET `?action=content`
+  for all types, memoised). A content file opts in with `"source": { "type": "sheetApi" }`
+  (`lessons.json`, `products.json`); the URL lives only in `data/sheet.json`. Column mapping:
+  `mapClassRows` (Classes + Questions → lessons with `thumbnail`, `description`, question `topic`)
+  and `mapProductRows`. New tab = add it to `doGet` in Code.gs + a mapper + a content type.
+- **Products** (`validateProducts`): `catalog.price(kind, id)` / `nameOf()` use the sheet row first.
+  A brand-new item id still needs code/data (vehicles.json, weapons.json…) before its row works.
+- **Map** (`src/features/minimap/`): `cityMap.js` paints the city once (shared), `index.js` = the
+  minimap + blips + institutes, `bigMap.js` = full map overlay (own rAF loop because the game is
+  paused), `route.js` = BFS route over `roads.route()` junctions. Look: `data/mapView.json`.
+- **Shops** (`src/features/shops/`): `preview.js` price card; `itemButton` shows "need ৳X more"
+  (`data-earn`); `onWeaponEmpty` → `route:set` + `earn:offer`. A shop can have its own `icon`.
+  Kind `health` heals `share` of max health (`data/shops.json → health`).
+- **earn** (`src/features/earn/`): offer panel + `landing.js` (fixed Bangla, Bangla digits;
+  YouTube is a plain `<a target=_blank>` — never an iframe).
+- **healthPacks**: two InstancedMeshes, seeded placement on junction corners, `player:heal { share }`.
+- **Starter**: `data/economy.json → starter { weapon, ammo }` is put into `defaults()` in `save.js`.
+- **Tests**: `node tools/session9-check.js --three <dir> --out <folder>` (mocks the web app). Run it
+  after touching accounts, sheet, map, shops, earn, health packs or the HUD/profile.
+- Privacy text (`data/pages.json → privacy`) now describes accounts — update it before collecting
+  anything new.
+
 ## 13. Notes for the next sessions (historical)
 - **Session 4 is done** (the old notes below are kept for reference).
 - **Session 5 is done** (notes below kept for reference).
@@ -689,7 +732,9 @@ Ordered by value for the owner. Each is one or a few daily prompts.
 5. **Better models** — Shoumik outfits on the GLB (texture recolour per outfit), rigged NPCs that
    share Mixamo clips, real rickshaw/CNG models from a licensed pack (record in
    `assets/CREDITS.md`), landmark details.
-6. **Online save + leaderboards** — Supabase (free tier): anonymous auth, a `saves` table keyed by
+6. **Online save + leaderboards** — Update 9 added accounts + online save through the Google
+   Sheet (§12g). Leaderboards can read the Players tab (cash, lessons_done). For many thousands of
+   players move to Supabase (free tier): anonymous auth, a `saves` table keyed by
    user, a weekly "Top student" board from Lesson Check results (server-side checks before any
    real prize). Needs: a privacy page update first, a consent screen, and an owner-approved
    data plan. Keep localStorage as the offline save and sync on top (merge by `updatedAt`).
