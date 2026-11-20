@@ -17,7 +17,7 @@ time. Quick map of this file:
 - No build step. Any static server from the repo root works: `python3 -m http.server 8000`
   → `http://localhost:8000/?debug=1`.
 - URL flags: `?debug=1` (FPS panel, logs, `window.BC` = the Game object), `?autostart=1`
-  (skip the Tap-to-start button), `?quality=low|medium|high` (also switches automatic quality
+  (skip the Tap-to-start button; Update 9: also a local test player, no live Google Sheet unless `&sheet=1`), `?quality=low|medium|high` (also switches automatic quality
   off), `?touch=1` (show touch controls on a computer). Session 8: `?sw=0` (no service worker),
   `?sw=1` (service worker even in a test browser), `?autoquality=1` (automatic quality even in a
   test browser). Automated browsers (`navigator.webdriver`) get neither by default, so the older

@@ -763,3 +763,11 @@ Known issues
   until it signs in again.
 - Thumbnails need direct image links; none are filled in yet (a colour card with the subject shows).
 - Not tested on a real phone yet.
+
+## 2026-11-20 — Sheet link added (Claude Opus 5.5)
+- `data/sheet.json → apiUrl` = the owner's Apps Script web app.
+- Checked it: it answers "Script function not found: doGet", so the deployment does not contain
+  `tools/sheets/Code.gs` yet. Until the owner redeploys with the code, the game falls back to
+  its local files (content). Sign-up needs the sheet, so new accounts cannot be made until the
+  script works — fix the deployment before merging to main.
+- `?autostart=1` (test tools) no longer uses the live sheet unless `&sheet=1` is added.

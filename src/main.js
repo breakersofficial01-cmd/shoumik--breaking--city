@@ -70,7 +70,9 @@ async function boot() {
   await config.loadSome(['ui', 'strings', 'game', 'economy', 'sheet', 'accounts']);
   const ui = config.get('ui');
   const gameCfg = config.get('game');
-  account.init(config.get('sheet'), config.get('accounts'));
+  // Test tools (?autostart=1) never touch the live Google Sheet unless they add &sheet=1.
+  const sheetCfg = debug.flag('autostart') === '1' && debug.flag('sheet') !== '1' ? { ...config.get('sheet'), apiUrl: '' } : config.get('sheet');
+  account.init(sheetCfg, config.get('accounts'));
   initI18n({ stringsCfg: config.get('strings'), uiCfg: ui, economyCfg: config.get('economy'), savedLanguage: account.language || oldSaveLanguage(gameCfg) });
   loading.set(0.08, 'loading.fonts');
 
@@ -91,7 +93,7 @@ async function boot() {
   await settingsLoaded;
   assets.configure(config.get('assets'));
   registerProceduralTextures(assets);
-  content.configureSheet(config.get('sheet'));
+  content.configureSheet(sheetCfg);
 
   // 3) Content (lessons) through the Content Service.
   loading.set(0.2, 'loading.content');
