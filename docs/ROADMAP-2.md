@@ -20,7 +20,8 @@ commit + push, then tell the owner how to test on a phone. Tick the box when a s
 ## Downloading the free packs
 The cloud environment **`shoumik--breaking--city`** allows the download sites (kenney.nl,
 quaternius.com, Google Drive download hosts, poly.pizza). Start sessions in that environment.
-If a download is still blocked, ask the owner to download the ZIP and upload it.
+Checked 2026-11-21: quaternius.com answers; kenney.nl and poly.pizza answer when curl sends a browser
+User-Agent (`-A "Mozilla/5.0"`). If a download is still blocked, ask the owner to download the ZIP and upload it.
 Convert FBX/OBJ → GLB like Session 4.5 (see HANDOFF §9), keep files small (merge meshes,
 flat colours, no big textures), add ids to `data/assets.json`.
 
