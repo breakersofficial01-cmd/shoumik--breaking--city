@@ -160,3 +160,17 @@
 - Health pack pickup sound + green screen flash; hospital "heal for free once a day" for new players.
 - Quiz by topic: pick a topic (Questions → topic) and get questions from every class with it.
 - Admin page (owner only) listing players and totals, read from the sheet.
+
+## Ideas noted during Roadmap 2 · Session 1 (street look)
+- Walkable footbridges: climb the stairs and cross on the deck. Needs a ground height that
+  depends on where you come from (a car under the deck must stay on the road) — e.g. a
+  "layer" on the player (street / bridge) switched at the top and bottom of the stairs.
+- Advert panels on the footbridge sides as poster slots (Dhaka footbridges are covered in ads):
+  add a `footbridge` kind to `data/posterSlots.json` using `world.street.plan.footbridges`.
+- Quaternius "Modular Streets" pack (CC0) has nicer street lights and traffic lights; its Google
+  Drive was over its download quota on 2026-11-21. Try again later or ask the owner to upload the ZIP.
+- Street props LOD: drop benches/bins in chunks further than ~150 m (cheaper far chunks).
+- Parked rickshaws and tea stalls under the footbridges; people sitting on benches.
+- Scaffold end posts (the last bamboo column of a wall has no right-hand pole) and a tower crane
+  at the biggest construction sites.
+- Real light pools that follow the road surface exactly (now a flat disc at kerb height).

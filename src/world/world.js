@@ -8,6 +8,7 @@
 //   world.ramps                 stunt ramps; their height is already part of heightAt()
 //   world.landmarks             real Dhaka places, MRT / flyover, entrance markers (landmarks/index.js)
 //   world.cityShading           lit windows, glowing shop signs, wet roads, load-shedding (cityShading.js)
+//   world.street                street lamps, benches, bins, transformers, construction sites, footbridges (street/)
 
 import * as THREE from 'three';
 import { log, debugLine } from '../core/debug.js';
@@ -24,6 +25,7 @@ import { HeroBuildings } from './hero/index.js';
 import { SignAtlas } from './signboards.js';
 import { fontsReady } from '../ui/fonts.js';
 import { CityShading } from './cityShading.js';
+import { StreetDressing } from './street/index.js';
 
 export class World {
   /** @param {object} game  the Game (scene, camera, config, assets) */
@@ -77,6 +79,12 @@ export class World {
     this.cityShading = new CityShading(this.shared, config.get('dayNight')?.windows);
     if (this.shared.signAtlas) this.cityShading.patchSigns(this.shared.signAtlas.material);
 
+    // Roadmap 2 S1: street lamps, benches, bins, construction sites, footbridges. Planned
+    // before colliders and chunks exist (it adds street trees and clears the stair strips).
+    this.street = new StreetDressing(this);
+    await this.street.init({ ramps: this.ramps, landmarks: this.landmarks, roads: this.roads });
+    this.shared.street = this.street;
+
     this.sky = new Sky(this.cfg, glow, scene, this.game.renderer);
     this.water = new Water(this.layout, water, this.root, config.get('graphics'));
     this.chunks = new ChunkManager(this.layout, this.shared, this.root);
@@ -118,6 +126,7 @@ export class World {
       for (const t of c.trees) col.add(t.x - tree.colliderSize / 2, t.z - tree.colliderSize / 2, t.x + tree.colliderSize / 2, t.z + tree.colliderSize / 2, COLLIDE.SOLID);
       count += c.buildings.length + c.poles.length + c.trees.length;
     }
+    count += this.street ? this.street.addColliders(col, COLLIDE.SOLID) : 0;
     // City limits (north/east/west walls) and the river to the south.
     const far = 5000;
     col.add(L.minX - far, L.minZ - far, L.maxX + far, L.minZ + 0.4, COLLIDE.SOLID);
@@ -156,6 +165,7 @@ export class World {
     this.sky.update(this.game.camera);
     this.landmarks.update(focus, this.quality.viewDistance);
     this.hero.update(focus, this.quality.viewDistance);
+    this.street.update(focus, this.quality.viewDistance);
     debugLine('chunks', `chunks ${this.chunks.stats.visible}/${this.chunks.stats.built} queue ${this.chunks.queue.length}`);
   }
 }

@@ -5,7 +5,7 @@
 // Facade trick: each wall is cut into vertical "bays" (~3 m wide). A bay is one tall quad
 // whose texture tile repeats once per floor, so even a 20-floor tower is only a few quads.
 
-import { Rng } from '../core/rng.js';
+import { Rng, hashInts } from '../core/rng.js';
 import { FACADE } from '../assets/proceduralTextures.js';
 import { hexToLinear, shade } from './geoBuilder.js';
 import { SIDE } from './blockgen.js';
@@ -45,6 +45,41 @@ function wallBox(gb, s, t0, t1, depth, y0, y1, cBottom, cTop, tile, withBottom) 
   }
 }
 
+/** Fixed 0..1 number per building + wall + purpose (no Rng calls: the city stays the same). */
+const hash01 = (b, bit, salt) => (hashInts(b.seed, bit, salt) % 10000) / 10000;
+
+/**
+ * Roadmap 2 S1 — more signboards: a board across the first upper floor (coaching centres,
+ * doctors' chambers) and big name boards on the roof edge. data/signboards.json → upper, roof.
+ */
+function extraSigns(gb, b, s, len, cfg, baseY, signs) {
+  const S = signs.atlas.cfg;
+  const yGround = baseY + cfg.groundFloorHeight;
+  const yTop = baseY + b.h;
+  const board = (cell, w, y0, y1, depth) => {
+    const ta = 0.5 - w / 2, tb = 0.5 + w / 2;
+    signs.atlas.face(signs.gb, cell, s.ax + (s.bx - s.ax) * ta, s.az + (s.bz - s.az) * ta,
+      s.ax + (s.bx - s.ax) * tb, s.az + (s.bz - s.az) * tb, s.ox, s.oz, depth + 0.015, y0 + 0.05, y1 - 0.05);
+    wallBox(gb, s, ta, tb, depth, y0, y1, shade(cell.bgLinear, 0.82), cell.bgLinear, FACADE.PLAIN, true);
+  };
+  const U = S.upper;
+  if (U && !b.balcony && b.floors >= U.minFloors && len > 5 && hash01(b, s.bit, 811) < U.chance) {
+    const cell = signs.atlas.pick(b.seed, 200 + s.bit, s.bit);
+    const w = U.width[0] + (U.width[1] - U.width[0]) * hash01(b, s.bit, 812);
+    if (cell) board(cell, w, yGround + 0.2, yGround + 0.2 + U.height, cfg.signDepth);
+  }
+  const R = S.roof;
+  if (R && b.floors >= R.minFloors && len > 8 && hash01(b, s.bit, 813) < R.chance) {
+    const cell = signs.atlas.pick(b.seed, 300 + s.bit, s.bit);
+    if (!cell) return;
+    const w = R.width[0] + (R.width[1] - R.width[0]) * hash01(b, s.bit, 814);
+    const y0 = yTop + R.lift;
+    board(cell, w, y0, y0 + R.height, 0.3);
+    const post = hexToLinear(R.postColor);
+    for (const t of [0.5 - w / 2 + 0.03, 0.5 + w / 2 - 0.05]) wallBox(gb, s, t, t + 0.02, 0.25, yTop, y0, post, post, FACADE.PLAIN, false);
+  }
+}
+
 /**
  * @param {import('./geoBuilder.js').GeoBuilder} gb
  * @param {object} b         building spec
@@ -72,6 +107,7 @@ export function meshBuilding(gb, b, cfg, palette, baseY, quality, signs = null) 
   for (const s of sidesOf(b)) {
     const len = Math.hypot(s.bx - s.ax, s.bz - s.az);
     const isFront = (b.front & s.bit) !== 0;
+    if (signs && isFront && !hero) extraSigns(gb, b, s, len, cfg, baseY, signs);
     if (hero && !(b.shop && isFront)) continue;
     if (!isFront && !b.allSides) {
       // Blank side wall: one quad, floor lines only.

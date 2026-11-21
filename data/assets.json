@@ -340,6 +340,10 @@
     "model.vehicle.bus": {
       "type": "model",
       "url": "assets/vehicles/bus.glb"
+    },
+    "model.street.props": {
+      "type": "model",
+      "url": "assets/street/street-props.glb"
     }
   }
 }

@@ -1,8 +1,9 @@
 {
-  "_comment": "Graphics quality levels. pixelRatioCap = sharpness limit (lower = faster). viewDistance in metres (fog hides the rest). propDensity = share of poles/trees/tanks drawn. chunkBuildMs = time budget per frame for building new city chunks. pedestrians = how many people walk around the player at once; pedLodDistance = beyond this (metres) people are drawn in a simpler way. traffic = AI vehicles driving around; parked = empty vehicles waiting at the roadside. posterDistance = posters further away than this (metres) are not drawn. postfx = bloom/colour-grade chain on or off. bloom = neon glow. shadowMapSize = real sun shadows (0 = off; bigger = sharper but slower). softShadows = softer shadow edges. msaa = anti-aliasing samples inside the effect chain (0 = off). police = share of the police numbers in data/police.json (fewer officers on weak phones). environmentRefreshSeconds = how often sky reflections are re-made as the time of day changes (Session 8: rarer on Low saves a hitch on weak phones).",
+  "_comment": "Graphics quality levels. pixelRatioCap = sharpness limit (lower = faster). viewDistance in metres (fog hides the rest). propDensity = share of poles/trees/tanks drawn. chunkBuildMs = time budget per frame for building new city chunks. pedestrians = how many people walk around the player at once; pedLodDistance = beyond this (metres) people are drawn in a simpler way. traffic = AI vehicles driving around; parked = empty vehicles waiting at the roadside. posterDistance = posters further away than this (metres) are not drawn. postfx = bloom/colour-grade chain on or off. bloom = neon glow. shadowMapSize = real sun shadows (0 = off; bigger = sharper but slower). softShadows = softer shadow edges. msaa = anti-aliasing samples inside the effect chain (0 = off). police = share of the police numbers in data/police.json (fewer officers on weak phones). environmentRefreshSeconds = how often sky reflections are re-made as the time of day changes (Session 8: rarer on Low saves a hitch on weak phones). streetLights = how many REAL lights shine from the nearest street lamps at night (0 = none; each one costs a little on every pixel, data/street.json → realLights).",
   "default": "medium",
   "levels": {
     "low": {
+      "streetLights": 0,
       "environmentRefreshSeconds": 75,
       "heroBuildings": false,
       "pixelRatioCap": 1.0,
@@ -28,6 +29,7 @@
       "police": 0.6
     },
     "medium": {
+      "streetLights": 2,
       "environmentRefreshSeconds": 25,
       "heroBuildings": true,
       "pixelRatioCap": 1.25,
@@ -53,6 +55,7 @@
       "police": 0.85
     },
     "high": {
+      "streetLights": 6,
       "environmentRefreshSeconds": 25,
       "heroBuildings": true,
       "pixelRatioCap": 2.0,

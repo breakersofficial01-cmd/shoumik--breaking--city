@@ -38,6 +38,8 @@ const LOADERS = {
   // Session 7: time of day + load-shedding, monsoon rain, all sounds, radio, profile card,
   // reward codes, screenshots, the 17+ age screen.
   dayNight: () => import('./dayNight/index.js'),
+  // Roadmap 2 S1: street lamps glow at night, light pools, a few real lights near the player.
+  streetLights: () => import('./streetLights/index.js'),
   weather: () => import('./weather/index.js'),
   sound: () => import('./sound/index.js'),
   radio: () => import('./radio/index.js'),

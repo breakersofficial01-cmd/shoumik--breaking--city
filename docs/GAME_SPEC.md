@@ -23,7 +23,13 @@ A free-roam, Vice-City-flavoured open world set in a compressed Dhaka, made for
 
 Money only comes from answering lesson questions. YouTube links open outside the game.
 
-## 2. What you can do today (after Update 9, 2026-11-20)
+## 2. What you can do today (after Roadmap 2 · Session 1, 2026-11-21)
+- **Roadmap 2 S1 — street look:** grey street lamps along every block that light up at night
+  (glowing bulbs, warm light pools, real light near you on Medium/High), double lamps in the
+  parks, benches, dustbins, green waste containers in the lanes, pole transformers, 17
+  construction sites wrapped in bamboo scaffolding (some with a green net, fence, cones),
+  14 steel foot overbridges over main roads, more street trees, and more Bangla signboards
+  (upper-floor coaching / doctor boards, rooftop name boards). Section 3d.
 - **Update 9:** sign up with your name, Bangladeshi phone number, class and a 4-digit PIN (one
   account per number), or sign in. New players start with **৳১,০০০ and a pistol with ৩০ bullets**.
   Your name is top-left (tap → your profile: health, money, vehicles, weapons, homes, lessons,
@@ -182,6 +188,29 @@ as before. Steps at the Sangsad plaza and Shaheed Minar can be walked and driven
 Posters come from `data/posters.json` (dates, districts, weights, links; guide in
 `posters/README.md`). Pictures load only near the player; small posters are drawn within
 75 / 160 / 220 m (Low / Medium / High). Empty slots show "এখানে আপনার বিজ্ঞাপন".
+
+## 3d. Street look (Roadmap 2, Session 1)
+All placed by `src/world/street/` from `data/street.json`, with their own random numbers (the
+buildings and old trees did not move). Count for the current city:
+
+| Thing | How many | Where / notes |
+|---|---|---|
+| Street lamps | ~1,590 | every gap between two electric poles, arm over the road (Kenney model, grey) |
+| Park double lamps | ~70 | grid in the parks (not the Sangsad grounds) |
+| Benches | ~290 | inner side of the sidewalk facing the road, and in parks |
+| Dustbins | ~340 | next to benches or at the kerb (green / yellow / blue) |
+| Waste containers | ~240 | in the small lanes inside blocks |
+| Pole transformers | ~180 | on some electric poles (2nd pole, platform, grey tank) |
+| Construction sites | 17 | bamboo scaffolding on the road sides, half with a green net, site fence, cones, barriers |
+| Foot overbridges | 14 | across main roads (never under the MRT / flyover, at landmarks or bus stops); stairs along the kerb are solid |
+| Extra street trees | ~55 % of the gaps | where blockgen left none |
+
+Night: bulbs glow and warm light pools appear on the ground as the windows light up; on
+Medium 2 and High 6 real lights sit on the lamps nearest to Shoumik (`data/quality.json →
+streetLights`, 0 on Low). Load-shedding turns the lamps off in the dark district.
+Signboards: upper-floor boards on ~40 % of street walls without balconies (3+ floors) and big
+rooftop name boards on ~12 % of 5+ floor buildings; 16 new names (`data/signboards.json`).
+The footbridges cannot be climbed yet (NEXT.md).
 
 ## 4. Look
 Sky: our own painted 360° sunset (`data/world.json → sky.painted`, `src/world/skyPainter.js`): orange horizon, gold-lit streaky clouds, purple top with faint stars.
@@ -373,6 +402,11 @@ saved first.
 | কম (low) | 0.8× | 210 m | no balconies, fewer props and wires; tone mapping only (no shadows, no bloom) |
 | মাঝারি (medium, default) | 1.25× | 300 m | sun shadows (1024), bloom, colour grade |
 | বেশি (high) | 2× | 430 m | soft sun shadows (2048), bloom, colour grade, 4× anti-aliasing |
+
+Roadmap 2 S1 (street look, headless 915×412, start corner, night): Low 143 → 162 draw calls, 70k → 94k
+triangles; Medium 284 → 322 draw calls (shadow pass included), 474k → 560k triangles. Small street
+props are merged into ONE mesh per chunk (+ 1 for the bulbs, + 1 for the light pools; scaffolding
+and nets are instanced, only on chunks with a site); 2 or 6 real lights on Medium / High.
 
 Session 7 (headless, software rendering, Medium, Shahbag start corner): ~217 draw calls (+10: one
 Bangla-sign mesh per chunk), rain adds 1 draw call, the day/night look costs nothing per object

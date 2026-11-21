@@ -68,9 +68,11 @@ export class ChunkManager {
     const signs = shared.signAtlas ? { gb: signGb, atlas: shared.signAtlas } : null;
     const lists = { poles: [], tanks: [], trees: [] };
     const wires = [];
+    const pieces = [];
     for (let j = chunk.j0; j <= chunk.j1; j++) {
       for (let i = chunk.i0; i <= chunk.i1; i++) {
         const p = layout.piece(i, j);
+        pieces.push(p);
         meshGroundPiece(ground, layout, p);
         const c = p.content;
         if (!c) continue;
@@ -88,6 +90,8 @@ export class ChunkManager {
     if (!facades.isEmpty) node.add(new THREE.Mesh(facades.build(), shared.facadeMaterial));
     if (!signGb.isEmpty) node.add(new THREE.Mesh(signGb.build(), shared.signAtlas.material)); // Bangla shop signs
     for (const mesh of buildProps(lists, world, shared, quality, layout.kerb)) node.add(mesh);
+    // Roadmap 2 S1: lamps, benches, bins, transformers, scaffolding... (src/world/street/).
+    if (shared.street) for (const mesh of shared.street.buildChunk(pieces, quality)) node.add(mesh);
     const lines = buildWires(wires, world, shared, quality, hashInts(layout.seed, chunk.ci, chunk.cj, 9));
     if (lines) node.add(lines);
     node.traverse((o) => { o.matrixAutoUpdate = false; });
