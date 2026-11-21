@@ -21,7 +21,7 @@
     {
       "id": "golden-desert", "type": "desert",
       "name": { "en": "Golden Sand Desert", "bn": "সোনালি মরুভূমি" },
-      "rect": { "col0": -13, "row0": -12, "col1": -1, "row1": 21 }, "ponds": 2
+      "rect": { "col0": -13, "row0": -12, "col1": 0, "row1": 21 }, "ponds": 2
     },
     {
       "id": "coconut-coast", "type": "coast",
@@ -130,39 +130,44 @@
     "nearDistance": 240,
     "fields": [
       { "kind": "paddy", "per": 26, "size": [0.7, 1.0], "onPlots": true },
-      { "kind": "bush", "per": 0.8, "size": [0.8, 1.6] },
-      { "kind": "grass", "per": 2.0, "size": [0.4, 0.7] },
-      { "kind": "logs", "per": 0.05, "size": [0.9, 1.3] },
-      { "kind": "tree:round", "per": 0.5, "size": [6, 10] },
-      { "kind": "tree:palm", "per": 0.35, "size": [8, 12] },
-      { "kind": "bamboo", "per": 0.25, "size": [5, 8] }
+      { "kind": "bush", "per": 3, "size": [0.8, 1.6] },
+      { "kind": "grass", "per": 8, "size": [0.4, 0.7] },
+      { "kind": "logs", "per": 0.3, "size": [0.9, 1.3] },
+      { "kind": "tree:round", "per": 2, "size": [6, 10] },
+      { "kind": "tree:palm", "per": 1.5, "size": [8, 12] },
+      { "kind": "bamboo", "per": 1, "size": [5, 8] }
     ],
     "desert": [
-      { "kind": "cactusTall", "per": 0.7, "size": [2.2, 4.2] },
-      { "kind": "cactusShort", "per": 0.8, "size": [1.0, 1.8] },
-      { "kind": "desertRock", "per": 0.25, "size": [1.2, 3.5] },
-      { "kind": "desertSpire", "per": 0.06, "size": [6, 14] },
-      { "kind": "dryBush", "per": 1.2, "size": [0.5, 0.9] }
+      { "kind": "cactusTall", "per": 4, "size": [2.2, 4.2] },
+      { "kind": "cactusShort", "per": 5, "size": [1.0, 1.8] },
+      { "kind": "desertRock", "per": 1.5, "size": [1.2, 3.5] },
+      { "kind": "desertSpire", "per": 0.4, "size": [6, 14] },
+      { "kind": "dryBush", "per": 6, "size": [0.5, 0.9] }
     ],
     "coast": [
-      { "kind": "tree:palm", "per": 2.4, "size": [8, 13] },
-      { "kind": "tree:palmBend", "per": 1.0, "size": [7, 11] },
-      { "kind": "bush", "per": 0.8, "size": [0.8, 1.5] },
-      { "kind": "grass", "per": 1.5, "size": [0.4, 0.7] }
+      { "kind": "tree:palm", "per": 12, "size": [8, 13] },
+      { "kind": "tree:palmBend", "per": 6, "size": [7, 11] },
+      { "kind": "bush", "per": 3, "size": [0.8, 1.5] },
+      { "kind": "grass", "per": 6, "size": [0.4, 0.7] }
     ],
     "beach": [
-      { "kind": "tree:palmBend", "per": 0.7, "size": [7, 11] },
-      { "kind": "beachRock", "per": 0.12, "size": [0.6, 1.4] },
-      { "kind": "canoe", "per": 0.1, "size": [0.7, 0.9] },
-      { "kind": "umbrella", "per": 0.5, "size": [2.6, 3.0] },
-      { "kind": "tent", "per": 0.06, "size": [2.2, 2.8] }
+      { "kind": "tree:palmBend", "per": 6, "size": [7, 11] },
+      { "kind": "beachRock", "per": 1.2, "size": [0.6, 1.4] },
+      { "kind": "canoe", "per": 2, "size": [0.7, 0.9] },
+      { "kind": "umbrella", "per": 14, "size": [2.6, 3.0] },
+      { "kind": "tent", "per": 1.5, "size": [2.2, 2.8] }
     ],
     "mountains": [
-      { "kind": "tree:oak", "per": 2.2, "size": [7, 12] },
-      { "kind": "tree:fat", "per": 1.2, "size": [6, 10] },
-      { "kind": "pine", "per": 0.8, "size": [8, 13] },
-      { "kind": "boulder", "per": 0.2, "size": [1.5, 4] },
-      { "kind": "crag", "per": 0.05, "size": [5, 12] }
+      { "kind": "tree:oak", "per": 14, "size": [7, 12] },
+      { "kind": "tree:fat", "per": 8, "size": [6, 10] },
+      { "kind": "pine", "per": 6, "size": [8, 13] },
+      { "kind": "boulder", "per": 1.5, "size": [1.5, 4] },
+      { "kind": "crag", "per": 0.4, "size": [5, 12] }
+    ],
+    "oasis": [
+      { "kind": "tree:palm", "per": 40, "size": [7, 11] },
+      { "kind": "tree:palmBend", "per": 20, "size": [6, 10] },
+      { "kind": "grass", "per": 30, "size": [0.4, 0.7] }
     ],
     "colliders": ["tree:", "cactusTall", "desertRock", "desertSpire", "boulder", "crag", "pine", "bamboo"],
     "umbrellaColors": ["#e8473a", "#f2b632", "#2f8fd8", "#3bb36b", "#ffffff"]

@@ -15,10 +15,10 @@
     { "id": "model.weapon.*" }
   ],
   "areas": [
-    { "id": "northern-fields", "at": [7, -2], "radius": 750, "assets": ["model.nature.outskirts"] },
-    { "id": "golden-desert", "at": [-4, 8], "radius": 750, "assets": ["model.nature.outskirts"] },
-    { "id": "coconut-coast", "at": [17, 6], "radius": 750, "assets": ["model.nature.outskirts"] },
-    { "id": "char-fields", "at": [3, 21], "radius": 750, "assets": ["model.nature.outskirts"] }
+    { "id": "northern-fields", "at": [7, -2], "radius": 600, "assets": ["model.nature.outskirts"] },
+    { "id": "golden-desert", "at": [-4, 8], "radius": 600, "assets": ["model.nature.outskirts"] },
+    { "id": "coconut-coast", "at": [17, 6], "radius": 600, "assets": ["model.nature.outskirts"] },
+    { "id": "char-fields", "at": [3, 21], "radius": 600, "assets": ["model.nature.outskirts"] }
   ],
   "idleFps": 24,
   "maxParallel": 2,

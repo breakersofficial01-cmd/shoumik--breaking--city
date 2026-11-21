@@ -103,11 +103,10 @@ export class TerrainProps {
     const rng = new Rng(hashInts(this.cfg.seed, Math.round(t.x0), Math.round(t.z0)));
     const area = (t.x1 - t.x0) * (t.z1 - t.z0) / 10000;
     const o = { col: [0, 0, 0] };
-    const lists = { ...this.P, oasis: [{ kind: 'tree:palm', per: 6, size: [7, 11] }, { kind: 'tree:palmBend', per: 3, size: [6, 10] }] };
     for (const cls of ['fields', 'desert', 'coast', 'beach', 'mountains', 'oasis']) {
-      for (const item of lists[cls] || []) {
+      for (const item of this.P[cls] || []) {
         if (!this.geos.has(item.kind)) continue;
-        const n = Math.round(item.per * area * this.density * (cls === 'oasis' ? 0.25 : 1));
+        const n = Math.round(item.per * area * this.density);
         for (let k = 0; k < n; k++) {
           const x = rng.range(t.x0, t.x1), z = rng.range(t.z0, t.z1);
           const rot = rng.range(0, Math.PI * 2), s = rng.range(item.size[0], item.size[1]), tint = rng.int(0, 7);
@@ -147,6 +146,13 @@ export class TerrainProps {
     if (now.size !== this.near.size) changed = true;
     else for (const t of now) if (!this.near.has(t)) { changed = true; break; }
     if (!changed) return;
+    // Plant at most two new tiles per frame (each takes a few ms); draw when all are ready.
+    let fresh = 0;
+    for (const t of now) {
+      if (this.planted.has(`${t.x0},${t.z0}`)) continue;
+      if (fresh++ >= 2) { this.dirty = true; return; }
+      this.plant(t);
+    }
     this.near = now;
     this.dirty = false;
     // Count + fill per kind.

@@ -897,3 +897,60 @@ Code / tools
 - Products tab: the Google Sheet could not be written from here — rows are in
   `tools/sheets/products-roadmap2-s2.csv` for the owner to paste (the game sells the items anyway).
 - Tests: crime-check buys and uses knife, grenade and launcher (pass); vehicle gallery 19 types.
+
+## 2026-11-21 — Roadmap 2 · Session 3: bigger world (Claude Opus 5.5)
+S2 was merged into `main` (pull request #5).
+
+The city is no longer walled in. Around it there is now about 3.5 × 3.9 km of land
+(`src/world/terrain/`, all numbers in the new `data/terrain.json`):
+- **Northern Paddy Fields**: green and golden rice plots with earth bunds between them (drawn
+  sharply per pixel by a small shader), paddy clumps, bushes, bamboo, palms, log piles, ponds
+  and a lotus pond.
+- **Golden Sand Desert** (west): rolling dunes, tall and short cacti, red rocks and rock
+  spires, dry bushes, and an **oasis** ringed by palms.
+- **Coconut Coast** (east): coconut groves, then a wide **beach** with umbrellas, canoes,
+  tents and rocks, and the **sea** (Bay of Bengal) out to the horizon. The sea stops you a
+  few metres into the water (boats come in Session 7).
+- **The Buriganga** now flows into the sea, with sandy banks, and a road bridge, the
+  **Buriganga Bridge**: 9 m high with lamp posts that light up at night. It leads to the
+  **Char Lands** (south bank): more fields and ponds.
+- **Green Hills** along the outer edge (west, north, south) with forests, pines, boulders
+  and crags; far **mountains on the horizon** that follow the time of day.
+- **Highways out of the city**: Northern Highway, Desert Road, Beach Road, Marine Drive along
+  the beach, Fields Link Road and Char Road (asphalt with painted lines; they climb into the
+  hills).
+- **Lakes and ponds in the city**: Gulshan Lake (east edge of Gulshan, one road bridge) and
+  stone-edged park ponds: Ramna Park, Banani Lake Park, Dhanmondi Pond.
+- Walking or driving out of the city shows the zone name (like the districts). Cars follow
+  the hills and tilt with them.
+- **Map**: the whole land is painted on the minimap and full map, with 8 new points
+  (🌾 Countryside group in the legend). The GPS route to a countryside spot follows the city
+  roads and then the right highway (or the bridge).
+- **Rides**: 4 new rickshaw/CNG destinations at the city exits: Northern Highway, Desert
+  Road, Beach Road, Buriganga Bridge.
+
+Fast start kept: the ground, roads, bridge and water are code (no download). The
+countryside models (Kenney Nature Kit, CC0: `assets/nature/outskirts.glb`, 88 KB) download
+only when Shoumik comes near an edge of the city (`data/streaming.json → areas`, one group
+per zone). Terrain tiles are built a few per frame near the player (fine grid nearby, coarse
+further away); props are planted at most two tiles per frame.
+
+Code / data / tools
+- New: `src/world/terrain/` (index, field, tiles, props, roads, backdrop, noise),
+  `data/terrain.json`, `tools/terrain-kit/outskirts.json` (pack recipe),
+  `tools/world-check.js` (test + photos).
+- Changed: `world.js` (`world.terrain`, `terrainAt`, `areaAt`, heights include the land,
+  no city-limit walls), `water.js` (sea, ponds, river ends at the sea), `layout.js` (area
+  type `pond`), `groundMesher.js` (open city edge, pond parks, bridge gap), vehicles
+  `physics.js` / `fleet.js` (follow the land), `roads.js` (`nearestJunction` clamps to the
+  grid), minimap (`cityMap.js` paints the land; canvas origin `ox/oz`), `route.js`, player
+  (zone names), `data/districts.json`, `data/places.json`, `data/streaming.json`,
+  `data/assets.json`, `data/strings.json`.
+- Test: `node tools/world-check.js --three <dir> --out <folder>` — all checks pass
+  (streaming, height = drawn ground, sea/river/pond/edge collisions, bridge deck 9 m, a car
+  driven over the bridge to the south bank, map + GPS). Smoke test passes.
+
+Known issues
+- AI traffic, pedestrians and police stay on the city roads (the countryside is quiet).
+- Mountains are pale in the daytime fog on Low/Medium (short view distance).
+- The sea and river cannot be entered yet (boats: Session 7).

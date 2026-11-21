@@ -1,4 +1,4 @@
-# Handoff — how Breaking City is built (v12, after Roadmap 2 · S2 — more cars and weapons)
+# Handoff — how Breaking City is built (v13, after Roadmap 2 · S3 — bigger world)
 
 For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, then
 `docs/GAME_SPEC.md` (what exists) and `docs/CHANGELOG.md` (what changed last).
@@ -14,6 +14,7 @@ time. Quick map of this file:
 - **Roadmap 2 (current plan: `docs/ROADMAP-2.md`) · S1 street look: lamps, benches, bins,
   transformers, construction sites, footbridges, more signs → §12h**
 - **G1 fast start: boot prefetch, streaming, compressed models, preload list, real trees → §12i**
+- **S3 bigger world: terrain around the city, sea, desert, fields, hills, bridge, ponds → §12k**
 - Roadmap → §14
 
 ## 1. Run and test
@@ -63,6 +64,12 @@ time. Quick map of this file:
   list in index.html; `--check` tells if it is stale — a stale entry is a 404 in the console).
 - **After adding a GLB**: `node tools/compress-models.js --cli <node_modules/.bin/gltf-transform>`
   (meshopt; `npm i @gltf-transform/cli@4` in a scratch folder). Already-compressed files are skipped.
+- Bigger world (Roadmap 2 S3): `node tools/world-check.js --three <dir> --out <folder> [--quality medium] [--only stream,shots,ground,drive,map]`
+  checks that the countryside models are only downloaded near the edge, photographs fields,
+  desert, beach, bridge (day/night), hills, oasis, a city pond, Gulshan Lake and the city edge,
+  compares the gameplay height with the drawn ground, tests sea/river/pond/edge collisions,
+  drives a car over the bridge (slow headless: up to 3 minutes) and checks the map + GPS. Run it
+  after touching `src/world/terrain/`, `data/terrain.json`, water, vehicle ground following or the map.
 - Street look (Roadmap 2 S1): `node tools/street-look-check.js --three <dir> --out <folder> [--quality medium] [--only street,site,bridge,park,props]`
   photographs a lamp-lined street by day and night, a construction site, a footbridge (day/night),
   a park at night, a transformer and a bench; checks counts, lamps off by day / glowing at night,
@@ -297,6 +304,7 @@ posters/     poster pictures + README.md (how to add one)
 | `earn:offer` | `{ reason: 'money'\|'ammo', need?, price?, item?, target? }` show the "earn Taka" panel | shops → earn |
 | `earn:landing` | `{ mode?: 'watch'\|'quiz', need? }` open the class landing page | anyone → earn |
 | `class:start` | `{ lesson }` open Class Mode on that lesson's Lesson Check | earn (landing) → classes |
+| `stream:loaded` | `{ group }` an `areas` group of data/streaming.json finished downloading (S3: zone ids → countryside props) | streaming → terrain |
 | `route:set` / `route:clear` | `{ x, z, label?, icon? }` / – GPS line on both maps | earn, shops, big map → minimap |
 | `map:open` / `input:map` | – open the full map (M key) | earn / Input → minimap |
 | `weapon:empty` | `{ id }` the gun in his hand has no bullets | weapons → shops (way to the nearest weapon shop) |
@@ -764,6 +772,44 @@ version, add the field to `defaults()`. Features store live state with
 - Products tab rows for the new items: `tools/sheets/products-roadmap2-s2.csv` (paste into the
   sheet; the game sells them anyway — the sheet only overrides names / prices / pictures).
 - Test: `tools/crime-check.js` now buys a knife, throws a grenade and fires the launcher.
+
+## 12k. Bigger world (Roadmap 2, Session 3)
+- **`world.terrain`** (`src/world/terrain/index.js`, made in `World.init` right after the road
+  net, only when `data/terrain.json → enabled`). It sets `layout.openCity` (no city-limit
+  walls; `groundMesher.js` draws a kerb face instead) and `layout.openEdges` (`"i,j,S"` = the
+  bridge gap in the river railing). `Terrain.init(collision)` builds tiles, props, highways,
+  bridge, backdrop and colliders (edge of the land, sea strips, river with the bridge gap,
+  bridge parapets, ponds); `World.buildColliders` skips the old city-limit / river boxes.
+- **`TerrainField`** (`field.js`, pure maths): `sample(x, z)` = height + colour + plot weight +
+  prop class; layers: zones (fields / desert / coast, blended) → flat near the city → outer
+  mountains → highways (flattened to the smooth mountain height) → ponds → beach + sea → river.
+  `groundAt` interpolates the SAME grid as the mesh (cell 8 m, diagonal b–c), so feet and
+  wheels sit exactly on the drawn ground. `deckAt` = the bridge deck. `zoneAt` names,
+  `mapColor` for the map, `routeVia` for the GPS, `X(col)/Z(row)` junction units → metres.
+- **Heights**: `world.heightAt` = layout + ramps + `terrain.heightAt` (0 inside the city).
+  `world.terrainAt` = the land only: vehicles add it UNSMOOTHED next to the ramp height and it
+  never launches them (`physics.js → followGround`); `fleet.js` tilts cars with it outside the city.
+- **Tiles** (`tiles.js`): 192 m tiles, fine grid within `farDistance`, coarse beyond, skirts
+  hide cracks, built in a 4 ms budget per frame. Shared material = Lambert + `onBeforeCompile`
+  patch: per-pixel paddy plots with bunds where the `aField` attribute is > 0.
+- **Props** (`props.js`): seeded per tile, only tiles within `props.nearDistance`; one
+  InstancedMesh per kind for all near tiles; kinds = child meshes of `assets/nature/outskirts.glb`
+  (repack: `pack-props.js --recipes tools/terrain-kit/outskirts.json --kit "<Nature Kit>/Models/GLTF format" --out assets/nature/outskirts.glb`,
+  then `compress-models.js`), `tree:<kind>` from trees.glb, and `umbrella` (code). New kind =
+  recipe + an entry in a zone list of `data/terrain.json → props`. Colliders for the kinds in
+  `props.colliders`, added once per tile.
+- **Streaming**: the props wait for `stream:loaded` of a group whose id is a zone id
+  (`data/streaming.json → areas`). New countryside model files: add them to those groups.
+- **Water** (`water.js`): `extra` from `terrain.waterShapes()` (sea quad, river x range, pond discs).
+  City pond parks: `p.pond` rect (layout.js) → water quad, collider, grass ring + stone rim.
+- **Far mountains** (`backdrop.js`): a ring centred on the camera (like the sky dome), low over
+  the sea; coloured from `scene.fog.color` each time it changes.
+- **Map**: `paintCityMap(layout, cfg, terrain)` covers the whole land; the canvas origin is
+  `city.ox / city.oz` (no more `L.minX + margin`). Countryside blips: `minimap/index.js →
+  countrysideBlips` (group `outskirts`).
+- For S7 (boats): the sea collider strips are in `Terrain.addColliders`; water level
+  `data/world.json → water.level`; `field.shoreX(z)`, `field.river`, `field.ponds`. Boats should
+  ignore those colliders and use `field.sample(x, z).h < water.level` as "deep enough".
 
 ## 13. Notes for the next sessions (historical)
 - **Session 4 is done** (the old notes below are kept for reference).

@@ -14,6 +14,7 @@ with real brand logos.
 | `assets/city/facades.jpg`, `assets/city/ground.jpg` (baked from kit pieces and textures) | Downtown City MegaKit (free Standard version) | Quaternius | CC0 1.0 |
 | `assets/vehicles/kenney-*.glb` (pickup, van → microbus, delivery → box truck, flatbed → army truck, sedan-sports → luxury car, hatchback, suv-luxury → police jeep) | Car Kit, kenney.nl/assets/car-kit (downloaded 2026-11-21) | Kenney (www.kenney.nl) | CC0 1.0 |
 | `assets/nature/trees.glb` (oak, round, detailed, fat trees, three palms; recoloured) | Nature Kit, kenney.nl/assets/nature-kit (downloaded 2026-11-21) | Kenney (www.kenney.nl) | CC0 1.0 |
+| `assets/nature/outskirts.glb` (cacti, desert rocks, dry bush, paddy, corn, bamboo, bushes, grass, fence, logs, boulder, crag, pine, beach rock, canoe, tent; recoloured) | Nature Kit, kenney.nl/assets/nature-kit (downloaded 2026-11-21) | Kenney (www.kenney.nl) | CC0 1.0 |
 | `assets/street/street-props.glb` (street lamps, park double lamps, cones, barriers, site fences, waste containers) | City Kit (Roads) 2.2, kenney.nl/assets/city-kit-roads (downloaded 2026-11-21) | Kenney (www.kenney.nl) | CC0 1.0 |
 
 Kenney cars: packed by `tools/car-kit/pack-cars.js` (palette colours sorted into Paint / Windows /
@@ -24,7 +25,9 @@ All GLBs are meshopt-compressed by `tools/compress-models.js` (same models, smal
 
 Street props and trees: packed by `tools/street-kit/pack-props.js` (palette texture baked into vertex colours,
 lamps recoloured grey, scaled to metres). Benches, dustbins, transformers, bamboo scaffolding,
-nets and footbridges are built in code (no pack).
+nets and footbridges are built in code (no pack). Countryside (Roadmap 2 S3): ground, highways,
+the Buriganga Bridge, beach umbrellas and the far mountains are built in code; the props are
+packed with `pack-props.js --recipes tools/terrain-kit/outskirts.json`.
 
 Converted from FBX to GLB in headless three.js (FBXLoader → GLTFExporter): FBX colours fixed
 (linear), opacity fixed, units in metres. No textures needed (flat colours).
