@@ -48,7 +48,7 @@ export class ChunkManager {
   setQuality(quality) {
     const rebuild = this.quality && (
       this.quality.propDensity !== quality.propDensity || this.quality.balconies !== quality.balconies ||
-      this.quality.wires !== quality.wires || this.quality.heroBuildings !== quality.heroBuildings || this.quality.wireStrandScale !== quality.wireStrandScale);
+      this.quality.wires !== quality.wires || this.quality.realTrees !== quality.realTrees || this.quality.treeShadows !== quality.treeShadows || this.quality.heroBuildings !== quality.heroBuildings || this.quality.wireStrandScale !== quality.wireStrandScale);
     this.quality = quality;
     if (rebuild) this.disposeAll();
   }
@@ -89,7 +89,8 @@ export class ChunkManager {
     if (!ground.isEmpty) node.add(new THREE.Mesh(ground.build(), shared.groundMaterial));
     if (!facades.isEmpty) node.add(new THREE.Mesh(facades.build(), shared.facadeMaterial));
     if (!signGb.isEmpty) node.add(new THREE.Mesh(signGb.build(), shared.signAtlas.material)); // Bangla shop signs
-    for (const mesh of buildProps(lists, world, shared, quality, layout.kerb)) node.add(mesh);
+    const districtOf = (x, z) => layout.districtAt(x, z)?.id || null;
+    for (const mesh of buildProps(lists, world, shared, quality, layout.kerb, districtOf)) node.add(mesh);
     // Roadmap 2 S1: lamps, benches, bins, transformers, scaffolding... (src/world/street/).
     if (shared.street) for (const mesh of shared.street.buildChunk(pieces, quality)) node.add(mesh);
     const lines = buildWires(wires, world, shared, quality, hashInts(layout.seed, chunk.ci, chunk.cj, 9));
@@ -117,6 +118,15 @@ export class ChunkManager {
     this.queue.length = 0;
   }
 
+  /** Real tree models near the player, simple trees further away (Roadmap 2 G1). */
+  treeDetail(c) {
+    const near = c.dist <= (this.world.props.tree.models?.nearDistance ?? 0);
+    for (const o of c.node.children) {
+      if (o.userData.nearTrees) o.visible = near;
+      else if (o.userData.farTrees) o.visible = !near;
+    }
+  }
+
   /** Decide which chunks are needed around (x, z); show/hide/queue/unload. */
   refresh(x, z) {
     const view = this.quality.viewDistance;
@@ -126,7 +136,7 @@ export class ChunkManager {
     for (const c of this.chunks) {
       c.dist = this.distanceTo(c, x, z);
       if (c.dist <= view) {
-        if (c.node) { c.node.visible = true; visible++; }
+        if (c.node) { c.node.visible = true; visible++; this.treeDetail(c); }
         else this.queue.push(c);
       } else if (c.node) {
         c.node.visible = false;

@@ -86,7 +86,44 @@
         "#5a7f34"
       ],
       "trunk": "#4a3524",
-      "colliderSize": 0.5
+      "colliderSize": 0.5,
+      "models": {
+        "_comment": "Roadmap 2 G1: real tree models (assets/nature/trees.glb, Kenney Nature Kit CC0) on quality levels with realTrees (data/quality.json), in chunks closer than nearDistance metres; simple trees further away and on Low. weights = how often each kind grows (kinds: oak, round, detailed, fat, palm, palmBend, palmDetailed); districts = other weights per district id (merged over weights). tints = slight colour variation per tree (white = the model's own colours). heightScale = model height x the tree's height.",
+        "nearDistance": 110,
+        "heightScale": 1.0,
+        "tints": [
+          "#ffffff",
+          "#e9f2de",
+          "#d9e8cc",
+          "#f4f1dc"
+        ],
+        "weights": {
+          "oak": 3,
+          "round": 3,
+          "fat": 2,
+          "detailed": 0.5,
+          "palm": 0.8,
+          "palmBend": 0.4,
+          "palmDetailed": 0.4
+        },
+        "districts": {
+          "gulshan-banani": {
+            "palm": 2.5,
+            "palmBend": 1,
+            "palmDetailed": 2
+          },
+          "dhanmondi-hatirjheel": {
+            "palm": 2,
+            "palmBend": 1.5,
+            "palmDetailed": 1
+          },
+          "old-dhaka": {
+            "palm": 0.3,
+            "palmBend": 0.2,
+            "palmDetailed": 0
+          }
+        }
+      }
     }
   },
   "edges": {

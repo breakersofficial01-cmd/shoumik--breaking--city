@@ -48,7 +48,9 @@ const server = http.createServer((req, res) => {
     const png = await page.evaluate(async ({ url, grip, clip }) => {
       const THREE = await import('three');
       const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
+      const { MeshoptDecoder } = await import('three/addons/libs/meshopt_decoder.module.js');
       const loader = new GLTFLoader();
+      loader.setMeshoptDecoder(MeshoptDecoder); // the game's GLBs are meshopt-compressed
       const man = await loader.loadAsync('/assets/shoumik/shoumik.glb');
       const gun = (await loader.loadAsync(url)).scene;
       const scene = new THREE.Scene(); scene.background = new THREE.Color('#9aa4b0');

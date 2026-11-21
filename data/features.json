@@ -29,5 +29,6 @@
   "autoQuality": true,
   "healthPacks": true,
   "earn": true,
-  "streetLights": true
+  "streetLights": true,
+  "streaming": true
 }

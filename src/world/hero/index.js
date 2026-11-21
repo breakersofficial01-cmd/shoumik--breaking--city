@@ -48,12 +48,13 @@ export class HeroBuildings {
   load(url, spawn) {
     if (this.loading) return this.loading;
     this.loading = (async () => {
-      const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
-      const gltf = await new GLTFLoader().loadAsync(url);
+      // Through the asset registry: it may already be downloading since the boot (prefetch),
+      // and it reads meshopt-compressed files. `url` only says that a file is configured.
+      const scene = await this.world.game.assets.load('model.city.kitPieces');
       this.lib = new Map();
-      gltf.scene.updateMatrixWorld(true);
+      scene.updateMatrixWorld(true);
       // The file holds one group ('kit-pieces') whose children are the pieces.
-      const root = gltf.scene.getObjectByName('kit-pieces') || gltf.scene;
+      const root = scene.getObjectByName('kit-pieces') || scene;
       for (const piece of root.children) {
         const parts = [];
         const box = new THREE.Box3();

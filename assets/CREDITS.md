@@ -12,9 +12,12 @@ with real brand logos.
 | `assets/weapons/` | Ultimate Gun Pack | Quaternius | CC0 1.0 |
 | `assets/shoumik/shoumik.glb` | Owner's Shoumik model rigged and animated with Mixamo | owner / Adobe Mixamo | owner's files; Mixamo animations are free for games |
 | `assets/city/facades.jpg`, `assets/city/ground.jpg` (baked from kit pieces and textures) | Downtown City MegaKit (free Standard version) | Quaternius | CC0 1.0 |
+| `assets/nature/trees.glb` (oak, round, detailed, fat trees, three palms; recoloured) | Nature Kit, kenney.nl/assets/nature-kit (downloaded 2026-11-21) | Kenney (www.kenney.nl) | CC0 1.0 |
 | `assets/street/street-props.glb` (street lamps, park double lamps, cones, barriers, site fences, waste containers) | City Kit (Roads) 2.2, kenney.nl/assets/city-kit-roads (downloaded 2026-11-21) | Kenney (www.kenney.nl) | CC0 1.0 |
 
-Street props: packed by `tools/street-kit/pack-props.js` (palette texture baked into vertex colours,
+All GLBs are meshopt-compressed by `tools/compress-models.js` (same models, smaller files).
+
+Street props and trees: packed by `tools/street-kit/pack-props.js` (palette texture baked into vertex colours,
 lamps recoloured grey, scaled to metres). Benches, dustbins, transformers, bamboo scaffolding,
 nets and footbridges are built in code (no pack).
 

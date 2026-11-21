@@ -67,3 +67,27 @@ flat colours, no big textures), add ids to `data/assets.json`.
   shops, restaurants, Breaking School / Breaking Biology classrooms, Police HQ; a few apartments.
 
 Order can change if the owner asks; S3 (bigger world) must come before S7–S10.
+
+## Graphics + size track (owner, 2026-11-21)
+"Expand the size of the game, add more graphics so it looks cool; a paid hosting service is
+fine if needed; but the game must launch as soon as possible, and each new area loads gradually."
+Rules for every session from now on:
+- **First play stays small**: what is needed before "playing" must stay under ~15 MB (Medium).
+  Everything else goes in `data/streaming.json` → `afterStart` or an `areas` group (loaded when
+  Shoumik gets near). New districts of S3/S7–S10 MUST come as `areas` groups.
+- Every GLB is meshopt-compressed (`node tools/compress-models.js`), and `node tools/make-preload.js`
+  is run after adding/removing code files.
+- Total size budget: ~150–250 MB. GitHub Pages allows a 1 GB site; if traffic grows past ~100 GB
+  per month, move the `assets/` folder to a CDN host (Cloudflare R2 / Pages, Bunny) — only
+  `data/assets.json` URLs change.
+
+- [x] **G1 — Fast start + streaming + real trees.** (done 2026-11-21) Boot prefetch, parallel
+  feature loading, preloaded code, all models compressed (18.5 → 9.4 MB), `streaming` feature,
+  real tree models with palms (Kenney Nature Kit).
+- [ ] **G2 — City buildings upgrade.** More 3D kit buildings (Kenney City Kit Commercial /
+  Suburban / Industrial, CC0) streamed per district instead of only 4 zones; rooftop details
+  (AC units, dish antennas, solar panels).
+- [ ] **G3 — Ground + water look.** Road wear, puddles, kerb paint, better lake/river water,
+  lake-side walkways; grass and flowers in parks (instanced).
+- [ ] **G4 — Effects.** Better sky clouds, rain splashes, neon reflections on wet roads,
+  headlights at night, birds.

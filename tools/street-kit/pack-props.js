@@ -8,7 +8,8 @@
 //   - 'grey' recolours a model (Kenney lamps are lavender; Dhaka lamps are grey steel)
 //
 //   node tools/street-kit/pack-props.js --three <three@0.170.0 dir> --kit "<City Kit Roads>/Models/GLB format" \
-//        [--out assets/street/street-props.glb] [--shot props.png]
+//        [--out assets/street/street-props.glb] [--shot props.png] [--recipes tools/street-kit/recipes.json]
+// Trees: --recipes tools/street-kit/trees.json --kit "<Nature Kit>/Models/GLTF format" --out assets/nature/trees.glb
 // --shot also saves a picture of every packed prop in a row (to check the look).
 
 const http = require('http');
@@ -22,7 +23,7 @@ const threeDir = arg('three');
 const kitDir = arg('kit');
 const out = arg('out', path.join(ROOT, 'assets/street/street-props.glb'));
 const shot = arg('shot', null);
-const recipes = JSON.parse(fs.readFileSync(path.join(__dirname, 'recipes.json'), 'utf8')).props;
+const recipes = JSON.parse(fs.readFileSync(arg('recipes', path.join(__dirname, 'recipes.json')), 'utf8')).props;
 const MIME = { '.js': 'text/javascript', '.glb': 'model/gltf-binary', '.png': 'image/png' };
 
 const server = http.createServer((req, res) => {
@@ -77,6 +78,8 @@ const server = http.createServer((req, res) => {
         const n = g.attributes.position.count;
         const uv = g.attributes.uv;
         const tex = m.map ? readTex(m.map) : null;
+        // recipe.colors = { materialName: '#hex' } replaces that material's colour (leaves, bark).
+        const forced = r.colors?.[m.name] ? new THREE.Color(r.colors[m.name]) : null;
         const col = new Float32Array(n * 3);
         const lum = new Float32Array(n);
         for (let i = 0; i < n; i++) {
@@ -89,6 +92,7 @@ const server = http.createServer((req, res) => {
             rgb = [tex.data[k] / 255, tex.data[k + 1] / 255, tex.data[k + 2] / 255];
           }
           col[i * 3] = toLin(rgb[0]) * m.color.r; col[i * 3 + 1] = toLin(rgb[1]) * m.color.g; col[i * 3 + 2] = toLin(rgb[2]) * m.color.b;
+          if (forced) { col[i * 3] = forced.r; col[i * 3 + 1] = forced.g; col[i * 3 + 2] = forced.b; }
           lum[i] = Math.min(col[i * 3], col[i * 3 + 1], col[i * 3 + 2]); // the darkest channel
           if (grey && lum[i] <= (r.glow?.minLinear ?? 2)) {
             // Recolour (keep the shading): brightness relative to tintRef times the grey colour.
@@ -148,12 +152,13 @@ const server = http.createServer((req, res) => {
       scene.add(new THREE.HemisphereLight('#ffffff', '#555555', 2.2));
       const sun = new THREE.DirectionalLight('#ffffff', 2); sun.position.set(3, 8, 6); scene.add(sun);
       let x = 0;
+      const show = Math.max(1, 3 / Math.max(...recipes.map((r) => r.height))); // tiny models: shown 3 m tall
       for (const r of recipes) {
         for (const suffix of ['', '.glow']) {
           const src = root.getObjectByName(r.name + suffix);
           if (!src) continue;
           const m = new THREE.Mesh(src.geometry, suffix ? new THREE.MeshBasicMaterial({ color: '#fff27a' }) : new THREE.MeshLambertMaterial({ vertexColors: true }));
-          m.position.x = x; m.rotation.y = -0.6; scene.add(m);
+          m.position.x = x; m.rotation.y = -0.6; m.scale.setScalar(show); scene.add(m);
         }
         x += 4.2;
       }

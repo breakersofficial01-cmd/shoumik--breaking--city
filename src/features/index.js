@@ -49,6 +49,8 @@ const LOADERS = {
   ageGate: () => import('./ageGate/index.js'),
   // Session 8: lowers the graphics quality by itself when the phone is too slow.
   autoQuality: () => import('./autoQuality/index.js'),
+  // Roadmap 2 G1: downloads the rest (trains, guns, new areas) bit by bit while you play.
+  streaming: () => import('./streaming/index.js'),
   touchControls: () => import('./touchControls/index.js'),
   hud: () => import('./hud/index.js'),
   minimap: () => import('./minimap/index.js'),
@@ -64,13 +66,21 @@ export async function loadFeatures(game) {
     if (id.startsWith('_') || flags[id] !== true) continue;
     if (!LOADERS[id]) notBuilt.push(id);
   }
+  // Roadmap 2 G1: download every feature's code AT ONCE (it used to be one after another, each
+  // waiting for the previous download — seconds on mobile data), then start them in order.
+  const modules = new Map();
   for (const [id, load] of Object.entries(LOADERS)) {
+    if (flags[id] === true) modules.set(id, load().catch((err) => ({ error: err })));
+  }
+  for (const id of Object.keys(LOADERS)) {
     if (flags[id] !== true) {
       log.info(`feature "${id}" is switched off`);
       continue;
     }
     try {
-      const feature = (await load()).default;
+      const mod = await modules.get(id);
+      if (mod.error) throw mod.error;
+      const feature = mod.default;
       await feature.init(game);
       active.push(feature);
     } catch (err) {

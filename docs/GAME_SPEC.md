@@ -23,7 +23,12 @@ A free-roam, Vice-City-flavoured open world set in a compressed Dhaka, made for
 
 Money only comes from answering lesson questions. YouTube links open outside the game.
 
-## 2. What you can do today (after Roadmap 2 · Session 1, 2026-11-21)
+## 2. What you can do today (after Roadmap 2 · G1, 2026-11-21)
+- **G1 — faster start, real trees:** the game starts about 40 % faster on mobile data (models
+  download while you sign in and while the city is built; all 3D models are compressed to half
+  their size); the rest (trains, guns, later new areas) downloads gradually while you play.
+  Real 3D trees near you on Medium/High: round trees, oaks and **coconut palms** (more palms in
+  Gulshan and around the Dhanmondi / Hatirjheel lakes).
 - **Roadmap 2 S1 — street look:** grey street lamps along every block that light up at night
   (glowing bulbs, warm light pools, real light near you on Medium/High), double lamps in the
   parks, benches, dustbins, green waste containers in the lanes, pole transformers, 17
@@ -387,6 +392,13 @@ pauses.
 
 ## 8. Performance budget
 Target: 30+ fps on a mid-range Android (4 GB RAM), landscape, Chrome.
+
+**Size and start time (G1, 2026-11-21).** All game files ≈ 16 MB (was 26 MB) (models 9.4 MB, meshopt-
+compressed). Downloaded before playing: Low ≈ 3.5 MB, Medium ≈ 7.7 MB (+ three.js 0.7 MB from
+the CDN). Start → playing at 8 Mbps mobile data (headless test, includes software drawing):
+Low 7.5 s, Medium 13 s (before G1: 11.7 s / 20.5 s). Budget from now on: first play under ~15 MB,
+whole game 150–250 MB, new areas load when you get near (`data/streaming.json`).
+Real trees (Medium, start corner): +16 draw calls, +64k triangles (no tree shadows on Medium).
 
 **Automatic quality (Session 8).** Until the player picks a quality in Settings, the game chooses:
 weak devices (≤2 GB RAM, ≤4 CPU cores, or a known slow graphics chip — `data/performance.json`)
