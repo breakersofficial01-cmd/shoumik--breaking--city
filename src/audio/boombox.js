@@ -5,13 +5,14 @@
 //
 // Browsers only allow sound after the player has touched the page, so the audio starts on
 // the first tap/key press.
+// Roadmap 2 S4: moved here from features/hotspots/ — the hotel dance lounge plays it too.
 
 const STEP_KICK = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0];
 const STEP_SNARE = [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0];
 const STEP_BASS = [0, 0, 3, 0, 0, 0, 5, 0, 0, 0, 3, 0, 7, 0, 5, 0]; // semitones above the root, 0 = rest (step 0 plays the root)
 
 export class Boombox {
-  /** @param {import('../../audio/audio.js').AudioManager} audio  game.audio */
+  /** @param {import('./audio.js').AudioManager} audio  game.audio */
   constructor(audio) {
     this.audio = audio;
     this.ctx = null;

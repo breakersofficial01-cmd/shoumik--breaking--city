@@ -1,0 +1,28 @@
+{
+  "_comment": "Roadmap 2 S4: which CC0 food models go into assets/food/food.glb. src = 'kenney/<model>' (Kenney Food Kit 2.0, 'Models/GLB format') or 'quat/<model>' (Quaternius Ultimate Food Pack, OBJ + MTL). size = metres across (the widest side) the model is scaled to; models are a bit larger than real food so they read from the chase camera. rotY = degrees. The game names each child mesh 'name' (data/menu.json → items.<id>.model parts use { \"kit\": name }). Every item also has a code-built stand-in, so a missing model never breaks the menu.",
+  "models": [
+    { "name": "burger", "src": "kenney/burger-cheese", "size": 0.17 },
+    { "name": "pizza", "src": "kenney/pizza", "size": 0.36 },
+    { "name": "fries", "src": "kenney/fries", "size": 0.11 },
+    { "name": "sandwich", "src": "kenney/sandwich", "size": 0.17 },
+    { "name": "noodleBox", "src": "kenney/chinese", "size": 0.13 },
+    { "name": "hotdog", "src": "kenney/hot-dog", "size": 0.2 },
+    { "name": "maki", "src": "kenney/maki-salmon", "size": 0.05 },
+    { "name": "nigiri", "src": "kenney/sushi-salmon", "size": 0.08 },
+    { "name": "steak", "src": "quat/Steak", "size": 0.2 },
+    { "name": "chickenLeg", "src": "quat/ChickenLeg", "size": 0.13 },
+    { "name": "salad", "src": "kenney/salad", "size": 0.2 },
+    { "name": "sundae", "src": "kenney/sundae", "size": 0.11 },
+    { "name": "cake", "src": "kenney/cake", "size": 0.22 },
+    { "name": "donut", "src": "kenney/donut-sprinkles", "size": 0.1 },
+    { "name": "pancakes", "src": "kenney/pancakes", "size": 0.18 },
+    { "name": "skewer", "src": "kenney/skewer", "size": 0.24, "rotY": 0 },
+    { "name": "eggFried", "src": "quat/Egg_Fried", "size": 0.1 },
+    { "name": "teaCup", "src": "kenney/cup-tea", "size": 0.11 },
+    { "name": "coffeeCup", "src": "kenney/cup-coffee", "size": 0.09 },
+    { "name": "frappe", "src": "kenney/frappe", "size": 0.09 },
+    { "name": "cocktail", "src": "kenney/cocktail", "size": 0.1 },
+    { "name": "cupcake", "src": "quat/Cupcake", "size": 0.08 },
+    { "name": "lettuce", "src": "quat/Lettuce", "size": 0.12 }
+  ]
+}

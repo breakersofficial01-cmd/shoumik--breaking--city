@@ -200,3 +200,10 @@
 - Sand dune jumps: let the countryside launch cars at sharp crests (now glued to the ground).
 - Fishing boats moored at the beach and on the river (S7 boats can reuse them).
 - Make mountain colours less washed-out in daytime fog (lighter fog far away on High).
+
+## Ideas from Roadmap 2 · S4 (hotels)
+- Waiter path finding around diners' chairs; a "carry tray" arm pose.
+- Hotel rooms upstairs (rent a room = sleep + save, like a home); a lift button in the lobby.
+- Daily "chef's special" on a lobby poster (cheaper, from the Products sheet).
+- Eating sound + "yum" bubble; diners finishing and leaving, new ones arriving.
+- Street food stalls could also show the 3D dish (reuse `DishMaker`).

@@ -30,5 +30,6 @@
   "healthPacks": true,
   "earn": true,
   "streetLights": true,
-  "streaming": true
+  "streaming": true,
+  "hotels": true
 }

@@ -33,11 +33,14 @@ import { sangsad, shaheedMinar, shaplaChattar } from './civic.js';
 import { curzonHall, dhakaUniversity, tsc, dhakaMedical, buet, notreDame, ssmc } from './campus.js';
 import { ahsanManzil, lalbaghFort, sadarghat, nilkhet } from './oldDhaka.js';
 import { breakingCampus, gulshanTowers, karwanBazar, lakeDecor } from './modern.js';
+import { hotel } from './hotels.js';
 
 export const BUILDERS = {
   sangsad, shaheedMinar, shaplaChattar, curzonHall, dhakaUniversity, tsc, dhakaMedical, buet,
   notreDame, ssmc, ahsanManzil, lalbaghFort, sadarghat, nilkhet, gulshanTowers, karwanBazar,
   breakingSchool: breakingCampus, breakingBiology: breakingCampus, // same building, own colours and name
+  // Roadmap 2 S4: the three hotels (one builder, three styles; the inside: src/features/hotels/).
+  breakingHotel: hotel, shoumikCulinary: hotel, bengaliHeritage: hotel,
 };
 const FACING = { S: 0, E: Math.PI / 2, N: Math.PI, W: -Math.PI / 2 };
 const WORLD_SITE = { cx: 0, cz: 0, y: 0, angle: 0 };
@@ -193,6 +196,7 @@ export class Landmarks {
       sign: markGlow(new THREE.MeshBasicMaterial({ map: atlas.texture }), 'sign'),
     };
     const sign = (id) => atlas.uv.get(id) || null;
+    this.signUv = sign; // Roadmap 2 S4: the hotels feature puts the name board inside the lobby too
     const makeBuilders = () => ({ lit: new GeoBuilder(), glow: new GeoBuilder(), sign: new GeoBuilder() });
     const waterLevel = this.worldCfg.water.level;
     let tris = 0;

@@ -13,7 +13,7 @@ import { t, pickName, formatNumber } from '../../ui/i18n.js';
 import { fontStack } from '../../ui/fonts.js';
 import { getLanguage } from '../../ui/i18n.js';
 
-const GROUPS = ['school', 'weapons', 'food', 'outfits', 'vehicles', 'homes', 'home', 'health', 'healthpack', 'police', 'outskirts'];
+const GROUPS = ['school', 'hotels', 'weapons', 'food', 'outfits', 'vehicles', 'homes', 'home', 'health', 'healthpack', 'police', 'outskirts'];
 
 export class BigMap {
   /**
@@ -77,7 +77,7 @@ export class BigMap {
     const counts = new Map();
     for (const pts of this.blips.values()) for (const b of pts) counts.set(b.group, (counts.get(b.group) || 0) + 1);
     return GROUPS.filter((g) => counts.get(g)).map((g) => {
-      const icon = g === 'school' ? '🎓' : g === 'outskirts' ? '🌾' : g === 'healthpack' ? '➕' : g === 'police' ? '🚓' : this.kinds[g]?.icon || '•';
+      const icon = g === 'school' ? '🎓' : g === 'hotels' ? '🏨' : g === 'outskirts' ? '🌾' : g === 'healthpack' ? '➕' : g === 'police' ? '🚓' : this.kinds[g]?.icon || '•';
       return `<button type="button" data-group="${g}" class="${this.hidden.has(g) ? 'off' : ''}">${icon} ${esc(t(`map.group.${g}`))} <small>${esc(formatNumber(counts.get(g)))}</small></button>`;
     }).join('');
   }

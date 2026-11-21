@@ -1,0 +1,59 @@
+product_id,kind,name_en,name_bn,price,heal,image_url,model_url,description,active,notes
+kacchi,food,"Kacchi biryani",কাচ্চি বিরিয়ানি,250,60,,,,TRUE,Roadmap 2 S4 hotel menu
+tehari,food,"Beef tehari",বিফ তেহারি,160,50,,,,TRUE,Roadmap 2 S4 hotel menu
+khichuri,food,"Khichuri",খিচুড়ি,120,45,,,,TRUE,Roadmap 2 S4 hotel menu
+bhuna_khichuri,food,"Bhuna khichuri",ভুনা খিচুড়ি,170,55,,,,TRUE,Roadmap 2 S4 hotel menu
+ilish_curry,food,"Hilsa fish curry",ইলিশ মাছের তরকারি,320,65,,,,TRUE,Roadmap 2 S4 hotel menu
+beef_bhuna,food,"Beef bhuna",গরুর মাংস ভুনা,260,60,,,,TRUE,Roadmap 2 S4 hotel menu
+chicken_roast,food,"Chicken roast",মুরগির রোস্ট,220,55,,,,TRUE,Roadmap 2 S4 hotel menu
+morog_polao,food,"Morog polao",মোরগ পোলাও,280,65,,,,TRUE,Roadmap 2 S4 hotel menu
+fuchka,food,"Fuchka",ফুচকা,50,45,,,,TRUE,Roadmap 2 S4 hotel menu
+chotpoti,food,"Chotpoti",চটপটি,40,35,,,,TRUE,Roadmap 2 S4 hotel menu
+singara,food,"Singara",সিঙ্গারা,20,12,,,,TRUE,Roadmap 2 S4 hotel menu
+samosa,food,"Samosa",সমুচা,20,12,,,,TRUE,Roadmap 2 S4 hotel menu
+piyaju,food,"Piyaju",পেঁয়াজু,20,10,,,,TRUE,Roadmap 2 S4 hotel menu
+beguni,food,"Beguni",বেগুনি,20,10,,,,TRUE,Roadmap 2 S4 hotel menu
+porota,food,"Paratha with egg",ডিম পরোটা,40,20,,,,TRUE,Roadmap 2 S4 hotel menu
+haleem,food,"Haleem",হালিম,150,45,,,,TRUE,Roadmap 2 S4 hotel menu
+kabab,food,"Kabab platter",কাবাব প্লেটার,180,55,,,,TRUE,Roadmap 2 S4 hotel menu
+mishti_doi,food,"Mishti doi",মিষ্টি দই,80,20,,,,TRUE,Roadmap 2 S4 hotel menu
+roshogolla,food,"Roshogolla",রসগোল্লা,60,15,,,,TRUE,Roadmap 2 S4 hotel menu
+chomchom,food,"Chomchom",চমচম,70,15,,,,TRUE,Roadmap 2 S4 hotel menu
+jilapi,food,"Jilapi",জিলাপি,50,15,,,,TRUE,Roadmap 2 S4 hotel menu
+payesh,food,"Payesh",পায়েস,90,25,,,,TRUE,Roadmap 2 S4 hotel menu
+burger,food,"Beef burger",বিফ বার্গার,220,50,,,,TRUE,Roadmap 2 S4 hotel menu
+pizza,food,"Pizza",পিৎজা,450,70,,,,TRUE,Roadmap 2 S4 hotel menu
+fried_chicken,food,"Fried chicken",ফ্রাইড চিকেন,260,55,,,,TRUE,Roadmap 2 S4 hotel menu
+fries,food,"French fries",ফ্রেঞ্চ ফ্রাই,90,20,,,,TRUE,Roadmap 2 S4 hotel menu
+sandwich,food,"Club sandwich",ক্লাব স্যান্ডউইচ,150,35,,,,TRUE,Roadmap 2 S4 hotel menu
+noodles,food,"Chowmein noodles",চাউমিন নুডলস,180,40,,,,TRUE,Roadmap 2 S4 hotel menu
+fried_rice,food,"Fried rice",ফ্রাইড রাইস,200,45,,,,TRUE,Roadmap 2 S4 hotel menu
+pasta,food,"Pasta",পাস্তা,240,45,,,,TRUE,Roadmap 2 S4 hotel menu
+hotdog,food,"Hot dog",হট ডগ,160,35,,,,TRUE,Roadmap 2 S4 hotel menu
+sushi,food,"Sushi platter",সুশি প্লেটার,550,50,,,,TRUE,Roadmap 2 S4 hotel menu
+steak,food,"Grilled steak",গ্রিলড স্টেক,650,75,,,,TRUE,Roadmap 2 S4 hotel menu
+salad,food,"Garden salad",গার্ডেন সালাদ,180,25,,,,TRUE,Roadmap 2 S4 hotel menu
+ice_cream,food,"Ice cream sundae",আইসক্রিম সানডে,120,15,,,,TRUE,Roadmap 2 S4 hotel menu
+cake,food,"Cake",কেক,150,20,,,,TRUE,Roadmap 2 S4 hotel menu
+doughnut,food,"Doughnut",ডোনাট,90,15,,,,TRUE,Roadmap 2 S4 hotel menu
+pancakes,food,"Pancakes",প্যানকেক,200,35,,,,TRUE,Roadmap 2 S4 hotel menu
+tea,drink,"Tea (cha)",চা,10,15,,,,TRUE,Roadmap 2 S4 hotel menu
+milk_tea,drink,"Milk tea",দুধ চা,20,15,,,,TRUE,Roadmap 2 S4 hotel menu
+coffee,drink,"Coffee",কফি,120,12,,,,TRUE,Roadmap 2 S4 hotel menu
+cold_coffee,drink,"Cold coffee",কোল্ড কফি,180,15,,,,TRUE,Roadmap 2 S4 hotel menu
+lassi,drink,"Lassi",লাচ্ছি,60,15,,,,TRUE,Roadmap 2 S4 hotel menu
+borhani,drink,"Borhani",বোরহানি,50,15,,,,TRUE,Roadmap 2 S4 hotel menu
+mango_juice,drink,"Mango juice",আমের জুস,90,15,,,,TRUE,Roadmap 2 S4 hotel menu
+orange_juice,drink,"Orange juice",কমলার জুস,90,15,,,,TRUE,Roadmap 2 S4 hotel menu
+lemonade,drink,"Lemonade",লেবুর শরবত,70,12,,,,TRUE,Roadmap 2 S4 hotel menu
+coconut_water,drink,"Green coconut water",ডাবের পানি,80,20,,,,TRUE,Roadmap 2 S4 hotel menu
+sugarcane_juice,drink,"Sugarcane juice",আখের রস,40,15,,,,TRUE,Roadmap 2 S4 hotel menu
+milkshake_chocolate,drink,"Chocolate milkshake",চকলেট মিল্কশেক,180,20,,,,TRUE,Roadmap 2 S4 hotel menu
+milkshake_strawberry,drink,"Strawberry milkshake",স্ট্রবেরি মিল্কশেক,180,20,,,,TRUE,Roadmap 2 S4 hotel menu
+cola,drink,"Cola",কোলা,50,8,,,,TRUE,Roadmap 2 S4 hotel menu
+lemon_soda,drink,"Lemon soda",লেমন সোডা,50,8,,,,TRUE,Roadmap 2 S4 hotel menu
+orange_soda,drink,"Orange soda",অরেঞ্জ সোডা,50,8,,,,TRUE,Roadmap 2 S4 hotel menu
+mint_mojito,drink,"Mint lemon mojito (no alcohol)",মিন্ট লেমন মোহিতো (মকটেল),220,12,,,,TRUE,Roadmap 2 S4 hotel menu
+blue_lagoon,drink,"Blue lagoon (mocktail)",ব্লু লেগুন (মকটেল),240,12,,,,TRUE,Roadmap 2 S4 hotel menu
+fruit_punch,drink,"Fruit punch (mocktail)",ফ্রুট পাঞ্চ (মকটেল),220,15,,,,TRUE,Roadmap 2 S4 hotel menu
+water,drink,"Bottled water",বোতলের পানি,20,10,,,,TRUE,Roadmap 2 S4 hotel menu

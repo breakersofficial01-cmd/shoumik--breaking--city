@@ -19,6 +19,7 @@ let drops = null;
 let flashLight = null;
 let rainLoop = null;
 let rain = 0;          // current strength 0..1
+let indoors = false;   // Roadmap 2 S4: inside a hotel (interior:changed)
 let target = 0;        // where rain is heading
 let wetness = 0;       // roads dry slower than the rain stops
 let phaseLeft = 0;     // seconds until the rain starts / stops by itself
@@ -105,6 +106,8 @@ export default {
     if (!cfg.enabled && forced !== '1') target = 0;
     offs = [
       g.events.on('weather:set', ({ rain: on }) => setRaining(!!on)),
+      // Roadmap 2 S4: no rain drops inside a hotel (roads stay wet, the sound goes on).
+      g.events.on('interior:changed', ({ inside }) => { indoors = !!inside; }),
       g.events.on('weather:thunder', thunder),
       g.events.on('quality:changed', ({ quality }) => buildDrops(cfg.drops.count[quality] ?? cfg.drops.count.medium)),
     ];
@@ -128,7 +131,7 @@ export default {
     }
     game.world.cityShading.setWet(wetness, game.scene.fog.color, cfg.wet);
 
-    drops.visible = rain > 0.01;
+    drops.visible = rain > 0.01 && !indoors;
     if (drops.visible) {
       const u = drops.material.uniforms;
       u.uTime.value = elapsed;

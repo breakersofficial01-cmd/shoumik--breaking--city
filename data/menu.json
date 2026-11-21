@@ -1,0 +1,1312 @@
+{
+ "_comment": "Roadmap 2 S4: everything the three hotels serve. kind = food | drink (the Products tab of the Google Sheet uses the same id + kind; a sheet row overrides name, price, heal and on/off). cat = bd (Bangladeshi) | fast (fast food and other) | sweet | drink — the tabs of the menu. heal = health points when eaten. Prices: data/economy.json → prices.food / prices.drink. model = the 3D dish on the table, built from parts: { serve: plate | bowl | board | glass | tall | cup | bottle | coconut | coupe | clayPot, liquid, top, fruit, straw, leaves, cap } containers; { kit: <name> } a model from assets/food/food.glb (tools/food-kit/food.json; at = [x, y, z] metres on the plate, rot = degrees, scale, fb = stand-in colour while/if the file is missing); { code: mound | fill | puddle | balls | egg | chilli | pyramids | triangles | discs | slices | flat | ovals | spirals | pasta | slice | cupSmall, color, color2, n, r, h, ring, at } code-built food (src/features/hotels/dishes.js). All drinks are soft drinks, juices and mocktails (no alcohol).",
+ "items": {
+  "kacchi": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Kacchi biryani",
+    "bn": "কাচ্চি বিরিয়ানি"
+   },
+   "heal": 60,
+   "icon": "🍛",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "code": "mound",
+     "color": "#f2dca0",
+     "color2": "#7a3b1e",
+     "n": 5,
+     "r": 0.085,
+     "h": 0.06
+    },
+    {
+     "code": "balls",
+     "color": "#e9c27a",
+     "n": 1,
+     "r": 0.025,
+     "at": [
+      0.05,
+      0.03,
+      0.03
+     ]
+    },
+    {
+     "code": "egg",
+     "at": [
+      -0.05,
+      0.02,
+      0.04
+     ]
+    }
+   ]
+  },
+  "tehari": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Beef tehari",
+    "bn": "বিফ তেহারি"
+   },
+   "heal": 50,
+   "icon": "🍛",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "code": "mound",
+     "color": "#e8c46a",
+     "color2": "#5e2a14",
+     "n": 9,
+     "r": 0.085,
+     "h": 0.055
+    },
+    {
+     "code": "chilli",
+     "at": [
+      0.06,
+      0.03,
+      -0.03
+     ]
+    }
+   ]
+  },
+  "khichuri": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Khichuri",
+    "bn": "খিচুড়ি"
+   },
+   "heal": 45,
+   "icon": "🥣",
+   "model": [
+    {
+     "serve": "bowl"
+    },
+    {
+     "code": "fill",
+     "color": "#e0b23a",
+     "color2": "#c98f2a",
+     "n": 6
+    }
+   ]
+  },
+  "bhuna_khichuri": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Bhuna khichuri",
+    "bn": "ভুনা খিচুড়ি"
+   },
+   "heal": 55,
+   "icon": "🍛",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "code": "mound",
+     "color": "#c98b2e",
+     "color2": "#6b2f14",
+     "n": 6,
+     "r": 0.08,
+     "h": 0.05
+    },
+    {
+     "code": "egg",
+     "at": [
+      0.05,
+      0.02,
+      0.04
+     ]
+    }
+   ]
+  },
+  "ilish_curry": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Hilsa fish curry",
+    "bn": "ইলিশ মাছের তরকারি"
+   },
+   "heal": 65,
+   "icon": "🐟",
+   "model": [
+    {
+     "serve": "bowl"
+    },
+    {
+     "code": "fill",
+     "color": "#d9822b",
+     "color2": "#c9ccd2",
+     "n": 3,
+     "big": true
+    }
+   ]
+  },
+  "beef_bhuna": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Beef bhuna",
+    "bn": "গরুর মাংস ভুনা"
+   },
+   "heal": 60,
+   "icon": "🍖",
+   "model": [
+    {
+     "serve": "bowl"
+    },
+    {
+     "code": "fill",
+     "color": "#6b2a12",
+     "color2": "#4a1a0a",
+     "n": 7,
+     "big": true
+    }
+   ]
+  },
+  "chicken_roast": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Chicken roast",
+    "bn": "মুরগির রোস্ট"
+   },
+   "heal": 55,
+   "icon": "🍗",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "code": "puddle",
+     "color": "#c46a1e"
+    },
+    {
+     "kit": "chickenLeg",
+     "at": [
+      0,
+      0.01,
+      0
+     ],
+     "rot": 20,
+     "fb": "#b8642a"
+    },
+    {
+     "code": "balls",
+     "color": "#f0e0c0",
+     "n": 1,
+     "r": 0.022,
+     "at": [
+      -0.07,
+      0.02,
+      0.04
+     ]
+    }
+   ]
+  },
+  "morog_polao": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Morog polao",
+    "bn": "মোরগ পোলাও"
+   },
+   "heal": 65,
+   "icon": "🍛",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "code": "mound",
+     "color": "#f4ead0",
+     "color2": "#d9b46a",
+     "n": 6,
+     "r": 0.085,
+     "h": 0.05
+    },
+    {
+     "kit": "chickenLeg",
+     "at": [
+      0.02,
+      0.045,
+      0
+     ],
+     "rot": -30,
+     "fb": "#b8642a"
+    }
+   ]
+  },
+  "fuchka": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Fuchka",
+    "bn": "ফুচকা"
+   },
+   "heal": 45,
+   "icon": "🥟",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "code": "balls",
+     "color": "#e7b768",
+     "n": 6,
+     "r": 0.022,
+     "ring": 0.06
+    },
+    {
+     "code": "cupSmall",
+     "liquid": "#6b3b1a",
+     "at": [
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  "chotpoti": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Chotpoti",
+    "bn": "চটপটি"
+   },
+   "heal": 35,
+   "icon": "🥣",
+   "model": [
+    {
+     "serve": "bowl"
+    },
+    {
+     "code": "fill",
+     "color": "#e8c25a",
+     "color2": "#f4f0e0",
+     "n": 8
+    }
+   ]
+  },
+  "singara": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Singara",
+    "bn": "সিঙ্গারা"
+   },
+   "heal": 12,
+   "icon": "🥟",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "code": "pyramids",
+     "color": "#d79a3e",
+     "n": 3
+    }
+   ]
+  },
+  "samosa": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Samosa",
+    "bn": "সমুচা"
+   },
+   "heal": 12,
+   "icon": "🥟",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "code": "triangles",
+     "color": "#e0aa52",
+     "n": 3
+    }
+   ]
+  },
+  "piyaju": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Piyaju",
+    "bn": "পেঁয়াজু"
+   },
+   "heal": 10,
+   "icon": "🧆",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "code": "discs",
+     "color": "#a8621e",
+     "n": 5,
+     "r": 0.022
+    }
+   ]
+  },
+  "beguni": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Beguni",
+    "bn": "বেগুনি"
+   },
+   "heal": 10,
+   "icon": "🍆",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "code": "slices",
+     "color": "#c8892e",
+     "n": 4
+    }
+   ]
+  },
+  "porota": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Paratha with egg",
+    "bn": "ডিম পরোটা"
+   },
+   "heal": 20,
+   "icon": "🫓",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "code": "flat",
+     "color": "#e6c27c",
+     "r": 0.1
+    },
+    {
+     "kit": "eggFried",
+     "at": [
+      0.02,
+      0.012,
+      0.0
+     ],
+     "fb": "#f6f0dc"
+    }
+   ]
+  },
+  "haleem": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Haleem",
+    "bn": "হালিম"
+   },
+   "heal": 45,
+   "icon": "🥣",
+   "model": [
+    {
+     "serve": "bowl"
+    },
+    {
+     "code": "fill",
+     "color": "#8a4f22",
+     "color2": "#e9d27a",
+     "n": 6
+    }
+   ]
+  },
+  "kabab": {
+   "kind": "food",
+   "cat": "bd",
+   "name": {
+    "en": "Kabab platter",
+    "bn": "কাবাব প্লেটার"
+   },
+   "heal": 55,
+   "icon": "🍢",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "kit": "skewer",
+     "at": [
+      0,
+      0.005,
+      -0.025
+     ],
+     "fb": "#7a3b1e"
+    },
+    {
+     "kit": "skewer",
+     "at": [
+      0,
+      0.005,
+      0.025
+     ],
+     "fb": "#7a3b1e"
+    },
+    {
+     "code": "slice",
+     "color": "#7ec850",
+     "at": [
+      0.08,
+      0.01,
+      0.06
+     ]
+    }
+   ]
+  },
+  "mishti_doi": {
+   "kind": "food",
+   "cat": "sweet",
+   "name": {
+    "en": "Mishti doi",
+    "bn": "মিষ্টি দই"
+   },
+   "heal": 20,
+   "icon": "🍮",
+   "model": [
+    {
+     "serve": "clayPot",
+     "liquid": "#f2e2c4"
+    }
+   ]
+  },
+  "roshogolla": {
+   "kind": "food",
+   "cat": "sweet",
+   "name": {
+    "en": "Roshogolla",
+    "bn": "রসগোল্লা"
+   },
+   "heal": 15,
+   "icon": "⚪",
+   "model": [
+    {
+     "serve": "bowl"
+    },
+    {
+     "code": "fill",
+     "color": "#f3e6b0",
+     "low": true
+    },
+    {
+     "code": "balls",
+     "color": "#fbf7ee",
+     "n": 3,
+     "r": 0.025,
+     "ring": 0.035,
+     "y": 0.035
+    }
+   ]
+  },
+  "chomchom": {
+   "kind": "food",
+   "cat": "sweet",
+   "name": {
+    "en": "Chomchom",
+    "bn": "চমচম"
+   },
+   "heal": 15,
+   "icon": "🍬",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "code": "ovals",
+     "color": "#d9886a",
+     "n": 3
+    }
+   ]
+  },
+  "jilapi": {
+   "kind": "food",
+   "cat": "sweet",
+   "name": {
+    "en": "Jilapi",
+    "bn": "জিলাপি"
+   },
+   "heal": 15,
+   "icon": "🍥",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "code": "spirals",
+     "color": "#f08a1e",
+     "n": 3
+    }
+   ]
+  },
+  "payesh": {
+   "kind": "food",
+   "cat": "sweet",
+   "name": {
+    "en": "Payesh",
+    "bn": "পায়েস"
+   },
+   "heal": 25,
+   "icon": "🍚",
+   "model": [
+    {
+     "serve": "bowl"
+    },
+    {
+     "code": "fill",
+     "color": "#f4ead2",
+     "color2": "#7a3b5a",
+     "n": 5
+    }
+   ]
+  },
+  "burger": {
+   "kind": "food",
+   "cat": "fast",
+   "name": {
+    "en": "Beef burger",
+    "bn": "বিফ বার্গার"
+   },
+   "heal": 50,
+   "icon": "🍔",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "kit": "burger",
+     "fb": "#c88a4a"
+    }
+   ]
+  },
+  "pizza": {
+   "kind": "food",
+   "cat": "fast",
+   "name": {
+    "en": "Pizza",
+    "bn": "পিৎজা"
+   },
+   "heal": 70,
+   "icon": "🍕",
+   "model": [
+    {
+     "serve": "board"
+    },
+    {
+     "kit": "pizza",
+     "at": [
+      0,
+      0.012,
+      0
+     ],
+     "fb": "#e0a040"
+    }
+   ]
+  },
+  "fried_chicken": {
+   "kind": "food",
+   "cat": "fast",
+   "name": {
+    "en": "Fried chicken",
+    "bn": "ফ্রাইড চিকেন"
+   },
+   "heal": 55,
+   "icon": "🍗",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "kit": "chickenLeg",
+     "at": [
+      -0.03,
+      0.0,
+      -0.03
+     ],
+     "rot": 10,
+     "fb": "#c27a2e"
+    },
+    {
+     "kit": "chickenLeg",
+     "at": [
+      0.03,
+      0.0,
+      0.03
+     ],
+     "rot": 200,
+     "fb": "#c27a2e"
+    },
+    {
+     "kit": "chickenLeg",
+     "at": [
+      0.0,
+      0.03,
+      0.0
+     ],
+     "rot": 100,
+     "fb": "#c27a2e"
+    }
+   ]
+  },
+  "fries": {
+   "kind": "food",
+   "cat": "fast",
+   "name": {
+    "en": "French fries",
+    "bn": "ফ্রেঞ্চ ফ্রাই"
+   },
+   "heal": 20,
+   "icon": "🍟",
+   "model": [
+    {
+     "kit": "fries",
+     "fb": "#f2c84b"
+    }
+   ]
+  },
+  "sandwich": {
+   "kind": "food",
+   "cat": "fast",
+   "name": {
+    "en": "Club sandwich",
+    "bn": "ক্লাব স্যান্ডউইচ"
+   },
+   "heal": 35,
+   "icon": "🥪",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "kit": "sandwich",
+     "fb": "#e8c27a"
+    }
+   ]
+  },
+  "noodles": {
+   "kind": "food",
+   "cat": "fast",
+   "name": {
+    "en": "Chowmein noodles",
+    "bn": "চাউমিন নুডলস"
+   },
+   "heal": 40,
+   "icon": "🍜",
+   "model": [
+    {
+     "kit": "noodleBox",
+     "fb": "#d84a2a"
+    }
+   ]
+  },
+  "fried_rice": {
+   "kind": "food",
+   "cat": "fast",
+   "name": {
+    "en": "Fried rice",
+    "bn": "ফ্রাইড রাইস"
+   },
+   "heal": 45,
+   "icon": "🍚",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "code": "mound",
+     "color": "#ecd9a2",
+     "color2": "#5fae4a",
+     "n": 10,
+     "r": 0.08,
+     "h": 0.045
+    }
+   ]
+  },
+  "pasta": {
+   "kind": "food",
+   "cat": "fast",
+   "name": {
+    "en": "Pasta",
+    "bn": "পাস্তা"
+   },
+   "heal": 45,
+   "icon": "🍝",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "code": "pasta",
+     "color": "#f0d27a",
+     "color2": "#c8321e"
+    }
+   ]
+  },
+  "hotdog": {
+   "kind": "food",
+   "cat": "fast",
+   "name": {
+    "en": "Hot dog",
+    "bn": "হট ডগ"
+   },
+   "heal": 35,
+   "icon": "🌭",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "kit": "hotdog",
+     "fb": "#d08a4a"
+    }
+   ]
+  },
+  "sushi": {
+   "kind": "food",
+   "cat": "fast",
+   "name": {
+    "en": "Sushi platter",
+    "bn": "সুশি প্লেটার"
+   },
+   "heal": 50,
+   "icon": "🍣",
+   "model": [
+    {
+     "serve": "board"
+    },
+    {
+     "kit": "maki",
+     "at": [
+      -0.06,
+      0.012,
+      -0.03
+     ],
+     "fb": "#f4f0e8"
+    },
+    {
+     "kit": "maki",
+     "at": [
+      0,
+      0.012,
+      -0.03
+     ],
+     "fb": "#f4f0e8"
+    },
+    {
+     "kit": "maki",
+     "at": [
+      0.06,
+      0.012,
+      -0.03
+     ],
+     "fb": "#f4f0e8"
+    },
+    {
+     "kit": "nigiri",
+     "at": [
+      -0.04,
+      0.012,
+      0.04
+     ],
+     "rot": 90,
+     "fb": "#f08a5a"
+    },
+    {
+     "kit": "nigiri",
+     "at": [
+      0.04,
+      0.012,
+      0.04
+     ],
+     "rot": 90,
+     "fb": "#f08a5a"
+    }
+   ]
+  },
+  "steak": {
+   "kind": "food",
+   "cat": "fast",
+   "name": {
+    "en": "Grilled steak",
+    "bn": "গ্রিলড স্টেক"
+   },
+   "heal": 75,
+   "icon": "🥩",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "kit": "steak",
+     "at": [
+      0,
+      0.008,
+      0
+     ],
+     "fb": "#5a2a1a"
+    },
+    {
+     "kit": "lettuce",
+     "at": [
+      0.07,
+      0.008,
+      0.05
+     ],
+     "scale": 0.6,
+     "fb": "#3f8f3a"
+    }
+   ]
+  },
+  "salad": {
+   "kind": "food",
+   "cat": "fast",
+   "name": {
+    "en": "Garden salad",
+    "bn": "গার্ডেন সালাদ"
+   },
+   "heal": 25,
+   "icon": "🥗",
+   "model": [
+    {
+     "kit": "salad",
+     "fb": "#5fae4a"
+    }
+   ]
+  },
+  "ice_cream": {
+   "kind": "food",
+   "cat": "sweet",
+   "name": {
+    "en": "Ice cream sundae",
+    "bn": "আইসক্রিম সানডে"
+   },
+   "heal": 15,
+   "icon": "🍨",
+   "model": [
+    {
+     "kit": "sundae",
+     "scale": 0.75,
+     "fb": "#f4d0e0"
+    }
+   ]
+  },
+  "cake": {
+   "kind": "food",
+   "cat": "sweet",
+   "name": {
+    "en": "Cake",
+    "bn": "কেক"
+   },
+   "heal": 20,
+   "icon": "🍰",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "kit": "cake",
+     "scale": 0.65,
+     "fb": "#f0c0d0"
+    }
+   ]
+  },
+  "doughnut": {
+   "kind": "food",
+   "cat": "sweet",
+   "name": {
+    "en": "Doughnut",
+    "bn": "ডোনাট"
+   },
+   "heal": 15,
+   "icon": "🍩",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "kit": "donut",
+     "at": [
+      0,
+      0.008,
+      0
+     ],
+     "fb": "#f08ac0"
+    }
+   ]
+  },
+  "pancakes": {
+   "kind": "food",
+   "cat": "sweet",
+   "name": {
+    "en": "Pancakes",
+    "bn": "প্যানকেক"
+   },
+   "heal": 35,
+   "icon": "🥞",
+   "model": [
+    {
+     "serve": "plate"
+    },
+    {
+     "kit": "pancakes",
+     "scale": 0.85,
+     "fb": "#e0a858"
+    }
+   ]
+  },
+  "tea": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Tea (cha)",
+    "bn": "চা"
+   },
+   "heal": 15,
+   "icon": "☕",
+   "model": [
+    {
+     "kit": "teaCup",
+     "scale": 0.9,
+     "fb": "#f4f4f0"
+    }
+   ]
+  },
+  "milk_tea": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Milk tea",
+    "bn": "দুধ চা"
+   },
+   "heal": 15,
+   "icon": "☕",
+   "model": [
+    {
+     "serve": "cup",
+     "liquid": "#c89a6a"
+    }
+   ]
+  },
+  "coffee": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Coffee",
+    "bn": "কফি"
+   },
+   "heal": 12,
+   "icon": "☕",
+   "model": [
+    {
+     "kit": "coffeeCup",
+     "scale": 1.1,
+     "fb": "#f4f4f0"
+    }
+   ]
+  },
+  "cold_coffee": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Cold coffee",
+    "bn": "কোল্ড কফি"
+   },
+   "heal": 15,
+   "icon": "🧋",
+   "model": [
+    {
+     "kit": "frappe",
+     "fb": "#a8784a"
+    }
+   ]
+  },
+  "lassi": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Lassi",
+    "bn": "লাচ্ছি"
+   },
+   "heal": 15,
+   "icon": "🥛",
+   "model": [
+    {
+     "serve": "tall",
+     "liquid": "#f6f0e0",
+     "top": "#fffaf0"
+    }
+   ]
+  },
+  "borhani": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Borhani",
+    "bn": "বোরহানি"
+   },
+   "heal": 15,
+   "icon": "🥛",
+   "model": [
+    {
+     "serve": "glass",
+     "liquid": "#dfe8cc",
+     "top": "#7ab05a"
+    }
+   ]
+  },
+  "mango_juice": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Mango juice",
+    "bn": "আমের জুস"
+   },
+   "heal": 15,
+   "icon": "🥭",
+   "model": [
+    {
+     "serve": "tall",
+     "liquid": "#f5b81e"
+    }
+   ]
+  },
+  "orange_juice": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Orange juice",
+    "bn": "কমলার জুস"
+   },
+   "heal": 15,
+   "icon": "🍊",
+   "model": [
+    {
+     "serve": "tall",
+     "liquid": "#f7931e",
+     "fruit": "#f7931e"
+    }
+   ]
+  },
+  "lemonade": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Lemonade",
+    "bn": "লেবুর শরবত"
+   },
+   "heal": 12,
+   "icon": "🍋",
+   "model": [
+    {
+     "serve": "tall",
+     "liquid": "#f4f0a0",
+     "fruit": "#d9e84a"
+    }
+   ]
+  },
+  "coconut_water": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Green coconut water",
+    "bn": "ডাবের পানি"
+   },
+   "heal": 20,
+   "icon": "🥥",
+   "model": [
+    {
+     "serve": "coconut"
+    }
+   ]
+  },
+  "sugarcane_juice": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Sugarcane juice",
+    "bn": "আখের রস"
+   },
+   "heal": 15,
+   "icon": "🥤",
+   "model": [
+    {
+     "serve": "tall",
+     "liquid": "#c9cf6a",
+     "top": "#f0f0d0"
+    }
+   ]
+  },
+  "milkshake_chocolate": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Chocolate milkshake",
+    "bn": "চকলেট মিল্কশেক"
+   },
+   "heal": 20,
+   "icon": "🥤",
+   "model": [
+    {
+     "serve": "tall",
+     "liquid": "#6b3a1e",
+     "top": "#fff8f0",
+     "straw": "#e83a3a"
+    }
+   ]
+  },
+  "milkshake_strawberry": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Strawberry milkshake",
+    "bn": "স্ট্রবেরি মিল্কশেক"
+   },
+   "heal": 20,
+   "icon": "🥤",
+   "model": [
+    {
+     "serve": "tall",
+     "liquid": "#f49ab8",
+     "top": "#fff8f0",
+     "straw": "#e83a3a"
+    }
+   ]
+  },
+  "cola": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Cola",
+    "bn": "কোলা"
+   },
+   "heal": 8,
+   "icon": "🥤",
+   "model": [
+    {
+     "serve": "bottle",
+     "liquid": "#3a1a0e",
+     "cap": "#d82a2a"
+    }
+   ]
+  },
+  "lemon_soda": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Lemon soda",
+    "bn": "লেমন সোডা"
+   },
+   "heal": 8,
+   "icon": "🥤",
+   "model": [
+    {
+     "serve": "bottle",
+     "liquid": "#c8f0a0",
+     "cap": "#3ab04a"
+    }
+   ]
+  },
+  "orange_soda": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Orange soda",
+    "bn": "অরেঞ্জ সোডা"
+   },
+   "heal": 8,
+   "icon": "🥤",
+   "model": [
+    {
+     "serve": "bottle",
+     "liquid": "#f7931e",
+     "cap": "#f7c21e"
+    }
+   ]
+  },
+  "mint_mojito": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Mint lemon mojito (no alcohol)",
+    "bn": "মিন্ট লেমন মোহিতো (মকটেল)"
+   },
+   "heal": 12,
+   "icon": "🍹",
+   "model": [
+    {
+     "serve": "tall",
+     "liquid": "#cdf0b0",
+     "fruit": "#b8e04a",
+     "leaves": "#2f9e3a",
+     "straw": "#2fbf6a"
+    }
+   ]
+  },
+  "blue_lagoon": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Blue lagoon (mocktail)",
+    "bn": "ব্লু লেগুন (মকটেল)"
+   },
+   "heal": 12,
+   "icon": "🍸",
+   "model": [
+    {
+     "serve": "coupe",
+     "liquid": "#2aa8f0",
+     "fruit": "#d9e84a"
+    }
+   ]
+  },
+  "fruit_punch": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Fruit punch (mocktail)",
+    "bn": "ফ্রুট পাঞ্চ (মকটেল)"
+   },
+   "heal": 15,
+   "icon": "🍹",
+   "model": [
+    {
+     "serve": "tall",
+     "liquid": "#e8323c",
+     "fruit": "#f7931e",
+     "straw": "#f7c21e"
+    }
+   ]
+  },
+  "water": {
+   "kind": "drink",
+   "cat": "drink",
+   "name": {
+    "en": "Bottled water",
+    "bn": "বোতলের পানি"
+   },
+   "heal": 10,
+   "icon": "💧",
+   "model": [
+    {
+     "serve": "bottle",
+     "liquid": "#d8eef8",
+     "cap": "#2a7ad8",
+     "clear": true
+    }
+   ]
+  }
+ }
+}

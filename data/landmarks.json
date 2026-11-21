@@ -17,6 +17,7 @@
     "enterRadius": 2.3,
     "visibleDistance": 140
   },
+  "_hotels": "Roadmap 2 S4: the three hotels (src/world/landmarks/hotels.js). style = glass (tall neon tower) | grand (cream + gold, crown) | heritage (red brick, white arches, domed kiosks). towerFloors = floors above the ground-floor podium (the lobby + restaurant inside, src/features/hotels/). Interior numbers: data/hotels.json.",
   "types": {
     "sangsad": {
       "ground": "plaza", "height": 34, "lakeHalf": 50,
@@ -109,6 +110,24 @@
       "ground": "lot", "towerHeight": 74,
       "post": "#5c564e", "roofA": "#7f8a8f", "roofB": "#8a5a44", "glass": "#9fc4d4", "roof": "#5a5650", "beacon": "#ff2a2a", "office": "#bfb49d",
       "goods": ["#c0392b", "#2e8b57", "#e6a817", "#8b5a2b", "#d9d2b8", "#6b8e23", "#b5651d", "#e67e22"]
+    },
+    "breakingHotel": {
+      "ground": "plaza", "style": "glass", "towerFloors": 18,
+      "bigSign": { "background": ["#1a0636", "#061a36"], "text": "#ffffff", "accent": "#36e6ff" },
+      "wall": "#2a2440", "trim": "#d9dee2", "glass": "#7fa6d9", "roof": "#2b2a33", "neonA": "#ff4fb0", "neonB": "#36e6ff",
+      "door": "#ffe9b8", "canopy": "#14121f", "forecourt": "#4a4658", "step": "#9a96b0", "signBack": "#0c0820", "beacon": "#ff2a2a", "lamp": "#fff1c4", "plant": "#2f7d3a", "pot": "#d9d2c4"
+    },
+    "shoumikCulinary": {
+      "ground": "plaza", "style": "grand", "towerFloors": 12,
+      "bigSign": { "background": ["#3a1a06", "#1a0c02"], "text": "#ffe7a8", "accent": "#ffb43a" },
+      "wall": "#efe3c8", "trim": "#c99a3e", "glass": "#a8c4c9", "roof": "#6b5638", "neonA": "#ffb43a", "neonB": "#fff1c4",
+      "door": "#ffe2a0", "canopy": "#5a3a1a", "forecourt": "#b8a88c", "step": "#d8ccb4", "signBack": "#2a1606", "beacon": "#ff2a2a", "lamp": "#fff1c4", "plant": "#2f7d3a", "pot": "#8a5a3a"
+    },
+    "bengaliHeritage": {
+      "ground": "plaza", "style": "heritage", "towerFloors": 5,
+      "bigSign": { "background": ["#5a0e0e", "#2a0606"], "text": "#fff4d6", "accent": "#f2c14e" },
+      "wall": "#a8442c", "trim": "#f4ead8", "glass": "#6a5a4a", "roof": "#7a2e1e", "neonA": "#f2c14e", "neonB": "#fff1c4",
+      "door": "#ffd890", "canopy": "#5a1a10", "forecourt": "#b89a7a", "step": "#d8c4a8", "signBack": "#3a0a06", "beacon": "#ff2a2a", "lamp": "#ffe2a0", "plant": "#2f7d3a", "pot": "#b8643a", "dome": "#f4ead8"
     }
   },
   "lakes": {

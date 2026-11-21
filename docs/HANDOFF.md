@@ -1,4 +1,4 @@
-# Handoff — how Breaking City is built (v13, after Roadmap 2 · S3 — bigger world)
+# Handoff — how Breaking City is built (v14, after Roadmap 2 · S4 — hotels)
 
 For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, then
 `docs/GAME_SPEC.md` (what exists) and `docs/CHANGELOG.md` (what changed last).
@@ -15,6 +15,7 @@ time. Quick map of this file:
   transformers, construction sites, footbridges, more signs → §12h**
 - **G1 fast start: boot prefetch, streaming, compressed models, preload list, real trees → §12i**
 - **S3 bigger world: terrain around the city, sea, desert, fields, hills, bridge, ponds → §12k**
+- **S4 hotels: enterable ground floors, waiter + menu + 3D food, bar + dance floor → §12l**
 - Roadmap → §14
 
 ## 1. Run and test
@@ -309,6 +310,9 @@ posters/     poster pictures + README.md (how to add one)
 | `map:open` / `input:map` | – open the full map (M key) | earn / Input → minimap |
 | `weapon:empty` | `{ id }` the gun in his hand has no bullets | weapons → shops (way to the nearest weapon shop) |
 | `map:blips` (Update 9) | points may also have `icon, label {en,bn}, group, big, small, pin, blink, routeable, id` | shops, healthPacks, police, minimap (institutes) |
+
+| `interior:changed` | `{ inside, id }` Shoumik walked into / out of a hotel (S4) | hotels → dayNight (indoor light), weather (no drops) |
+| `hotel:ate` | `{ hotel, items }` a meal was finished | hotels |
 
 Add new events to this table.
 
@@ -810,6 +814,37 @@ version, add the field to `defaults()`. Features store live state with
 - For S7 (boats): the sea collider strips are in `Terrain.addColliders`; water level
   `data/world.json → water.level`; `field.shoreX(z)`, `field.river`, `field.ponds`. Boats should
   ignore those colliders and use `field.sample(x, z).h < water.level` as "deep enough".
+
+## 12l. Hotels (Roadmap 2, Session 4)
+- **Outside** = landmark builder `hotel` (`src/world/landmarks/hotels.js`, three styles). The
+  podium is a hollow room `HOTEL_SHELL` (x −30…30, z −32…16 local, 7 m high, thin wall
+  colliders, door gap ±2.6 m at the front, bollards so cars cannot get in). Change one number
+  there and the feature follows (it imports `HOTEL_SHELL`).
+- **Inside** (`src/features/hotels/`): `interior.js` builds lobby / restaurant / bar with the
+  landmark Kit into 3 meshes (indoor material = facade Lambert + a `selfLit` emission patch,
+  landmark glow + sign materials) and adds colliders once. Built on `stream:loaded` of
+  `hotel-<id>` (data/streaming.json, brings `model.food.kit`); until then a door collider
+  blocks the door (`collision.setFlags(id, 0)` opens it). Sliding door leaves are feature meshes.
+- **Inside detection** = Shoumik's local position inside the room → fade, `cameraRig` mode
+  `indoor` (cfg injected from `data/hotels.json → camera`), `sky.indoorLight` (dayNight adds it to
+  the ambient), `interior:changed`.
+- **People** (`staff.js`): `Server` (waiter / bartender, walks waypoints, `tray` group follows
+  him), diners (crowd `sit`), dancers (crowd `dance` on the boombox beat, now
+  `src/audio/boombox.js`), receptionist. Woken within `diners.wakeDistance`; diners' dishes are
+  ONE merged mesh (2 draw calls).
+- **Meal** (`order.js`): state machine calling → choosing (MenuCard, `menu.js`, game paused) →
+  cooking → serving → eating → done. Seat = table chair or bar stool. `standUp()` heals food not
+  eaten yet. Waypoints use the lane `waiter.laneOffset` m south of the table row, then the table
+  corner on the player's side.
+- **Dishes** (`dishes.js`): `DishMaker.get(id)` → cached `{ base, food, glass }` geometries from
+  `menu.json → model` parts; `food` shrinks while eating. Kit models from
+  `assets/food/food.glb` (repack: `node tools/food-kit/pack-food.js --three <dir> --kenney
+  "<Food Kit>/Models/GLB format" --quat "<Ultimate Food Pack>/OBJ"`, then compress-models).
+- **Prices**: `menuBook(game)` = Products-sheet row (kind food / drink: price, heal, active,
+  names) → `data/economy.json` / `data/menu.json`.
+- **Test**: `node tools/hotel-check.js --three <dir> --out <folder> [--only gallery,breaking-hotel]`
+  (speeds the waiter up; checks Taka paid + health gained; photographs everything incl. food.png).
+  Debug: `BC.hotels` (list, inside, seat, meal, build(id), doorOf(id), standUp()).
 
 ## 13. Notes for the next sessions (historical)
 - **Session 4 is done** (the old notes below are kept for reference).
