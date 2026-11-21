@@ -13,7 +13,7 @@ import { t, pickName, formatNumber } from '../../ui/i18n.js';
 import { fontStack } from '../../ui/fonts.js';
 import { getLanguage } from '../../ui/i18n.js';
 
-const GROUPS = ['school', 'weapons', 'food', 'outfits', 'vehicles', 'homes', 'home', 'health', 'healthpack', 'police'];
+const GROUPS = ['school', 'weapons', 'food', 'outfits', 'vehicles', 'homes', 'home', 'health', 'healthpack', 'police', 'outskirts'];
 
 export class BigMap {
   /**
@@ -77,7 +77,7 @@ export class BigMap {
     const counts = new Map();
     for (const pts of this.blips.values()) for (const b of pts) counts.set(b.group, (counts.get(b.group) || 0) + 1);
     return GROUPS.filter((g) => counts.get(g)).map((g) => {
-      const icon = g === 'school' ? '🎓' : g === 'healthpack' ? '➕' : g === 'police' ? '🚓' : this.kinds[g]?.icon || '•';
+      const icon = g === 'school' ? '🎓' : g === 'outskirts' ? '🌾' : g === 'healthpack' ? '➕' : g === 'police' ? '🚓' : this.kinds[g]?.icon || '•';
       return `<button type="button" data-group="${g}" class="${this.hidden.has(g) ? 'off' : ''}">${icon} ${esc(t(`map.group.${g}`))} <small>${esc(formatNumber(counts.get(g)))}</small></button>`;
     }).join('');
   }
@@ -205,13 +205,12 @@ export class BigMap {
   draw() {
     const { ctx, canvas, city } = this;
     if (!ctx || !canvas.width) return;
-    const L = this.game.world.layout;
     const k = this.zoom * this.dpr;
     const s = k / city.scale;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = '#1b1426';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.setTransform(s, 0, 0, s, canvas.width / 2 - (this.cx - L.minX + city.margin) * k, canvas.height / 2 - (this.cz - L.minZ + city.margin) * k);
+    ctx.setTransform(s, 0, 0, s, canvas.width / 2 - (this.cx - city.ox) * k, canvas.height / 2 - (this.cz - city.oz) * k);
     ctx.imageSmoothingEnabled = true;
     ctx.drawImage(city.canvas, 0, 0);
     ctx.setTransform(1, 0, 0, 1, 0, 0);

@@ -192,3 +192,11 @@
 - Launcher: a smoke trail behind the shell; aim arc on phones.
 - Army trucks driven by soldiers (S8) and parked inside the cantonment.
 - Truck / microbus as hired rides (data/economy.json → rides) — a microbus "contract" to a far stop.
+
+## Ideas from Roadmap 2 · S3 (bigger world)
+- Village life in the countryside: a few farmers / fishermen and bullock carts in the fields,
+  bus traffic on the highways (needs the AI driver to follow highway points, not only the grid).
+- Rides straight to countryside places (rickshaw/CNG would have to follow the highway points).
+- Sand dune jumps: let the countryside launch cars at sharp crests (now glued to the ground).
+- Fishing boats moored at the beach and on the river (S7 boats can reuse them).
+- Make mountain colours less washed-out in daytime fog (lighter fog far away on High).

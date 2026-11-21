@@ -1,5 +1,5 @@
 {
-  "_comment": "The districts of Breaking City (a compressed Dhaka). 'rect' is in big-block units (col/row from the north-west corner; see data/world.json grid). subdivide = small lanes cutting each block into sub-blocks. lot = size of one building plot in metres. density = share of plots that get a building (the rest are open/green). floors = building height range (bias > 1 means more low buildings). Colours are plain hex. 'areas' are lakes, parks and plazas that replace blocks; 'bridges' keep a road across the water between two neighbouring blocks [col,row].",
+  "_comment": "The districts of Breaking City (a compressed Dhaka). 'rect' is in big-block units (col/row from the north-west corner; see data/world.json grid). subdivide = small lanes cutting each block into sub-blocks. lot = size of one building plot in metres. density = share of plots that get a building (the rest are open/green). floors = building height range (bias > 1 means more low buildings). Colours are plain hex. 'areas' are lakes, parks and plazas that replace blocks; 'bridges' keep a road across the water between two neighbouring blocks [col,row]. Roadmap 2 S3: type 'pond' = a park block with a stone-edged pond in the middle (inset = metres of grass between the road and the water). The land outside the city is in data/terrain.json.",
   "districts": [
     {
       "id": "sher-e-bangla-nagar",
@@ -188,12 +188,42 @@
       "name": { "en": "Suhrawardy Udyan", "bn": "সোহরাওয়ার্দী উদ্যান" },
       "rects": [ { "col": 4, "row": 10, "cols": 2, "rows": 2 } ],
       "bridges": []
+    },
+    {
+      "id": "gulshan-lake",
+      "type": "water",
+      "name": { "en": "Gulshan Lake", "bn": "গুলশান লেক" },
+      "rects": [ { "col": 13, "row": 1, "cols": 1, "rows": 3 } ],
+      "bridges": [ [[13, 2], [13, 3]] ]
+    },
+    {
+      "id": "ramna-park",
+      "type": "pond",
+      "name": { "en": "Ramna Park", "bn": "রমনা পার্ক" },
+      "rects": [ { "col": 6, "row": 10, "cols": 1, "rows": 1 } ],
+      "bridges": []
+    },
+    {
+      "id": "banani-lake-park",
+      "type": "pond",
+      "name": { "en": "Banani Lake Park", "bn": "বনানী লেক পার্ক" },
+      "rects": [ { "col": 11, "row": 1, "cols": 1, "rows": 1 } ],
+      "bridges": []
+    },
+    {
+      "id": "dhanmondi-pukur",
+      "type": "pond",
+      "inset": 20,
+      "name": { "en": "Dhanmondi Pond", "bn": "ধানমন্ডি পুকুর" },
+      "rects": [ { "col": 12, "row": 7, "cols": 1, "rows": 1 } ],
+      "bridges": []
     }
   ],
   "areaTypes": {
     "park": { "treeDensity": 0.02, "minimapColor": "#3f7a3a" },
     "plaza": { "treeDensity": 0.0015, "minimapColor": "#9a9080" },
-    "water": { "minimapColor": "#3d7fb0" }
+    "water": { "minimapColor": "#3d7fb0" },
+    "pond": { "treeDensity": 0.016, "inset": 16, "minimapColor": "#3f7a3a" }
   },
   "river": {
     "id": "buriganga",

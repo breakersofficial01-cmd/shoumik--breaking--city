@@ -75,6 +75,31 @@ function meshBlock(gb, layout, p) {
   }
 }
 
+/** Roadmap 2 S3: a park block with a stone-edged pond in the middle (layout.js → p.pond). */
+function meshPondPark(gb, layout, p) {
+  const world = layout.world;
+  const ed = world.edges;
+  const q = p.pond, y = p.y, tile = world.ground.tileMetres;
+  const x0 = p.x, z0 = p.z, x1 = p.x + p.w, z1 = p.z + p.d;
+  gb.tiled(x0, z0, x1, q.z0, y, WALK_TINT, GROUND.GRASS, tile);   // north strip
+  gb.tiled(x0, q.z1, x1, z1, y, WALK_TINT, GROUND.GRASS, tile);   // south strip
+  gb.tiled(x0, q.z0, q.x0, q.z1, y, WALK_TINT, GROUND.GRASS, tile); // west strip
+  gb.tiled(q.x1, q.z0, x1, q.z1, y, WALK_TINT, GROUND.GRASS, tile); // east strip
+  // Inner edges seen from the water side (walls face into the pond) + a low stone rim.
+  const skirt = hexToLinear(ed.skirtColor);
+  const rim = hexToLinear(ed.railColor);
+  const inner = [
+    { di: 0, dj: 1, ax: q.x0, az: q.z0, bx: q.x1, bz: q.z0 },  // north bank, faces south
+    { di: 0, dj: -1, ax: q.x1, az: q.z1, bx: q.x0, bz: q.z1 }, // south bank, faces north
+    { di: 1, dj: 0, ax: q.x0, az: q.z1, bx: q.x0, bz: q.z0 },  // west bank, faces east
+    { di: -1, dj: 0, ax: q.x1, az: q.z0, bx: q.x1, bz: q.z1 }, // east bank, faces west
+  ];
+  for (const e of inner) {
+    gb.wall(e.ax, e.az, e.bx, e.bz, world.water.level - ed.skirtDepth, y, shade(skirt, 0.6), skirt, GROUND.PLAZA);
+    edgeWall(gb, e, ed.railThickness * 1.4, y, y + 0.35, rim); // outside = the pond, rim on the grass
+  }
+}
+
 /**
  * Add the ground of one piece to the builder.
  * @param {import('./geoBuilder.js').GeoBuilder} gb
@@ -86,6 +111,7 @@ export function meshGroundPiece(gb, layout, p) {
   if (p.kind === KIND.WATER) return; // the water surface is one shared mesh (water.js)
 
   if (p.kind === KIND.BLOCK) meshBlock(gb, layout, p);
+  else if (p.kind === KIND.PARK && p.pond) meshPondPark(gb, layout, p);
   else if (p.kind === KIND.PARK) gb.tiled(p.x, p.z, p.x + p.w, p.z + p.d, p.y, WALK_TINT, GROUND.GRASS, world.ground.tileMetres);
   else if (p.kind === KIND.PLAZA) gb.tiled(p.x, p.z, p.x + p.w, p.z + p.d, p.y, WALK_TINT, GROUND.PLAZA, world.ground.tileMetres);
   else meshRoad(gb, layout, p);
@@ -95,6 +121,13 @@ export function meshGroundPiece(gb, layout, p) {
   for (const e of edgesOf(p)) {
     const n = layout.piece(p.i + e.di, p.j + e.dj);
     const riverSide = !n && e.dj === 1 && layout.river?.side === 'south';
+    // Roadmap 2 S3: the bridge leaves a gap in the river railing; with the countryside the
+    // city-limit wall is gone (a kerb face where a raised piece meets the land).
+    if (layout.openEdges?.has(`${p.i},${p.j},${e.dj === 1 ? 'S' : e.dj === -1 ? 'N' : e.di === 1 ? 'E' : 'W'}`)) continue;
+    if (!n && !riverSide && layout.openCity) {
+      if (isRaised(p)) gb.wall(e.ax, e.az, e.bx, e.bz, -0.3, p.y, shade(kerbCol, 0.75), kerbCol, GROUND.PLAZA);
+      continue;
+    }
     if ((n && n.kind === KIND.WATER) || riverSide) {
       // Embankment wall down into the water + a low railing wall on top.
       gb.wall(e.ax, e.az, e.bx, e.bz, world.water.level - ed.skirtDepth, p.y, shade(skirtCol, 0.6), skirtCol, GROUND.PLAZA);

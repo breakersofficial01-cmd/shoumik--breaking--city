@@ -338,6 +338,7 @@
     "map.group.health": { "en": "Hospitals & clinics", "bn": "হাসপাতাল ও ক্লিনিক" },
     "map.group.healthpack": { "en": "Health packs", "bn": "হেলথ প্যাক" },
     "map.group.police": { "en": "Police", "bn": "পুলিশ" },
+    "map.group.outskirts": { "en": "Countryside", "bn": "শহরের বাইরে" },
     "health.packTaken": { "en": "Health pack: +{n}% health", "bn": "হেলথ প্যাক: +{n}% স্বাস্থ্য" },
     "tutorial.welcome": { "en": "Welcome {name}! You have {money} and a pistol with 30 bullets. Tap the map to find shops, Breaking School and Breaking Biology.", "bn": "স্বাগতম {name}! তোমার কাছে {money} আর ৩০ গুলিসহ একটি পিস্তল আছে। দোকান, ব্রেকিং স্কুল আর ব্রেকিং বায়োলজি খুঁজতে ম্যাপে চাপো।" }
   }

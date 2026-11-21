@@ -15,7 +15,8 @@ import { Rng, hashInts } from '../core/rng.js';
 import { generateBlock, generateLandmarkBlock, scatterTrees } from './blockgen.js';
 
 export const KIND = { CROSSING: 0, ROAD_EW: 1, ROAD_NS: 2, BLOCK: 3, WATER: 4, PARK: 5, PLAZA: 6 };
-const AREA_KIND = { water: KIND.WATER, park: KIND.PARK, plaza: KIND.PLAZA };
+// 'pond' (Roadmap 2 S3) = a park with a stone-edged pond in the middle of each of its blocks.
+const AREA_KIND = { water: KIND.WATER, park: KIND.PARK, plaza: KIND.PLAZA, pond: KIND.PARK };
 
 export const isRoad = (p) => p.kind <= KIND.ROAD_NS;
 export const isRaised = (p) => p.kind === KIND.BLOCK || p.kind === KIND.PARK || p.kind === KIND.PLAZA;
@@ -172,9 +173,18 @@ export class CityLayout {
       } else if (p.kind === KIND.BLOCK) {
         p.content = generateBlock(this, p, this.districts[p.district], rng);
       } else if (p.kind === KIND.PARK || p.kind === KIND.PLAZA) {
-        const density = this.areaTypes[p.area.type]?.treeDensity ?? 0;
+        const type = this.areaTypes[p.area.type] || {};
+        const density = type.treeDensity ?? 0;
         p.content = { buildings: [], patches: [], poles: [], wires: [], tanks: [], trees: [] };
         scatterTrees(p.content.trees, p.x + 1.5, p.z + 1.5, p.x + p.w - 1.5, p.z + p.d - 1.5, density, this.world.props.tree, rng);
+        if (p.area.type === 'pond' && (p.i & 1) && (p.j & 1)) {
+          // The pond: a rectangle `inset` metres inside the block (water.js draws it, groundMesher.js
+          // the grass around + stone edge, world.js the collider). No trees in or right next to it.
+          const k = p.area.inset ?? type.inset ?? 16;
+          p.pond = { x0: p.x + k, z0: p.z + k, x1: p.x + p.w - k, z1: p.z + p.d - k };
+          const q = p.pond, m = 2.5;
+          p.content.trees = p.content.trees.filter((t) => t.x < q.x0 - m || t.x > q.x1 + m || t.z < q.z0 - m || t.z > q.z1 + m);
+        }
       }
     }
   }

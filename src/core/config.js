@@ -14,7 +14,7 @@ const FILES = [
   'audio', 'dayNight', 'weather', 'radio', 'profile', 'signboards',
   'pwa', 'performance',
   'sheet', 'accounts', 'healthPacks', 'mapView',
-  'street', 'streaming',
+  'street', 'streaming', 'terrain',
 ];
 
 const store = new Map();

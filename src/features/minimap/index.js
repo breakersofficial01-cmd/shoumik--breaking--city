@@ -24,7 +24,7 @@ let cfg = null;
 let mv = null;
 let canvas = null;
 let ctx = null;
-let city = null;      // { canvas, scale, margin }
+let city = null;      // { canvas, scale, ox, oz } (cityMap.js)
 let timer = 0;
 let dpr = 1;
 let offs = [];
@@ -46,6 +46,30 @@ function instituteBlips() {
   blips.set('institutes', points);
 }
 
+/**
+ * Roadmap 2 S3: the countryside on the full map — one labelled point per zone, the beach,
+ * the bridge, the oasis and the end of each highway (all routeable: the GPS line leads to the
+ * city edge on the road nearest to them).
+ */
+function countrysideBlips() {
+  const terrain = game.world.terrain;
+  if (!terrain) return;
+  const f = terrain.field;
+  const color = '#9bd46a';
+  const points = [];
+  const add = (id, x, z, icon, label) => points.push({ id, x, z, color, icon, label, group: 'outskirts', routeable: true });
+  const icons = { fields: '🌾', desert: '🏜️', coast: '🌴' };
+  for (const z of f.zones) add(z.id, (z.x0 + z.x1) / 2, (z.z0 + z.z1) / 2, icons[z.type] || '📍', z.name);
+  const S = terrain.cfg.sea;
+  const beachZ = f.Z(6);
+  add('beach', f.shoreX(beachZ) - S.beach / 2, beachZ, '🏖️', S.name);
+  if (f.bridge) add(f.bridge.id, f.bridge.x, (f.bridge.z0 + f.bridge.landZ) / 2, '🌉', f.bridge.name);
+  const oasis = f.ponds.find((p) => p.id === 'oasis');
+  if (oasis) add('oasis', oasis.x, oasis.z, '🌴', { en: 'Oasis', bn: 'মরূদ্যান' });
+  if (terrain.cfg.mountains.name) add('hills', f.X(-11.5), f.Z(-10.5), '⛰️', terrain.cfg.mountains.name);
+  blips.set('countryside', points);
+}
+
 function draw() {
   const player = game.player;
   if (!player || !city) return;
@@ -54,7 +78,6 @@ function draw() {
   const yaw = game.cameraRig.yaw;
   const mapAngle = cfg.rotate ? yaw - Math.PI : 0;
   const zoom = r / (cfg.range * city.scale); // screen px per map px
-  const L = game.world.layout;
   const px = player.position.x, pz = player.position.z;
 
   ctx.clearRect(0, 0, size, size);
@@ -68,7 +91,7 @@ function draw() {
   ctx.rotate(mapAngle);
   ctx.scale(zoom, zoom);
   ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(city.canvas, -(px - L.minX + city.margin) * city.scale, -(pz - L.minZ + city.margin) * city.scale);
+  ctx.drawImage(city.canvas, -(px - city.ox) * city.scale, -(pz - city.oz) * city.scale);
   ctx.restore();
 
   // Points (shops, police, packs...): rotate the offset like the map.
@@ -187,13 +210,13 @@ export default {
     ctx = canvas.getContext('2d');
     g.ui.appendChild(canvas);
     canvas.addEventListener('click', openBig);
-    city = paintCityMap(g.world.layout, cfg);
+    city = paintCityMap(g.world.layout, cfg, g.world.terrain);
     route = new Route(g);
     big = new BigMap(g, city, mv, route, blips, g.config.get('shops').kinds);
     instituteBlips();
     await fontsReady(); // canvas text must wait for the Bangla font (CLAUDE.md rule 7)
     offs = [
-      g.events.on('game:ready', () => { instituteBlips(); draw(); }),
+      g.events.on('game:ready', () => { instituteBlips(); countrysideBlips(); draw(); }),
       g.events.on('map:blips', ({ id, points }) => { if (points?.length) blips.set(id, points); else blips.delete(id); }),
       g.events.on('map:open', openBig),
       g.events.on('input:map', () => (big.isOpen ? big.close() : openBig())),

@@ -23,7 +23,14 @@ A free-roam, Vice-City-flavoured open world set in a compressed Dhaka, made for
 
 Money only comes from answering lesson questions. YouTube links open outside the game.
 
-## 2. What you can do today (after Roadmap 2 · Session 2, 2026-11-21)
+## 2. What you can do today (after Roadmap 2 · Session 3, 2026-11-21)
+- **S3 — bigger world:** walk or drive out of the city into the **Northern Paddy Fields**
+  (rice plots, ponds), the **Golden Sand Desert** (dunes, cacti, rock spires, an oasis), the
+  **Coconut Coast** with a beach (umbrellas, canoes) and the **sea**, over the 9 m high
+  **Buriganga Bridge** to the **Char Lands**, and up into the **Green Hills** at the edge (far
+  mountains on the horizon). Six highways lead out. In the city: **Gulshan Lake** and pond
+  parks (Ramna, Banani, Dhanmondi). Everything is on the map; the GPS leads along the highways;
+  rickshaw/CNG rides go to the four city exits.
 - **S2 — more cars and weapons:** 7 new vehicles — hatchback (৳25,000), pickup (৳45,000),
   microbus (৳55,000), box truck (৳80,000), luxury car (৳1,20,000) at the car showroom; police jeeps
   join chases next to the pickups; plain olive army trucks drive around Sher-e-Bangla Nagar.
@@ -146,6 +153,24 @@ brick, trim, doors and asphalt baked into the facade and ground textures
 
 On Medium/High, four zones (start area, Breaking Biology, Shapla Chattar, Ahsan Manzil) have
 real 3D kit buildings (`data/heroBuildings.json`).
+
+**Around the city (Roadmap 2 S3, `data/terrain.json`, `src/world/terrain/`):** the land runs
+from col −13 to 23 and row −12 to 27 (junction units; about 3.5 × 3.9 km):
+
+```
+            Green Hills (north edge) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ Golden     |   Northern Paddy Fields (rows -12..0)   | coast | sea
+ Sand       |   Northern Highway (col 7), lotus pond  | Marine Drive
+ Desert     +--------- THE CITY (col 0..14) ----------+ beach |  Bay
+ (cols      |  Desert Road (row 8) → oasis             Beach Road (row 6)
+  -13..0)   +~~~~~~ Buriganga river ~~~ (bridge at col 3) ~~~~~~→ sea
+            |   Char Lands (south bank) + Char Road
+            Green Hills (south edge)
+```
+Zones, heights, colours, highways, the bridge, ponds, props per zone and the far mountains
+are all in `data/terrain.json`. The countryside models are streamed (`data/streaming.json →
+areas`). City water/park areas added: Gulshan Lake, Ramna Park, Banani Lake Park,
+Dhanmondi Pond (`data/districts.json`, type `pond` = park with a stone-edged pond).
 
 Totals: about 3,800 buildings, 2,400 electric poles, 3,400 trees, 3,000 roof tanks.
 Everything about districts (size, colours, density, heights, lakes, parks, bridges) is in

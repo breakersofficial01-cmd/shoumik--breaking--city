@@ -349,6 +349,10 @@
       "type": "model",
       "url": "assets/nature/trees.glb"
     },
+    "model.nature.outskirts": {
+      "type": "model",
+      "url": "assets/nature/outskirts.glb"
+    },
     "model.vehicle.kenneyPickup": {
       "type": "model",
       "url": "assets/vehicles/kenney-pickup.glb"

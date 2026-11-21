@@ -1,5 +1,5 @@
 {
-  "_comment": "Fast start + gradual loading (Roadmap 2, G1). Asset ids from data/assets.json; an id ending in '*' means every id that starts with it. qualities = only for these quality levels (leave out = all). boot = started the moment the settings are loaded, so they download WHILE the player signs in and the city is built (nothing waits for them in a queue). afterStart = downloaded one by one once the game is running, when the frame rate is fine (warms the offline copy, so buying a gun or reaching the MRT never waits). areas = downloaded only when Shoumik comes within 'radius' metres of 'at' [col, row] (road-grid junctions, see the map in docs/GAME_SPEC.md) — for the new areas of Roadmap 2 (airport, cantonment, river...). idleFps = afterStart files only load while the game runs at least this fast (areas load anyway: the player is walking into them). maxParallel = how many downloads at once after the start.",
+  "_comment": "Fast start + gradual loading (Roadmap 2, G1). Asset ids from data/assets.json; an id ending in '*' means every id that starts with it. qualities = only for these quality levels (leave out = all). boot = started the moment the settings are loaded, so they download WHILE the player signs in and the city is built (nothing waits for them in a queue). afterStart = downloaded one by one once the game is running, when the frame rate is fine (warms the offline copy, so buying a gun or reaching the MRT never waits). areas = downloaded only when Shoumik comes within 'radius' metres of 'at' [col, row] (road-grid junctions, see the map in docs/GAME_SPEC.md) — for the new areas of Roadmap 2 (airport, cantonment, river...). Roadmap 2 S3: one group per countryside zone of data/terrain.json (same id); src/world/terrain/ plants its props when the group has loaded. idleFps = afterStart files only load while the game runs at least this fast (areas load anyway: the player is walking into them). maxParallel = how many downloads at once after the start.",
   "boot": [
     { "id": "model.street.props" },
     { "id": "model.nature.trees" },
@@ -14,7 +14,12 @@
     { "id": "model.train.*", "qualities": ["medium", "high"] },
     { "id": "model.weapon.*" }
   ],
-  "areas": [],
+  "areas": [
+    { "id": "northern-fields", "at": [7, -2], "radius": 600, "assets": ["model.nature.outskirts"] },
+    { "id": "golden-desert", "at": [-4, 8], "radius": 600, "assets": ["model.nature.outskirts"] },
+    { "id": "coconut-coast", "at": [17, 6], "radius": 600, "assets": ["model.nature.outskirts"] },
+    { "id": "char-fields", "at": [3, 21], "radius": 600, "assets": ["model.nature.outskirts"] }
+  ],
   "idleFps": 24,
   "maxParallel": 2,
   "checkSeconds": 1

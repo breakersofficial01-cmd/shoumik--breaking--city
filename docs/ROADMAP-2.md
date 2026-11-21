@@ -38,7 +38,7 @@ flat colours, no big textures), add ids to `data/assets.json`.
 - [x] **S2 — More cars and weapons.** (done 2026-11-21) 6–8 new vehicle types (pickup, van, microbus, truck, luxury
   car, police jeep, army truck) and 6+ new weapons (unused guns from the Ultimate Gun Pack,
   knife, grenade, grenade launcher). Add them to the shops and the Products sheet tab.
-- [ ] **S3 — Bigger world.** Expand the map around today's city: **large green fields**, a
+- [x] **S3 — Bigger world.** (done 2026-11-21, see CHANGELOG) Expand the map around today's city: **large green fields**, a
   **desert**, the **sea with a beach**, **mountains** at the edge, **ponds and lakes between the
   city blocks**, the river. Simple far-away terrain (low-poly), chunked like the city. New
   districts in `data/districts.json`; new places for rides and the map.

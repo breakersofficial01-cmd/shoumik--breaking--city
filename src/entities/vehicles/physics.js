@@ -128,16 +128,21 @@ export class VehiclePhysics {
     }
   }
 
-  /** Kerbs are smoothed, ramps are followed exactly, and a ramp that ends under a fast car launches it. */
+  /**
+   * Kerbs are smoothed, ramps are followed exactly, and a ramp that ends under a fast car
+   * launches it. Roadmap 2 S3: the countryside (world.terrainAt: hills, dunes, the bridge deck)
+   * is followed exactly too, but never launches the car (its slope changes at every triangle).
+   */
   followGround(v, h, px, pz) {
     const P = this.P;
     const base = this.world.layout.heightAt(v.x, v.z);
     const ramp = this.world.ramps ? this.world.ramps.heightAt(v.x, v.z) : 0;
+    const land = this.world.terrainAt ? this.world.terrainAt(v.x, v.z) : 0;
     if (v.airborne) {
       v.y += v.vy * h;
-      if (v.y <= base + ramp && v.vy <= 0) {
+      if (v.y <= base + ramp + land && v.vy <= 0) {
         const impact = -v.vy;
-        v.y = base + ramp;
+        v.y = base + ramp + land;
         v.baseY = base;
         v.lastRamp = ramp;
         v.rampRise = 0;
@@ -148,7 +153,7 @@ export class VehiclePhysics {
       return;
     }
     // Much taller than a kerb = a wall (the side of a ramp): stay where we were.
-    if (base + ramp > v.y + P.stepMax) {
+    if (base + ramp + land > v.y + P.stepMax) {
       const speed = Math.hypot(v.vx, v.vz);
       v.x = px; v.z = pz;
       v.vx *= -P.wallBounce; v.vz *= -P.wallBounce;
@@ -164,7 +169,7 @@ export class VehiclePhysics {
       v.vy = launched ? v.rampRise : 0;
       v.y += v.vy * h;
     } else {
-      v.y = v.baseY + ramp;
+      v.y = v.baseY + ramp + land;
     }
     v.rampRise = rise;
     v.lastRamp = ramp;

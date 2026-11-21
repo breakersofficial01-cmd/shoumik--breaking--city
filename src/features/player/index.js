@@ -307,7 +307,8 @@ export default {
   },
 
   reportDistrict() {
-    const district = game.world.districtAt(state.position.x, state.position.z);
+    // Roadmap 2 S3: outside the city the countryside zone (fields, desert, beach…) is reported.
+    const district = game.world.areaAt ? game.world.areaAt(state.position.x, state.position.z) : game.world.districtAt(state.position.x, state.position.z);
     if (district && district !== lastDistrict) {
       lastDistrict = district;
       game.events.emit('district:entered', { district });
