@@ -1,6 +1,8 @@
-// Water: Dhanmondi Lake, Hatirjheel and the Buriganga river. One merged mesh for all of it,
-// with a tiny ripple texture that scrolls slowly. Also the big dusty base plane under and
-// around the city (outskirts, lake bed).
+// Water: Dhanmondi Lake, Hatirjheel, Gulshan Lake, park ponds and the Buriganga river. One
+// merged mesh for all of it, with a tiny ripple texture that scrolls slowly. Also the big dusty
+// base plane under and around the city (lake bed, beyond the land).
+// Roadmap 2 S3: with the countryside (terrain/) it also draws the sea, the countryside ponds
+// and the river only as far as the sea (`extra` = terrain.waterShapes()).
 
 import * as THREE from 'three';
 import { hexToLinear } from './geoBuilder.js';
@@ -9,7 +11,8 @@ import { KIND } from './layout.js';
 export class Water {
   /** @param {import('./layout.js').CityLayout} layout */
   /** @param {object} gfx  data/graphics.json */
-  constructor(layout, waterTexture, parent, gfx) {
+  /** @param {{ riverX:[number,number], quads:Array, discs:Array }} [extra]  countryside water */
+  constructor(layout, waterTexture, parent, gfx, extra = null) {
     const world = layout.world;
     const w = world.water;
     this.cfg = w;
@@ -27,12 +30,29 @@ export class Water {
       idx.push(n, n + 1, n + 2, n, n + 2, n + 3);
       n += 4;
     };
+    const disc = (cx, cz, r, c) => {
+      const seg = 28;
+      const centre = n;
+      pos.push(cx, w.level, cz); colr.push(c[0], c[1], c[2]); uv.push(cx / w.textureMetres, cz / w.textureMetres);
+      n++;
+      for (let k = 0; k < seg; k++) {
+        const a = (k / seg) * Math.PI * 2;
+        const x = cx + Math.cos(a) * r, z = cz + Math.sin(a) * r;
+        pos.push(x, w.level, z); colr.push(c[0], c[1], c[2]); uv.push(x / w.textureMetres, z / w.textureMetres);
+        idx.push(centre, centre + 1 + ((k + 1) % seg), centre + 1 + k); // counter-clockwise from above
+      }
+      n += seg;
+    };
     for (const p of layout.pieces) {
       if (p.kind === KIND.WATER) quad(p.x, p.z, p.x + p.w, p.z + p.d, lake);
+      if (p.pond) quad(p.pond.x0, p.pond.z0, p.pond.x1, p.pond.z1, lake); // park pond (layout.js)
     }
     if (layout.river?.side === 'south') {
-      quad(layout.minX - 1500, layout.maxZ, layout.maxX + 1500, layout.maxZ + w.riverWidth, river);
+      const [rx0, rx1] = extra?.riverX || [layout.minX - 1500, layout.maxX + 1500];
+      quad(rx0, layout.maxZ, rx1, layout.maxZ + w.riverWidth, river);
     }
+    for (const q of extra?.quads || []) quad(q.x0, q.z0, q.x1, q.z1, q.color);
+    for (const d of extra?.discs || []) disc(d.x, d.z, d.r, lake);
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
     geo.setAttribute('color', new THREE.Float32BufferAttribute(colr, 3));

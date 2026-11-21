@@ -123,7 +123,9 @@ export class RoadNet {
   /** Nearest junction that really is a junction (not inside a park or lake). */
   nearestJunction(x, z) {
     const L = this.layout;
-    const c0 = Math.round((x - L.minX - L.W / 2) / L.P), r0 = Math.round((z - L.minZ - L.W / 2) / L.P);
+    // Clamped to the grid: a point in the countryside (Roadmap 2 S3) gets the nearest edge junction.
+    const c0 = Math.max(0, Math.min(L.cols, Math.round((x - L.minX - L.W / 2) / L.P)));
+    const r0 = Math.max(0, Math.min(L.rows, Math.round((z - L.minZ - L.W / 2) / L.P)));
     let best = null, bestD = Infinity;
     for (let c = c0 - 2; c <= c0 + 2; c++) {
       for (let r = r0 - 2; r <= r0 + 2; r++) {

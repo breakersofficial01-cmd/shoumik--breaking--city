@@ -25,6 +25,10 @@
     { "id": "ssmc", "name": { "en": "Sir Salimullah Medical College", "bn": "স্যার সলিমুল্লাহ মেডিকেল কলেজ" }, "col": 9, "row": 15, "ride": true, "landmark": { "type": "ssmc", "block": [9, 15], "facing": "N" } },
     { "id": "ahsan-manzil", "name": { "en": "Ahsan Manzil", "bn": "আহসান মঞ্জিল" }, "col": 5, "row": 15, "ride": true, "landmark": { "type": "ahsanManzil", "block": [5, 15], "facing": "S" } },
     { "id": "lalbagh-fort", "name": { "en": "Lalbagh Fort", "bn": "লালবাগ কেল্লা" }, "col": 2, "row": 14, "ride": true, "landmark": { "type": "lalbaghFort", "block": [2, 14], "facing": "S" } },
-    { "id": "sadarghat", "name": { "en": "Sadarghat", "bn": "সদরঘাট" }, "col": 7, "row": 16, "ride": true, "landmark": { "type": "sadarghat", "block": [7, 15], "facing": "S" } }
+    { "id": "sadarghat", "name": { "en": "Sadarghat", "bn": "সদরঘাট" }, "col": 7, "row": 16, "ride": true, "landmark": { "type": "sadarghat", "block": [7, 15], "facing": "S" } },
+    { "id": "northern-highway", "name": { "en": "Northern Highway (to the paddy fields)", "bn": "উত্তর মহাসড়ক (ধানক্ষেতের পথে)" }, "col": 7, "row": 0, "ride": true },
+    { "id": "desert-road", "name": { "en": "Desert Road (to the desert)", "bn": "মরু সড়ক (মরুভূমির পথে)" }, "col": 0, "row": 8, "ride": true },
+    { "id": "beach-road", "name": { "en": "Beach Road (to the sea)", "bn": "সৈকত সড়ক (সমুদ্রের পথে)" }, "col": 14, "row": 6, "ride": true },
+    { "id": "buriganga-bridge", "name": { "en": "Buriganga Bridge", "bn": "বুড়িগঙ্গা সেতু" }, "col": 3, "row": 16, "ride": true }
   ]
 }

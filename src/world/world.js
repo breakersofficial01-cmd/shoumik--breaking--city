@@ -9,6 +9,9 @@
 //   world.landmarks             real Dhaka places, MRT / flyover, entrance markers (landmarks/index.js)
 //   world.cityShading           lit windows, glowing shop signs, wet roads, load-shedding (cityShading.js)
 //   world.street                street lamps, benches, bins, transformers, construction sites, footbridges (street/)
+//   world.terrain               Roadmap 2 S3: the land around the city — fields, desert, beach + sea,
+//                               river bridge, hills, ponds, highways (terrain/); null when switched off
+//   world.areaAt(x, z)          district (city) or countryside zone — { id, name } for the HUD
 
 import * as THREE from 'three';
 import { log, debugLine } from '../core/debug.js';
@@ -26,6 +29,7 @@ import { SignAtlas } from './signboards.js';
 import { fontsReady } from '../ui/fonts.js';
 import { CityShading } from './cityShading.js';
 import { StreetDressing } from './street/index.js';
+import { Terrain } from './terrain/index.js';
 
 export class World {
   /** @param {object} game  the Game (scene, camera, config, assets) */
@@ -51,6 +55,8 @@ export class World {
     this.landmarks = new Landmarks(this.layout, places, landmarkCfg, this.cfg);
     this.ramps.surface = (x, z) => this.landmarks.heightAt(x, z);
     this.roads = new RoadNet(this.layout, config.get('traffic'));
+    // Roadmap 2 S3: the countryside around the city (opens the city-limit walls, plans the land).
+    this.terrain = config.has('terrain') && config.get('terrain').enabled ? new Terrain(this) : null;
 
     // Placeholder prop shapes go through the asset registry so real models can replace them.
     assets.registerDefault('geometry.pole', () => makePoleGeometry(this.cfg));
@@ -95,10 +101,11 @@ export class World {
     this.shared.street = this.street;
 
     this.sky = new Sky(this.cfg, glow, scene, this.game.renderer);
-    this.water = new Water(this.layout, water, this.root, config.get('graphics'));
+    this.water = new Water(this.layout, water, this.root, config.get('graphics'), this.terrain?.waterShapes());
     this.chunks = new ChunkManager(this.layout, this.shared, this.root);
     this.collision = new CollisionWorld();
     this.buildColliders();
+    this.terrain?.init(this.collision);
     await this.landmarks.build(this.shared, this.root, this.collision);
     const rampMesh = this.ramps.buildMesh();
     if (rampMesh) this.root.add(rampMesh);
@@ -128,6 +135,7 @@ export class World {
         col.add(p.x, p.z, p.x + p.w, p.z + p.d, COLLIDE.SOLID); // can't walk into the lake
         count++;
       }
+      if (p.pond) { col.add(p.pond.x0, p.pond.z0, p.pond.x1, p.pond.z1, COLLIDE.SOLID); count++; } // park pond
       const c = p.content;
       if (!c) continue;
       for (const b of c.buildings) col.add(b.x0, b.z0, b.x1, b.z1);
@@ -136,6 +144,10 @@ export class World {
       count += c.buildings.length + c.poles.length + c.trees.length;
     }
     count += this.street ? this.street.addColliders(col, COLLIDE.SOLID) : 0;
+    if (this.terrain) {
+      log.info(`collision: ${count} boxes (+ the countryside edges)`);
+      return; // the land outside is open: terrain/index.js adds the river, sea and outer edges
+    }
     // City limits (north/east/west walls) and the river to the south.
     const far = 5000;
     col.add(L.minX - far, L.minZ - far, L.maxX + far, L.minZ + 0.4, COLLIDE.SOLID);
@@ -151,19 +163,31 @@ export class World {
     if (quality.heroBuildings && this.hero && !this.hero.lib) this.loadHero();
     this.hero?.setEnabled(!!quality.heroBuildings);
     this.sky.setViewDistance(quality.viewDistance, this.game.camera);
+    this.terrain?.setQuality(quality);
   }
 
   /** Ground height: road 0, sidewalk/park = kerb height, plus any stunt ramp. */
   heightAt(x, z) {
-    return this.layout.heightAt(x, z) + this.ramps.heightAt(x, z);
+    return this.layout.heightAt(x, z) + this.ramps.heightAt(x, z) + (this.terrain ? this.terrain.heightAt(x, z) : 0);
+  }
+
+  /** Height of the countryside only (0 in the city) — vehicles follow it without smoothing. */
+  terrainAt(x, z) {
+    return this.terrain ? this.terrain.heightAt(x, z) : 0;
   }
 
   districtAt(x, z) {
     return this.layout.districtAt(x, z);
   }
 
+  /** City district, or the countryside zone outside the city (for names on the HUD). */
+  areaAt(x, z) {
+    return this.layout.districtAt(x, z) || this.terrain?.zoneAt(x, z) || null;
+  }
+
   /** Loading-screen build of everything in view of (x, z). */
   buildAround(x, z, onProgress) {
+    if (this.terrain && this.quality) this.terrain.update({ x, z }, this.quality.viewDistance, this.game.camera, true);
     return this.chunks.buildAround(x, z, onProgress);
   }
 
@@ -175,6 +199,7 @@ export class World {
     this.landmarks.update(focus, this.quality.viewDistance);
     this.hero.update(focus, this.quality.viewDistance);
     this.street.update(focus, this.quality.viewDistance);
+    this.terrain?.update(focus, this.quality.viewDistance, this.game.camera);
     debugLine('chunks', `chunks ${this.chunks.stats.visible}/${this.chunks.stats.built} queue ${this.chunks.queue.length}`);
   }
 }

@@ -1,0 +1,23 @@
+{
+  "_comment": "Countryside props (Roadmap 2 S3) from the Kenney Nature Kit (CC0), packed into assets/nature/outskirts.glb by tools/street-kit/pack-props.js --recipes tools/terrain-kit/outskirts.json --kit \"<Nature Kit>/Models/GLTF format\" --out assets/nature/outskirts.glb. Every model is packed 1 m tall and stands at (0,0,0); the game scales each one (data/terrain.json → props). colors = new colour per kit material.",
+  "props": [
+    { "name": "cactusTall", "file": "cactus_tall", "height": 1, "colors": { "leafsGreen": "#4f7a2e" } },
+    { "name": "cactusShort", "file": "cactus_short", "height": 1, "colors": { "leafsGreen": "#5a8433" } },
+    { "name": "desertRock", "file": "rock_largeA", "height": 1, "colors": { "dirt": "#b07a4a", "grass": "#d9b27a" } },
+    { "name": "desertSpire", "file": "rock_tallE", "height": 1, "colors": { "dirt": "#a8693e", "grass": "#d4a46a", "_defaultMat": "#a8693e" } },
+    { "name": "dryBush", "file": "plant_bushSmall", "height": 1, "colors": { "grass": "#9a8a48" } },
+    { "name": "paddy", "file": "crops_wheatStageB", "height": 1, "colors": { "woodInner": "#6fae3a", "_defaultMat": "#5c9a32" } },
+    { "name": "corn", "file": "crops_cornStageC", "height": 1, "colors": { "grass": "#5f9a35" } },
+    { "name": "bamboo", "file": "crops_bambooStageB", "height": 1, "colors": { "grass": "#6c9a3a" } },
+    { "name": "bush", "file": "plant_bushLarge", "height": 1, "colors": { "grass": "#3f7a2c" } },
+    { "name": "grass", "file": "grass_large", "height": 1, "colors": { "grass": "#5c9a3a" } },
+    { "name": "fence", "file": "fence_simple", "height": 1, "colors": { "wood": "#8a6440", "woodDark": "#5e4128" } },
+    { "name": "logs", "file": "log_stackLarge", "height": 1, "colors": { "woodBark": "#6b4a32", "woodInner": "#c79a62", "woodDark": "#4a3220" } },
+    { "name": "boulder", "file": "rock_largeC", "height": 1, "colors": { "dirt": "#7c7468", "grass": "#5d8a3a" } },
+    { "name": "crag", "file": "stone_tallA", "height": 1, "colors": { "stone": "#8a8276", "_defaultMat": "#8a8276" } },
+    { "name": "pine", "file": "tree_pineRoundA", "height": 1, "colors": { "woodBarkDark": "#4e3826", "leafsDark": "#2f5f2a" } },
+    { "name": "beachRock", "file": "rock_smallFlatA", "height": 1, "colors": { "dirt": "#8a8070", "grass": "#a49a86" } },
+    { "name": "canoe", "file": "canoe", "height": 1, "colors": { "leafsFall": "#2f6f9f", "wood": "#9a6a3c" } },
+    { "name": "tent", "file": "tent_detailedOpen", "height": 1, "colors": { "colorRed": "#e0533a", "wood": "#8a6440" } }
+  ]
+}

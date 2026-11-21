@@ -30,7 +30,9 @@ export class Route {
     const L = g.world.layout;
     const p = g.player.position;
     const a = roads.nearestJunction(p.x, p.z);
-    const b = roads.nearestJunction(this.target.x, this.target.z);
+    // Roadmap 2 S3: a target in the countryside is reached along the best highway.
+    const via = g.world.terrain?.field.routeVia(this.target.x, this.target.z, p.x, p.z) || null;
+    const b = via ? via.junction : roads.nearestJunction(this.target.x, this.target.z);
     const pts = [[p.x, p.z]];
     const dirs = a && b ? roads.route(a.c, a.r, b.c, b.r) : null;
     if (dirs) {
@@ -43,6 +45,7 @@ export class Route {
         pts.push([q.x, q.z]);
       }
     }
+    if (via) pts.push(...via.points);
     pts.push([this.target.x, this.target.z]);
     this.points = pts;
   }

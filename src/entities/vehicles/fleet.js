@@ -205,6 +205,10 @@ export class Fleet {
       if (world.ramps && (v.lastRamp > 0 || v.airborne)) {
         const fx = Math.sin(v.heading), fz = Math.cos(v.heading), hb = v.T.wheel.base / 2;
         slope = (world.ramps.heightAt(v.x + fx * hb, v.z + fz * hb) - world.ramps.heightAt(v.x - fx * hb, v.z - fz * hb)) / (hb * 2);
+      } else if (near && world.terrain && !world.layout.pieceAt(v.x, v.z)) {
+        // Roadmap 2 S3: tilt with the hills and the bridge ramps outside the city.
+        const fx = Math.sin(v.heading), fz = Math.cos(v.heading), hb = v.T.wheel.base / 2;
+        slope = (world.terrainAt(v.x + fx * hb, v.z + fz * hb) - world.terrainAt(v.x - fx * hb, v.z - fz * hb)) / (hb * 2);
       }
       v.syncVisual(dt, P, slope);
       if (v.rider) { this.placeRider(v); v.rider.visible = near; v.rider.far = dist > lod; }
