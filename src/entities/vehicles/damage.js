@@ -48,31 +48,49 @@ export class DamageModel {
     // The blast lifts the wreck off the ground.
     v.airborne = true;
     v.vy = D.explosionPush * 0.6;
-    const rnd = () => Math.random() * 2 - 1;
-    for (let i = 0; i < 18; i++) {
-      fx.emit('fire', { x: v.x + rnd(), y: v.y + 0.8 + Math.random(), z: v.z + rnd(), vx: rnd() * 5, vy: 2 + Math.random() * 5, vz: rnd() * 5, life: 0.5 + Math.random() * 0.5, size: [1.2, 4.2], color: E.fireColors[i % E.fireColors.length] });
-    }
-    for (let i = 0; i < 10; i++) {
-      fx.emit('smoke', { x: v.x + rnd(), y: v.y + 1.2, z: v.z + rnd(), vx: rnd() * 2, vy: 2.5 + Math.random() * 2, vz: rnd() * 2, life: 1.6 + Math.random(), size: [1.5, 5], color: E.darkSmokeColor });
-    }
+    this.fireball(v.x, v.y, v.z, 1);
+    const by = v.tags.lastHitBy || (v.driver === 'player' ? 'player' : null);
     // Everything close gets hurt and thrown.
+    this.blast(v.x, v.z, D.explosionRadius, D.explosionDamage, null, v);
+    const ev = this.game.events;
+    ev.emit('vehicle:exploded', { id: v.id, type: v.type, x: v.x, z: v.z, radius: D.explosionRadius, by, police: !!v.tags.police });
+    ev.emit('explosion', { x: v.x, z: v.z, radius: D.explosionRadius, power: 1, by });
+    ev.emit('danger:raised', { x: v.x, z: v.z, radius: D.explosionDangerRadius, source: 'explosion' });
+  }
+
+  /** Flames and black smoke of an explosion (size 1 = a car blowing up). */
+  fireball(x, y, z, size = 1) {
+    const E = this.E, fx = this.fleet.fx;
+    if (!fx) return;
+    const rnd = () => (Math.random() * 2 - 1) * size;
+    for (let i = 0; i < Math.round(18 * size); i++) {
+      fx.emit('fire', { x: x + rnd(), y: y + 0.8 + Math.random(), z: z + rnd(), vx: rnd() * 5, vy: 2 + Math.random() * 5, vz: rnd() * 5, life: 0.5 + Math.random() * 0.5, size: [1.2 * size, 4.2 * size], color: E.fireColors[i % E.fireColors.length] });
+    }
+    for (let i = 0; i < Math.round(10 * size); i++) {
+      fx.emit('smoke', { x: x + rnd(), y: y + 1.2, z: z + rnd(), vx: rnd() * 2, vy: 2.5 + Math.random() * 2, vz: rnd() * 2, life: 1.6 + Math.random(), size: [1.5 * size, 5 * size], color: E.darkSmokeColor });
+    }
+  }
+
+  /**
+   * Hurt and throw every vehicle within `radius` of (x, z) (strongest in the middle).
+   * Used by exploding vehicles and (Roadmap 2 S2) grenades / the grenade launcher.
+   * by = who caused it ('player' makes destroyed vehicles count as his crime).
+   */
+  blast(x, z, radius, damage, by = null, skip = null) {
+    const D = this.D;
     for (const o of this.fleet.vehicles) {
-      if (o === v) continue;
-      const dx = o.x - v.x, dz = o.z - v.z;
+      if (o === skip || o.removed) continue;
+      const dx = o.x - x, dz = o.z - z;
       const d = Math.hypot(dx, dz);
-      if (d > D.explosionRadius) continue;
-      const f = 1 - d / D.explosionRadius;
+      if (d > radius) continue;
+      const f = 1 - d / radius;
       const push = (D.explosionPush * f * 1200) / Math.max(400, o.T.mass);
       o.vx += (dx / (d || 1)) * push;
       o.vz += (dz / (d || 1)) * push;
       o.speed = Math.hypot(o.vx, o.vz);
-      this.damage(o, D.explosionDamage * f);
+      if (by) o.tags.lastHitBy = by;
+      this.damage(o, damage * f);
     }
-    const ev = this.game.events;
-    const by = v.tags.lastHitBy || (v.driver === 'player' ? 'player' : null);
-    ev.emit('vehicle:exploded', { id: v.id, type: v.type, x: v.x, z: v.z, radius: D.explosionRadius, by, police: !!v.tags.police });
-    ev.emit('explosion', { x: v.x, z: v.z, radius: D.explosionRadius, power: 1, by });
-    ev.emit('danger:raised', { x: v.x, z: v.z, radius: D.explosionDangerRadius, source: 'explosion' });
   }
 
   /** Smoke from a hurt engine, flames when nearly dead, tyre smoke while drifting. */

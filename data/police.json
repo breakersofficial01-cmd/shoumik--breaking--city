@@ -41,8 +41,9 @@
     "stuckSeconds": 1.2
   },
   "car": {
-    "_comment": "Police pickups. type = vehicle type from data/vehicles.json. ramSpeed = target speed when close (m/s); cruise = speed when far. leadSeconds = they aim where Shoumik will be this many seconds ahead. exitDistance = when Shoumik is on foot this close and the pickup has stopped, its officers get out (crew of them). sirenEvery = seconds between siren blasts. stuckSeconds/reverseSeconds = backing off after getting stuck.",
+    "_comment": "Police pickups. type = vehicle type from data/vehicles.json; types = (Roadmap 2 S2) a list to pick from for each new car (a name twice = twice as likely), e.g. pickups and jeeps. ramSpeed = target speed when close (m/s); cruise = speed when far. leadSeconds = they aim where Shoumik will be this many seconds ahead. exitDistance = when Shoumik is on foot this close and the pickup has stopped, its officers get out (crew of them). sirenEvery = seconds between siren blasts. stuckSeconds/reverseSeconds = backing off after getting stuck.",
     "type": "police_pickup",
+    "types": ["police_pickup", "police_pickup", "police_jeep"],
     "cruise": 26,
     "ramSpeed": 30,
     "leadSeconds": 0.6,

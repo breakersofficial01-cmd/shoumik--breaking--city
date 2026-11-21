@@ -35,7 +35,7 @@ flat colours, no big textures), add ids to `data/assets.json`.
   lights), benches, footbridges over main roads, more signboards, construction sites (barriers,
   cones, scaffolding), more street trees, dustbins, power transformers. Kenney City Kit (Roads),
   Quaternius props.
-- [ ] **S2 — More cars and weapons.** 6–8 new vehicle types (pickup, van, microbus, truck, luxury
+- [x] **S2 — More cars and weapons.** (done 2026-11-21) 6–8 new vehicle types (pickup, van, microbus, truck, luxury
   car, police jeep, army truck) and 6+ new weapons (unused guns from the Ultimate Gun Pack,
   knife, grenade, grenade launcher). Add them to the shops and the Products sheet tab.
 - [ ] **S3 — Bigger world.** Expand the map around today's city: **large green fields**, a

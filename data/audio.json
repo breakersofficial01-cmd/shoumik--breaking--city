@@ -54,6 +54,6 @@
   "weaponSounds": {
     "_comment": "Which sound each weapon makes (weapon ids from data/weapons.json). police = police officers' guns.",
     "pistol": "gun.pistol", "revolver": "gun.revolver", "smg": "gun.smg", "shotgun": "gun.shotgun",
-    "sawedOff": "gun.shotgun", "rifle": "gun.rifle", "sniper": "gun.sniper", "molotov": "glass", "police": "gun.pistol", "policeRifle": "gun.rifle", "helicopter": "gun.smg"
+    "sawedOff": "gun.shotgun", "rifle": "gun.rifle", "sniper": "gun.sniper", "molotov": "glass", "heavyPistol": "gun.revolver", "uzi": "gun.smg", "combatShotgun": "gun.shotgun", "carbine": "gun.rifle", "bullpup": "gun.rifle", "marksman": "gun.sniper", "launcher": "gun.shotgun", "grenade": "glass", "police": "gun.pistol", "policeRifle": "gun.rifle", "helicopter": "gun.smg"
   }
 }

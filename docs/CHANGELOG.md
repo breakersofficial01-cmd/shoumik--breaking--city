@@ -871,3 +871,29 @@ Code / data
   asset id `model.nature.trees`; hero buildings load through the registry.
 - docs/ROADMAP-2.md: new "Graphics + size track" (G2 buildings, G3 ground/water, G4 effects)
   and the size rules.
+
+## 2026-11-21 — Roadmap 2 · Session 2: more cars and weapons (Claude Opus 5.5)
+G1 was merged into `main` (pull request #4).
+
+Vehicles (Kenney Car Kit, CC0, repainted per colour; 0.40 MB for all seven)
+- **Hatchback** ৳25,000 · **Pickup** ৳45,000 · **Microbus** ৳55,000 · **Box truck** ৳80,000 ·
+  **Luxury car** ৳1,20,000 — sold at the car showroom, and in traffic (more microbuses and
+  pickups in Motijheel / Old Dhaka, luxury cars in Gulshan).
+- **Police jeep**: one in three police cars in a chase is a jeep.
+- **Army truck**: plain olive, no insignia; drives around Sher-e-Bangla Nagar (the cantonment
+  comes in Session 8).
+
+Weapons (9 new, in all 16 weapon shops)
+- Knife ৳800, heavy pistol ৳9,000, mini SMG ৳13,000, combat shotgun ৳24,000, carbine ৳30,000,
+  bullpup rifle ৳42,000, marksman rifle ৳60,000 (unused guns of the Ultimate Gun Pack).
+- **Grenades** ৳6,000 for 3: thrown like molotovs, bounce to a stop, explode after 2 s.
+- **Grenade launcher** ৳90,000 (+ ৳5,000 for 4 shells): the shell explodes on contact.
+- Explosions throw and burn nearby cars, knock down / kill people, hurt Shoumik if he is close,
+  and are a crime (60 heat). Ammo boxes for every new gun.
+
+Code / tools
+- `tools/car-kit/pack-cars.js` (+ `cars.json`); `damage.js → fireball(), blast()`,
+  `fleet.blast()`; `throwing.js` handles molotov / grenade / launcher shells; police car types list.
+- Products tab: the Google Sheet could not be written from here — rows are in
+  `tools/sheets/products-roadmap2-s2.csv` for the owner to paste (the game sells the items anyway).
+- Tests: crime-check buys and uses knife, grenade and launcher (pass); vehicle gallery 19 types.

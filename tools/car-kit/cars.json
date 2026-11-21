@@ -1,0 +1,12 @@
+{
+  "_comment": "Kenney Car Kit models (CC0) packed for the game by tools/car-kit/pack-cars.js. file = model name in the kit's 'Models/GLB format'; out = file name in assets/vehicles/ (also the asset id: data/assets.json → model.vehicle.<out without 'kenney-'>). Every palette colour is sorted into a material: Paint, Windows, Headlight, Taillight, Trim, Dark, Light (roles = { 'rrggbb': role } to override one). Use those names in data/vehicles.json → types.<id>.model (paint / second / colors).",
+  "cars": [
+    { "file": "truck", "out": "kenney-pickup" },
+    { "file": "van", "out": "kenney-van" },
+    { "file": "delivery", "out": "kenney-delivery" },
+    { "file": "truck-flat", "out": "kenney-flatbed" },
+    { "file": "sedan-sports", "out": "kenney-luxury" },
+    { "file": "hatchback-sports", "out": "kenney-hatchback" },
+    { "file": "suv-luxury", "out": "kenney-jeep" }
+  ]
+}

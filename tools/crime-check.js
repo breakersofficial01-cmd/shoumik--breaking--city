@@ -4,7 +4,8 @@
 //   wanted stars from the crimes, police on foot / pickups / helicopter by star level, stars
 //   fading out of sight, BUSTED with enough cash (pay bail → Police HQ), BUSTED without cash
 //   (jail → study → released), jail kept after a reload, WASTED (new session: ৳500 cut, everything kept, start point),
-//   desktop free aim, the cricket bat, a molotov fire, a vehicle blown up, Blood Off.
+//   desktop free aim, the cricket bat, a molotov fire, knife, grenade, grenade launcher
+//   (Roadmap 2 S2), a vehicle blown up, Blood Off.
 // Fails on any console error or a wrong number. Saves screenshots into --out.
 //
 //   node tools/crime-check.js --three <dir with three@0.170.0> --out shots [--quality low]
@@ -306,6 +307,30 @@ const BN = /[০-৯]/;
     await tap();
     await wait(1500);
     await shot('molotov');
+
+    // ---- Roadmap 2 S2: knife, grenade (fuse) and grenade launcher (explodes on contact)
+    await page.evaluate(() => { window.BC.economy.addCash(200000, 'test'); const B = window.BC; B._blasts = []; B.events.on('explosion', (e) => { if (e.by === 'player') B._blasts.push(e); }); });
+    await buy('weapon-shop', 'knife');
+    check(await page.evaluate(() => window.BC.player.weapon?.id === 'knife'), 'knife in hand');
+    await buy('weapon-shop', 'grenade');
+    s = await save();
+    check(s.ammo.grenade === W.weapons.find((w) => w.id === 'grenade').ammoPack, `grenades bought (${s.ammo.grenade})`);
+    await placeVictim(16);
+    await tap();
+    await page.waitForFunction(() => window.BC._blasts.length > 0, null, { timeout: 20000 }).catch(() => {});
+    check(await page.evaluate(() => window.BC._blasts.length > 0), 'grenade exploded after its fuse');
+    await shot('grenade');
+    await buy('weapon-shop', 'launcher');
+    check(await page.evaluate(() => window.BC.player.weapon?.id === 'launcher'), 'grenade launcher in hand');
+    const n0 = await page.evaluate(() => window.BC._blasts.length);
+    await placeVictim(20);
+    await tap();
+    await page.waitForFunction((n) => window.BC._blasts.length > n, n0, { timeout: 20000 }).catch(() => {});
+    check(await page.evaluate((n) => window.BC._blasts.length > n, n0), 'launcher shell exploded');
+    check(await page.evaluate(() => window.BC.save.data.ammo.launcher === window.BC.config.get('weapons').weapons.find((w) => w.id === 'launcher').startAmmo - 1), 'launcher used one shell');
+    await shot('launcher');
+    check(await page.evaluate(() => !window.BC.player.dead), 'his own blasts did not kill him (thrown far enough)');
+    await ev('player:heal', { share: 1 });
 
     // ---- a vehicle blown up by him counts
     const before = (await save()).stats.carsDestroyed || 0;
