@@ -212,7 +212,7 @@ export class StreetPlan {
       }
     }
     // No tree right on top of a lamp or bench.
-    p.content.trees = p.content.trees.filter((t) => ![...S.lampDouble, ...S.bench].some((o) => Math.hypot(o.x - t.x, o.z - t.z) < 2.6));
+    p.content.trees = p.content.trees.filter((t) => ![...S.lampDouble, ...S.bench].some((o) => Math.hypot(o.x - t.x, o.z - t.z) < 4.5));
   }
 
   // ---- helpers ---------------------------------------------------------------------------

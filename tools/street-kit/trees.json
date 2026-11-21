@@ -1,0 +1,82 @@
+{
+  "_comment": "Real tree models (Roadmap 2 G1) from the Kenney Nature Kit (CC0), packed into assets/nature/trees.glb by tools/street-kit/pack-props.js --recipes tools/street-kit/trees.json. Every tree is packed 1 m tall (the game scales each one to its height) and stands on its root at (0, 0, 0). Which tree goes where: data/world.json \u2192 props.tree.models. colors = new colour per kit material (leafsGreen = leaves, woodBark = trunk).",
+  "props": [
+    {
+      "name": "oak",
+      "file": "tree_oak",
+      "height": 1,
+      "rotY": 0,
+      "colors": {
+        "leafsGreen": "#3b6e2a",
+        "woodBark": "#6b4a32",
+        "_defaultMat": "#6b4a32"
+      }
+    },
+    {
+      "name": "round",
+      "file": "tree_default",
+      "height": 1,
+      "rotY": 0,
+      "colors": {
+        "leafsGreen": "#4a8233",
+        "woodBark": "#6b4a32",
+        "_defaultMat": "#6b4a32"
+      }
+    },
+    {
+      "name": "detailed",
+      "file": "tree_detailed",
+      "height": 1,
+      "rotY": 0,
+      "colors": {
+        "leafsGreen": "#3f7530",
+        "woodBark": "#6b4a32",
+        "_defaultMat": "#6b4a32"
+      }
+    },
+    {
+      "name": "fat",
+      "file": "tree_fat",
+      "height": 1,
+      "rotY": 0,
+      "colors": {
+        "leafsGreen": "#55893a",
+        "woodBark": "#6b4a32",
+        "_defaultMat": "#6b4a32"
+      }
+    },
+    {
+      "name": "palm",
+      "file": "tree_palmTall",
+      "height": 1,
+      "rotY": 0,
+      "colors": {
+        "leafsGreen": "#5c8f37",
+        "woodBark": "#6b4a32",
+        "_defaultMat": "#6b4a32"
+      }
+    },
+    {
+      "name": "palmBend",
+      "file": "tree_palmBend",
+      "height": 1,
+      "rotY": 0,
+      "colors": {
+        "leafsGreen": "#5c8f37",
+        "woodBark": "#6b4a32",
+        "_defaultMat": "#6b4a32"
+      }
+    },
+    {
+      "name": "palmDetailed",
+      "file": "tree_palmDetailedTall",
+      "height": 1,
+      "rotY": 0,
+      "colors": {
+        "leafsGreen": "#5a8a35",
+        "woodBark": "#6b4a32",
+        "_defaultMat": "#6b4a32"
+      }
+    }
+  ]
+}

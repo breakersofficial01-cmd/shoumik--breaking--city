@@ -16,6 +16,43 @@
 import * as THREE from 'three';
 import { log } from '../core/debug.js';
 
+let loaderTask = null;
+/**
+ * One shared glTF loader. It also reads files compressed with meshopt
+ * (EXT_meshopt_compression — every GLB in assets/ is packed by tools/compress-models.js).
+ */
+export function gltfLoader() {
+  loaderTask ||= (async () => {
+    const [{ GLTFLoader }, { MeshoptDecoder }] = await Promise.all([
+      import('three/addons/loaders/GLTFLoader.js'),
+      import('three/addons/libs/meshopt_decoder.module.js'),
+    ]);
+    const loader = new GLTFLoader();
+    loader.setMeshoptDecoder(MeshoptDecoder);
+    return loader;
+  })();
+  return loaderTask;
+}
+
+/**
+ * Meshopt files store vertices as small integers (with the scale on the node). Game code bakes
+ * node transforms into geometry (vehicles, metro, street props), which needs plain floats, so
+ * every vertex attribute except bone indices is turned back into Float32 once, at load time.
+ */
+function plainAttributes(root) {
+  root.traverse((o) => {
+    if (!o.isMesh) return;
+    const g = o.geometry;
+    for (const [name, a] of Object.entries(g.attributes)) {
+      if (name === 'skinIndex' || (a.array instanceof Float32Array && !a.isInterleavedBufferAttribute)) continue;
+      const out = new Float32Array(a.count * a.itemSize);
+      const get = [a.getX, a.getY, a.getZ, a.getW]; // these undo 'normalized' (and work on interleaved data)
+      for (let i = 0; i < a.count; i++) for (let k = 0; k < a.itemSize; k++) out[i * a.itemSize + k] = get[k].call(a, i);
+      g.setAttribute(name, new THREE.BufferAttribute(out, a.itemSize));
+    }
+  });
+}
+
 class AssetRegistry {
   constructor() {
     this.defaults = new Map();   // id -> factory()
@@ -61,8 +98,8 @@ class AssetRegistry {
       }
       case 'model': {
         // Loaded only when a real model is configured, so the loader costs nothing until then.
-        const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
-        const gltf = await new GLTFLoader().loadAsync(url);
+        const gltf = await (await gltfLoader()).loadAsync(url);
+        plainAttributes(gltf.scene);
         gltf.scene.userData.animations = gltf.animations;
         return gltf.scene;
       }

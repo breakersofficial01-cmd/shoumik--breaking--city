@@ -838,3 +838,36 @@ Known issues
 - Light pools are flat discs at kerb height (they float 15 cm over the road surface).
 - The Quaternius street pack could not be downloaded (Google Drive quota); Kenney models used.
 - Not tested on a real phone yet — please check FPS at night on Medium (`?debug=1`).
+
+## 2026-11-21 — Roadmap 2 · G1: fast start, gradual loading, real trees (Claude Opus 5.5)
+Session 1 was merged into `main` (pull request #3). Owner: "expand the game, more graphics, but
+it must launch as soon as possible; each new area loads gradually; hosting can be paid if needed".
+
+Faster start (measured at 8 Mbps / 80 ms, headless): Low 11.7 → **7.5 s**, Medium 20.5 → **13.0 s**;
+on a slow network (200 ms) Low 21.7 → 13.0 s, Medium 31.0 → 18.5 s.
+- **All 3D models compressed** with meshopt (`tools/compress-models.js`): 18.5 → 9.4 MB, same look
+  (Shoumik 4.2 → 1.9 MB). The registry reads them (`gltfLoader()` + MeshoptDecoder) and turns
+  the vertex data back to floats once.
+- **Downloads start at once** (`src/core/streamer.js`): the start area's models begin downloading
+  the moment the settings arrive — while the player signs in and while the city is built.
+- **Feature code loads in parallel** (was one file after another).
+- **modulepreload list** in `index.html` (`tools/make-preload.js`): the browser fetches all 165
+  code files + three.js add-ons at once.
+- **Gradual loading after the start** (new feature `streaming`, `data/streaming.json`): MRT
+  trains and every gun download in the background while FPS is fine; `areas` groups load when
+  Shoumik comes near (ready for the airport, cantonment, river... of Roadmap 2).
+
+Graphics
+- **Real 3D trees** (Kenney Nature Kit, CC0, `assets/nature/trees.glb`, 40 KB): round trees, oaks
+  and three kinds of **coconut palm**, mixed per district (more palms in Gulshan and by the
+  lakes, few in Old Dhaka). Medium/High, near the player; the simple trees stay far away and on
+  Low. Tree shadows on High only.
+
+Code / data
+- New: `src/core/streamer.js`, `src/features/streaming/`, `data/streaming.json`,
+  `tools/compress-models.js`, `tools/make-preload.js`, `tools/street-kit/trees.json`
+  (`pack-props.js --recipes`, `colors` per kit material).
+- `data/quality.json → realTrees, treeShadows`; `data/world.json → props.tree.models`;
+  asset id `model.nature.trees`; hero buildings load through the registry.
+- docs/ROADMAP-2.md: new "Graphics + size track" (G2 buildings, G3 ground/water, G4 effects)
+  and the size rules.

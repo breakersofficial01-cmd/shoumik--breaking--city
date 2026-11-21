@@ -116,7 +116,12 @@ export class StreetDressing {
     let kit = null;
     try { kit = await assets.load('model.street.props'); } catch (err) { log.warn('street props: no models', err); }
     const fallback = makeFallbackKit();
-    const geoOf = (name) => (kit?.getObjectByName(name) || fallback.getObjectByName(name))?.geometry || null;
+    kit?.updateMatrixWorld(true);
+    // Bake each mesh's node transform (compressed GLBs keep their scale on the node).
+    const geoOf = (name) => {
+      const o = kit?.getObjectByName(name) || fallback.getObjectByName(name);
+      return o?.geometry ? o.geometry.clone().applyMatrix4(o.matrixWorld) : null;
+    };
     this.geos = {};
     this.glowGeos = {};
     for (const name of KIT) {

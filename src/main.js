@@ -12,6 +12,7 @@ import { registerProceduralTextures } from './assets/proceduralTextures.js';
 import { loadFonts } from './ui/fonts.js';
 import { initI18n, setLanguage, getLanguage } from './ui/i18n.js';
 import { loading } from './ui/loading.js';
+import { Streamer } from './core/streamer.js';
 import { registerServiceWorker } from './core/pwa.js';
 import { account } from './core/account.js';
 import { showSignIn } from './ui/signIn.js';
@@ -77,7 +78,19 @@ async function boot() {
   loading.set(0.08, 'loading.fonts');
 
   // 2) Fonts and the rest of the settings files, side by side.
-  const settingsLoaded = config.loadAll();
+  // Roadmap 2 G1: as soon as the settings are here, start downloading the start area's models
+  // (Shoumik, cars, street props...) — they arrive while the player signs in and the city is built.
+  let streamer = null;
+  const settingsLoaded = config.loadAll().then(() => {
+    assets.configure(config.get('assets'));
+    registerProceduralTextures(assets);
+    try {
+      streamer = new Streamer(assets, config.get('streaming'));
+      streamer.prefetchBoot(Streamer.guessQuality(config.get('quality'), config.get('performance'), debug.flag('quality')));
+    } catch (err) {
+      log.warn('stream: boot prefetch skipped', err);
+    }
+  });
   await loadFonts(ui).then(() => setLanguage(getLanguage(), true)); // re-apply so the UI picks up the loaded font
 
   // 2b) Session 9: who is playing? Every player has their own save (src/core/account.js).
@@ -91,8 +104,6 @@ async function boot() {
   save.load(gameCfg, config.get('economy'), key);
   if (save.data.settings.language) setLanguage(save.data.settings.language, true);
   await settingsLoaded;
-  assets.configure(config.get('assets'));
-  registerProceduralTextures(assets);
   content.configureSheet(sheetCfg);
 
   // 3) Content (lessons) through the Content Service.
@@ -103,6 +114,7 @@ async function boot() {
   loading.set(0.25, 'loading.city');
   const game = new Game(document.getElementById('game'));
   game.account = account; // Session 9: who is playing (HUD name, profile card, sign out)
+  game.streamer = streamer; // Roadmap 2 G1: gradual loading after the start (features/streaming)
   await game.init((f) => loading.set(0.25 + f * 0.75));
   save.startAutosave(gameCfg.autosaveSeconds);
   account.startSync(save, game);

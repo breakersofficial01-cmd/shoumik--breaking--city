@@ -174,3 +174,12 @@
 - Scaffold end posts (the last bamboo column of a wall has no right-hand pole) and a tower crane
   at the biggest construction sites.
 - Real light pools that follow the road surface exactly (now a flat disc at kerb height).
+
+## Ideas noted during Roadmap 2 · G1 (fast start)
+- Start playing BEFORE the car models arrive: code-built bodies first, real bodies swap in
+  (vehicles/index.js now waits for fleet.ready). Would cut ~2–3 s more on Medium.
+- Smaller chunks (1 block instead of 2) so "near" (real trees, props) can be tighter.
+- Shoumik texture as WebP/KTX2 (240 KB JPEG) and quantised animations ('gltf-transform resample').
+- A build step (esbuild) would bundle 165 code files into one — needs the owner's OK (tech rule:
+  no build step). The modulepreload list gets most of the gain without it.
+- Show the city behind the sign-in screen (start building while the player types).

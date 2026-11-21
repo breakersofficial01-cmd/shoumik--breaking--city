@@ -61,13 +61,22 @@ export class World {
       'geometry.pole', 'geometry.tank', 'geometry.tree',
     ]);
 
+    // Roadmap 2 G1: real tree models (one GLB, a child mesh per kind; empty if it fails).
+    assets.registerDefault('model.nature.trees', () => new THREE.Group());
+    const treeModels = new Map();
+    try {
+      const lib = await assets.load('model.nature.trees');
+      lib.updateMatrixWorld(true);
+      lib.traverse((o) => { if (o.isMesh) treeModels.set(o.name, o.geometry.clone().applyMatrix4(o.matrixWorld)); });
+    } catch (err) { log.warn('trees: real models missing, simple trees everywhere', err); }
+
     // Shared materials: the whole static city uses just these.
     this.shared = {
       facadeMaterial: new THREE.MeshLambertMaterial({ map: facades, vertexColors: true }),
       groundMaterial: new THREE.MeshLambertMaterial({ map: ground, vertexColors: true }),
       propMaterial: new THREE.MeshLambertMaterial({ vertexColors: true }),
       wireMaterial: new THREE.LineBasicMaterial({ color: this.cfg.props.wire.color }),
-      poleGeo, tankGeo, treeGeo,
+      poleGeo, tankGeo, treeGeo, treeModels,
     };
     // Session 7: Bangla shop signs (fonts are loaded before the world) and the night/rain shading.
     try {

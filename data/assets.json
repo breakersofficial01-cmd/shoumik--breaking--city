@@ -344,6 +344,10 @@
     "model.street.props": {
       "type": "model",
       "url": "assets/street/street-props.glb"
+    },
+    "model.nature.trees": {
+      "type": "model",
+      "url": "assets/nature/trees.glb"
     }
   }
 }

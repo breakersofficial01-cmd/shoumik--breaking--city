@@ -58,11 +58,50 @@ function thin(list, density) {
 }
 
 /**
+ * Real tree models: one InstancedMesh per model kind. Which kind = a fixed hash of the tree's
+ * spot, weighted per district (data/world.json → props.tree.models: palms by the lakes...).
+ */
+function buildRealTrees(trees, M, shared, kerb, districtOf) {
+  const byKind = new Map();
+  const mixes = new Map();
+  for (const p of trees) {
+    const d = districtOf(p.x, p.z) || '';
+    if (!mixes.has(d)) {
+      const w = { ...M.weights, ...(M.districts?.[d] || {}) };
+      const kinds = Object.keys(w).filter((k) => w[k] > 0 && shared.treeModels.has(k));
+      const total = kinds.reduce((sum, k) => sum + w[k], 0);
+      mixes.set(d, { kinds, w, total });
+    }
+    const mix = mixes.get(d);
+    if (!mix.kinds.length) continue;
+    let r = ((hashInts(Math.round(p.x * 10), Math.round(p.z * 10), 31) % 10000) / 10000) * mix.total;
+    let kind = mix.kinds[mix.kinds.length - 1];
+    for (const k of mix.kinds) { r -= mix.w[k]; if (r < 0) { kind = k; break; } }
+    if (!byKind.has(kind)) byKind.set(kind, []);
+    byKind.get(kind).push(p);
+  }
+  const out = [];
+  for (const [kind, list] of byKind) {
+    const mesh = new THREE.InstancedMesh(shared.treeModels.get(kind), shared.propMaterial, list.length);
+    list.forEach((p, i) => {
+      q.setFromAxisAngle(up, p.rot);
+      const h = p.h * (M.heightScale ?? 1);
+      m4.compose(v.set(p.x, kerb, p.z), q, s.set(h, h, h));
+      mesh.setMatrixAt(i, m4);
+      mesh.setColorAt(i, col.set(M.tints[p.tint % M.tints.length]));
+    });
+    out.push(mesh);
+  }
+  return out;
+}
+
+/**
  * Build the instanced meshes for a chunk.
  * @param {{poles:any[], tanks:any[], trees:any[]}} lists  collected from the chunk's pieces
+ * @param {(x:number, z:number) => string|null} districtOf  district id at a spot (tree mix)
  * @returns {THREE.Object3D[]}
  */
-export function buildProps(lists, world, shared, quality, kerb) {
+export function buildProps(lists, world, shared, quality, kerb, districtOf = () => null) {
   const out = [];
   const poles = thin(lists.poles, quality.propDensity);
   if (poles.length) {
@@ -97,6 +136,12 @@ export function buildProps(lists, world, shared, quality, kerb) {
       mesh.setColorAt(i, col.set(t.colors[p.tint]));
     });
     out.push(mesh);
+    // Roadmap 2 G1: real tree models (Kenney Nature Kit) for the chunks near the player.
+    // The simple trees above stay for far chunks; chunks.js switches between the two.
+    const near = quality.realTrees && shared.treeModels?.size ? buildRealTrees(trees, t.models, shared, kerb, districtOf) : [];
+    for (const m of near) { m.userData.nearTrees = true; m.userData.noCastShadow = !quality.treeShadows; }
+    if (near.length) mesh.userData.farTrees = true;
+    out.push(...near);
   }
   for (const mesh of out) {
     mesh.instanceMatrix.needsUpdate = true;
