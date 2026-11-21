@@ -105,17 +105,19 @@
     }
   },
   "bail": {
-    "_comment": "Busted: bail = perStar x stars. Enough cash -> pay and walk out at Police HQ. Not enough -> jail: the cash he has is taken as part of the bail and the rest is earned by answering questions in jail (perCorrect Taka of bail per right answer, questionsPerRound per round, timePerQuestionSec each).",
+    "_comment": "Busted: bail = perStar x stars. Enough cash -> pay and walk out at Police HQ. Not enough -> jail: the cash he has is taken as part of the bail and the rest is earned by answering questions in jail (perCorrect Taka of bail per right answer, questionsPerRound per round, timePerQuestionSec each). freeSeconds (Update 9b): after the bail is paid or the jail questions are done, every police unit leaves and no crime adds stars for this many seconds (so he walks out free).",
     "perStar": 1000,
     "perCorrect": 250,
     "questionsPerRound": 5,
     "timePerQuestionSec": 30,
-    "releasePlace": "police-hq"
+    "releasePlace": "police-hq",
+    "freeSeconds": 60
   },
   "wasted": {
-    "_comment": "Wasted (health reaches 0): wake up at hospitalPlace, pay feeShare of the cash as the hospital bill, lose every weapon and its ammo when loseWeapons is true.",
-    "feeShare": 0.1,
-    "loseWeapons": true,
+    "_comment": "Update 9b: health 0 = dead → a NEW SESSION: he starts again at the start point (data/player.json → spawn; respawn 'hospital' = at hospitalPlace instead) with full health. Only 'fee' Taka is taken (never below 0); everything he owns stays (loseWeapons false). The police leave and no new stars for bail.freeSeconds.",
+    "fee": 500,
+    "loseWeapons": false,
+    "respawn": "start",
     "hospitalPlace": "dhaka-medical"
   },
   "starter": {

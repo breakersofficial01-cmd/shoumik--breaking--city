@@ -8,13 +8,17 @@
 //                 rounds of Lesson Check questions (all institutes) in Bangla, each right answer
 //                 pays bail.perCorrect towards the bail (a progress bar) until it is paid.
 //                 The jail is saved (save.data.jail) — closing the game does not get him out.
-// WASTED (player:died): banner, then he wakes up at Dhaka Medical College
-// (wasted.hospitalPlace), pays wasted.feeShare of his cash and (wasted.loseWeapons) loses his
-// weapons; wanted level cleared.
+// After the penalty (bail paid / jail finished) he is FREE (Update 9b): police:standDown sends every
+// unit away and wanted:amnesty { bail.freeSeconds } stops new stars for a while (e.g. a car he set
+// on fire that explodes later).
+// WASTED (player:died, health 0 = dead) — Update 9b: a NEW SESSION starts: he stands up again at the
+// game's start point (data/player.json → spawn) with full health; only wasted.fee Taka (৳500) is
+// taken; everything else (vehicles, weapons, homes, clothes, lessons) stays. Police stand down.
 //
 // Events  listens player:busted, player:died
 //         sends   vehicle:forceExit, player:freeze, player:action, wanted:clear, player:teleport,
-//                 player:revive, weapons:lose, jail:entered { owed }, jail:released { paid }
+//                 player:revive, weapons:lose, jail:entered { owed }, jail:released { paid },
+//                 police:standDown, wanted:amnesty { seconds }
 // Screens: ./screens.js (fixed language, Bangla digits). Quiz engine: src/ui/quiz.js.
 
 import { tl, moneyIn, numIn, t } from '../../ui/i18n.js';
@@ -184,12 +188,21 @@ function nextQuestion() {
   show(roundEndScreen(L, r));
 }
 
-/** Out of jail (or bail paid): walk out at Police HQ. */
+/** The penalty is paid: no unit keeps chasing and nothing that happened before counts any more. */
+function setFree() {
+  game.events.emit('police:standDown', {});
+  game.events.emit('wanted:amnesty', { seconds: B().freeSeconds || 0 });
+}
+
+/** Out of jail (or bail paid): walk out at Police HQ, free. */
 function release() {
   const j = game.save.data.jail;
   game.save.data.jail = null;
   if (j) game.events.emit('jail:released', { paid: j.paid });
+  setFree();
   afterClose = () => {
+    setFree(); // again on leaving the screen: something may have burned out while he read it
+    game.events.emit('toast:show', { key: 'jail.freeNow' });
     game.events.emit('player:teleport', placeSpot(B().releasePlace));
     game.events.emit('player:freeze', { on: false });
     game.events.emit('player:action', { name: 'cower', on: false });
@@ -207,16 +220,32 @@ function onDied() {
   pending = { kind: 'wasted', t: game.config.get('combat').player.deadSeconds };
 }
 
-function wakeInHospital() {
+/** The game's start point: a free sidewalk corner of data/player.json → spawn (col, row). */
+function startSpot() {
+  const sp = game.config.get('player').spawn;
+  const L0 = game.world.layout;
+  const c = L0.crossingCentre(sp.col, sp.row);
+  const off = L0.W / 2 + 1.6;
+  for (const [sx, sz] of [[1, 1], [-1, 1], [1, -1], [-1, -1]]) {
+    const x = c.x + sx * off, z = c.z + sz * off;
+    if (!game.world.collision.isBlocked(x, z, 0.5)) return { x, z, heading: sp.heading ?? 0 };
+  }
+  return { x: c.x, z: c.z, heading: sp.heading ?? 0 };
+}
+
+/** Dead (health 0) → a new session: back at the start, full health, only wasted.fee is taken. */
+function newSession() {
   const W = game.config.get('economy').wasted;
-  const fee = Math.floor(game.economy.getCash() * W.feeShare);
-  if (fee > 0) game.economy.spend(fee, 'hospital');
+  const fee = Math.min(game.economy.getCash(), W.fee ?? 500);
+  if (fee > 0) game.economy.spend(fee, 'death');
   const lost = W.loseWeapons && game.save.data.owned.weapons.length > 0;
   if (W.loseWeapons) game.events.emit('weapons:lose', {});
-  game.events.emit('player:teleport', placeSpot(W.hospitalPlace));
+  setFree();
+  game.events.emit('player:teleport', W.respawn === 'hospital' ? placeSpot(W.hospitalPlace) : startSpot());
   game.events.emit('player:revive', {});
+  game.save.flush();
   L = lang();
-  afterClose = null;
+  afterClose = () => setFree();
   ov.open();
   show(hospitalScreen(L, { fee, lostWeapons: lost }));
 }
@@ -275,7 +304,7 @@ export default {
     pending = null;
     banner.hidden = true;
     if (p.kind === 'busted') openBail(p.stars);
-    else wakeInHospital();
+    else newSession();
   },
 
   dispose() {

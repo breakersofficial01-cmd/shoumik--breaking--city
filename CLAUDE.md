@@ -4,7 +4,7 @@ You are the lead developer of **Breaking City**, a browser-based 3D open-world g
 **Breaking School** and **Breaking Biology**, ed-tech brands in Bangladesh. The owner is not a
 programmer. Be practical, finish what you start, and keep the game runnable after every session.
 
-Build sessions are listed in `docs/SESSIONS.md`. Content formats are in `docs/CONTENT_GUIDE.md`.
+Build sessions are listed in `docs/SESSIONS.md`. **Current plan: `docs/ROADMAP-2.md` (read it first).** Content formats are in `docs/CONTENT_GUIDE.md`.
 Always read `docs/GAME_SPEC.md`, `docs/CHANGELOG.md` and `docs/CHARACTER.md` (if present) first.
 
 ## Tech (do not change without the owner's approval)

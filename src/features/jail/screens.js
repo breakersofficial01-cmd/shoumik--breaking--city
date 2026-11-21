@@ -49,9 +49,10 @@ export function releasedScreen(L) {
 
 export function hospitalScreen(L, { fee, lostWeapons }) {
   return `
-    <h2>🏥 ${T(L, 'jail.hospitalTitle')}</h2>
-    <p class="class-sub">${T(L, 'jail.hospitalNote')}</p>
-    <p class="jail-line">${T(L, 'jail.hospitalFee', { money: moneyIn(L, fee) })}</p>
+    <h2>🔄 ${T(L, 'jail.newSessionTitle')}</h2>
+    <p class="class-sub">${T(L, 'jail.newSessionNote')}</p>
+    <p class="jail-line">${T(L, 'jail.deathFee', { money: moneyIn(L, fee) })}</p>
+    <p class="jail-line">${T(L, 'jail.keptAll')}</p>
     ${lostWeapons ? `<p class="jail-line">${T(L, 'jail.lostWeapons')}</p>` : ''}
     <button type="button" class="panel-close" data-act="leave">${T(L, 'jail.ok')}</button>`;
 }
