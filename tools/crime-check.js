@@ -3,7 +3,7 @@
 //   weapon shop (pistol + ammo + armour), shooting a pedestrian dead with phone aim assist,
 //   wanted stars from the crimes, police on foot / pickups / helicopter by star level, stars
 //   fading out of sight, BUSTED with enough cash (pay bail → Police HQ), BUSTED without cash
-//   (jail → study → released), jail kept after a reload, WASTED (hospital fee, weapons lost),
+//   (jail → study → released), jail kept after a reload, WASTED (new session: ৳500 cut, everything kept, start point),
 //   desktop free aim, the cricket bat, a molotov fire, a vehicle blown up, Blood Off.
 // Fails on any console error or a wrong number. Saves screenshots into --out.
 //
@@ -227,6 +227,14 @@ const BN = /[০-৯]/;
     });
     check(hq < 20, `walked out at Police HQ (${hq.toFixed(1)} m)`);
     check(await page.evaluate(() => !window.BC.player.frozen && !window.BC.paused), 'free to move again');
+    // Update 9b: after the penalty nobody chases him — all units gone, and a car he set on fire
+    // earlier that explodes now does not bring the stars back.
+    const after = await page.evaluate(() => ({ o: window.BC.debugPolice.officers().length, c: window.BC.debugPolice.cars().length }));
+    check(after.o === 0 && after.c === 0, `all police left after bail (${after.o} officers, ${after.c} cars)`);
+    await ev('vehicle:exploded', { id: 'x', type: 'sedan', x: 0, z: 0, radius: 4, by: 'player', police: true });
+    await wait(2500);
+    check((await page.evaluate(() => document.querySelectorAll('.hud-stars span.on').length)) === 0, 'free: a late explosion adds no stars');
+    check(await page.evaluate(() => window.BC.debugPolice.officers().length === 0), 'free: no new police come');
 
     // ---- BUSTED without cash → jail
     await page.evaluate(() => window.BC.economy.spend(window.BC.economy.getCash(), 'test'));
@@ -317,26 +325,27 @@ const BN = /[০-৯]/;
     if (process.env.DBG) console.log(await page.evaluate(() => JSON.stringify({ st: window.BC._boom.v.state, rm: window.BC._boom.v.removed, d: window.BC._boom.v.driver, seen: window.BC._boom.seen, stats: window.BC.save.data.stats, paused: window.BC.paused })));
     check(((await save()).stats.carsDestroyed || 0) >= before + 1, 'blown-up vehicle counted');
 
-    // ---- WASTED
+    // ---- WASTED → a new session (Update 9b): ৳500 cut, everything else kept, back at the start
     await ev('wanted:clear');
+    const w0 = await save();
     c0 = await cash();
     await ev('player:damage', { amount: 9999 });
     await page.waitForSelector('#big-banner.wasted:not([hidden])', { timeout: 3000 });
     await shot('wasted');
     await page.waitForSelector('#jail-mode:not([hidden])', { timeout: 8000 });
     await shot('hospital');
-    const fee = Math.floor(c0 * E.wasted.feeShare);
-    check(c0 - (await cash()) === fee, `hospital bill ৳${fee}`);
+    const fee = Math.min(c0, E.wasted.fee);
+    check(c0 - (await cash()) === fee, `death cuts ৳${fee}`);
     s = await save();
-    check(s.owned.weapons.length === 0 && Object.keys(s.ammo).length === 0, 'weapons lost');
+    check(JSON.stringify(s.owned) === JSON.stringify(w0.owned), 'weapons, vehicles, homes and clothes kept');
     check(await page.evaluate(() => window.BC.player.health.value === window.BC.player.health.max && !window.BC.player.dead), 'full health again');
     const dmc = await page.evaluate(() => {
       const BC = window.BC;
-      const pl = BC.content.get('places').find((p) => p.id === 'dhaka-medical');
-      const c = BC.world.layout.crossingCentre(pl.col, pl.row);
+      const sp = BC.config.get('player').spawn;
+      const c = BC.world.layout.crossingCentre(sp.col, sp.row);
       return Math.hypot(BC.player.position.x - c.x, BC.player.position.z - c.z);
     });
-    check(dmc < 20, `woke up at Dhaka Medical College (${dmc.toFixed(1)} m)`);
+    check(dmc < 20, `new session at the start point (${dmc.toFixed(1)} m)`);
     await page.click('[data-act="leave"]');
 
     // ---- Blood off

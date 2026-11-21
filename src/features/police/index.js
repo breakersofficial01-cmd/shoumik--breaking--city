@@ -14,7 +14,7 @@
 // vehicle that has stopped) → player:busted { stars }. The jail feature does the rest.
 //
 // Events
-//   listens  wanted:changed { stars }, player:attack (punches / bat / machete on officers),
+//   listens  wanted:changed { stars }, police:standDown {} (Update 9b: penalty paid → all units leave), player:attack (punches / bat / machete on officers),
 //            explosion { x, z, radius, by }, vehicle:driverEjected { police: true } (a police
 //            driver dragged out becomes an officer), vehicle:entered (he took a police car)
 //   sends    map:blips { id: 'police' } (Session 9: where the police are, while wanted)
@@ -270,6 +270,26 @@ function checkBust(dt) {
   }
 }
 
+/**
+ * Update 9b: the penalty is paid (bail, jail, a new life) → every unit leaves at once instead of
+ * retreating past him, the road blocks and the helicopter go, and the map dots disappear.
+ */
+function standDown() {
+  for (const o of officers) o.remove();
+  for (const c of cars) if (!c.v.removed) { if (c.v.driver === 'police') c.v.driver = null; ctx.fleet.remove(c.v); }
+  officers = [];
+  cars = [];
+  roadblocks?.clear();
+  heli?.dispose();
+  heli = null;
+  heliKiller = null;
+  stars = 0;
+  bust = 0;
+  spawnIn = cfg.spawn.every;
+  blipsShown = true; // so the next map update removes the dots
+  blipIn = 0;
+}
+
 function onWanted({ stars: n }) {
   const before = stars;
   stars = n || 0;
@@ -322,6 +342,7 @@ export default {
     roadblocks = new Roadblocks({ ...ctx, hooks: { spawnOfficer } });
     offs = [
       g.events.on('wanted:changed', onWanted),
+      g.events.on('police:standDown', standDown),
       g.events.on('player:attack', onPlayerAttack),
       g.events.on('explosion', onExplosion),
       g.events.on('vehicle:driverEjected', ({ x, z, police }) => { if (police) spawnOfficer(level()?.swat ? 'swat' : 'police', x, z, !!level()?.armed); }),

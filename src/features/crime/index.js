@@ -13,6 +13,8 @@
 //            combat:hit { by, police }    police:killed { by }      ped:killed { by }
 //            vehicle:exploded { by, police }    weapon:fired    player:busted    player:died
 //            wanted:set { stars }         (debug / testing: force a level)
+//            wanted:amnesty { seconds }   (Update 9b: after bail / jail / a new life no crime counts for a while,
+//                                          e.g. a car set on fire in the chase that explodes later)
 //   sends    wanted:changed { stars, seen }    stats:changed { stats }
 
 import { debugLine, log } from '../../core/debug.js';
@@ -26,6 +28,7 @@ let unseen = 0;          // seconds out of police sight
 let grace = 0;           // seconds a fresh crime counts as "seen" (police are on the way)
 let chase = 0;           // seconds of the current chase
 let assaultCooldown = 0;
+let amnesty = 0;         // seconds in which crimes add no heat (after the penalty is paid)
 let offs = [];
 
 const stats = () => game.save.data.stats;
@@ -69,6 +72,7 @@ function endChase() {
 function onCrime({ type }) {
   const points = W.crimes[type];
   if (!points) return log.warn(`crime:committed — unknown crime "${type}"`);
+  if (amnesty > 0) return; // he has just paid for his crimes: stay free
   grace = W.seenGraceSeconds;
   unseen = 0;
   setHeat(heat + points);
@@ -98,6 +102,7 @@ export default {
     offs = [
       g.events.on('crime:committed', onCrime),
       g.events.on('wanted:clear', clear),
+      g.events.on('wanted:amnesty', ({ seconds = 0 } = {}) => { amnesty = Math.max(amnesty, seconds); clear(); }),
       g.events.on('wanted:set', ({ stars: n = 0 }) => setHeat(n > 0 ? W.starAt[Math.min(n, W.starAt.length) - 1] : 0)),
       g.events.on('police:sight', ({ seen: s }) => {
         if (s === seen) return;
@@ -132,6 +137,7 @@ export default {
 
   update(dt) {
     assaultCooldown -= dt;
+    amnesty = Math.max(0, amnesty - dt);
     if (stars === 0) { debugLine('wanted', 'stars 0'); return; }
     chase += dt;
     if (grace > 0) {

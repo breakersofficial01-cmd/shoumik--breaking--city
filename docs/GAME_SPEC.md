@@ -550,3 +550,5 @@ weapons (`data/economy.json → wasted`).
   weapon shop when out of bullets) and the class landing page → `class:start`.
 - **Health**: 36 packs (+25 %, respawn 90 s), clinics (+25 % / +50 % / full).
 - **Start**: ৳1,000 + pistol with 30 bullets (`data/economy.json → startCash, starter`).
+- **Update 9b**: health 0 = dead → new session at the start point, only ৳500 cut, everything kept.
+  After paying bail / finishing jail questions he is free: all police leave, no new stars for 60 s.

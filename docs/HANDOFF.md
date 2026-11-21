@@ -275,6 +275,8 @@ posters/     poster pictures + README.md (how to add one)
 | `settings:controls` | – control size or layout changed (save.data.settings) | settings → touchControls |
 | `reward:unlocked` | `{ id }` | rewardCodes → profileCard |
 | `screenshot:taken` | `{ width, height }` | screenshot |
+| `police:standDown` | – every police unit, road block and the helicopter leave now (Update 9b) | jail → police |
+| `wanted:amnesty` | `{ seconds }` clear the stars; no crime adds heat for that long (Update 9b) | jail → crime |
 | `earn:offer` | `{ reason: 'money'\|'ammo', need?, price?, item?, target? }` show the "earn Taka" panel | shops → earn |
 | `earn:landing` | `{ mode?: 'watch'\|'quiz', need? }` open the class landing page | anyone → earn |
 | `class:start` | `{ lesson }` open Class Mode on that lesson's Lesson Check | earn (landing) → classes |
@@ -650,6 +652,8 @@ version, add the field to `defaults()`. Features store live state with
 - **earn** (`src/features/earn/`): offer panel + `landing.js` (fixed Bangla, Bangla digits;
   YouTube is a plain `<a target=_blank>` — never an iframe).
 - **healthPacks**: two InstancedMeshes, seeded placement on junction corners, `player:heal { share }`.
+- **Update 9b**: death = new session (`jail/index.js → newSession`, `economy.wasted.fee/respawn`);
+  after bail / jail / death `setFree()` sends `police:standDown` + `wanted:amnesty { bail.freeSeconds }`.
 - **Starter**: `data/economy.json → starter { weapon, ammo }` is put into `defaults()` in `save.js`.
 - **Tests**: `node tools/session9-check.js --three <dir> --out <folder>` (mocks the web app). Run it
   after touching accounts, sheet, map, shops, earn, health packs or the HUD/profile.

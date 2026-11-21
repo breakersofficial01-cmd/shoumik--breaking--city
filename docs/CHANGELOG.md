@@ -776,3 +776,16 @@ Known issues
   wrong PIN refused, sign-in returns the save, save updates the Players row (phone keeps its 0,
   PIN only as a hash). The test player was deleted. The game loads content from the live sheet
   with no errors. `Code.gs` now opens the sheet by id (`SHEET_ID`).
+
+## 2026-11-21 — Update 9b: death = new session, free after the penalty (Claude Opus 5.5)
+- **Health 0 = dead → a new session**: WASTED banner, then he starts again at the game's start
+  point (Shahbag, `data/player.json → spawn`) with full health. Only **৳500** is cut (never below
+  ৳0; `data/economy.json → wasted.fee`). Vehicles, weapons, bullets, homes, clothes and lessons
+  all stay (`loseWeapons: false`). Screen "নতুন সেশন শুরু". Was: hospital, 10 % bill, weapons lost.
+- **Free after the penalty**: after paying the bail or finishing the jail questions (and after a
+  new session) every police officer, pickup, road block and the helicopter leave at once
+  (`police:standDown`), and for `bail.freeSeconds` (60 s) no crime adds stars (`wanted:amnesty`).
+  Cause found: units only "retreated" past him, and a car set on fire during the chase could
+  explode after the arrest and count as a new crime, bringing the stars back. Toast "তুমি এখন মুক্ত।".
+- `tools/crime-check.js` checks both (all police gone after bail, a late explosion adds no stars,
+  death cuts ৳500 and keeps everything, new session at the start point).
