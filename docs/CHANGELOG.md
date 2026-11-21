@@ -826,7 +826,12 @@ Code
 - `cityShading.windows` getter (night level).
 - Test: new `tools/street-look-check.js` (counts, day/night lamps, real lights per quality,
   solid footbridge stairs, photos) — passes on Medium and Low. `smoke-test` passes.
-- Cost at the start corner (headless): Low 143 → 157 draw calls, Medium 282 → ~310.
+- Cost at the start corner (headless): by day Low 143 → 157 draw calls, Medium 282 → 310; at night
+  Low 143 → 162, Medium 284 → 322 (560k triangles incl. the shadow pass).
+- Older tests compared before/after this session: poster-check (LED, entrance, bus/rickshaw
+  adverts), vehicle-shots (ramp jump, drift) and the last crime-check step fail the SAME way on the
+  code before this session (software-rendering timing, not this change); the star-fade check is
+  timing-sensitive and passed on a rerun. vibe-check (power, times) and smoke-test pass.
 
 Known issues
 - Footbridges cannot be climbed yet; they are decoration with solid stairs (NEXT.md).

@@ -403,8 +403,8 @@ saved first.
 | মাঝারি (medium, default) | 1.25× | 300 m | sun shadows (1024), bloom, colour grade |
 | বেশি (high) | 2× | 430 m | soft sun shadows (2048), bloom, colour grade, 4× anti-aliasing |
 
-Roadmap 2 S1 (street look, headless 915×412, start corner): Low 143 → 157 draw calls, 70k → 93k
-triangles; Medium 282 → ~310 draw calls (shadow pass included), 472k → ~560k triangles. Small street
+Roadmap 2 S1 (street look, headless 915×412, start corner, night): Low 143 → 162 draw calls, 70k → 94k
+triangles; Medium 284 → 322 draw calls (shadow pass included), 474k → 560k triangles. Small street
 props are merged into ONE mesh per chunk (+ 1 for the bulbs, + 1 for the light pools; scaffolding
 and nets are instanced, only on chunks with a site); 2 or 6 real lights on Medium / High.
 
