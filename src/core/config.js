@@ -15,6 +15,7 @@ const FILES = [
   'pwa', 'performance',
   'sheet', 'accounts', 'healthPacks', 'mapView',
   'street', 'streaming', 'terrain',
+  'hotels', 'menu',
 ];
 
 const store = new Map();

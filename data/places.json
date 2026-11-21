@@ -29,6 +29,9 @@
     { "id": "northern-highway", "name": { "en": "Northern Highway (to the paddy fields)", "bn": "উত্তর মহাসড়ক (ধানক্ষেতের পথে)" }, "col": 7, "row": 0, "ride": true },
     { "id": "desert-road", "name": { "en": "Desert Road (to the desert)", "bn": "মরু সড়ক (মরুভূমির পথে)" }, "col": 0, "row": 8, "ride": true },
     { "id": "beach-road", "name": { "en": "Beach Road (to the sea)", "bn": "সৈকত সড়ক (সমুদ্রের পথে)" }, "col": 14, "row": 6, "ride": true },
-    { "id": "buriganga-bridge", "name": { "en": "Buriganga Bridge", "bn": "বুড়িগঙ্গা সেতু" }, "col": 3, "row": 16, "ride": true }
+    { "id": "buriganga-bridge", "name": { "en": "Buriganga Bridge", "bn": "বুড়িগঙ্গা সেতু" }, "col": 3, "row": 16, "ride": true },
+    { "id": "breaking-hotel", "name": { "en": "Breaking Hotel", "bn": "ব্রেকিং হোটেল" }, "col": 11, "row": 3, "ride": true, "landmark": { "type": "breakingHotel", "block": [11, 3], "facing": "N" } },
+    { "id": "shoumiks-culinary", "name": { "en": "Shoumik's Culinary", "bn": "শৌমিক'স কালিনারি" }, "col": 11, "row": 8, "ride": true, "landmark": { "type": "shoumikCulinary", "block": [11, 8], "facing": "N" } },
+    { "id": "bengali-heritage", "name": { "en": "Bengali Heritage", "bn": "বেঙ্গলি হেরিটেজ" }, "col": 11, "row": 14, "ride": true, "landmark": { "type": "bengaliHeritage", "block": [11, 14], "facing": "N" } }
   ]
 }

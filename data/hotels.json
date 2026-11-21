@@ -1,0 +1,359 @@
+{
+ "_comment": "Roadmap 2 S4: inside the three hotels (src/features/hotels/). Positions are LOCAL metres of the hotel plot like the landmark builder (+z = the front / door, the ground-floor room is x -30…30, z -32…16, see src/world/landmarks/hotels.js → HOTEL_SHELL). place = data/places.json id (where it stands and its name). menu = item ids from data/menu.json (prices: data/economy.json → prices.food / prices.drink; the Products tab of the Google Sheet can change name, price, heal or switch an item off). bar = a bar + dance lounge (adults only, plain party dancing, soft drinks and mocktails only — no alcohol, no sexual content). tables = restaurant table centres (xs × zs). kitchen = where the waiter comes from (x on the back wall). The inside and the food models stream in through data/streaming.json → areas 'hotel-<id>'; until then the doors stay shut.",
+ "hotels": [
+  {
+   "id": "breaking-hotel",
+   "place": "breaking-hotel",
+   "icon": "🏨",
+   "waiter": "waitress",
+   "menu": [
+    "burger",
+    "pizza",
+    "fried_chicken",
+    "fries",
+    "sandwich",
+    "noodles",
+    "fried_rice",
+    "pasta",
+    "hotdog",
+    "sushi",
+    "steak",
+    "salad",
+    "ice_cream",
+    "cake",
+    "doughnut",
+    "pancakes",
+    "cola",
+    "lemon_soda",
+    "orange_soda",
+    "mint_mojito",
+    "blue_lagoon",
+    "fruit_punch",
+    "milkshake_chocolate",
+    "milkshake_strawberry",
+    "cold_coffee",
+    "coffee",
+    "orange_juice",
+    "lemonade",
+    "water"
+   ],
+   "colors": {
+    "floor": "#6a6088",
+    "floor2": "#524a6e",
+    "lobbyFloor": "#9a94ae",
+    "wall": "#a89ec0",
+    "wall2": "#3b3452",
+    "ceiling": "#c8c0d8",
+    "wood": "#4a3a5a",
+    "cloth": "#f6f2fa",
+    "chair": "#ff4fb0",
+    "accent": "#ff4fb0",
+    "accent2": "#36e6ff",
+    "sofa": "#5a3a8a",
+    "desk": "#2a2440",
+    "plant": "#2f7d3a",
+    "pot": "#d9d2c4",
+    "lamp": "#fff1c4"
+   },
+   "tables": {
+    "xs": [
+     -24,
+     -16,
+     -8,
+     0
+    ],
+    "zs": [
+     -24,
+     -16,
+     -8,
+     -1
+    ]
+   },
+   "kitchen": {
+    "x": -12
+   },
+   "bar": {
+    "x0": 8,
+    "x1": 29.5,
+    "menu": [
+     "mint_mojito",
+     "blue_lagoon",
+     "fruit_punch",
+     "cola",
+     "lemon_soda",
+     "orange_soda",
+     "milkshake_chocolate",
+     "milkshake_strawberry",
+     "cold_coffee",
+     "mango_juice",
+     "orange_juice",
+     "lemonade",
+     "water",
+     "fries",
+     "hotdog"
+    ],
+    "server": "waiter"
+   }
+  },
+  {
+   "id": "shoumiks-culinary",
+   "place": "shoumiks-culinary",
+   "icon": "🍽️",
+   "waiter": "waiter",
+   "menu": [
+    "kacchi",
+    "morog_polao",
+    "ilish_curry",
+    "beef_bhuna",
+    "chicken_roast",
+    "khichuri",
+    "fuchka",
+    "singara",
+    "haleem",
+    "kabab",
+    "burger",
+    "pizza",
+    "fried_chicken",
+    "fries",
+    "noodles",
+    "fried_rice",
+    "pasta",
+    "steak",
+    "sushi",
+    "roshogolla",
+    "mishti_doi",
+    "ice_cream",
+    "cake",
+    "tea",
+    "milk_tea",
+    "coffee",
+    "cold_coffee",
+    "lassi",
+    "borhani",
+    "mango_juice",
+    "milkshake_chocolate",
+    "mint_mojito",
+    "cola",
+    "water"
+   ],
+   "colors": {
+    "floor": "#8a5a3a",
+    "floor2": "#7a4e30",
+    "lobbyFloor": "#c8b89a",
+    "wall": "#d8c8a4",
+    "wall2": "#c99a3e",
+    "ceiling": "#e0d6c0",
+    "wood": "#5a3a1e",
+    "cloth": "#fffaf0",
+    "chair": "#8a2a1e",
+    "accent": "#ffb43a",
+    "accent2": "#fff1c4",
+    "sofa": "#8a2a1e",
+    "desk": "#5a3a1e",
+    "plant": "#2f7d3a",
+    "pot": "#8a5a3a",
+    "lamp": "#fff1c4"
+   },
+   "tables": {
+    "xs": [
+     -24,
+     -16,
+     -8,
+     0,
+     8,
+     16,
+     24
+    ],
+    "zs": [
+     -24,
+     -16,
+     -8,
+     -1
+    ]
+   },
+   "kitchen": {
+    "x": -12
+   }
+  },
+  {
+   "id": "bengali-heritage",
+   "place": "bengali-heritage",
+   "icon": "🍛",
+   "waiter": "waiter",
+   "menu": [
+    "kacchi",
+    "tehari",
+    "khichuri",
+    "bhuna_khichuri",
+    "ilish_curry",
+    "beef_bhuna",
+    "chicken_roast",
+    "morog_polao",
+    "fuchka",
+    "chotpoti",
+    "singara",
+    "samosa",
+    "piyaju",
+    "beguni",
+    "porota",
+    "haleem",
+    "kabab",
+    "mishti_doi",
+    "roshogolla",
+    "chomchom",
+    "jilapi",
+    "payesh",
+    "tea",
+    "milk_tea",
+    "lassi",
+    "borhani",
+    "mango_juice",
+    "coconut_water",
+    "sugarcane_juice",
+    "lemonade",
+    "water"
+   ],
+   "colors": {
+    "floor": "#a8643a",
+    "floor2": "#8e5230",
+    "lobbyFloor": "#c0a888",
+    "wall": "#d8c2a0",
+    "wall2": "#a8442c",
+    "ceiling": "#e0d0b4",
+    "wood": "#4a2a14",
+    "cloth": "#fff6e4",
+    "chair": "#4a2a14",
+    "accent": "#f2c14e",
+    "accent2": "#ffe2a0",
+    "sofa": "#7a1e14",
+    "desk": "#4a2a14",
+    "plant": "#2f7d3a",
+    "pot": "#b8643a",
+    "lamp": "#ffe2a0"
+   },
+   "tables": {
+    "xs": [
+     -24,
+     -16,
+     -8,
+     0,
+     8,
+     16,
+     24
+    ],
+    "zs": [
+     -24,
+     -16,
+     -8,
+     -1
+    ]
+   },
+   "kitchen": {
+    "x": -12
+   }
+  }
+ ],
+ "room": {
+  "ceiling": 6.4,
+  "lobbyWall": 4,
+  "lobbyOpening": 6,
+  "barWallOpening": [
+   -15,
+   -6
+  ],
+  "showDistance": 75
+ },
+ "table": {
+  "size": 1.3,
+  "height": 0.76,
+  "chairDistance": 0.95,
+  "sitRadius": 1.9
+ },
+ "barCounter": {
+  "z0": -27.6,
+  "z1": -26.4,
+  "height": 1.1,
+  "stoolZ": -25.4,
+  "stoolGap": 1.6,
+  "serverZ": -29.2,
+  "floor": {
+   "x0": 12,
+   "x1": 27,
+   "z0": -20,
+   "z1": -3
+  },
+  "dancers": 10,
+  "bpm": 118,
+  "danceArchetypes": {
+   "genz_oversized": 3,
+   "genz_jacket": 3,
+   "genz_tee_girl": 3,
+   "genz_jacket_boy": 3,
+   "student_girl": 1,
+   "student_boy": 1
+  },
+  "musicVolume": 0.55,
+  "hearDistance": 26
+ },
+ "waiter": {
+  "speed": 1.7,
+  "turnSpeed": 8,
+  "kitchenSeconds": 4,
+  "standOff": 1.3,
+  "laneOffset": 4,
+  "trayHeight": 1.12,
+  "trayReach": 0.42
+ },
+ "order": {
+  "maxItems": 4,
+  "eatSeconds": 5,
+  "clearSeconds": 20
+ },
+ "diners": {
+  "share": 0.4,
+  "archetypes": {
+   "office_man": 3,
+   "office_woman": 3,
+   "shirt_pant_man": 3,
+   "kameez_woman": 3,
+   "panjabi_man": 2,
+   "saree_woman": 2,
+   "hijab_woman": 2,
+   "genz_oversized": 1,
+   "genz_tee_girl": 1,
+   "genz_jacket": 1
+  },
+  "dishes": [
+   1,
+   2
+  ],
+  "wakeDistance": 45,
+  "max": 16
+ },
+ "doors": {
+  "openDistance": 4.2,
+  "speed": 2.5,
+  "width": 2.6,
+  "height": 4.2,
+  "glass": "#9fd4ff",
+  "frame": "#d9dee2"
+ },
+ "fadeSeconds": 0.5,
+ "indoorLight": {
+  "ambient": 0.6,
+  "selfLight": 0.3
+ },
+ "camera": {
+  "distance": 4.4,
+  "minDistance": 1.0,
+  "targetHeight": 1.5,
+  "pitch": 0.28,
+  "pitchMin": -0.1,
+  "pitchMax": 0.62,
+  "followSpeed": 1.5,
+  "followDelay": 1.2,
+  "positionSmooth": 12,
+  "wallPadding": 0.3
+ },
+ "dishScale": 1.35
+}

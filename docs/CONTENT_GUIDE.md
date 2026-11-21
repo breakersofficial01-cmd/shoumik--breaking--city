@@ -9,7 +9,8 @@ touching gameplay code.
 Everything below can now be edited in the shared sheet **Breaking City — Game Data**
 (https://docs.google.com/spreadsheets/d/1fIEDXo3xX3RwOJR04mcujVnXGp9Iw8fmHygVqw6Q0lE/edit) once it
 is connected (`tools/sheets/README.md`, 5 minutes, once).
-- **Products**: `product_id | kind | name_en | name_bn | price | image_url | model_url | description | active | notes`.
+- **Products**: `product_id | kind | name_en | name_bn | price | image_url | model_url | description | active | notes | heal`.
+  Roadmap 2 S4: kind `drink` and the `heal` column (food / drink only) are for the hotel menu.
   kind = vehicles, weapons, outfits, food, homes, health. Only ids the game knows work (the rows
   already there). `model_url` is noted for Claude (3D models need a code step).
 - **Classes**: `class_id | institute | subject | chapter | title | youtube_link | thumbnail_url | description | reward_per_correct | language | active | notes`.
@@ -159,6 +160,16 @@ Change colours freely (hex codes). `style` must be one of `tee`, `polo`, `panjab
 - Food: name and `heal` in `data/shops.json → food`. Homes: name, ring position and `garage`
   (junction + road direction where owned vehicles park) in `data/shops.json → homes`.
 - Ring look and colours: `marker` and `kinds` in the same file.
+
+## Hotel menu — `data/menu.json` + `data/hotels.json` (Roadmap 2 S4)
+- A menu item: `"id": { "kind": "food" | "drink", "cat": "bd" | "fast" | "sweet" | "drink",
+  "name": { "en", "bn" }, "heal": 40, "icon": "🍛", "model": [parts] }`; its price goes in
+  `data/economy.json → prices.food` (or `prices.drink`). Model parts are explained in the
+  `_comment` of `menu.json` (a plate / bowl / glass + a food-kit model or a code-built shape).
+- Put the id into a hotel's `menu` (or `bar.menu`) list in `data/hotels.json`.
+- Change price / name / heal / switch off from the Google Sheet: Products row with the same
+  `product_id` and kind `food` or `drink`. Check with `node tools/hotel-check.js`.
+- Drinks are always soft drinks, juices, lassi / borhani or mocktails (no alcohol).
 
 ## Places (ride destinations) — `data/places.json`
 Every row is a named place. A hired rickshaw or CNG can take Shoumik to any place with

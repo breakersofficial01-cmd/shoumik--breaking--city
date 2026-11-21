@@ -259,7 +259,8 @@ export function validateRewards(raw) {
   return { items, defaults: raw?.settings || {}, skipped };
 }
 
-const PRODUCT_KINDS = ['vehicles', 'weapons', 'outfits', 'food', 'homes', 'health'];
+// 'drink' (Roadmap 2 S4): hotel drinks; food + drink rows may also have a `heal` column.
+const PRODUCT_KINDS = ['vehicles', 'weapons', 'outfits', 'food', 'drink', 'homes', 'health'];
 
 /**
  * Validate products (Session 9: the Products tab of the Google Sheet, or data/products.json).
@@ -280,9 +281,11 @@ export function validateProducts(raw) {
     if (seen.has(key)) return skipped.push({ id: label, reason: 'duplicate product' });
     const price = r.price === '' || r.price == null ? null : Number(r.price);
     if (price !== null && !(Number.isFinite(price) && price >= 0)) return skipped.push({ id: label, reason: `price "${r.price}" is not a number` });
+    const heal = r.heal === '' || r.heal == null ? null : Number(r.heal);
+    if (heal !== null && !(Number.isFinite(heal) && heal >= 0)) return skipped.push({ id: label, reason: `heal "${r.heal}" is not a number` });
     seen.add(key);
     items.push({
-      id, kind: r.kind, price,
+      id, kind: r.kind, price, heal,
       name: { en: isText(r.name_en) ? r.name_en.trim() : '', bn: isText(r.name_bn) ? r.name_bn.trim() : '' },
       image: isHttpUrl(r.image_url) ? r.image_url.trim() : '',
       model: isText(r.model_url) ? r.model_url.trim() : '',

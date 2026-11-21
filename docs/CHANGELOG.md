@@ -954,3 +954,71 @@ Known issues
 - AI traffic, pedestrians and police stay on the city roads (the countryside is quiet).
 - Mountains are pale in the daytime fog on Low/Medium (short view distance).
 - The sea and river cannot be entered yet (boats: Session 7).
+
+## 2026-11-21 — Roadmap 2 · Session 4: three big hotels, waiter, food menu, bar (Claude Opus 5.5)
+S3 was merged into `main` (pull request #6).
+
+Three big hotels stand in the city (on the map, the full map legend "🏨 Hotels", and as
+rickshaw / CNG destinations):
+- **Breaking Hotel** (Gulshan, block 11,3): a 25-floor dark-glass tower with pink/cyan neon,
+  slanted crown and beacon. Inside: lobby, restaurant (fast food) and a **bar + dance lounge**.
+- **Shoumik's Culinary** (Hatirjheel, block 11,8): cream and gold, golden crown; mixed menu.
+- **Bengali Heritage** (Old Dhaka, block 11,14): red brick with white Mughal arches and domed
+  kiosks; Bangladeshi menu.
+Every hotel: canopy with a red carpet, bollards (cars cannot drive in), plants, lamps, a name
+board, the name on the podium and the tower.
+
+Walk in through the **sliding glass doors** → short fade → the inside: lobby (reception desk
+with a receptionist, sofas, plants, chandeliers, the hotel name over the arch) and the
+restaurant (16–28 tables with chairs, a kitchen door, a glowing serving counter, paintings),
+with diners already eating. The camera comes closer indoors, the room lights itself (same by
+day and night) and there is no rain inside.
+
+**Eating**: stand next to a free table → ‘ঢোকো’ / E → Shoumik sits, the **waiter walks over**
+from the kitchen, the **menu card** opens (tabs: দেশি খাবার / ফাস্ট ফুড / মিষ্টি / পানীয়; price +
+health on every line; up to 4 items) → pay → the waiter goes to the kitchen and comes back
+with the dishes **on his tray** → he puts them on the table → each dish is eaten (shrinks) and
+gives its health. ‘ঢোকো’ again = order more; Jump = stand up. At the bar the bartender serves
+drinks across the counter. On the dance floor ‘ঢোকো’ = dance (adults only, plain party dancing,
+soft drinks and mocktails only — no alcohol).
+
+**Menu: 58 items** (`data/menu.json`, prices in `data/economy.json → prices.food / drink`):
+22 Bangladeshi (kacchi, tehari, khichuri, bhuna khichuri, ilish curry, beef bhuna, chicken
+roast, morog polao, fuchka, chotpoti, singara, samosa, piyaju, beguni, paratha + egg, haleem,
+kabab, mishti doi, roshogolla, chomchom, jilapi, payesh), 16 fast food and other (burger,
+pizza, fried chicken, fries, sandwich, noodles, fried rice, pasta, hot dog, sushi, steak,
+salad, ice cream, cake, doughnut, pancakes) and 20 drinks (tea, milk tea, coffee, cold coffee,
+lassi, borhani, mango / orange juice, lemonade, green coconut water, sugarcane juice,
+chocolate / strawberry milkshake, cola, lemon soda, orange soda — no brands —, mint mojito,
+blue lagoon, fruit punch mocktails, bottled water). Each has its own **3D dish**: 23 CC0 food
+models (Kenney Food Kit + Quaternius Ultimate Food Pack, `assets/food/food.glb`, 242 KB after
+meshopt) and code-built plates, bowls, glasses, bottles, coconuts and Bangladeshi dishes.
+All items are in the **Products tab** of the Google Sheet (kind `food` / `drink`, new `heal`
+column): the sheet can change name, price, heal or switch an item off.
+
+Fast start kept: the food models and the insides stream in (`data/streaming.json → areas`
+`hotel-<id>`) only when Shoumik comes within 260 m; the doors stay shut ("opening…") until then.
+
+Code / data / tools
+- New: `src/world/landmarks/hotels.js` (outside), `src/features/hotels/` (index, interior,
+  staff, order, menu, dishes), `src/ui/hotels.css`, `data/hotels.json`, `data/menu.json`,
+  `tools/food-kit/` (pack-food.js + food.json), `tools/hotel-check.js`,
+  `tools/sheets/products-roadmap2-s4.csv`.
+- Changed: `src/audio/boombox.js` (moved from hotspots, shared with the bar), `collision.js`
+  (`setFlags`), landmarks index (hotel builder, `signUv`), dayNight (indoor light), weather
+  (no drops inside), product validator (kind `drink`, `heal`), sheet adapter (`heal`), big map
+  legend, `data/places.json`, `landmarks.json`, `pedestrians.json` (waiter / waitress),
+  `economy.json`, `strings.json`, `streaming.json`, `assets.json`, `features.json`,
+  `pages.json` (credits), `shops.json` (khichuri name).
+- Test: `node tools/hotel-check.js --three <dir> --out <folder>` — all checks pass for all three
+  hotels (streamed inside, walk in/out, indoor camera, sit, waiter, menu, Taka paid, food served,
+  health gained, stand up, bar + bartender, dancing). Smoke test, session9-check and
+  class-check pass.
+- The live Google Sheet (Products tab) was updated: 50 new menu rows (kind food / drink), a new
+  `heal` column (filled for the old food rows too), and the khichuri row (Khichuri, ৳120).
+
+Known issues
+- The waiter walks through other diners' chairs in a straight line sometimes (no path finding).
+- Arms do not hold the tray (it floats in front of the waiter's chest).
+- Street stalls still sell tea / borhani / lassi as kind `food`; the hotel uses kind `drink`
+  (two sheet rows if you want to change both prices).

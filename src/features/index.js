@@ -41,6 +41,9 @@ const LOADERS = {
   // Roadmap 2 S1: street lamps glow at night, light pools, a few real lights near the player.
   streetLights: () => import('./streetLights/index.js'),
   weather: () => import('./weather/index.js'),
+  // Roadmap 2 S4: the three hotels — lobby, restaurant with a waiter, bar + dance lounge. After
+  // dayNight + weather so its indoor light and no-rain-inside win.
+  hotels: () => import('./hotels/index.js'),
   sound: () => import('./sound/index.js'),
   radio: () => import('./radio/index.js'),
   rewardCodes: () => import('./rewardCodes/index.js'),

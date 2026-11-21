@@ -42,7 +42,7 @@ flat colours, no big textures), add ids to `data/assets.json`.
   **desert**, the **sea with a beach**, **mountains** at the edge, **ponds and lakes between the
   city blocks**, the river. Simple far-away terrain (low-poly), chunked like the city. New
   districts in `data/districts.json`; new places for rides and the map.
-- [ ] **S4 — Three big hotels + bar.** "Shoumik's Culinary", "Breaking Hotel", "Bengali Heritage":
+- [x] **S4 — Three big hotels + bar.** (done 2026-11-21, see CHANGELOG) "Shoumik's Culinary", "Breaking Hotel", "Bengali Heritage":
   large landmark buildings (on the map, with rides). Walk in → lobby + restaurant interior.
   **Waiter** NPC walks to your table and serves the food you order (menu from the Products sheet,
   kind `food`; eating heals). A **bar / dance lounge** inside one hotel where adults dance (reuse

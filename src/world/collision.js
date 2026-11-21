@@ -74,6 +74,14 @@ export class CollisionWorld {
     return id;
   }
 
+  /**
+   * Change what a box blocks (id = what add() returned). flags 0 = it blocks nothing any more
+   * (Roadmap 2 S4: the hotel doors open once the inside has loaded).
+   */
+  setFlags(id, flags) {
+    if (id >= 0 && id * 5 + 4 < this.boxes.length) this.boxes[id * 5 + 4] = flags;
+  }
+
   /** Collect ids of boxes whose grid cells touch the given rectangle (each id once). */
   query(minX, minZ, maxX, maxZ) {
     const out = this.hits;

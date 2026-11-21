@@ -1,0 +1,31 @@
+/* Roadmap 2 S4: hotels — the menu card and the walk-in fade. Builds on panels.css (.shop-*). */
+
+.hotel-fade {
+  position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none;
+  transition-property: opacity; transition-timing-function: ease-in-out; z-index: 30;
+}
+.hotel-fade.on { opacity: 1; }
+
+.hotel-menu .panel { width: min(600px, 100%); }
+.hotel-menu .menu-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 8px; }
+.hotel-menu .menu-tabs button {
+  flex: 1 1 auto; padding: 7px 10px; border-radius: 999px; border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08); color: inherit; font: inherit; font-size: 15px; font-weight: 700;
+}
+.hotel-menu .menu-tabs button.on { background: var(--gold); color: var(--ink); border-color: var(--ink); }
+.hotel-menu .menu-list { max-height: 46vh; }
+.hotel-menu .menu-item { justify-content: flex-start; }
+.hotel-menu .menu-item.picked { background: rgba(255, 211, 90, 0.12); }
+.hotel-menu .menu-icon { flex: none; width: 30px; font-size: 22px; text-align: center; }
+.hotel-menu .shop-name { flex: 1 1 auto; }
+.hotel-menu .menu-price { flex: none; font-weight: 700; font-size: 16px; min-width: 54px; text-align: right; }
+.hotel-menu .menu-plus, .hotel-menu .menu-minus {
+  flex: none; width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--ink);
+  background: var(--gold); color: var(--ink); font-size: 22px; font-weight: 800; line-height: 1;
+}
+.hotel-menu .menu-minus { background: #fff; }
+.hotel-menu .menu-plus:disabled { opacity: 0.35; }
+.hotel-menu .menu-count { flex: none; min-width: 18px; text-align: center; font-size: 17px; }
+.hotel-menu .menu-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.hotel-menu .menu-order { flex: 1 1 auto; }
+.hotel-menu .menu-order:disabled { opacity: 0.45; }

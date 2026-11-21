@@ -79,7 +79,7 @@ export function mapClassRows(classRows, questionRows) {
 /** Products tab rows → the products.json shape. */
 export function mapProductRows(rows) {
   return (rows || []).filter((r) => str(r.product_id)).map((r) => ({
-    id: str(r.product_id), kind: str(r.kind).toLowerCase(), price: str(r.price),
+    id: str(r.product_id), kind: str(r.kind).toLowerCase(), price: str(r.price), heal: str(r.heal), // heal: Roadmap 2 S4 (food / drink)
     name_en: str(r.name_en), name_bn: str(r.name_bn), image_url: str(r.image_url),
     model_url: str(r.model_url), description: str(r.description), active: str(r.active) === '' ? true : truthy(r.active),
   }));

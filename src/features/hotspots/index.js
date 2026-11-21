@@ -25,7 +25,7 @@ import { Animator } from '../../entities/people/animator.js';
 import { buildLook } from '../../entities/people/looks.js';
 import { acquireCrowd } from '../../entities/people/crowd.js';
 import { buildHotspotProps } from './props.js';
-import { Boombox } from './boombox.js';
+import { Boombox } from '../../audio/boombox.js'; // shared with the hotel bar (Roadmap 2 S4)
 
 const SIDE = {
   N: { ax: 1, az: 0, nx: 0, nz: 1 },

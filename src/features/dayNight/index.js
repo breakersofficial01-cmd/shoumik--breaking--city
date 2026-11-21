@@ -44,7 +44,8 @@ function apply(force) {
   sky.hemi.groundColor.copy(k.hemiGround);
   sky.hemi.intensity = k.hemi * (1 - rain * 0.15);
   sky.ambient.color.copy(k.ambient.color);
-  sky.ambient.intensity = k.ambient.value;
+  // Roadmap 2 S4: inside a hotel the room lights itself (sky.indoorLight set by the hotels feature).
+  sky.ambient.intensity = k.ambient.value + (sky.indoorLight || 0);
 
   fogCol.copy(k.fog).lerp(wetFog, rain * wet.fogMix);
   game.scene.fog.color.copy(fogCol);
@@ -121,6 +122,7 @@ export default {
       g.events.on('weather:changed', ({ rain: r }) => { rain = r; }),
       g.events.on('time:set', ({ hour: h }) => setHour(h)),
       g.events.on('quality:changed', () => apply(true)),
+      g.events.on('interior:changed', () => apply(false)),
     ];
   },
 

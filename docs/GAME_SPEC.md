@@ -23,7 +23,12 @@ A free-roam, Vice-City-flavoured open world set in a compressed Dhaka, made for
 
 Money only comes from answering lesson questions. YouTube links open outside the game.
 
-## 2. What you can do today (after Roadmap 2 · Session 3, 2026-11-21)
+## 2. What you can do today (after Roadmap 2 · Session 4, 2026-11-21)
+- **S4 — hotels:** three big hotels — **Breaking Hotel** (Gulshan, with a bar + dance lounge),
+  **Shoumik's Culinary** (Hatirjheel) and **Bengali Heritage** (Old Dhaka). Walk in through the
+  sliding doors, sit at a free table, the waiter walks over, choose from a 58-item menu
+  (Bangladeshi food, fast food, sweets, drinks, mocktails), pay, he brings the 3D dishes on a
+  tray, eat to heal. Dance on the bar's glowing floor. Section 10g.
 - **S3 — bigger world:** walk or drive out of the city into the **Northern Paddy Fields**
   (rice plots, ponds), the **Golden Sand Desert** (dunes, cacti, rock spires, an oasis), the
   **Coconut Coast** with a beach (umbrellas, canoes) and the **sea**, over the 9 m high
@@ -593,6 +598,23 @@ weapons (`data/economy.json → wasted`).
 - **17+ screen** on the first launch: what is in the game, "17 or older — play" / "under 17"
   (friendly no + links to lessons from `data/links.json` when filled). The game is paused behind
   it; it is saved and not asked again (even after a reset).
+
+## 10g. Hotels, waiter and food (Roadmap 2, Session 4)
+- **Where**: Breaking Hotel block (11,3), Shoumik's Culinary (11,8), Bengali Heritage (11,14),
+  all facing north (`data/places.json`, look `data/landmarks.json → types`, builder
+  `src/world/landmarks/hotels.js`). Ground floor = a hollow 60 × 48 m room with a door gap.
+- **Inside** (`src/features/hotels/`, numbers `data/hotels.json`): lobby + restaurant tables
+  (grid `tables.xs × zs`), kitchen door, serving counter; Breaking Hotel also a bar (9 stools,
+  bartender) and a dance floor (10 dancers, boombox music). Diners sit at ~40 % of tables (max 16).
+  Built only after the stream group `hotel-<id>` (food models) arrived; doors shut until then.
+- **Meal**: sit (E) → waiter walks over → menu card (max 4 items, tabs per `cat`) → pay → kitchen
+  (`waiter.kitchenSeconds`) → served on the table → each dish eaten in `order.eatSeconds` gives
+  its `heal` → E = order more, Jump = stand up (food not yet eaten heals at once).
+- **Menu** (`data/menu.json`): 58 items, kind food / drink, heal, icon, 3D `model` parts. Hotel
+  menus: Bengali Heritage = Bangladeshi + traditional drinks; Breaking Hotel = fast food, sweets,
+  mocktails / soft drinks (bar card: drinks + snacks); Shoumik's Culinary = a mix. Products sheet
+  rows (kind food / drink, columns price, heal, active) override the data.
+- No alcohol anywhere (mocktails only); all NPCs are adults; dancing is plain party dancing.
 
 ## 11. Release: app, offline, pages (Session 8)
 - **Installable app** (`manifest.webmanifest`, icons in `assets/icons/`): name Breaking City,
