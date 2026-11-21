@@ -22,12 +22,16 @@ The cloud environment **`shoumik--breaking--city`** allows the download sites (k
 quaternius.com, Google Drive download hosts, poly.pizza). Start sessions in that environment.
 Checked 2026-11-21: quaternius.com answers; kenney.nl and poly.pizza answer when curl sends a browser
 User-Agent (`-A "Mozilla/5.0"`). If a download is still blocked, ask the owner to download the ZIP and upload it.
+Kenney: the page's download button calls `https://kenney.nl/download-link/<data-download-id>` (same
+cookie + Referer) which returns a signed ZIP link. Quaternius packs are Google Drive folders
+(`pip install gdown`, `REQUESTS_CA_BUNDLE=/root/.ccr/ca-bundle.crt gdown --folder <url>`); on
+2026-11-21 the Modular Streets folder answered "Quota exceeded" — try another day.
 Convert FBX/OBJ → GLB like Session 4.5 (see HANDOFF §9), keep files small (merge meshes,
 flat colours, no big textures), add ids to `data/assets.json`.
 
 ## Sessions
 
-- [ ] **S1 — Street look.** Street lamps that light up at night (glow + light pools, few real
+- [x] **S1 — Street look.** (done 2026-11-21, see CHANGELOG) Street lamps that light up at night (glow + light pools, few real
   lights), benches, footbridges over main roads, more signboards, construction sites (barriers,
   cones, scaffolding), more street trees, dustbins, power transformers. Kenney City Kit (Roads),
   Quaternius props.

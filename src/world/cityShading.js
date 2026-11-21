@@ -181,6 +181,9 @@ export class CityShading {
   /** @param {number} k  0 = no window lit (day) .. 1 = full night */
   setWindows(k) { this.u.bcWindows.value = k; }
 
+  /** How dark it is: 0 = day .. 1 = full night (the lit-window level dayNight sets). */
+  get windows() { return this.u.bcWindows.value; }
+
   /** @param {number} k  0..1 how much the shop sign letters glow */
   setSigns(k) { this.u.bcSigns.value = k; }
 

@@ -1,0 +1,11 @@
+{
+  "_comment": "Which Kenney City Kit (Roads) models (CC0) go into assets/street/street-props.glb, and how. file = model name in 'Models/GLB format'. height = target height in metres (the model is scaled evenly to it). rotY = degrees, turns the model so its arm / front points to +z (the game's 'forward'). glow = triangles whose baked (linear) colour has every channel above minLinear (0-1, the kit paints bulbs pure white) become a second mesh '<name>.glow' that lights up at night. grey = recolour the model in this colour, keeping its light and dark parts (tintRef = the kit brightness that becomes exactly this colour). Glow parts keep their colour.",
+  "props": [
+    { "name": "lamp", "file": "light-curved", "height": 7.6, "rotY": 180, "glow": { "minLinear": 0.95 }, "grey": "#9da3a8", "tintRef": 0.5 },
+    { "name": "lampDouble", "file": "light-curved-double", "height": 8.4, "rotY": 0, "glow": { "minLinear": 0.95 }, "grey": "#9da3a8", "tintRef": 0.5 },
+    { "name": "barrier", "file": "construction-barrier", "height": 1.05, "rotY": 90, "grey": "#c9c4b8", "tintRef": 0.5 },
+    { "name": "cone", "file": "construction-cone", "height": 0.75, "rotY": 0 },
+    { "name": "fence", "file": "construction-fence", "height": 1.6, "rotY": 90, "grey": "#d8d4c8", "tintRef": 0.5 },
+    { "name": "dumpster", "file": "dumpster", "height": 1.55, "rotY": 0 }
+  ]
+}

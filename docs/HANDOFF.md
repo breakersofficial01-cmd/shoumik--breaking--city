@@ -1,4 +1,4 @@
-# Handoff — how Breaking City is built (v9, after Update 9 — accounts, Google Sheet, map)
+# Handoff — how Breaking City is built (v10, after Roadmap 2 · Session 1 — street look)
 
 For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, then
 `docs/GAME_SPEC.md` (what exists) and `docs/CHANGELOG.md` (what changed last).
@@ -11,6 +11,8 @@ time. Quick map of this file:
   a lesson → §7b + `docs/CONTENT_GUIDE.md` · an asset → §9 · change the save → §10**
 - Release: offline app, automatic quality, privacy/credits pages, publishing → §12f, `docs/DEPLOY.md`
 - **Update 9: accounts, the Google Sheet, full map + GPS, earn offer, health packs → §12g**
+- **Roadmap 2 (current plan: `docs/ROADMAP-2.md`) · S1 street look: lamps, benches, bins,
+  transformers, construction sites, footbridges, more signs → §12h**
 - Roadmap → §14
 
 ## 1. Run and test
@@ -56,6 +58,11 @@ time. Quick map of this file:
   network OFF; renders privacy/credits in both languages and the Settings → App row; checks the
   automatic quality (`?autoquality=1`) and the "graphics paused" screen after a lost WebGL context.
   Run it after touching `sw.js`, `src/core/pwa.js`, `data/pwa.json`, the pages or the boot.
+- Street look (Roadmap 2 S1): `node tools/street-look-check.js --three <dir> --out <folder> [--quality medium] [--only street,site,bridge,park,props]`
+  photographs a lamp-lined street by day and night, a construction site, a footbridge (day/night),
+  a park at night, a transformer and a bench; checks counts, lamps off by day / glowing at night,
+  real lights on Medium/High (none on Low) and that the footbridge stairs are solid. Run it after
+  touching `src/world/street/`, `src/features/streetLights/`, `data/street.json` or the signboards.
 - Class Mode + shops (Session 5): `node tools/class-check.js --three <dir> --out <folder> [--quality low]`
   walks into the Breaking Biology ring, runs two Lesson Checks, two Quiz Class rounds and a
   time-out, buys food / a bicycle / an outfit / a pistol / a home, sleeps at home, opens the
@@ -128,6 +135,10 @@ src/assets/  registry.js (asset ids + overrides), proceduralTextures.js (atlases
 src/audio/   audio.js (AudioManager = game.audio: one context, buses, play/loop, file overrides),
              synth.js (every code-made sound: SYNTH one-shots, LOOPS beds)
 src/world/   layout.js (piece grid) → blockgen.js (buildings/poles/trees DATA)
+  street/    Roadmap 2 S1: index.js (StreetDressing = world.street: load, merge per chunk, materials),
+             plan.js (what stands where: lamps, benches, bins, transformers, sites — DATA),
+             footbridgePlan.js + footbridges.js, meshes.js (code-built benches, bins, transformers,
+             bamboo scaffolding, nets, fallbacks)
              geoBuilder.js, buildingMesher.js, groundMesher.js, props.js  (DATA → geometry)
              chunks.js (build/show/hide/unload), collision.js, water.js, sky.js, world.js (glue)
              roads.js (road graph: junctions, lanes, signals, routes, bus stops), ramps.js
@@ -165,13 +176,14 @@ src/features/ index.js (registry) + player/ (index.js, actions.js) pedestrians/ 
              radio/ (index.js stations + DJ banner, music.js code-made music)
              rewardCodes/  profileCard/  screenshot/  ageGate/  settings/ (rewritten in Session 7)
              autoQuality/ (Session 8: FPS watchdog that lowers quality / resolution)
+             streetLights/ (Roadmap 2 S1: lamps glow at night, light pools, real lights nearby)
 src/ui/      fonts.js, i18n.js (t, tl = fixed language, numIn/moneyIn), loading.js, overlay.js
              (createOverlay: pause + Esc + save on close, esc()), styles.css, panels.css (Session 5),
              combat.css (Session 6), vibe.css (Session 7), quiz.js + quizScreens.js (quiz engine + question screens, shared
              by classes and jail), bubbles.js (speech bubbles, shared by pedestrians and police),
              release.css + contextLost.js (Session 8), pages.css (privacy / credits pages)
 data/        every tunable number and all content
-tools/       release-check.js, make-icons.js (Session 8), smoke-test.js, vibe-check.js, crime-check.js, class-check.js, character-shots.js, vehicle-shots.js, landmark-shots.js, poster-check.js
+tools/       street-look-check.js + street-kit/ (Roadmap 2 S1), release-check.js, make-icons.js (Session 8), smoke-test.js, vibe-check.js, crime-check.js, class-check.js, character-shots.js, vehicle-shots.js, landmark-shots.js, poster-check.js
 posters/     poster pictures + README.md (how to add one)
 ```
 
@@ -382,6 +394,12 @@ Check with `node tools/poster-check.js`. Like lessons, no release step is needed
   `image.shoumik.portrait`, `image.shoumik.face`, `texture.shoumik.face`,
   `geometry.person.<shape>` (tube, torso, skirt, head, hairShort, hairLong, hairBun, hijab,
   cap, bucket, box).
+- Roadmap 2 S1: `model.street.props` = `assets/street/street-props.glb` (one GLB, child meshes
+  `lamp`, `lamp.glow`, `lampDouble`, `lampDouble.glow`, `cone`, `barrier`, `fence`, `dumpster`;
+  vertex colours, metres, +z = front). Code stand-ins in `src/world/street/meshes.js →
+  makeFallbackKit`. Repack: `node tools/street-kit/pack-props.js --three <dir> --kit
+  "<City Kit Roads>/Models/GLB format" [--shot props.png]` (models + sizes in
+  `tools/street-kit/recipes.json`; Kenney download: see ROADMAP-2 "Downloading the free packs").
 - Session 4: `texture.poster.<poster id>` (and `texture.poster.default-<shape>`) for every poster
   picture — an override in `data/assets.json` replaces the file without touching posters.json.
 - Real 3D models should use MeshStandardMaterial (GLB default) so they pick up the sky
@@ -659,6 +677,36 @@ version, add the field to `defaults()`. Features store live state with
   after touching accounts, sheet, map, shops, earn, health packs or the HUD/profile.
 - Privacy text (`data/pages.json → privacy`) now describes accounts — update it before collecting
   anything new.
+
+## 12h. Street look (Roadmap 2, Session 1)
+- **Plan first, meshes later.** `World.init` creates `world.street = new StreetDressing(world)`
+  right after the shared materials and BEFORE `buildColliders` and any chunk: `StreetPlan`
+  (`street/plan.js`) adds `piece.street = { lamp, lampDouble, bench, bin, dumpster, transformer,
+  cone, barrier, fence, scaffold, net }` lists (items `{x, y, z, rot, sx?, sy?, tint?}`, `rot` =
+  heading, model +z faces that way), pushes extra street trees into `piece.content.trees`, marks
+  `building.construction = true`, plans footbridges and collects `plan.colliders`. It uses its own
+  `Rng(hashInts(seed, i, j, 7001))` — never the block's Rng, so the city does not change.
+- **Drawing** (`chunks.js` → `street.buildChunk(pieces, quality)`): all small kinds are baked into
+  ONE merged geometry per chunk with the shared prop material (`mergeItems`), lamp bulbs into one
+  more with `street.materials.bulb`, light pools are one InstancedMesh (`materials.pool`, additive,
+  no fog), scaffold cells and nets are InstancedMeshes (nets: see-through `netMaterial`).
+  `quality.propDensity` thins benches, bins and containers. Footbridges are Kit-built groups
+  (`footbridges.js`) hidden beyond view distance + `viewMargin`.
+- **Night** (`features/streetLights/`): every frame reads `world.cityShading.windows` (0 day → 1
+  night, set by dayNight) and sets the bulb / pool intensity; on Medium/High it moves
+  `quality.streetLights` PointLights to the nearest bulbs (`street.heads`, a flat xyz array)
+  twice a second. The lights always exist (intensity 0 by day) so shaders compile once.
+  Bulb and pool materials are `cityShading.patchCut` → dark during load-shedding.
+- **Footbridges** (`footbridgePlan.js`): roads between two ordinary blocks, not under a viaduct
+  path (`data/landmarks.json → viaducts[].path`), not at a stunt ramp or bus stop; the deck starts
+  `fromPole` m after the middle electric pole so the stairs (along the kerb, 0.1–1.3 m from it)
+  end before the next pole; small props and trees in that strip are removed; stairs are solid
+  colliders. They are decoration for now — `heightAt` does not know them (a car under the deck
+  would otherwise be lifted onto it). Making them walkable needs a height that depends on the
+  current height (see NEXT.md).
+- **More signboards** (`buildingMesher.js → extraSigns`): upper-floor and rooftop boards use
+  `signs.atlas.pick(seed, 200|300 + bit, bit)` and `hashInts` chances (no Rng calls).
+  Settings: `data/signboards.json → upper, roof`.
 
 ## 13. Notes for the next sessions (historical)
 - **Session 4 is done** (the old notes below are kept for reference).

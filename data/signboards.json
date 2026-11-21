@@ -3,6 +3,21 @@
   "atlas": { "width": 1024, "height": 1024, "cols": 4, "rows": 16 },
   "styles": [["#c0392b", "#ffffff"], ["#f1c40f", "#7a0d0d"], ["#1e6f9f", "#ffffff"], ["#27ae60", "#ffffff"], ["#f2efe6", "#b0282e"], ["#111111", "#f9d342"], ["#8e44ad", "#ffffff"], ["#e67e22", "#1a1a1a"], ["#0f5a6a", "#f2efe6"], ["#ffffff", "#1f4f7a"]],
   "nightGlow": 1.4,
+  "upper": {
+    "_comment": "Roadmap 2 S1: more signboards. upper = a board across the first upper floor (coaching centres, doctors' chambers — very Dhaka) on street sides of buildings without balconies. chance = share of such walls; width = [min, max] share of the wall; height in metres. roof = a big name board standing on the roof edge of taller buildings, on two posts.",
+    "chance": 0.4,
+    "minFloors": 3,
+    "width": [0.45, 0.85],
+    "height": 1.35
+  },
+  "roof": {
+    "chance": 0.12,
+    "minFloors": 5,
+    "width": [0.45, 0.75],
+    "height": 2.3,
+    "lift": 0.7,
+    "postColor": "#3a3d42"
+  },
   "names": [
     { "bn": "রহমান স্টোর", "en": "Rahman Store" },
     { "bn": "মায়ের দোয়া হোটেল", "en": "" },
@@ -43,6 +58,22 @@
     { "bn": "কাবাব ঘর", "en": "Kebab" },
     { "bn": "দই ঘর", "en": "Doi" },
     { "bn": "টেলিকম সেন্টার", "en": "Flexiload" },
-    { "bn": "গিফট কর্নার", "en": "Gifts" }
+    { "bn": "গিফট কর্নার", "en": "Gifts" },
+    { "bn": "ডাক্তারের চেম্বার", "en": "Doctor's Chamber" },
+    { "bn": "এডমিশন কোচিং", "en": "Admission Coaching" },
+    { "bn": "স্পোকেন ইংলিশ", "en": "Spoken English" },
+    { "bn": "কুরিয়ার সার্ভিস", "en": "Courier" },
+    { "bn": "ট্রাভেলস এন্ড ট্যুরস", "en": "Travels" },
+    { "bn": "মোবাইল রিচার্জ", "en": "Recharge" },
+    { "bn": "ডেন্টাল কেয়ার", "en": "Dental Care" },
+    { "bn": "চাইনিজ রেস্টুরেন্ট", "en": "Chinese" },
+    { "bn": "কাচ্চি ঘর", "en": "Kacchi" },
+    { "bn": "জিম ও ফিটনেস", "en": "Gym" },
+    { "bn": "প্রাইভেট টিউশন", "en": "Tuition" },
+    { "bn": "আইটি ট্রেনিং সেন্টার", "en": "IT Training" },
+    { "bn": "ফ্ল্যাট বিক্রয় হবে", "en": "Flat for Sale" },
+    { "bn": "টু-লেট", "en": "To-Let" },
+    { "bn": "ব্রেকিং স্কুল ক্লাসরুম", "en": "Breaking School" },
+    { "bn": "হাসপাতাল ও ক্লিনিক", "en": "Clinic" }
   ]
 }

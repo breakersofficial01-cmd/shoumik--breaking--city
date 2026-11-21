@@ -789,3 +789,47 @@ Known issues
   explode after the arrest and count as a new crime, bringing the stars back. Toast "তুমি এখন মুক্ত।".
 - `tools/crime-check.js` checks both (all police gone after bail, a late explosion adds no stars,
   death cuts ৳500 and keeps everything, new session at the start point).
+
+## 2026-11-21 — Roadmap 2 · Session 1: street look (Claude Opus 5.5)
+Update 9b and the Roadmap 2 plan were merged into `main` first (pull request #2).
+
+The streets now look lived-in, by day and at night. Free CC0 models only.
+- **Street lamps** (~1,590) along every block, arm over the road, grey steel (Kenney City Kit
+  Roads, CC0). At night the bulbs glow and soft warm **light pools** appear on the ground; on
+  Medium 2 and High 6 **real lights** follow you to the nearest lamps (cars, people and walls get
+  lit). Lamps fade in with the lit windows and go dark during load-shedding. **Double lamps** in
+  the parks (~70).
+- **Benches** (~290, sidewalks and parks), **dustbins** (~340, green / yellow / blue), green
+  **waste containers** in the small lanes (~240), **pole transformers** (~180).
+- **17 construction sites**: buildings next to a main road wrapped in **bamboo scaffolding**
+  (Dhaka style), half with a see-through green net, a site fence on the sidewalk, cones and
+  barriers at the kerb.
+- **14 steel foot overbridges** across main roads with side panels, roof, lamps under the roof and
+  stairs down to both sidewalks (solid; not climbable yet). Never under the MRT / flyover, next to
+  a landmark, on a stunt ramp or at a bus stop.
+- **More street trees** in the gaps between poles.
+- **More signboards**: boards across the first upper floor (coaching centres, doctors' chambers…)
+  and big rooftop name boards; 16 new Bangla names (56 in all). Shop names are re-shuffled.
+- Everything is solid: lamps, benches, bins, containers, transformers, site fences, barriers,
+  footbridge stairs (people walk round them).
+
+Code
+- New `src/world/street/` (`index.js` StreetDressing = `world.street`, `plan.js`,
+  `footbridgePlan.js`, `footbridges.js`, `meshes.js`); new feature `streetLights`; new data file
+  `data/street.json`; `data/quality.json → streetLights` (0 / 2 / 6); `data/signboards.json →
+  upper, roof` + names; asset id `model.street.props` → `assets/street/street-props.glb` (85 KB).
+- Packing tool `tools/street-kit/pack-props.js` (+ `recipes.json`): Kenney GLBs → one GLB with
+  vertex colours (palette baked), grey recolour, metres, bulbs split off as `.glow` meshes.
+- Small street props are merged into one mesh per chunk (plus one for bulbs and one for light
+  pools), scaffold cells and nets are instanced. Own seeded random numbers: buildings, poles and
+  old trees are exactly where they were.
+- `cityShading.windows` getter (night level).
+- Test: new `tools/street-look-check.js` (counts, day/night lamps, real lights per quality,
+  solid footbridge stairs, photos) — passes on Medium and Low. `smoke-test` passes.
+- Cost at the start corner (headless): Low 143 → 157 draw calls, Medium 282 → ~310.
+
+Known issues
+- Footbridges cannot be climbed yet; they are decoration with solid stairs (NEXT.md).
+- Light pools are flat discs at kerb height (they float 15 cm over the road surface).
+- The Quaternius street pack could not be downloaded (Google Drive quota); Kenney models used.
+- Not tested on a real phone yet — please check FPS at night on Medium (`?debug=1`).

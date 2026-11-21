@@ -28,5 +28,6 @@
   "ageGate": true,
   "autoQuality": true,
   "healthPacks": true,
-  "earn": true
+  "earn": true,
+  "streetLights": true
 }
