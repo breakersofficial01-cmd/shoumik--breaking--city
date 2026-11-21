@@ -183,3 +183,12 @@
 - A build step (esbuild) would bundle 165 code files into one — needs the owner's OK (tech rule:
   no build step). The modulepreload list gets most of the gain without it.
 - Show the city behind the sign-in screen (start building while the player types).
+
+## Ideas noted during Roadmap 2 · Session 2 (cars and weapons)
+- Kenney cars are chunkier than the Quaternius ones; if the owner prefers one style, look for a
+  matching CC0 pack (Quaternius "Cars" has no pickup/van/truck).
+- Lightbar on the real police jeep model (the code-built lightbar only shows on code bodies).
+- Grenade: a small "pin out" sound and a red fuse ring on the ground; cook-the-grenade by holding.
+- Launcher: a smoke trail behind the shell; aim arc on phones.
+- Army trucks driven by soldiers (S8) and parked inside the cantonment.
+- Truck / microbus as hired rides (data/economy.json → rides) — a microbus "contract" to a far stop.

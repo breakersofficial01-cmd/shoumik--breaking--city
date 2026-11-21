@@ -5,6 +5,7 @@
 //   fleet.setRider(vehicle, look | null)   a crowd person seated on an open vehicle
 //   fleet.update(dt)                       physics, crashes, wheels, riders, smoke — once a frame
 //   fleet.damage(vehicle, amount)          fleet.nearest(x, z, range, filter)
+//   fleet.blast(x, y, z, radius, damage, by)   grenade-style explosion (flames + vehicles hurt)
 //
 // Events sent
 //   vehicle:crashed  { id, x, z, speed }            vehicle:burning { id, x, z }
@@ -125,6 +126,13 @@ export class Fleet {
 
   damage(v, amount) {
     this.damageModel.damage(v, amount);
+  }
+
+  /** Roadmap 2 S2: an explosion that is not a vehicle (grenade): flames + hurt/throw vehicles. */
+  blast(x, y, z, radius, damage, by = null) {
+    if (!this.damageModel) return;
+    this.damageModel.fireball(x, y, z, Math.max(0.5, radius / 8));
+    this.damageModel.blast(x, z, radius, damage, by);
   }
 
   /** Vehicle against vehicle: push apart by weight, bounce, spin and dent both. */

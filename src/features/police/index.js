@@ -97,7 +97,8 @@ function spawnCar() {
   const L = level();
   const spot = findSpot(cfg.spawn.carMinDistance, cfg.spawn.carMaxDistance, true);
   if (!spot) return;
-  const v = ctx.fleet.create(cfg.car.type, { x: spot.x, z: spot.z, heading: spot.heading, color: L.carColor });
+  const types = cfg.car.types?.length ? cfg.car.types : [cfg.car.type]; // pickups and jeeps (Roadmap 2 S2)
+  const v = ctx.fleet.create(types[Math.floor(Math.random() * types.length)], { x: spot.x, z: spot.z, heading: spot.heading, color: L.carColor });
   if (v) cars.push(new PoliceCar(ctx, v));
 }
 

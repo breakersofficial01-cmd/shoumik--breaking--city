@@ -1,0 +1,22 @@
+product_id,kind,name_en,name_bn,price,image_url,model_url,description,active,notes
+hatchback,vehicles,Hatchback,হ্যাচব্যাক,25000,,,,TRUE,Roadmap 2 S2
+pickup,vehicles,Pickup,পিকআপ,45000,,,,TRUE,Roadmap 2 S2
+microbus,vehicles,Microbus,মাইক্রোবাস,55000,,,,TRUE,Roadmap 2 S2
+truck,vehicles,Box truck,ট্রাক,80000,,,,TRUE,Roadmap 2 S2
+luxury,vehicles,Luxury car,বিলাসবহুল গাড়ি,120000,,,,TRUE,Roadmap 2 S2
+knife,weapons,Knife,ছুরি,800,,,,TRUE,Roadmap 2 S2
+heavyPistol,weapons,Heavy pistol,ভারী পিস্তল,9000,,,,TRUE,Roadmap 2 S2
+uzi,weapons,Mini SMG,মিনি এসএমজি,13000,,,,TRUE,Roadmap 2 S2
+combatShotgun,weapons,Combat shotgun,কমব্যাট শটগান,24000,,,,TRUE,Roadmap 2 S2
+carbine,weapons,Carbine,কারবাইন,30000,,,,TRUE,Roadmap 2 S2
+bullpup,weapons,Bullpup rifle,বুলপাপ রাইফেল,42000,,,,TRUE,Roadmap 2 S2
+marksman,weapons,Marksman rifle,মার্কসম্যান রাইফেল,60000,,,,TRUE,Roadmap 2 S2
+launcher,weapons,Grenade launcher,গ্রেনেড লঞ্চার,90000,,,,TRUE,Roadmap 2 S2
+grenade,weapons,Grenades (3),গ্রেনেড (৩টি),6000,,,,TRUE,Roadmap 2 S2
+ammo-heavyPistol,weapons,Heavy pistol bullets (box of 21),ভারী পিস্তলের গুলি (২১টি),900,,,,TRUE,
+ammo-uzi,weapons,Mini SMG bullets (box of 90),মিনি এসএমজির গুলি (৯০টি),1100,,,,TRUE,
+ammo-combatShotgun,weapons,Combat shotgun shells (box of 16),কমব্যাট শটগানের গুলি (১৬টি),1200,,,,TRUE,
+ammo-carbine,weapons,Carbine bullets (box of 60),কারবাইনের গুলি (৬০টি),1800,,,,TRUE,
+ammo-bullpup,weapons,Bullpup bullets (box of 60),বুলপাপের গুলি (৬০টি),2000,,,,TRUE,
+ammo-marksman,weapons,Marksman bullets (box of 15),মার্কসম্যানের গুলি (১৫টি),2600,,,,TRUE,
+ammo-launcher,weapons,Launcher grenades (4),লঞ্চারের গ্রেনেড (৪টি),5000,,,,TRUE,

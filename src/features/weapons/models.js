@@ -1,5 +1,6 @@
 // Weapon models for Shoumik's hand. Guns are GLB files from the asset registry
-// (data/weapons.json → weapons[].asset); the cricket bat, machete and molotov bottle are built
+// (data/weapons.json → weapons[].asset); the cricket bat, machete, molotov bottle (and since
+// Roadmap 2 S2 the knife, grenade and grenade launcher) are built
 // here in code (weapons[].build, colours in builds). Every model is returned sized in metres
 // (its long side = weapons[].length) and pointing along +x like the gun pack.
 // Used only by ./index.js.
@@ -35,6 +36,35 @@ const BUILDERS = {
     bar(g, -0.05, 0.22, 0.04, 0.03, C.handle);
     bar(g, 0.22, 0.95, 0.09, 0.008, C.blade, 0.015);
     bar(g, 0.22, 0.95, 0.015, 0.009, C.edge, -0.035);
+    return g;
+  },
+  // Roadmap 2 S2 ------------------------------------------------------------------------
+  knife(C) {
+    const g = new THREE.Group();
+    bar(g, -0.05, 0.4, 0.07, 0.05, C.handle);
+    bar(g, 0.4, 1.0, 0.1, 0.012, C.blade, 0.01);
+    return g;
+  },
+  grenade(C) {
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.SphereGeometry(0.38, 10, 8).scale(1.15, 1, 1), mat(C.body));
+    body.position.x = 0.45;
+    const lever = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.06, 0.12), mat(C.lever));
+    lever.position.set(0.5, 0.38, 0);
+    const pin = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.025, 6, 12), mat(C.pin));
+    pin.position.set(0.82, 0.38, 0);
+    g.add(body, lever, pin);
+    return g;
+  },
+  launcher(C) {
+    const g = new THREE.Group();
+    const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.62, 12).rotateZ(-Math.PI / 2), mat(C.tube));
+    tube.position.set(0.62, 0.05, 0);
+    g.add(tube);
+    bar(g, 0.05, 0.42, 0.12, 0.1, C.body, 0.02);   // body
+    bar(g, -0.32, 0.05, 0.09, 0.07, C.body, 0.0);  // stock
+    bar(g, 0.12, 0.2, 0.2, 0.06, C.grip, -0.12);   // grip
+    bar(g, 0.35, 0.52, 0.06, 0.04, C.sight, 0.17); // sight
     return g;
   },
   molotov(C) {
@@ -90,9 +120,9 @@ export class WeaponModels {
     return null;
   }
 
-  /** A loose bottle for a thrown molotov (not in the hand). */
-  async bottle() {
-    const w = this.cfg.weapons.find((x) => x.build === 'molotov');
+  /** A loose bottle / grenade in flight (not in the hand). build = 'molotov' | 'grenade'. */
+  async bottle(build = 'molotov') {
+    const w = this.cfg.weapons.find((x) => x.build === build);
     const m = await this.get(w);
     return m ? m.clone() : null;
   }

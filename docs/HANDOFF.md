@@ -1,4 +1,4 @@
-# Handoff — how Breaking City is built (v11, after Roadmap 2 · G1 — fast start, streaming, real trees)
+# Handoff — how Breaking City is built (v12, after Roadmap 2 · S2 — more cars and weapons)
 
 For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, then
 `docs/GAME_SPEC.md` (what exists) and `docs/CHANGELOG.md` (what changed last).
@@ -403,6 +403,11 @@ Check with `node tools/poster-check.js`. Like lessons, no release step is needed
   `plainAttributes()` turns the quantised vertex data back into Float32 at load time, so code that
   bakes node transforms into geometry (vehicles, metro, street props, trees) keeps working. Load
   GLBs ONLY through the registry (`assets.load(id)`), never with your own GLTFLoader.
+- S2: `model.vehicle.kenney{Pickup,Van,Delivery,Flatbed,Luxury,Hatchback,Jeep}` = `assets/vehicles/kenney-*.glb`
+  (Kenney Car Kit). Pack with `node tools/car-kit/pack-cars.js --three <dir> --kit "<Car Kit>/Models/GLB format"`
+  (recipes `tools/car-kit/cars.json`), then `tools/compress-models.js`. Materials are ROLES
+  (Paint, Windows, Headlight, Taillight, Trim, Dark, Light) — use them in `data/vehicles.json →
+  types.<id>.model.paint / colors`. Wheels stay separate meshes named `wheel-…`.
 - G1: `model.nature.trees` = `assets/nature/trees.glb` (child meshes oak, round, detailed, fat,
   palm, palmBend, palmDetailed; 1 m tall; repack with `pack-props.js --recipes tools/street-kit/trees.json`).
 - Roadmap 2 S1: `model.street.props` = `assets/street/street-props.glb` (one GLB, child meshes
@@ -740,6 +745,25 @@ version, add the field to `defaults()`. Features store live state with
   `nearDistance` and the simple trees elsewhere. `treeShadows` (High only) lets them cast shadows.
 - Measured with `tools`-style throttling (8 Mbps, 80 ms): start → playing Low 11.7 → 7.5 s,
   Medium 20.5 → 13.0 s (headless software rendering; real phones draw faster).
+
+## 12j. More cars and weapons (Roadmap 2, Session 2)
+- New vehicle types (data/vehicles.json): `hatchback`, `pickup`, `microbus`, `truck`, `luxury`,
+  `police_jeep`, `army_truck` — Kenney models on Medium/High, code-built bodies (style car /
+  pickup / van) on Low. Prices `data/economy.json → prices.vehicles`; showroom stock
+  `data/shops.json`; traffic weights per district `data/traffic.json → mix`.
+- Police cars are picked from `data/police.json → car.types` (pickups and jeeps).
+- Weapons (data/weapons.json): `knife` (melee, code-built), `heavyPistol`, `uzi`, `combatShotgun`,
+  `carbine`, `bullpup`, `marksman` (Ultimate Gun Pack models already in assets/weapons),
+  `grenade` (type throw, `fuse` seconds) and `launcher` (type gun with `projectile: true`: fires a
+  shell through `throwing.js → launch()` that explodes on contact). Blast numbers:
+  `blastRadius / blastDamage / blastVehicleDamage`.
+- Explosions: `throwing.js → explode()` calls `fleet.blast(x, y, z, radius, damage, by)` (new:
+  `damage.js → fireball() + blast()`, also used by exploding vehicles), sends `explosion { by:
+  'player' }` (people / police / Shoumik react as before) and `crime:committed { type:
+  'explosion' }` (heat in `data/economy.json → wanted.crimes.explosion`).
+- Products tab rows for the new items: `tools/sheets/products-roadmap2-s2.csv` (paste into the
+  sheet; the game sells them anyway — the sheet only overrides names / prices / pictures).
+- Test: `tools/crime-check.js` now buys a knife, throws a grenade and fires the launcher.
 
 ## 13. Notes for the next sessions (historical)
 - **Session 4 is done** (the old notes below are kept for reference).

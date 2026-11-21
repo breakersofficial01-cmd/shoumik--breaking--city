@@ -1,5 +1,5 @@
 // Feature: weapons (Session 6). Shoumik's weapons: fists, cricket bat, machete, guns and
-// molotovs. Which ones he owns comes from the weapon shop (save.data.owned.weapons); bullets
+// molotovs (Roadmap 2 S2: + knife, grenades, grenade launcher). Which ones he owns comes from the weapon shop (save.data.owned.weapons); bullets
 // are in save.data.ammo. Numbers and models: data/weapons.json.
 //
 // Controls: Q / অস্ত্র button = next weapon, click / আঘাত = attack. Guns:
@@ -122,7 +122,12 @@ function fireGun(w) {
   aimTimer = cfg.aim.holdSeconds;
   save().ammo[w.id] = left - 1;
   game.events.emit('player:action', { name: 'shoot' });
-  if (gunner.fire(w, aim.dx, aim.dy, aim.dz)) hud.flashHit(game.config.get('combat').hitMarkerSeconds);
+  if (w.projectile) {
+    // Roadmap 2 S2: the grenade launcher fires a shell that explodes on contact (./throwing.js).
+    const o = gunner.muzzle();
+    gunner.fx.flash(o.x + aim.dx * 0.4, o.y + aim.dy * 0.4, o.z + aim.dz * 0.4);
+    molotovs.launch(w, o.x + aim.dx * 0.6, o.y + aim.dy * 0.6, o.z + aim.dz * 0.6, aim.dx, aim.dy, aim.dz);
+  } else if (gunner.fire(w, aim.dx, aim.dy, aim.dz)) hud.flashHit(game.config.get('combat').hitMarkerSeconds);
   const p = game.player.position;
   game.events.emit('weapon:fired', { id: w.id, x: p.x, z: p.z });
   game.events.emit('danger:raised', { x: p.x, z: p.z, radius: w.noise, source: 'player' });

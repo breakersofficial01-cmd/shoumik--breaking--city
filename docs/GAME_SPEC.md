@@ -23,7 +23,13 @@ A free-roam, Vice-City-flavoured open world set in a compressed Dhaka, made for
 
 Money only comes from answering lesson questions. YouTube links open outside the game.
 
-## 2. What you can do today (after Roadmap 2 · G1, 2026-11-21)
+## 2. What you can do today (after Roadmap 2 · Session 2, 2026-11-21)
+- **S2 — more cars and weapons:** 7 new vehicles — hatchback (৳25,000), pickup (৳45,000),
+  microbus (৳55,000), box truck (৳80,000), luxury car (৳1,20,000) at the car showroom; police jeeps
+  join chases next to the pickups; plain olive army trucks drive around Sher-e-Bangla Nagar.
+  9 new weapons in every weapon shop: knife, heavy pistol, mini SMG, combat shotgun, carbine,
+  bullpup rifle, marksman rifle, **grenades** (explode 2 s after the throw) and a **grenade
+  launcher** (explodes on contact). Explosions throw and burn cars and are a crime.
 - **G1 — faster start, real trees:** the game starts about 40 % faster on mobile data (models
   download while you sign in and while the city is built; all 3D models are compressed to half
   their size); the rest (trains, guns, later new areas) downloads gradually while you play.

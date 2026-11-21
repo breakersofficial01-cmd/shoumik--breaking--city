@@ -348,6 +348,34 @@
     "model.nature.trees": {
       "type": "model",
       "url": "assets/nature/trees.glb"
+    },
+    "model.vehicle.kenneyPickup": {
+      "type": "model",
+      "url": "assets/vehicles/kenney-pickup.glb"
+    },
+    "model.vehicle.kenneyVan": {
+      "type": "model",
+      "url": "assets/vehicles/kenney-van.glb"
+    },
+    "model.vehicle.kenneyDelivery": {
+      "type": "model",
+      "url": "assets/vehicles/kenney-delivery.glb"
+    },
+    "model.vehicle.kenneyFlatbed": {
+      "type": "model",
+      "url": "assets/vehicles/kenney-flatbed.glb"
+    },
+    "model.vehicle.kenneyLuxury": {
+      "type": "model",
+      "url": "assets/vehicles/kenney-luxury.glb"
+    },
+    "model.vehicle.kenneyHatchback": {
+      "type": "model",
+      "url": "assets/vehicles/kenney-hatchback.glb"
+    },
+    "model.vehicle.kenneyJeep": {
+      "type": "model",
+      "url": "assets/vehicles/kenney-jeep.glb"
     }
   }
 }
