@@ -1,4 +1,4 @@
-# Handoff — how Breaking City is built (v17, after Roadmap 2 · S7 — boats and the river launch)
+# Handoff — how Breaking City is built (v18, after Roadmap 2 · S8 — the cantonment and the army)
 
 For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, then
 `docs/GAME_SPEC.md` (what exists) and `docs/CHANGELOG.md` (what changed last).
@@ -19,6 +19,7 @@ time. Quick map of this file:
 - **S5 real 3D people (streamed, near the player) + animals (code-built, instanced) → §12m**
 - **S6 riding buses / MRT / railway with passengers → §12n**
 - **S7 boats (lakes, river, sea), ghats, boat club, Buriganga launch → §12o**
+- **S8 cantonment, soldiers, army trucks, tanks, army wanted rules → §12p**
 - Roadmap → §14
 
 ## 1. Run and test
@@ -72,6 +73,12 @@ time. Quick map of this file:
   (ghats, drive a country boat on the river and into the bank, buy a speedboat + yacht, sea run,
   the Sadarghat launch to the Sea Mouth Ghat, night photos). Run it after touching boats, ferry,
   water, `data/boats.json`.
+- Army (Roadmap 2 S8): `node tools/army-check.js --three <dir> --out <folder> [--quality medium] [--only base,pass,gate,attack,counts,night]`
+  (the base is built only when near; flat ground, solid walls, map + zone name; residents; a tank
+  and a truck driving inside; visitor pass; warning → 1 star → arrested (busted); shooting a soldier
+  → 5 stars, extra soldiers, trucks, a tank that fires shells; stars stay in a car; wasted; counts per
+  quality; day/night photos). Run it after touching `src/features/army/`, police officers/pursuit,
+  crime, `data/army.json` or the terrain pads. ~10 minutes headless.
 - Riding (Roadmap 2 S6): `node tools/ride-check.js --three <dir> --out <folder> [--only bus,metro,train,counts,night]`
   (bus 2 stops + police stop, MRT with a map-picked station, train, fares, passengers per quality,
   night photos). Run it after touching `src/entities/transit/`, buses, metro, railway, the map or
@@ -326,6 +333,15 @@ posters/     poster pictures + README.md (how to add one)
 | `hotel:ate` | `{ hotel, items }` a meal was finished | hotels |
 
 S5 animals only LISTEN (weapon:fired, police:fired, explosion, danger:raised, vehicle:crashed); no new events.
+
+Roadmap 2 S8 (army):
+
+| Event | Payload | Sent by |
+|---|---|---|
+| `army:sight` | `{ seen }` a soldier, army truck or tank can see him (crime ORs it with police:sight) | army → crime |
+| `army:killed` | `{ x, z, by }` a soldier died (kills stat) | army → crime |
+| `army:alert` | `{ on }` the army level started / ended (attacking the army) | army |
+| crimes `trespassArmy` / `attackArmy` | 1 star / straight to 5 stars (`data/economy.json → wanted.crimes`) | army → crime |
 
 Add new events to this table.
 
@@ -984,6 +1000,41 @@ Settings `data/boats.json` (types, physics, blocked, wake, enter, docks, ferry);
 - Debug: `BC.boats` (list, docks, driving, spawn(type, at), enter(b), shore()), `BC.ferry`
   (ride, trains, ghats, passengers), `BC.world.waterAt(x, z)`.
 - **Test**: `node tools/boat-check.js --three <dir> --out <folder> [--only ghats,drive,buy,ferry,night]`.
+
+## 12p. Cantonment and army (Roadmap 2, Session 8)
+Settings `data/army.json` (base layout, routes, posts, parked, quality counts, rules, soldier,
+truck, tank, looks); crimes `data/economy.json → wanted.crimes` (trespassArmy, attackArmy); tank
+type `data/vehicles.json → types.tank`; strings `army.*`.
+- **Ground**: `data/terrain.json → pads` (NEW layer in `TerrainField`: flat rectangle + blend
+  margin, its own colour; no props or ponds on it; `field.padAt`, `zoneAt` names it, `mapColor`
+  paints it). The S10 airport can use another pad. Cantonment Road = a highway in terrain.json.
+  The base stands west of the Northern Highway because the S6 railway runs along row −5.5 east of it.
+- **Base** (`src/features/army/base.js`, `CantonmentBase`): built with the landmark Kit on
+  `stream:loaded { group: 'cantonment' }` (no files; fallback: when near if streaming is off) into a
+  lit + a glow mesh (landmark materials), instanced trees (world shared tree models), the barrier
+  (own mesh, lifts when any vehicle is near the gate) and the name board (canvas, after the fonts).
+  Its own frame: origin = pad centre, gate on −x; `base.angle` (data) turns it (180° = gate east).
+  Use `base.toWorld / toLocal / heading / inside / gatePoints` — never add pad.cx by hand.
+- **Soldiers** (`soldier.js`): `Soldier extends Officer` (police brain: chase / shoot / arrest /
+  down / dead / retreat) + calm states `guard`, `patrol`, `home`. Officer ctx gets
+  `soldierCfg = police.json with officer = army.soldier numbers, archetypes = army archetypes`.
+  Targets are kind `soldier` (not police); `onHit` by the player → `ctx.onAttack()`.
+- **Vehicles**: `ArmyDriver` (`drive.js`, driver `'army'`, tags `army` + `noBoard`) drives by writing
+  `vehicle.input`; `aimPoint` goes through the gate when only one of (vehicle, target) is inside and
+  follows the road grid in the city. `TankUnit extends ArmyDriver` (`tank.js`): turret + gun meshes
+  hang on `v.mesh` (geometry from `modelsMilitary.js → buildTurretGeometry`), modes parked / loop /
+  chase / home, fires through `shells.js` (fleet.blast + `explosion { by: 'army' }`). Chasing trucks
+  reuse the police `PoliceCar` (driver 'police' while chasing, `tags.police` removed, `tags.army` set).
+  `tags.noBoard` = the vehicles feature will not let him get in (tanks always; trucks while driven).
+- **Units** (`units.js`): `wake()` / `sleep()` by distance (wakeDistance / sleepDistance), counts per
+  quality, `alertAll()`, `staff()` (extra soldiers, trucks, tanks at the army level), `standDown()`,
+  clean-up, map blips (group police while alert), `report()`.
+- **Rules** (`rules.js`): warning → trespass (1 star) → repeat; the pass prompt sets
+  `game.transitPrompt = 'army'` so E is ours.
+- Busted by a soldier = `player:busted` from the army feature (same check as police). Busted /
+  wasted / bail → `wanted:changed 0` / `police:standDown` → `standDown()`.
+- Debug: `BC.army.report()`, `BC.army.units` (soldiers, tanks, drivers, chasers), `BC.army.rules`
+  (pass, warnings), `BC.army.shells`, `BC.army.attack()` (start the alert), `BC.army.toWorld(x, z)`.
 
 ## 13. Notes for the next sessions (historical)
 - **Session 4 is done** (the old notes below are kept for reference).

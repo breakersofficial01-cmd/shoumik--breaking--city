@@ -8,9 +8,11 @@
 //   field.zoneAt(x, z)     { id, name } of the countryside zone (for the HUD), or null
 //   field.mapColor(x, z)   colour for the minimap painter
 //   field.highways / ponds / bridge / sea / river   the planned features (metres)
+//   field.pads             flat areas for built-up places outside the city (S8 cantonment):
+//                          { id, name, x0, z0, x1, z1, cx, cz, height, margin, color }
 //
 // Layers, in order: zone land (fields / desert dunes / coast) → flattened next to the city →
-// outer mountains → highways (flattened corridors) → ponds → beach + sea → the river.
+// outer mountains → highways (flattened corridors) → ponds → pads (flat, S8) → beach + sea → the river.
 
 import { Rng } from '../../core/rng.js';
 import { hexToLinear } from '../geoBuilder.js';
@@ -92,6 +94,12 @@ export class TerrainField {
       this.routeLines.push({ c: B.col, r: layout.rows, pts: [[B.x, this.Z(layout.rows)], [B.x, B.landZ], ...(on ? on.pts : [])] });
     }
 
+    // Roadmap 2 S8: flat pads (cantonment, later the airport). Planned before the ponds so no
+    // pond lands on one.
+    this.pads = (cfg.pads?.list || []).map((p) => {
+      const x0 = this.X(p.rect.col0), z0 = this.Z(p.rect.row0), x1 = this.X(p.rect.col1), z1 = this.Z(p.rect.row1);
+      return { ...p, x0, z0, x1, z1, cx: (x0 + x1) / 2, cz: (z0 + z1) / 2, rgb: hexToLinear(p.color) };
+    });
     this.ponds = this.planPonds();
     this.cache = new Map(); // grid point heights for heightAt (same points as the mesh)
     this.cell = cfg.cell;
@@ -109,6 +117,17 @@ export class TerrainField {
   shoreX(z) {
     const S = this.sea;
     return S.x + S.wobble * (Math.sin(z / S.period * Math.PI * 2) + 0.4 * Math.sin(z / (S.period * 0.37) + 1.3));
+  }
+
+  /** Metres from (x, z) to the pad's rectangle (0 inside). */
+  padDistance(p, x, z) {
+    return Math.hypot(Math.max(p.x0 - x, 0, x - p.x1), Math.max(p.z0 - z, 0, z - p.z1));
+  }
+
+  /** The pad (x, z) stands on, or null (margin = also this many metres around it). */
+  padAt(x, z, margin = 0) {
+    for (const p of this.pads) if (this.padDistance(p, x, z) <= margin) return p;
+    return null;
   }
 
   /** 0..1: how far into the outer mountain band (0 = foot, 1 = the edge). */
@@ -241,6 +260,17 @@ export class TerrainField {
       else if (p.palms && d < p.r + 14 && cls) cls = 'oasis';
     }
 
+    // Pads (Roadmap 2 S8): perfectly flat inside, blending back over `margin` metres.
+    for (const p of this.pads) {
+      const d = this.padDistance(p, x, z);
+      if (d >= p.margin) continue;
+      const k = smoothstep(0, p.margin, d);
+      h = lerp(p.height, h, k);
+      mix3(col, col, p.rgb, 1 - k);
+      field *= k;
+      if (d < p.margin * 0.6) cls = null;
+    }
+
     // Beach and sea (east).
     const S = this.cfg.sea;
     const sx = this.shoreX(z);
@@ -326,6 +356,8 @@ export class TerrainField {
   zoneAt(x, z) {
     if (this.inCity(x, z) || !this.inBounds(x, z)) return null;
     if (this.deckAt(x, z) !== null) return this.bridge;
+    const pad = this.padAt(x, z);
+    if (pad) return pad;
     if (this.mountainRaw(x, z) > 0.55) return this.cfg.mountains.name ? { id: 'hills', name: this.cfg.mountains.name } : null;
     if (this.shoreX(z) - x < this.cfg.sea.beach) return { id: 'beach', name: this.cfg.sea.name };
     for (const zn of this.zones) {
@@ -341,6 +373,8 @@ export class TerrainField {
     if (z > this.river.z0 && z < this.river.z1) return this.cfg.river.minimapColor;
     for (const p of this.ponds) if (Math.hypot(x - p.x, z - p.z) < p.r) return this.cfg.river.minimapColor;
     if (sx - x < this.cfg.sea.beach) return this.cfg.sea.sand;
+    const pad = this.padAt(x, z);
+    if (pad) return pad.mapColor || pad.color;
     const raw = this.mountainRaw(x, z);
     let base = this.cfg.types.fields.minimapColor;
     for (const zn of this.zones) {
@@ -386,6 +420,7 @@ export class TerrainField {
       if (z > this.river.z0 - 80 - r && z < this.river.z1 + 80 + r) return false;
       for (const s of this.segs) if (segDistance(x, z, s.ax, s.az, s.bx, s.bz) < this.roadReach + r + 10) return false;
       for (const p of out) if (Math.hypot(x - p.x, z - p.z) < P.minGap + r + p.r) return false;
+      for (const p of this.pads) if (this.padDistance(p, x, z) < p.margin + r + 40) return false;
       return true;
     };
     for (const f of P.list || []) {

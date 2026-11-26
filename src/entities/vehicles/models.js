@@ -10,11 +10,13 @@ import * as THREE from 'three';
 import { VBuilder, makeWheelGeometry } from './shapes.js';
 import { buildCar, buildPickup, buildVan, buildBus, buildLeguna } from './modelsCars.js';
 import { buildCng, buildRickshaw, buildBicycle, buildMotorbike } from './modelsSmall.js';
+import { buildTank } from './modelsMilitary.js';
 import { buildRealVehicle } from './realModels.js';
 
 const BUILDERS = {
   car: buildCar, pickup: buildPickup, van: buildVan, bus: buildBus, leguna: buildLeguna,
   cng: buildCng, rickshaw: buildRickshaw, bicycle: buildBicycle, motorbike: buildMotorbike,
+  tank: buildTank, // Roadmap 2 S8 (hull only; the army feature adds the turning turret)
 };
 
 /** Wheel positions from the type's wheel block. Front wheels (z > 0) steer. */

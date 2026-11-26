@@ -42,6 +42,8 @@ const LOADERS = {
   weapons: () => import('./weapons/index.js'),
   crime: () => import('./crime/index.js'),
   police: () => import('./police/index.js'),
+  // Roadmap 2 S8: the cantonment, soldiers, army trucks and tanks (after police: uses its officer brain).
+  army: () => import('./army/index.js'),
   jail: () => import('./jail/index.js'),
   // Session 7: time of day + load-shedding, monsoon rain, all sounds, radio, profile card,
   // reward codes, screenshots, the 17+ age screen.

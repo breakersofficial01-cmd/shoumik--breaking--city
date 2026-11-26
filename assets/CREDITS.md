@@ -26,6 +26,13 @@ Kenney cars: packed by `tools/car-kit/pack-cars.js` (palette colours sorted into
 Headlight / Taillight / Trim / Dark / Light materials so the game can repaint them; no logos).
 Army truck: plain olive, no insignia (CLAUDE.md / ROADMAP-2).
 
+Cantonment and army (Roadmap 2 S8): no new files. The cantonment (walls, gate, barracks, office,
+parade ground, yard) and the tanks are built in code (`src/features/army/base.js`,
+`src/entities/vehicles/modelsMilitary.js`); soldiers are the 3D people above in plain olive
+uniforms. No real Bangladesh Army insignia, crests, flags or logos. The Quaternius Tank Pack
+(CC0, quaternius.com/packs/animatedtanks.html) was tried on 2026-11-26 but Google Drive answered
+"Quota exceeded" — see docs/NEXT.md for how to swap it in later.
+
 All GLBs are meshopt-compressed by `tools/compress-models.js` (same models, smaller files).
 
 Street props and trees: packed by `tools/street-kit/pack-props.js` (palette texture baked into vertex colours,

@@ -36,5 +36,6 @@
   "railway": true,
   "buses": true,
   "boats": true,
-  "ferry": true
+  "ferry": true,
+  "army": true
 }

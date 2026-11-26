@@ -153,7 +153,7 @@
     }
   },
   "wanted": {
-    "_comment": "Wanted stars. Every crime adds heat points; the number of stars = how many starAt values the heat has passed. When no police officer, car or helicopter has seen Shoumik for fadeSeconds, one star fades (heat drops to the level of one star less). witnessRange = police inside this distance count as seeing him even behind a wall. Crime ids are sent by the game as crime:committed { type }.",
+    "_comment": "Wanted stars. Every crime adds heat points; the number of stars = how many starAt values the heat has passed. When no police officer, car or helicopter has seen Shoumik for fadeSeconds, one star fades (heat drops to the level of one star less). witnessRange = police inside this distance count as seeing him even behind a wall. Crime ids are sent by the game as crime:committed { type }. Roadmap 2 S8: trespassArmy (entering the cantonment without a pass) = 1 star, attackArmy (hurting a soldier or an army vehicle) = straight to 5 stars.",
     "starAt": [
       30,
       120,
@@ -176,7 +176,9 @@
       "assaultPolice": 45,
       "killPolice": 150,
       "destroyPolice": 150,
-      "stealPolice": 90
+      "stealPolice": 90,
+      "trespassArmy": 30,
+      "attackArmy": 1000
     }
   },
   "bail": {

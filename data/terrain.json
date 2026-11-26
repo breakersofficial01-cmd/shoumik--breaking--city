@@ -98,7 +98,8 @@
       { "id": "beach-road", "name": { "en": "Beach Road", "bn": "সৈকত সড়ক" }, "points": [[14, 6], [18.2, 6]] },
       { "id": "marine-drive", "name": { "en": "Marine Drive", "bn": "মেরিন ড্রাইভ" }, "points": [[18.2, -10.6], [18.2, 6], [18.2, 15.6]] },
       { "id": "north-link", "name": { "en": "Fields Link Road", "bn": "মাঠের সংযোগ সড়ক" }, "points": [[14, 1], [16, -1], [18.2, -2]] },
-      { "id": "char-road", "name": { "en": "Char Road", "bn": "চর সড়ক" }, "points": [[3, 20.6], [3, 22], [8, 22.5], [15, 22.5]] }
+      { "id": "char-road", "name": { "en": "Char Road", "bn": "চর সড়ক" }, "points": [[3, 20.6], [3, 22], [8, 22.5], [15, 22.5]] },
+      { "id": "cantonment-road", "name": { "en": "Cantonment Road", "bn": "ক্যান্টনমেন্ট সড়ক" }, "points": [[7, -4], [4.3, -4]] }
     ]
   },
   "bridge": {
@@ -114,6 +115,12 @@
     "railColor": "#d8d2c4",
     "pierColor": "#a39c90",
     "lampEvery": 30
+  },
+  "pads": {
+    "_comment": "Roadmap 2 S8: flat ground for areas built later (cantonment; the airport of S10 can use the same). rect in junction units, height in metres, margin = metres over which the land blends back, color = ground colour, mapColor = colour on the map. Nothing grows on a pad and no pond is placed there; zoneAt names it (the HUD shows the name when Shoumik walks in).",
+    "list": [
+      { "id": "cantonment", "name": { "en": "Dhaka Cantonment", "bn": "ঢাকা সেনানিবাস" }, "rect": { "col0": 1.5, "row0": -5.5, "col1": 4.5, "row1": -2.5 }, "height": 0, "margin": 36, "color": "#7f9a4c", "mapColor": "#8a9a5a" }
+    ]
   },
   "ponds": {
     "radius": [14, 30],

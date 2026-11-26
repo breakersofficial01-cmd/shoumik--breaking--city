@@ -116,6 +116,16 @@
       ]
     },
     {
+      "_comment": "Roadmap 2 S8: the cantonment (data/army.json) is built in code when Shoumik comes this near; the army truck model is already in the boot list (model.vehicle.*), the tank is code-built.",
+      "id": "cantonment",
+      "at": [
+        3,
+        -4
+      ],
+      "radius": 560,
+      "assets": []
+    },
+    {
       "id": "hotel-breaking-hotel",
       "at": [
         11,
