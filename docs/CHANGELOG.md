@@ -1198,3 +1198,18 @@ Code / data
   (`owned.boats`), validators (Products kinds `boats`), LineRide (kind-specific prompt strings),
   Passengers (counts per kind), big map legend (boats), strings `boat.*`, `transit.*.launch`.
 - Products tab: 4 new rows (speedboat, speedboatGreen, yacht; launch fare).
+- Tests (headless, Medium): `tools/boat-check.js` — all checks pass (5 ghats on dry land with
+  mooring spots; Buriganga: E into a country boat, it moves, driving into the bank never leaves the
+  water, E out onto dry land; boat club: speedboat + yacht ৳310,000 paid and saved, both wait at the
+  beach jetty, the speedboat reaches 15+ m/s on the sea, yacht; launch: Sadarghat pontoon, launch
+  alongside, ৳50, 8 passengers, map pick → off at the Sea Mouth Ghat on the bank; night photos; no
+  console errors). Smoke test, ride-check (bus, MRT, train), class-check (shops), crime-check and
+  hotel-check pass.
+
+Known issues
+- Hatirjheel is several small basins between its road bridges (boats cannot pass under them);
+  the river and the sea are the big open water.
+- Boats pass through the moving launch and the country boats painted at Sadarghat.
+- No swimming: you only get out of a boat at a bank or jetty; the jetties are decoration (you get
+  in from the ghat spot on land, up to 10 m from the boat).
+- Boats cannot reach the countryside ponds; the Buriganga Bridge piers do not stop boats.
