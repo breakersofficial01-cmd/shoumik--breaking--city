@@ -31,5 +31,6 @@
   "earn": true,
   "streetLights": true,
   "streaming": true,
-  "hotels": true
+  "hotels": true,
+  "animals": true
 }

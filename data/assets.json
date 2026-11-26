@@ -384,6 +384,14 @@
     "model.vehicle.kenneyJeep": {
       "type": "model",
       "url": "assets/vehicles/kenney-jeep.glb"
+    },
+    "model.people": {
+      "type": "model",
+      "url": "assets/people/people.glb"
+    },
+    "image.people.skins": {
+      "type": "image",
+      "url": "assets/people/skins.png"
     }
   }
 }

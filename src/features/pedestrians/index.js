@@ -135,7 +135,7 @@ function spawn(ped, spot, district, archetype = null) {
   ped.animator.dims = look.dims;
   ped.animator.configure({ idle: arch.idle || 'idle', stride: arch.stride ?? 1, runAt: 5 });
   ped.animator.reset();
-  ped.person = crowd.add(look, ped.animator.pose);
+  ped.person = crowd.add(look, ped.animator.pose, ped.animator);
   game.world.collision.dynamic.add(ped.circle);
   active++;
 }

@@ -1,0 +1,182 @@
+{
+  "_comment": "Recipe for tools/people-kit/pack-people.js (Roadmap 2 S5). clips: game clip name -> source clip in assets/shoumik/shoumik.glb (Mixamo) and optional maxSeconds (cut long loops). posed: clips made from a base clip with some bones pointed in fixed directions every frame (model space, +z = forward, +x = his LEFT; written for the left side, mirrored for the right): carryIdle / carryWalk = both forearms forward holding a tray (hotel waiters, palms up), cower = crouched with the hands over the head. fps = samples per second of every baked clip. height = metres from the soles to the top of the head. headScale = the Kenney head is big; this shrinks the Head bone (also stored in the GLB as extras so the game can do the same).",
+  "fps": 20,
+  "height": 1.72,
+  "clips": {
+    "idle": {
+      "from": "idle"
+    },
+    "walk": {
+      "from": "walk"
+    },
+    "run": {
+      "from": "run"
+    },
+    "sit": {
+      "from": "sitIdle"
+    },
+    "dance": {
+      "from": "dance"
+    },
+    "dance2": {
+      "from": "dance2",
+      "maxSeconds": 8.5
+    },
+    "fall": {
+      "from": "fallOver"
+    },
+    "hit": {
+      "from": "hit"
+    },
+    "punch": {
+      "from": "punch"
+    },
+    "aim": {
+      "from": "pistolAim",
+      "maxSeconds": 3
+    },
+    "shoot": {
+      "from": "shoot"
+    },
+    "drive": {
+      "from": "drive",
+      "maxSeconds": 2
+    },
+    "shout": {
+      "from": "dismiss"
+    },
+    "clap": {
+      "from": "victory"
+    }
+  },
+  "posed": {
+    "carryIdle": {
+      "base": "idle",
+      "maxSeconds": 4,
+      "palmUp": true,
+      "aim": [
+        [
+          "Arm",
+          "ForeArm",
+          [
+            0.12,
+            -0.8,
+            0.42
+          ]
+        ],
+        [
+          "ForeArm",
+          "Hand",
+          [
+            -0.22,
+            0.12,
+            1
+          ]
+        ],
+        [
+          "Hand",
+          "HandIndex1",
+          [
+            -0.1,
+            0,
+            1
+          ]
+        ]
+      ]
+    },
+    "carryWalk": {
+      "base": "walk",
+      "palmUp": true,
+      "aim": [
+        [
+          "Arm",
+          "ForeArm",
+          [
+            0.12,
+            -0.8,
+            0.42
+          ]
+        ],
+        [
+          "ForeArm",
+          "Hand",
+          [
+            -0.22,
+            0.12,
+            1
+          ]
+        ],
+        [
+          "Hand",
+          "HandIndex1",
+          [
+            -0.1,
+            0,
+            1
+          ]
+        ]
+      ]
+    },
+    "cower": {
+      "base": "sit",
+      "maxSeconds": 3,
+      "hipsDrop": 0.05,
+      "aim": [
+        [
+          "Spine",
+          "Chest",
+          [
+            0,
+            0.75,
+            0.65
+          ]
+        ],
+        [
+          "Chest",
+          "UpperChest",
+          [
+            0,
+            0.7,
+            0.7
+          ]
+        ],
+        [
+          "Neck",
+          "Head",
+          [
+            0,
+            0.5,
+            0.85
+          ]
+        ],
+        [
+          "Arm",
+          "ForeArm",
+          [
+            0.35,
+            0.55,
+            0.6
+          ]
+        ],
+        [
+          "ForeArm",
+          "Hand",
+          [
+            -0.75,
+            0.35,
+            -0.2
+          ]
+        ],
+        [
+          "Hand",
+          "HandIndex1",
+          [
+            -0.6,
+            0.5,
+            -0.3
+          ]
+        ]
+      ]
+    }
+  }
+}

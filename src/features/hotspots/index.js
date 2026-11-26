@@ -91,7 +91,7 @@ function wake(spot) {
       ...pl, y: spot.y, animator, clap: rng.chance(settings.clapChance), variant: rng.int(0, 2),
       changeAt: 0, circle: { x: pl.x, z: pl.z, r: 0.3 },
     };
-    d.person = crowd.add(look, animator.pose);
+    d.person = crowd.add(look, animator.pose, animator);
     Object.assign(d.person, { x: d.x, y: d.y, z: d.z, heading: d.heading, groundY: spot.y });
     d.start = () => animator.play(d.clap ? 'clap' : 'dance', { variant: d.variant, beat });
     d.start();

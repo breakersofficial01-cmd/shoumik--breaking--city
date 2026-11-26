@@ -1,4 +1,4 @@
-# Handoff — how Breaking City is built (v14, after Roadmap 2 · S4 — hotels)
+# Handoff — how Breaking City is built (v15, after Roadmap 2 · S5 — 3D people and animals)
 
 For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, then
 `docs/GAME_SPEC.md` (what exists) and `docs/CHANGELOG.md` (what changed last).
@@ -16,6 +16,7 @@ time. Quick map of this file:
 - **G1 fast start: boot prefetch, streaming, compressed models, preload list, real trees → §12i**
 - **S3 bigger world: terrain around the city, sea, desert, fields, hills, bridge, ponds → §12k**
 - **S4 hotels: enterable ground floors, waiter + menu + 3D food, bar + dance floor → §12l**
+- **S5 real 3D people (streamed, near the player) + animals (code-built, instanced) → §12m**
 - Roadmap → §14
 
 ## 1. Run and test
@@ -313,6 +314,8 @@ posters/     poster pictures + README.md (how to add one)
 
 | `interior:changed` | `{ inside, id }` Shoumik walked into / out of a hotel (S4) | hotels → dayNight (indoor light), weather (no drops) |
 | `hotel:ate` | `{ hotel, items }` a meal was finished | hotels |
+
+S5 animals only LISTEN (weapon:fired, police:fired, explosion, danger:raised, vehicle:crashed); no new events.
 
 Add new events to this table.
 
@@ -845,6 +848,65 @@ version, add the field to `defaults()`. Features store live state with
 - **Test**: `node tools/hotel-check.js --three <dir> --out <folder> [--only gallery,breaking-hotel]`
   (speeds the waiter up; checks Taka paid + health gained; photographs everything incl. food.png).
   Debug: `BC.hotels` (list, inside, seat, meal, build(id), doorOf(id), standUp()).
+
+## 12m. Real 3D people and animals (Roadmap 2, Session 5)
+**People** (`src/entities/people/real/`, settings `data/people.json`):
+- Nothing changed for the features: everybody still goes through the shared `Crowd`
+  (`crowd.add(look, pose, animator)` — the 3rd argument is NEW and is what makes a person
+  eligible for 3D; vehicle riders pass none and stay code-built). `Crowd.update()` calls
+  `RealPeople.update(dt, people)`: every `assignSeconds` the nearest `count[quality]` people
+  within `distance[quality]` get a SLOT (cloned skinned body + one skinned attachment mesh + an
+  AnimationMixer); the crowd then skips their instanced parts (`person.real` = the slot) but keeps
+  the soft contact shadow. Low: count 0, nothing downloaded.
+- Loading: `model.people` + `image.people.skins` are the first `afterStart` items of
+  `data/streaming.json` (Medium/High). `Crowd.checkReal()` (every 30 frames) waits until the
+  streamer has both, then builds `RealPeople`. Until then the code-built crowd is shown.
+  Tests force it with `BC.streamer.start('model.people')` (+ the skins).
+- The Animator stays the brain (like `GlbShoumikModel`): `animator.speed` (new field) / `move`
+  pick idle ↔ walk ↔ run (time-scaled to the speed); `animator.action` (name, fade, variant)
+  picks a clip from `people.json → actions` (sit, dance/dance2, clap, cower, down → fall (held),
+  hit, punch/melee, aim, shoot, shout, enter/exitVehicle → drive). New Animator action → add a
+  line there (or it plays the base clip).
+- **Waiter tray**: `Server` (hotels/staff.js) sets `person.carryObject = tray`. A real person
+  with a carryObject plays `carryIdle` / `carryWalk` (both forearms forward, palms up) and the
+  tray is moved between the hands every frame. Carriers get the first 3D slot (×0.3 distance) and
+  twice the distance.
+- **Looks**: `buildLook()` now also returns `look.desc` (sex, top, bottom, head kind, hex colours,
+  extras; recorded without extra rng calls, so the code-built looks did not change).
+  `skinPainter.js` paints a 256 px texture per look: `assets/people/skins.png` holds the Kenney
+  texture in grey (R; left half man, right half woman) + a region id (G/16: 1 face, 2 hair, 3
+  shirt, 4 upper arm, 5 forearm, 6 hands, 7 thigh, 8 shin, 9 shoes); texel = grey × region colour
+  (sleeves follow `top`, bare shins for lungi, sandals = skin + strap colour, police vest dark).
+  LRU of `textures` (40), at most `paintPerFrame` new ones per assignment. `attachments.js` adds
+  one merged, skinned mesh per person: long hair / bun, hijab (own hood + cape shape), cap, bucket
+  hat, lungi / saree (+ anchal) / kameez / panjabi skirts (blended hips → thighs so they swing),
+  orna, tie, chain, gamcha, backpack, hand bag, basket, police gun.
+- **Units gotcha**: the compressed GLB stores the body squeezed into −1…1 (meshopt
+  quantisation; the bind matrices undo it). `measureBody(body, modelHeight)` returns `k`
+  (geometry units per metre) and `floor`; every size in metres must be multiplied by k.
+- **Rebuild the model** (new clips, other body): `node tools/people-kit/pack-people.js --three
+  <dir> --kenney "<Animated Characters 3 folder>" [--shot sheet.png]`, then `node
+  tools/compress-models.js --cli <gltf-transform> --only people`. Recipe `tools/people-kit/people.json`
+  (clip list, posed clips). Retarget = bend the Mixamo rest into the Kenney T-pose, copy world
+  rotation changes per bone; hips height = ankles-to-hips of the clip (measured on the idle clip's
+  first frame) × leg-length ratio. To use the Quaternius packs later: same idea, a new MAP of bone
+  names in `page.js` + their texture/regions (see docs/NEXT.md).
+- Debug: `BC.crowd.real.report()`, `BC.crowd.realState`, `BC.config.get('people').count.medium = 20`.
+
+**Animals** (`src/features/animals/`, settings `data/animals.json`): code-built (no download),
+instanced per kind (body, head, legs, wings → ≤ 4 draw calls per kind that is near; a kind with
+nobody near is not drawn). Spawned / removed around Shoumik like pedestrians (`spots.js`: street =
+sidewalk, herd = Old Dhaka sidewalks + countryside zones, perch = wire spans and roof edges,
+water = lake pieces, park ponds, countryside ponds), `brain.js` = idle (lie, graze, look around,
+bob) / walk / flee / fly. A car faster than `carSpeed` within `carRadius` scares them; driving
+through one = a hop and it runs (never hurt). Counts per quality (`trim()` removes extras when the
+quality goes down). New kind = a builder in `models.js` + a `kinds` entry + `quality` numbers.
+Debug: `BC.animals.report()`, `.nearest(['dog'])`, `.testSpots()`.
+
+**Test**: `node tools/people-check.js --three <dir> --out <folder> [--quality medium] [--only
+counts,gallery,actions,street,hotel,police,animals]` (feet on the ground per clip, real 3D counts
+per quality, the waiter's tray in his hands, police in 3D, animals per quality / place, day and
+night photos, a gunshot scares them).
 
 ## 13. Notes for the next sessions (historical)
 - **Session 4 is done** (the old notes below are kept for reference).

@@ -31,7 +31,11 @@ const NO_SLEEVE = new Set(['vest']);
  * @param {import('../../core/rng.js').Rng} rng
  */
 export function buildLook(arch, palettes, rng) {
-  const pick = (name) => hexToLinear(rng.pick(palettes[name] || palettes.shirt));
+  // desc = the same choices as plain data (hex colours, clothing kinds) for the real 3D people
+  // (src/entities/people/real/). Recording them makes no extra rng calls, so looks stay the same.
+  const desc = { sex: arch.sex, top: arch.top, bottom: arch.bottom, shoes: arch.shoes || 'shoe', extras: {} };
+  let lastHex = '#ffffff';
+  const pick = (name) => hexToLinear(lastHex = rng.pick(palettes[name] || palettes.shirt));
   const female = arch.sex === 'f';
   const b = rng.range(arch.build?.[0] ?? 0.92, arch.build?.[1] ?? 1.1);
   const scale = rng.range(arch.height[0], arch.height[1]) / 1.76; // 1.76 m = the skeleton at scale 1
@@ -39,10 +43,10 @@ export function buildLook(arch, palettes, rng) {
   const parts = [];
   const add = (bone, kind, color, near, far = near) => parts.push({ bone, kind, color, near, far });
 
-  const skin = pick('skin');
-  const hair = pick('hair');
-  const topC = pick(arch.topColors || 'shirt');
-  const bottomC = pick(arch.bottomColors || 'pants');
+  const skin = pick('skin'); desc.skin = lastHex;
+  const hair = pick('hair'); desc.hair = lastHex;
+  const topC = pick(arch.topColors || 'shirt'); desc.topC = lastHex;
+  const bottomC = pick(arch.bottomColors || 'pants'); desc.bottomC = lastHex;
   const top = arch.top;
   const bottom = arch.bottom;
   const oversized = top === 'oversized_tee';
@@ -55,7 +59,7 @@ export function buildLook(arch, palettes, rng) {
   const td = (female ? 0.122 : 0.132) * (oversized ? 1.15 : 1);
   if (oversized) add(BONE.SPINE, 'torso', topC, mat(0, -0.2, 0, tw, 0.64, td));
   else add(BONE.SPINE, 'torso', top === 'crop_jacket' ? pick('tee') : topC, mat(0, -0.06, 0, tw, 0.5, td));
-  if (top === 'crop_jacket') add(BONE.SPINE, 'torso', topC, mat(0, 0.14, 0, tw * 1.12, 0.31, td * 1.14));
+  if (top === 'crop_jacket') { desc.underC = lastHex; add(BONE.SPINE, 'torso', topC, mat(0, 0.14, 0, tw * 1.12, 0.31, td * 1.14)); }
 
   // Skirts: lungi, saree, or the long part of a panjabi / kameez.
   if (bottom === 'lungi') add(BONE.HIPS, 'skirt', bottomC, mat(0, 0.15, 0, 0.225 * b, 0.93, 0.19));
@@ -70,11 +74,14 @@ export function buildLook(arch, palettes, rng) {
   add(BONE.HEAD, 'tube', skin, mat(0, 0.03, 0, 0.05, 0.1, 0.05), null);
   add(BONE.HEAD, 'head', skin, headM);
   const headKind = rng.weighted(arch.head);
+  desc.head = headKind;
   if (headKind === 'cap' || headKind === 'bucket') {
     add(BONE.HEAD, female ? 'hairLong' : 'hairShort', hair, mat(0, 0.127, 0, 0.102, 0.122, 0.112), null);
     add(BONE.HEAD, headKind, pick(arch.headColors || 'hats'), headM);
+    desc.headC = lastHex;
   } else if (headKind === 'hijab') {
     add(BONE.HEAD, 'hijab', pick(arch.headColors || 'hijab'), headM);
+    desc.headC = lastHex;
   } else {
     add(BONE.HEAD, headKind, hair, headM);
   }
@@ -92,7 +99,7 @@ export function buildLook(arch, palettes, rng) {
   // Legs and shoes.
   const wide = bottom === 'cargo' || bottom === 'salwar' ? 1.25 : 1;
   const legC = bottom === 'lungi' || bottom === 'saree' ? skin : bottomC;
-  const shoeC = pick(arch.shoeColors || 'shoes');
+  const shoeC = pick(arch.shoeColors || 'shoes'); desc.shoeC = lastHex;
   const flat = arch.shoes === 'sandal';
   for (const [leg, shin] of [[BONE.LEG_L, BONE.SHIN_L], [BONE.LEG_R, BONE.SHIN_R]]) {
     add(leg, 'tube', legC, mat(0, 0.03, 0, 0.092 * wide, 0.48, 0.098 * wide), mat(0, 0.03, 0, 0.092 * wide, 0.94, 0.098 * wide));
@@ -101,18 +108,21 @@ export function buildLook(arch, palettes, rng) {
   }
 
   // Extras, each with its own chance.
-  const has = (name) => rng.chance(arch.extras?.[name] ?? 0);
+  const has = (name) => (desc.extras[name] = rng.chance(arch.extras?.[name] ?? 0));
   if (top === 'kameez' || has('orna')) {
     add(BONE.SPINE, 'box', pick('orna'), mat(0, 0.36, 0.08, tw * 1.9, 0.08, 0.07), null);
+    desc.extras.orna = true; desc.ornaC = lastHex;
     add(BONE.SPINE, 'box', parts[parts.length - 1].color, mat(-tw * 0.8, 0.2, -0.06, 0.07, 0.42, 0.04), null);
   }
-  if (has('backpack')) add(BONE.SPINE, 'box', pick('bags'), mat(0, 0.2, -td - 0.06, 0.26, 0.34, 0.13));
+  if (has('backpack')) { add(BONE.SPINE, 'box', pick('bags'), mat(0, 0.2, -td - 0.06, 0.26, 0.34, 0.13)); desc.backpackC = lastHex; }
   if (has('basket')) {
     add(BONE.HEAD, 'box', hexToLinear(palettes.basket[0]), mat(0, 0.29, 0, 0.44, 0.09, 0.44));
     add(BONE.HEAD, 'box', pick('wares'), mat(0, 0.36, 0, 0.32, 0.08, 0.32));
+    desc.waresC = lastHex;
   }
   if (has('gamcha')) {
     const c = pick('gamcha');
+    desc.gamchaC = lastHex;
     add(BONE.SPINE, 'box', c, mat(0.12, 0.43, 0, 0.1, 0.035, td * 2.2), null);
     add(BONE.SPINE, 'box', c, mat(0.12, 0.3, td + 0.01, 0.09, 0.24, 0.025), null);
   }
@@ -121,8 +131,8 @@ export function buildLook(arch, palettes, rng) {
     add(BONE.SPINE, 'box', gold, mat(0, 0.36, td * 0.93, 0.13, 0.014, 0.014), null);
     add(BONE.SPINE, 'box', gold, mat(0, 0.325, td * 0.97, 0.028, 0.04, 0.014), null);
   }
-  if (has('tie')) add(BONE.SPINE, 'box', pick('tie'), mat(0, 0.28, td * 0.98, 0.036, 0.26, 0.012), null);
-  if (has('bag')) add(BONE.FORE_R, 'box', pick('bags'), mat(0, -0.46, 0, 0.07, 0.24, 0.3), null);
+  if (has('tie')) { add(BONE.SPINE, 'box', pick('tie'), mat(0, 0.28, td * 0.98, 0.036, 0.26, 0.012), null); desc.tieC = lastHex; }
+  if (has('bag')) { add(BONE.FORE_R, 'box', pick('bags'), mat(0, -0.46, 0, 0.07, 0.24, 0.3), null); desc.bagC = lastHex; }
   if (has('gun')) {
     // A dark gun held in the right hand, barrel along the hand (points ahead when aiming).
     const black = hexToLinear('#151515');
@@ -131,5 +141,6 @@ export function buildLook(arch, palettes, rng) {
   }
   if (has('vest')) add(BONE.SPINE, 'torso', hexToLinear('#0b0c0e'), mat(0, 0.0, 0, tw * 1.1, 0.42, td * 1.18));
 
-  return { parts, dims, scale };
+  desc.key = JSON.stringify(desc); // same desc = same painted texture
+  return { parts, dims, scale, desc };
 }

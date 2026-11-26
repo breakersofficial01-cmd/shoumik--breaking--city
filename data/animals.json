@@ -1,0 +1,30 @@
+{
+  "_comment": "Animals (Roadmap 2 S5): stray dogs and cats on the sidewalks, cows and goats in Old Dhaka and the countryside fields, crows on wires and rooftops, ducks on lakes and ponds. Code-built low-poly models drawn with a few InstancedMeshes (src/features/animals/). quality = how many of each kind live around Shoumik at once (total = the most of all kinds together). spawn = metres around Shoumik where animals appear / disappear (minDistanceInView: not right in front of the camera). kinds: size = body length (metres), speed = walking speed range, run = running speed, colours = body colours, one per animal (crows: their black and grey are in the model, the colour only tints it), where = street (sidewalks), herd (Old Dhaka lanes + countryside fields), perch (wires, rooftops), water (lakes, ponds); districts / zones = where herd animals live; idle = share of the time spent sitting / grazing; fly = birds: flying speed, climb speed and how far away they are removed. behaviour: scareRadius = a gunshot / explosion / danger this close makes them run (birds fly off); carRadius + carSpeed = a vehicle this close and fast makes them jump away (a car only scares them: no injuries for animals); fleeSeconds = how long they run; playerRadius = they step away from Shoumik walking into them.",
+  "quality": {
+    "low": { "total": 9, "dog": 3, "cat": 1, "crow": 3, "cow": 1, "goat": 1, "duck": 2 },
+    "medium": { "total": 18, "dog": 5, "cat": 3, "crow": 6, "cow": 3, "goat": 3, "duck": 5 },
+    "high": { "total": 28, "dog": 7, "cat": 4, "crow": 10, "cow": 4, "goat": 4, "duck": 8 }
+  },
+  "spawn": { "minDistance": 14, "minDistanceInView": 40, "maxDistance": 70, "despawnDistance": 95, "perFrame": 1, "tries": 6, "warmTries": 40 },
+  "kinds": {
+    "dog": { "size": 0.85, "height": 0.55, "speed": [0.7, 1.3], "run": 6.5, "colours": ["#b8864b", "#d9b27c", "#3a2c22", "#e8dcc4", "#8a6a48", "#c4a57a"], "where": "street", "idle": 0.45 },
+    "cat": { "size": 0.45, "height": 0.27, "speed": [0.5, 0.9], "run": 5.5, "colours": ["#e09a4a", "#8c8c8c", "#2a2624", "#f0ead8", "#b87a3c"], "where": "street", "idle": 0.55 },
+    "cow": { "size": 1.9, "height": 1.25, "speed": [0.4, 0.7], "run": 3.2, "colours": ["#f2efe6", "#9a6a42", "#3b2a20", "#d9cdb4", "#c49a6a"], "where": "herd", "idle": 0.7, "districts": ["old-dhaka"], "zones": ["northern-fields", "char-fields", "coconut-coast"] },
+    "goat": { "size": 0.85, "height": 0.62, "speed": [0.5, 0.9], "run": 4.5, "colours": ["#1e1a18", "#f2efe6", "#7a5236", "#3a2e26"], "where": "herd", "idle": 0.6, "districts": ["old-dhaka"], "zones": ["northern-fields", "char-fields", "golden-desert"] },
+    "crow": { "size": 0.36, "height": 0.26, "speed": [0.3, 0.5], "run": 1.2, "colours": ["#ffffff", "#f2f2f2", "#e6e6e6"], "where": "perch", "idle": 0.9, "fly": { "speed": 7, "climb": 3.5, "gone": 45 } },
+    "duck": { "size": 0.42, "height": 0.3, "speed": [0.25, 0.5], "run": 1.6, "colours": ["#f4f2ea", "#8a6a48", "#efe9da"], "where": "water", "idle": 0.4, "fly": { "speed": 6, "climb": 2.5, "gone": 45 } }
+  },
+  "behaviour": {
+    "scareRadius": 28,
+    "carRadius": 7,
+    "carSpeed": 3,
+    "fleeSeconds": [3, 6],
+    "playerRadius": 2.2,
+    "turnSpeed": 4,
+    "wanderSeconds": [2.5, 7],
+    "idleSeconds": [3, 9],
+    "stepRate": 2.6,
+    "perchSearch": 60,
+    "waterSearch": 90
+  }
+}

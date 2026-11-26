@@ -23,7 +23,13 @@ A free-roam, Vice-City-flavoured open world set in a compressed Dhaka, made for
 
 Money only comes from answering lesson questions. YouTube links open outside the game.
 
-## 2. What you can do today (after Roadmap 2 · Session 4, 2026-11-21)
+## 2. What you can do today (after Roadmap 2 · Session 5, 2026-11-26)
+- **S5 — 3D people and animals:** on Medium/High the people near Shoumik are real animated 3D
+  people in Dhaka clothes (lungi, panjabi, saree, salwar-kameez, hijab, shirt-pant, uniforms,
+  Gen-Z streetwear) who walk, run, flee, cower, fall, dance, sit, fight and aim; the hotel waiter
+  carries his tray in both hands. Stray dogs and cats, cows and goats (Old Dhaka + fields), crows
+  on wires and roofs, ducks on lakes and ponds — they run or fly away from gunshots and cars.
+  Section 5b.
 - **S4 — hotels:** three big hotels — **Breaking Hotel** (Gulshan, with a bar + dance lounge),
   **Shoumik's Culinary** (Hatirjheel) and **Bengali Heritage** (Old Dhaka). Walk in through the
   sliding doors, sit at a free table, the waiter walks over, choose from a 58-item menu
@@ -342,6 +348,19 @@ dance, dance2, talk, dismiss, wave, victory. Which clip plays for each game acti
 - **Hangout spots** (`data/hotspots.json`): TSC (park, 8 dancers), Dhanmondi lakeside,
   Hatirjheel, Gulshan café. Dance mat, boombox, neon posts, Gen-Z dancers in time with the
   beat. Shoumik can join. No sexual content, no romance.
+- **Real 3D people (Roadmap 2 S5)**: on Medium / High the 10 / 18 people nearest to Shoumik
+  (within 30 / 42 m) are rigged 3D people (Kenney CC0 body + Mixamo animations: idle, walk, run,
+  sit, dance ×2, clap, cower, fall down, hit, punch, aim, shoot, drive, shout, tray carrying);
+  the rest and everyone on Low are code-built. Same looks as the code crowd (colours and clothing
+  kinds of `data/pedestrians.json`, painted per person + added hair / hijab / lungi / saree /
+  kameez / panjabi / bags / basket / gun pieces). The model streams in right after the start
+  (602 KB, Medium/High). Settings `data/people.json`.
+- **Animals (Roadmap 2 S5)**: stray dogs and cats on sidewalks; cows (Deshi, with the hump) and
+  Black Bengal goats in Old Dhaka and the Northern Fields / Char Lands / coast / desert; house
+  crows on wires and roof edges; ducks on city lakes, park ponds and village ponds. They wander,
+  lie down, graze, swim; gunshots / explosions / crashes make them run or fly off; cars make them
+  jump aside (never hurt — no gore for animals). At most 9 / 18 / 28 (Low / Medium / High),
+  code-built and instanced (no download). Settings `data/animals.json`.
 
 ## 5c. Vehicles and traffic
 | Vehicle | Top speed | Notes |
@@ -428,6 +447,16 @@ pauses.
 
 ## 8. Performance budget
 Target: 30+ fps on a mid-range Android (4 GB RAM), landscape, Chrome.
+
+**Roadmap 2 S5 (3D people + animals).** Each real 3D person = 2 draw calls (body + clothes pieces;
+High: ×2 with sun shadows) and one small skinned skeleton (32 bones, 17 clips shared); people
+beyond 18 m animate every 2nd frame. Medium: ≤ 10 real people, no person shadows; High: ≤ 18 with
+shadows; Low: none (nothing downloaded). Animals: ≤ 4 instanced draw calls per kind that is near
+(dog, cat, cow, goat, crow, duck), ~20 matrices per animal per frame. Download: +602 KB after the
+start on Medium/High. Measured (headless, Shahbag start corner, `tools/people-check.js --only counts`):
+Medium 356 → 360 draw calls with 8 real people (triangles about the same: the Kenney body is ~1.6k
+triangles, about as many as a code-built person), High 436 → 453 with 14 real people and their
+shadows; Low unchanged (157 calls). **Real-phone FPS still to be measured by the owner.**
 
 **Size and start time (G1, 2026-11-21).** All game files ≈ 16 MB (was 26 MB) (models 9.4 MB, meshopt-
 compressed). Downloaded before playing: Low ≈ 3.5 MB, Medium ≈ 7.7 MB (+ three.js 0.7 MB from

@@ -38,6 +38,7 @@ export class Animator {
     this.time = Math.random() * 10; // so a crowd doesn't breathe in sync
     this.phase = Math.random() * 6.28;
     this.move = 0;       // 0 standing … 1 moving
+    this.speed = 0;      // last speed given to update() (m/s) — real 3D people read it (Roadmap 2 S5)
     this.air = 0;        // 0 on the ground … 1 in the air
     this.crossed = 0;    // 0 normal idle … 1 arms crossed
     this.idleTime = 0;
@@ -85,6 +86,7 @@ export class Animator {
   update(dt, s) {
     const k = (rate) => Math.min(1, dt * rate);
     const moving = s.speed > 0.25;
+    this.speed = s.speed;
     const grounded = s.grounded !== false;
     this.time += dt;
     this.move += ((moving ? 1 : 0) - this.move) * k(10);

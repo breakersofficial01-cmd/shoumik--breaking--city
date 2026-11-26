@@ -22,6 +22,8 @@ const LOADERS = {
   player: () => import('./player/index.js'),
   pedestrians: () => import('./pedestrians/index.js'),
   hotspots: () => import('./hotspots/index.js'),
+  // Roadmap 2 S5: stray dogs, cats, cows, goats, crows and ducks around Shoumik.
+  animals: () => import('./animals/index.js'),
   posters: () => import('./posters/index.js'),
   metro: () => import('./metro/index.js'),
   entrances: () => import('./entrances/index.js'),

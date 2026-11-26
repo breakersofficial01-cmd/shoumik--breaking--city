@@ -16,6 +16,7 @@ const FILES = [
   'sheet', 'accounts', 'healthPacks', 'mapView',
   'street', 'streaming', 'terrain',
   'hotels', 'menu',
+  'people', 'animals',
 ];
 
 const store = new Map();
