@@ -114,6 +114,7 @@ export class TerrainProps {
           const here = f.sample(x, z, o);
           if (here.cls !== cls) continue;
           if (item.onPlots && here.field < 0.6) continue;
+          if (this.clearAt?.(x, z)) continue; // Roadmap 2 S6: keep the railway clear
           list.push({ kind: item.kind, x, y: f.groundAt(x, z) - 0.05, z, rot, s, tint });
         }
       }

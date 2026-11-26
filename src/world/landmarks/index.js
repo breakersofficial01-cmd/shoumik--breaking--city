@@ -29,6 +29,7 @@ import { COLLIDE } from '../collision.js';
 import { Kit } from './kit.js';
 import { buildSignAtlas } from './signs.js';
 import { buildViaduct } from './viaduct.js';
+import { buildRailway } from './railway.js';
 import { sangsad, shaheedMinar, shaplaChattar } from './civic.js';
 import { curzonHall, dhakaUniversity, tsc, dhakaMedical, buet, notreDame, ssmc } from './campus.js';
 import { ahsanManzil, lalbaghFort, sadarghat, nilkhet } from './oldDhaka.js';
@@ -68,6 +69,8 @@ export class Landmarks {
     this.sites = [];
     this.markers = [];
     this.viaducts = [];
+    this.railways = [];   // Roadmap 2 S6: ground railways (railway.js); trains: features/railway
+    this.groundAt = null; // (x, z) → countryside height, set by world.js before build()
     this.platforms = [];
     this.units = [];
     this.group = new THREE.Group();
@@ -184,7 +187,7 @@ export class Landmarks {
     const { cfg, layout } = this;
     this.collision = collision;
     parent.add(this.group);
-    const stations = (cfg.viaducts || []).flatMap((v) => v.stations || []);
+    const stations = [...(cfg.viaducts || []), ...(cfg.railways || [])].flatMap((v) => v.stations || []);
     const entries = [
       ...this.sites.map((s) => ({ id: s.id, name: s.place.name, big: cfg.types[s.type].bigSign || null })),
       ...stations.map((s) => ({ id: s.id, name: s.name })),
@@ -228,7 +231,24 @@ export class Landmarks {
       v.sections.forEach((sec, i) => this.addUnit(`${line.id}-${i}`, [sec.kit], sec.cx, sec.cz));
       this.viaducts.push({ id: v.id, kind: v.kind, line, path: v.path, pillars: v.pillars, stations: v.stations });
     }
+    for (const line of cfg.railways || []) {
+      const r = buildRailway(layout, line, cfg.railwayColors, makeBuilders, sign, this.groundAt || (() => 0));
+      r.sections.forEach((sec, i) => this.addUnit(`${line.id}-${i}`, [sec.kit], sec.cx, sec.cz));
+      this.railways.push(r);
+    }
     log.info(`landmarks: ${this.sites.length} places, ${this.viaducts.length} viaducts, ${this.units.length} mesh groups, ~${Math.round(tris / 1000)}k triangles`);
+  }
+
+  /** Is (x, z) within `r` metres of a railway track? (no countryside trees on the line) */
+  nearRailway(x, z, r) {
+    for (const rl of this.railways) {
+      const b = rl.bounds;
+      if (b && (x < b.x0 - r || x > b.x1 + r || z < b.z0 - r || z > b.z1 + r)) continue;
+      const s = rl.path.nearest(x, z);
+      const p = rl.path.at(s, {});
+      if (Math.hypot(p.x - x, p.z - z) < r) return true;
+    }
+    return false;
   }
 
   /** Show only what is within view of the player. */

@@ -440,6 +440,22 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 }
 #ride-fade { position: absolute; inset: 0; z-index: 25; background: #000; opacity: 0; pointer-events: none; transition: opacity 0.4s; }
 #ride-fade.on { opacity: 1; }
+/* Roadmap 2 S6: riding a bus / MRT / train — next stop panel + buttons (src/entities/transit/rider.js) */
+#ride-hud {
+  position: absolute; left: 50%; top: calc(var(--safe-top) + 8px); transform: translateX(-50%); z-index: 18;
+  min-width: 260px; max-width: min(560px, calc(100vw - 32px)); padding: 8px 12px; text-align: center;
+  border: 2px solid var(--ink); border-radius: 14px; background: rgba(20, 12, 40, 0.82); color: #fff;
+}
+#ride-hud .rh-line { font-size: 13px; opacity: 0.85; }
+#ride-hud .rh-next { font-size: 15px; margin-top: 2px; }
+#ride-hud .rh-next b { font-size: 19px; color: var(--gold); }
+#ride-hud .rh-next small { font-size: 13px; opacity: 0.85; }
+#ride-hud .rh-dest, #ride-hud .rh-note { font-size: 13px; margin-top: 2px; color: var(--cyan); }
+#ride-hud .rh-btns { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 6px; }
+#ride-hud .rh-btns button { padding: 6px 10px; border: 2px solid var(--ink); border-radius: 999px; background: rgba(255, 255, 255, 0.14); color: #fff; font-size: 14px; font-weight: 700; }
+#ride-hud .rh-btns button[data-off] { background: var(--gold); color: var(--ink); }
+#transit-fade { position: absolute; inset: 0; z-index: 25; background: #000; opacity: 0; pointer-events: none; transition: opacity 0.4s; }
+#transit-fade.on { opacity: 1; }
 
 /* ------------------------------------------------------------ posters (Session 4) */
 .poster-open {

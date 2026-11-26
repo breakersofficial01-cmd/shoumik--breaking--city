@@ -1,4 +1,4 @@
-# Handoff — how Breaking City is built (v15, after Roadmap 2 · S5 — 3D people and animals)
+# Handoff — how Breaking City is built (v16, after Roadmap 2 · S6 — riding buses, MRT, trains)
 
 For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, then
 `docs/GAME_SPEC.md` (what exists) and `docs/CHANGELOG.md` (what changed last).
@@ -17,6 +17,7 @@ time. Quick map of this file:
 - **S3 bigger world: terrain around the city, sea, desert, fields, hills, bridge, ponds → §12k**
 - **S4 hotels: enterable ground floors, waiter + menu + 3D food, bar + dance floor → §12l**
 - **S5 real 3D people (streamed, near the player) + animals (code-built, instanced) → §12m**
+- **S6 riding buses / MRT / railway with passengers → §12n**
 - Roadmap → §14
 
 ## 1. Run and test
@@ -66,6 +67,10 @@ time. Quick map of this file:
   list in index.html; `--check` tells if it is stale — a stale entry is a 404 in the console).
 - **After adding a GLB**: `node tools/compress-models.js --cli <node_modules/.bin/gltf-transform>`
   (meshopt; `npm i @gltf-transform/cli@4` in a scratch folder). Already-compressed files are skipped.
+- Riding (Roadmap 2 S6): `node tools/ride-check.js --three <dir> --out <folder> [--only bus,metro,train,counts,night]`
+  (bus 2 stops + police stop, MRT with a map-picked station, train, fares, passengers per quality,
+  night photos). Run it after touching `src/entities/transit/`, buses, metro, railway, the map or
+  `data/transit.json`.
 - Bigger world (Roadmap 2 S3): `node tools/world-check.js --three <dir> --out <folder> [--quality medium] [--only stream,shots,ground,drive,map]`
   checks that the countryside models are only downloaded near the edge, photographs fields,
   desert, beach, bridge (day/night), hills, oasis, a city pond, Gulshan Lake and the city edge,
@@ -907,6 +912,43 @@ Debug: `BC.animals.report()`, `.nearest(['dog'])`, `.testSpots()`.
 counts,gallery,actions,street,hotel,police,animals]` (feet on the ground per clip, real 3D counts
 per quality, the waiter's tray in his hands, police in 3D, animals per quality / place, day and
 night photos, a gunshot scares them).
+
+## 12n. Riding buses, the MRT and trains (Roadmap 2, Session 6)
+Settings `data/transit.json` (camera, ride, passengers, cabins, bus, metro, train); fares
+`data/economy.json → fares` (override: Products tab rows kind `fare`, ids bus / metro / train,
+`src/entities/transit/fares.js`); the railway line `data/landmarks.json → railways`.
+- **Shared code** `src/entities/transit/`:
+  - `lineTrain.js` — `LineTrain` (shuttles a path, stops at stations, `hold`, `skipToNext`, `etaTo`,
+    `carPose(i)`) + `buildCarGeometry(T)`. Used by the MRT and the railway.
+  - `lineRide.js` — riding a line: `entry: 'stairs'` (MRT: E at the stair foot → fade → waiting on the
+    platform, mode 'vehicle') or `'walk'` (railway: walkable platform). E with a train standing
+    there → `payFare` → `Rider.board`. Gets off at `dest` (map) or the next station when `offQueued`.
+    Stations need `{ id, name, s, x, z, feet[], platform(sign), doorSide(train), onPlatform(x, z) }`.
+  - `rider.js` — ONE shared `Rider` (`acquireRider(game)`, `game.rider`; `game.ride` while riding):
+    seats Shoumik (mode 'vehicle', `player.vehicle` = the bus or null, 'sit' action,
+    `wanted:hold`), the ride HUD (`#ride-hud`), the cabin mesh, inside/outside camera
+    (`cameraRig.setInside(eye)` / chase cam on a proxy), `fadeThen(fn)`.
+  - `cabin.js` — cabin insides per kind (seats rows / benches, standing spots, doors, eye, driver).
+    Local frame: x = LEFT, y up, z forward (same as vehicles and the landmark Kit).
+  - `passengers.js` — `Passengers.setUnits([unit…])`, `stop(unit, side)`, `reserve(unit, seat)`. A
+    UNIT = { id, kind, cabin, pose(out), outsideY(), forward(), speed() } (a bus or one train car).
+- **Buses** (`src/features/buses/`): the service bus is a fleet vehicle with `driver = 'transit'`,
+  `tags.transit` (traffic ignores it, it cannot be carjacked), driven by `Driver` with an explicit
+  route (`stops.js → routeTo`); `svc.state` coming → atStop → boarding → riding → (policeStop) →
+  leaving (handed to traffic with `traffic:adopt`). Its line is extended before the route runs out
+  (`lineJunctions`). ⏩ teleports it ~40 m before the next stop on its route.
+- **MRT** (`features/metro`): stations get stair feet from the viaduct station layout
+  (local x = ±legOffset, z = 0.72 L + 0.8). **Railway** (`features/railway`): one LineTrain on
+  `rl.path` with `heightAt = rl.heightAt` (smoothed ground), `side: 0`; platforms are
+  `Kit.platform` rects (axis-aligned stations only!). Countryside props avoid the track via
+  `terrain.props.clearAt = landmarks.nearRailway`.
+- **E key**: features set `game.transitPrompt` while their prompt shows; the vehicles feature
+  then ignores E. **Map**: points may carry `action: { key, when(), run() }` (bigMap shows a button).
+- Debug: `BC.buses.service` (state, bus, segs), `BC.buses.call(stop)`, `BC.buses.upcoming(3)`,
+  `BC.metro.rides[0]`, `BC.railway.rides[0]` (state, station, train), `BC.rider`, `BC.ride`.
+- **Test**: `node tools/ride-check.js --three <dir> --out <folder> [--quality medium] [--only
+  bus,metro,train,counts,night]`. Headless runs ~4× slow-motion (5 fps, 0.05 s frame cap): a full
+  run takes ~15–25 minutes.
 
 ## 13. Notes for the next sessions (historical)
 - **Session 4 is done** (the old notes below are kept for reference).

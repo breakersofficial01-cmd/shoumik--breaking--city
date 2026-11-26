@@ -106,7 +106,9 @@ export class World {
     this.collision = new CollisionWorld();
     this.buildColliders();
     this.terrain?.init(this.collision);
+    this.landmarks.groundAt = (x, z) => this.terrainAt(x, z); // Roadmap 2 S6: railways follow the land
     await this.landmarks.build(this.shared, this.root, this.collision);
+    if (this.terrain?.props) this.terrain.props.clearAt = (x, z) => this.landmarks.nearRailway(x, z, 7);
     const rampMesh = this.ramps.buildMesh();
     if (rampMesh) this.root.add(rampMesh);
     // 3D kit buildings (Medium/High): load now, during the loading screen, before chunks are built.

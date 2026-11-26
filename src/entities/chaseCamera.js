@@ -27,6 +27,21 @@ export class ChaseCamera {
     this.shoulder = 0;  // metres the view shifts to the right (over-the-shoulder aiming)
     this.zoomTarget = 1;
     this.shoulderTarget = 0;
+    // Roadmap 2 S6: inside view while riding a bus / train. { x, y, z, heading } kept up to date
+    // by the ride (src/entities/transit/rider.js); dragging turns the head (insideYaw/Pitch).
+    this.inside = null;
+    this.insideYaw = 0;
+    this.insidePitch = 0;
+    this.insideLimits = { yaw: 1.6, pitch: 0.6 };
+  }
+
+  /** Inside view on (eye object, kept up to date by the caller) or off (null). */
+  setInside(eye, limits = null) {
+    this.inside = eye;
+    this.insideYaw = 0;
+    this.insidePitch = 0.06;
+    if (limits) this.insideLimits = limits;
+    if (eye) this.yaw = eye.heading;
   }
 
   /** Over-the-shoulder aiming view on/off (the weapons feature calls this). */
@@ -51,6 +66,12 @@ export class ChaseCamera {
   /** Rotate the view. dx > 0 turns right, dy > 0 looks down. Radians. */
   addLook(dx, dy) {
     if (dx === 0 && dy === 0) return;
+    if (this.inside) {
+      const L = this.insideLimits;
+      this.insideYaw = Math.max(-L.yaw, Math.min(L.yaw, this.insideYaw - dx));
+      this.insidePitch = Math.max(-L.pitch, Math.min(L.pitch, this.insidePitch + dy));
+      return;
+    }
     this.yaw = wrapAngle(this.yaw - dx);
     this.pitch = Math.min(this.mode.pitchMax, Math.max(this.mode.pitchMin, this.pitch + dy));
     this.sinceLook = 0;
@@ -61,6 +82,15 @@ export class ChaseCamera {
   right() { return { x: -Math.cos(this.yaw), z: Math.sin(this.yaw) }; }
 
   update(dt) {
+    if (this.inside) {
+      // Inside view: from the eye, along the vehicle plus the dragged head turn.
+      const e = this.inside;
+      const yaw = e.heading + this.insideYaw, p = this.insidePitch;
+      this.yaw = yaw;
+      this.camera.position.set(e.x, e.y, e.z);
+      this.camera.lookAt(e.x + Math.sin(yaw) * Math.cos(p) * 10, e.y - Math.sin(p) * 10, e.z + Math.cos(yaw) * Math.cos(p) * 10);
+      return;
+    }
     const t = this.target;
     if (!t) return;
     const m = this.mode;

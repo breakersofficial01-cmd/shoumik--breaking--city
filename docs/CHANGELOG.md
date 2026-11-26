@@ -1079,3 +1079,82 @@ Known issues
 - 3D people play actions full-body (an officer stops his walk animation while aiming).
 - Lungis / sarees are stiff tubes that swing with the thighs (no cloth simulation).
 - Crows on wires can sit a little above or below the wire (wires sag randomly).
+
+## 2026-11-26 — Roadmap 2 · Session 6: ride with other people (buses, MRT, trains)
+Shoumik can now ride a local bus, MRT Line 6 and a new railway line, sitting inside with other
+passengers.
+
+Riding
+- **Buses** (`src/features/buses/`): stand at any of the 162 bus-stop shelters for a moment (not
+  while wanted or right after a shot) → a bus is called,
+  drives up the road and stops (people get off and on) → E at the front door → pay ৳20 → he sits
+  inside. The bus drives a line and pulls up at every stop on the way. Each stop has a name (the
+  nearest place: "শাহবাগ / Shahbag", numbered when two share a place).
+- **MRT** (`src/features/metro/`): walk to the stairs under a station → E → he waits on the
+  platform (ETA shown) → a train stops → E → pay ৳40 → sit inside. E with no train = back down.
+- **Railway** (new, `src/world/landmarks/railway.js` + `src/features/railway/`): a broad-gauge
+  ground line from **Kamalapur Railway Station** (east edge of the city, Kamalapur-style wavy
+  umbrella roof) along the coast fields to **Coconut Coast** and **Sobujpur** in the northern
+  paddy fields (2.3 km). Walkable platforms, station houses with Bangla + English name boards,
+  lamps, benches. One train (engine + 3 coaches; real Quaternius Train Pack cars on Medium/High,
+  code-built on Low) shuttles up and down; walk onto a platform → it waits → E → pay ৳60. A
+  moving train knocks you down if you stand on the track.
+- **Getting off**: নামো / E / Jump = get off at the next stop. **Big map (M)**: tap a stop or station
+  while riding → "এখানে নামবো / Get off here" → the GPS shows it and the ride ends there. ⏩ = fade
+  and jump to just before the next stop.
+- **HUD**: line name, next stop (Bangla first, English second), the picked stop, buttons
+  নামো · 🎥 view · 🗺 pick a stop · ⏩ next stop.
+- **Camera**: inside view (from the back of the cabin, drag to look around) or outside (chase cam
+  behind the vehicle) — 🎥 button or C. Cabins have seats, poles, ceiling lights and an open
+  window band you look through.
+- **Wanted**: stars do not fade while riding (`wanted:hold`); with 2+ stars the police stop the
+  bus after a few seconds and push him out.
+
+Passengers
+- Varied Dhaka adults (data/transit.json → passengers.archetypes) sit or stand inside; at each
+  stop 0–2 walk out of the door and away, 1–2 walk up and get on. They go through the shared
+  crowd with their Animator, so the nearest are real 3D people on Medium/High (sit pose; the bus
+  driver uses the drive pose) and code-built on Low.
+- Only while he rides or waits at that stop / platform, and only the vehicle he rides plus the
+  nearest ones get passengers: 5/4 (bus/train car) on Low,
+  8/7 on Medium, 11/10 on High; 1 / 2 / 3 vehicles.
+
+Fixed
+- MRT trains could roll straight through a station: the next stop was re-picked every frame and a
+  station less than 1 m ahead stopped counting. A train now fixes its target stop when it
+  departs (`LineTrain.target`).
+
+Code / data / tools
+- New shared code `src/entities/transit/`: `lineTrain.js` (the MRT train class, moved out of the
+  metro feature, now also the railway's), `trainModel.js` (moved from `features/metro/model.js`),
+  `lineRide.js` (station → platform → board → ride → get off), `rider.js` (Shoumik's seat, ride HUD,
+  inside/outside camera, fade), `cabin.js` (insides + seats), `passengers.js`, `fares.js`.
+- New features `buses`, `railway`; `metro` now uses LineTrain + LineRide. `ChaseCamera.setInside()`.
+- New `data/transit.json`; `data/economy.json → fares` (bus 20, metro 40, train 60);
+  `data/landmarks.json → railways, railwayColors`; strings `transit.*`, `map.group.transit`.
+- The Products tab can override fares (kind `fare`, product_id bus / metro / train) — three rows
+  were added to the Google Sheet (`tools/sheets/products-roadmap2-s6.csv`); the validator accepts
+  kind `fare`.
+- Vehicles feature: the service bus cannot be carjacked; E belongs to a bus/train prompt while one
+  shows (`game.transitPrompt`). Big map: points can carry an `action` button. Countryside props stay
+  off the railway (`terrain.props.clearAt`).
+- No new model files: the trains reuse the Quaternius Train Pack already in `assets/trains/` (CC0).
+- Test: `node tools/ride-check.js --three <dir> --out <folder> [--only bus,metro,train,counts,night]`.
+- Tests (headless, Medium): `tools/ride-check.js` — all checks pass (bus: called, arrives, E boards,
+  ৳20, 7 passengers, HUD next stop, two stops with ⏩, gets off at the stop, police stop at 2 stars;
+  MRT: stairs → platform at 10.9 m, train stops, ৳40, passengers, map "get off here" + GPS, arrives
+  at Motijheel's stairs; train: Kamalapur platform, ৳60, passengers, Jump → off at Coconut Coast on
+  the platform; passengers per car Low 4 / Medium 7 / High 10, code-built on Low; night photos; no
+  console errors). Smoke test, hotel-check (Breaking Hotel) and crime-check pass. vehicle-shots
+  (ride, traffic): the hired rickshaw ride works, but "the puller is pedalling (1 m)" fails — the same
+  on the previous main (timing in the slow headless browser). people-check: counts pass; gallery 1–2
+  show 6 of 7 real 3D people — also the same on the previous main.
+
+Known issues
+- The MRT stairs are a fade (you do not climb them); the platform wait is a standing pose.
+- Cars on the highways drive over the railway at the two level crossings (no gate, the train does
+  not stop them); a train only knocks down Shoumik on foot.
+- From outside you cannot see passengers through the bus windows (only in the inside view).
+- Bus lines are random (a line picks a far stop as its end and is extended); stops are named after
+  the nearest place, so several share a name with a number ("শাহবাগ ২").
+- Headless tests run ~4× slow-motion: ride-check takes 20–30 minutes.

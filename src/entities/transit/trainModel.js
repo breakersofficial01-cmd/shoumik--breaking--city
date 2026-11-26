@@ -1,5 +1,7 @@
-// Real 3D MRT cars from the train pack (assets/trains/*.glb), used on Medium/High quality.
-// Config: data/landmarks.json → viaducts[].line.train.model
+// Real 3D train cars from the Quaternius Train Pack (assets/trains/*.glb, CC0), used on Medium/High.
+// Shared by the MRT (features/metro) and the railway (features/railway) — moved here from
+// features/metro/model.js in Roadmap 2 S6.
+// Config: data/landmarks.json → viaducts[].train.model and railways[].train.model
 //   { useOn, front, wagon, noseAt, heightScale, roughness, metalness, recolor: { <material>: <train colour key> } }
 // Each model is merged into ONE geometry with vertex colours (one draw call per car, like the
 // code-built car). Materials are recoloured to the Dhaka MRT livery using the train's own colours
@@ -47,7 +49,7 @@ function mergeModel(root, M, T) {
  * Load the front and wagon models for one train config.
  * @returns {Promise<{front:THREE.BufferGeometry, wagon:THREE.BufferGeometry, material:THREE.Material}|null>}
  */
-export async function loadMetroModels(game, T) {
+export async function loadTrainModels(game, T) {
   const M = T.model;
   if (!M || !M.useOn?.includes(game.qualityName)) return null;
   if (!game.assets.url(M.front) || !game.assets.url(M.wagon)) return null;
@@ -57,3 +59,6 @@ export async function loadMetroModels(game, T) {
   });
   return { front: mergeModel(front, M, T), wagon: mergeModel(wagon, M, T), material };
 }
+
+/** Old name (Roadmap 2 G1). */
+export const loadMetroModels = loadTrainModels;

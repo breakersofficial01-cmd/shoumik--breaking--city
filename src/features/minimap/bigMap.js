@@ -6,6 +6,8 @@
 //   - tap a place → its name + distance + "Show the way" (a yellow GPS route on both maps)
 //   - while wanted, police officers (blue) and cars / helicopter (red) blink on the map
 //   - the legend can hide / show each group
+//   - Roadmap 2 S6: a point with `action` { key, when(), run() } gets an extra button (bus stops and
+//     stations while riding: "get off here")
 // The game is paused while it is open, so it draws itself with requestAnimationFrame.
 
 import { createOverlay, esc } from '../../ui/overlay.js';
@@ -13,7 +15,7 @@ import { t, pickName, formatNumber } from '../../ui/i18n.js';
 import { fontStack } from '../../ui/fonts.js';
 import { getLanguage } from '../../ui/i18n.js';
 
-const GROUPS = ['school', 'hotels', 'weapons', 'food', 'outfits', 'vehicles', 'homes', 'home', 'health', 'healthpack', 'police', 'outskirts'];
+const GROUPS = ['school', 'hotels', 'weapons', 'food', 'outfits', 'vehicles', 'homes', 'home', 'health', 'healthpack', 'police', 'outskirts', 'transit'];
 
 export class BigMap {
   /**
@@ -170,7 +172,8 @@ export class BigMap {
     const dist = Math.round(Math.hypot(b.x - p.x, b.z - p.z));
     box.innerHTML = `<b>${esc(b.icon || '•')} ${esc(pickName(b.label) || t(`map.group.${b.group}`))}</b>
       <small>${esc(t('map.distance', { m: formatNumber(dist) }))}</small>
-      <button type="button" data-route>🧭 ${esc(t('map.showWay'))}</button>`;
+      <button type="button" data-route>🧭 ${esc(t('map.showWay'))}</button>
+      ${b.action && (!b.action.when || b.action.when()) ? `<button type="button" data-act>🚏 ${esc(t(b.action.key))}</button>` : ''}`;
   }
 
   onClick(e) {
@@ -193,6 +196,8 @@ export class BigMap {
       return;
     }
     if (el.dataset.route !== undefined && this.selected) this.setRoute(this.selected);
+    // Roadmap 2 S6: a stop / station while riding → "get off here" (the ride shows the GPS too).
+    if (el.dataset.act !== undefined && this.selected?.action) { this.selected.action.run(); this.close(); }
   }
 
   setRoute(b) {

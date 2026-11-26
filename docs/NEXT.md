@@ -228,3 +228,14 @@
 - Dogs barking at Shoumik at night (sound + a short chase); cats on boundary walls.
 - Cows and goats on the highway shoulders, a cowherd with a stick walking with them.
 - Ducks: a mother duck with ducklings in a row; ducks also on the river bank and sea shore ponds.
+
+## Ideas from Roadmap 2 · S6 (riding)
+- Buses: real bus routes with numbers ("৬ নম্বর বাস") and a line map at the shelters; a conductor
+  ("হেলপার") shouting stop names at the door; people hanging on the door when it is full.
+- A bus/train seat picker (window seat) and a "look out of the window" camera from his own seat.
+- Fares by distance (MRT: ৳20 + ৳10 per station) and an MRT card bought once (Products tab).
+- More railway: a second line to the airport (S10), a level-crossing gate with a bell where the
+  track crosses the highways (now cars just drive over the rails), trains that stop AI cars, a
+  freight train with the Kenney cargo wagons, rooftop riders (Dhaka style — only as scenery).
+- Station interiors for the MRT (stairs you really climb, ticket gates) instead of the fade.
+- Passengers chatting / phone idles; a vendor walking through the train selling jhalmuri.

@@ -1,151 +1,116 @@
 // Feature: metro. MRT Line 6 trains running on the viaduct (world.landmarks.viaducts, kind
 // 'rail'). Each train shuttles up and down its own track: it speeds up, slows down to stop
-// at every station for a few seconds, and turns back at the ends of the line.
-// Numbers and colours: data/landmarks.json → viaducts[].train. Scenery only for now — riding
-// the metro is an idea in docs/NEXT.md.
+// at every station for a few seconds, and turns back at the ends of the line
+// (src/entities/transit/lineTrain.js). Numbers and colours: data/landmarks.json → viaducts[].train.
 //
-// Events: sends metro:arrived { line, station } when a train stops at a station.
+// Roadmap 2 S6 — RIDING (src/entities/transit/lineRide.js): walk to the stairs under a station
+// → E → wait on the platform → E when a train stands there (fare: data/economy.json → fares.metro)
+// → sit inside with other passengers → get off at the next station (E / Jump / নামো) or at the
+// station picked on the big map. Settings: data/transit.json → metro, cabins.metro, passengers.
+//
+// Events: sends metro:arrived { line, station } when a train stops at a station, map:blips
+//         { id: 'metro-stations' }, ride:* (see lineRide.js / rider.js).
+//         listens input:action, input:jump, ride:destination, player:busted, player:died.
 
 import * as THREE from 'three';
-import { GeoBuilder } from '../../world/geoBuilder.js';
-import { Kit } from '../../world/landmarks/kit.js';
-import { loadMetroModels } from './model.js';
+import { loadTrainModels } from '../../entities/transit/trainModel.js';
+import { LineTrain, buildCarGeometry } from '../../entities/transit/lineTrain.js';
+import { LineRide } from '../../entities/transit/lineRide.js';
+import { Passengers } from '../../entities/transit/passengers.js';
+import { toWorld } from '../../entities/transit/cabin.js';
+import { acquireCrowd } from '../../entities/people/crowd.js';
+import { Rng } from '../../core/rng.js';
 import { log } from '../../core/debug.js';
 
 let game = null;
 let trains = [];
+let rides = [];
+let passengers = null;
 let root = null;
 let geometry = null;
 let real = null;   // { front, wagon, material } once the real 3D cars are loaded (Medium/High)
-const at = {};
+let offs = [];
 
-/** One MRT car, centred on the origin, nose towards +z. */
-function buildCar(T) {
-  const b = { lit: new GeoBuilder(), glow: new GeoBuilder(), sign: new GeoBuilder() };
-  const k = new Kit(b, { cx: 0, cz: 0, y: 0, angle: 0 });
-  const hw = T.carWidth / 2, hl = T.carLength / 2, H = T.carHeight;
-  k.box(-hw * 0.8, 0, -hl + 0.6, hw * 0.8, 0.55, hl - 0.6, T.under, { flat: true, faces: 'nsewb' });
-  k.box(-hw, 0.55, -hl, hw, H - 0.35, hl, T.body, { flat: true, grad: 0.85 });
-  k.box(-hw + 0.04, H - 0.35, -hl + 0.15, hw - 0.04, H, hl - 0.15, T.roof, { flat: true });
-  for (const s of [-1, 1]) {
-    const x = s * (hw + 0.01);
-    const side = (y0, y1, hex) => k.quad([x, y0, s > 0 ? hl : -hl], [x, y0, s > 0 ? -hl : hl], [x, y1, s > 0 ? -hl : hl], [x, y1, s > 0 ? hl : -hl], hex);
-    side(1.45, 2.55, T.window);
-    side(0.95, 1.2, T.stripeA);
-    side(1.2, 1.32, T.stripeB);
-    for (const z of [-hl * 0.5, hl * 0.5]) k.quad([x, 0.6, z + (s > 0 ? 0.65 : -0.65)], [x, 0.6, z - (s > 0 ? 0.65 : -0.65)], [x, 2.75, z - (s > 0 ? 0.65 : -0.65)], [x, 2.75, z + (s > 0 ? 0.65 : -0.65)], T.window);
-  }
-  for (const s of [-1, 1]) {
-    const z = s * (hl + 0.01);
-    const end = (x0, x1, y0, y1, hex) => k.quad([s > 0 ? x0 : x1, y0, z], [s > 0 ? x1 : x0, y0, z], [s > 0 ? x1 : x0, y1, z], [s > 0 ? x0 : x1, y1, z], hex);
-    end(-hw * 0.7, hw * 0.7, 1.5, 2.6, T.window);
-    end(-hw * 0.75, -hw * 0.45, 0.9, 1.15, T.headlight);
-    end(hw * 0.45, hw * 0.75, 0.9, 1.15, T.headlight);
-    end(-hw, hw, 0.95, 1.2, T.stripeA);
-  }
-  return b.lit.build();
-}
-
-class Train {
-  constructor(v, index) {
-    this.v = v;
-    this.T = v.line.train;
-    this.path = v.path;
-    this.side = index % 2 === 0 ? this.T.trackOffset : -this.T.trackOffset;
-    this.length = this.T.cars * (this.T.carLength + this.T.gap);
-    this.min = this.length / 2 + 2;
-    this.max = this.path.length - this.length / 2 - 2;
-    this.stops = v.stations.map((s) => s.s).sort((a, b) => a - b);
-    this.dir = index % 2 === 0 ? 1 : -1;
-    this.s = this.dir > 0 ? this.min : this.max;
-    this.speed = 0;
-    this.wait = 0;
-    this.y = v.line.deckY + v.line.deckThickness + 0.05;
-    this.group = new THREE.Group();
-    this.group.name = `metro-${v.id}-${index}`;
-    this.cars = [];
-    for (let i = 0; i < this.T.cars; i++) {
-      const car = new THREE.Mesh(geometry, game.world.shared.facadeMaterial);
-      car.matrixAutoUpdate = false;
-      this.cars.push(car);
-      this.group.add(car);
-    }
-    root.add(this.group);
-  }
-
-  /** Swap the code-built cars for the real models: fronts at both ends, wagons between. */
-  useModels(m) {
-    const last = this.cars.length - 1;
-    this.cars.forEach((car, i) => {
-      const end = i === 0 || i === last;
-      car.geometry = end ? m.front : m.wagon;
-      car.material = m.material;
-      car.userData.flip = i === last && last > 0;
-    });
-  }
-
-  /** Next place to stop: the next station ahead, or the end of the line. */
-  nextStop() {
-    const ahead = this.stops.filter((s) => (s - this.s) * this.dir > 1).sort((a, b) => (a - b) * this.dir);
-    const end = this.dir > 0 ? this.max : this.min;
-    const st = ahead.length ? ahead[0] : end;
-    return this.dir > 0 ? Math.min(st, end) : Math.max(st, end);
-  }
-
-  update(dt, focus) {
-    const T = this.T;
-    if (this.wait > 0) {
-      this.wait -= dt;
-      if (this.wait <= 0 && (this.s >= this.max - 0.5 || this.s <= this.min + 0.5)) this.dir = this.s >= this.max - 0.5 ? -1 : 1;
-    } else {
-      const left = Math.abs(this.nextStop() - this.s);
-      const want = Math.min(T.speed, Math.sqrt(2 * T.acceleration * left));
-      this.speed = this.speed < want ? Math.min(want, this.speed + T.acceleration * dt) : want;
-      const step = Math.min(left, this.speed * dt);
-      this.s += step * this.dir;
-      if (left - step < 0.05) {
-        this.speed = 0;
-        this.wait = T.stopSeconds;
-        const st = this.v.stations.find((s) => Math.abs(s.s - this.s) < 1);
-        if (st) game.events.emit('metro:arrived', { line: this.v.id, station: st.id });
-      }
-    }
-    // Draw only when near (the deck sections are culled the same way).
-    this.path.at(this.s, at, this.side);
-    const near = Math.hypot(at.x - focus.x, at.z - focus.z) < T.visibleDistance;
-    this.group.visible = near;
-    if (!near) return;
-    const pitch = T.carLength + T.gap;
-    this.cars.forEach((car, i) => {
-      const s = this.s + (((T.cars - 1) / 2 - i) * pitch);
-      this.path.at(s, at, this.side);
-      car.position.set(at.x, this.y, at.z);
-      car.rotation.set(0, at.heading + (car.userData.flip ? Math.PI : 0), 0);
-      car.updateMatrix();
-    });
-  }
+/**
+ * Everything a rider needs to know about one station: the stair feet on the sidewalks (where
+ * you walk in), the two platforms (sign = which track side) and the door side of a train.
+ */
+function stationInfo(v, st, deckTop) {
+  const line = v.line;
+  const L = line.station.length / 2;
+  const pose = { x: st.x, y: 0, z: st.z, heading: st.heading };
+  const feet = [1, -1].map((s) => {
+    const f = toWorld(pose, s * line.station.legOffset, 0, L * 0.72 + 0.8, {});
+    return { x: f.x, z: f.z, heading: st.heading + Math.PI };
+  });
+  const platformY = line.deckY + line.deckThickness + 0.5;
+  return {
+    id: st.id, name: st.name, s: st.s, x: st.x, z: st.z, feet,
+    platform(sign) {
+      const out = {};
+      // Near the platform edge, facing mostly along the track (turned a little towards it), so
+      // the chase camera stays inside the station instead of behind its glass wall.
+      v.path.at(st.s - 8, out, sign * (line.deckWidth / 2 + 0.8));
+      return { x: out.x, y: platformY, z: out.z, heading: out.heading + (sign > 0 ? -0.35 : 0.35) };
+    },
+    doorSide: (tr) => Math.sign(tr.side) || 1,
+    onPlatform: () => false,
+    deckTop,
+  };
 }
 
 export default {
   id: 'metro',
 
-  init(g) {
+  async init(g) {
     game = g;
     root = new THREE.Group();
     root.name = 'metro';
     g.scene.add(root);
     trains = [];
+    rides = [];
+    const material = g.world.shared.facadeMaterial;
+    const crowd = await acquireCrowd(g);
+    passengers = new Passengers(g, crowd, new Rng(g.config.get('world').seed ^ 0x3e7c0));
     for (const v of g.world.landmarks?.viaducts || []) {
       if (v.kind !== 'rail' || !v.line.train) continue;
-      if (!geometry) geometry = buildCar(v.line.train);
-      for (let i = 0; i < v.line.train.count; i++) trains.push(new Train(v, i));
+      const T = v.line.train;
+      if (!geometry) geometry = buildCarGeometry(T);
+      const y = v.line.deckY + v.line.deckThickness + 0.05;
+      const stations = v.stations.map((st) => stationInfo(v, st, y));
+      const ride = new LineRide(g, {
+        kind: 'metro', lineId: v.id, line: v.line.name, icon: g.config.get('transit').metro.icon, fareId: 'metro',
+        trains: [], stations, entry: 'stairs', passengers,
+      });
+      const mine = [];
+      for (let i = 0; i < T.count; i++) {
+        mine.push(new LineTrain({
+          path: v.path, T, index: i, lineId: v.id, stations, heightAt: () => y, root, geometry, material,
+          onArrive: (tr, st) => {
+            g.events.emit('metro:arrived', { line: v.id, station: st.id });
+            ride.onArrive(tr, st);
+          },
+        }));
+      }
+      ride.setTrains(mine);
+      trains.push(...mine);
+      rides.push(ride);
     }
-    g.metro = { trains }; // read-only handle for debug tools
+    g.metro = { trains, rides, passengers }; // handle for debug tools and tests
+    offs = [
+      g.events.on('input:action', () => { for (const r of rides) if (r.onAction()) return; }),
+      g.events.on('input:jump', () => { for (const r of rides) r.onJump(); }),
+      g.events.on('ride:destination', ({ line, id }) => { for (const r of rides) if (r.lineId === line) r.setDestination(id); }),
+      g.events.on('player:busted', () => rides.forEach((r) => r.abort())),
+      g.events.on('player:died', () => rides.forEach((r) => r.abort())),
+      g.events.on('game:ready', () => g.events.emit('map:blips', { id: 'metro-stations', points: rides.flatMap((r) => r.blips()) })),
+    ];
+    g.events.emit('map:blips', { id: 'metro-stations', points: rides.flatMap((r) => r.blips()) });
     // Real 3D cars (data/landmarks.json → train.model). Loaded in the background; the code-built
     // cars stay until it is ready, and stay for good on Low quality or if loading fails.
     const first = trains[0];
     if (first) {
-      loadMetroModels(g, first.T).then((m) => {
+      loadTrainModels(g, first.T).then((m) => {
         if (!m || !trains.length) return;
         real = m;
         for (const t of trains) t.useModels(m);
@@ -156,9 +121,17 @@ export default {
   update(dt) {
     const focus = game.player?.position || game.camera.position;
     for (const t of trains) t.update(dt, focus);
+    if (!game.player) return;
+    for (const r of rides) r.update(dt);
+    passengers.update(dt);
   },
 
   dispose() {
+    offs.forEach((off) => off());
+    offs = [];
+    for (const r of rides) r.abort();
+    passengers?.dispose();
+    rides = [];
     root?.removeFromParent();
     geometry?.dispose();
     geometry = null;
