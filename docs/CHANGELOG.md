@@ -1259,6 +1259,9 @@ Code / data
   soldier → 5 stars, alert, extra soldiers, trucks and a tank chase, the turret aims at him, shells
   fire and explode; stars stay in a car; WASTED → army stands down; counts Low 3/1/2, Medium 5/2/3,
   High 8/3/4 match the data; day + night photos; no console errors).
+  Smoke test, crime-check, ride-check (39 checks) and boat-check (23 checks) pass. people-check:
+  everything passes except "gallery: 7 people are real 3D" (4–6 of 7) — the same check fails on the
+  previous main too (timing in the slow headless browser), not caused by this session.
 
 Known issues
 - The tank is code-built (no CC0 model downloaded yet).
