@@ -12,6 +12,7 @@
 //   world.terrain               Roadmap 2 S3: the land around the city — fields, desert, beach + sea,
 //                               river bridge, hills, ponds, highways (terrain/); null when switched off
 //   world.areaAt(x, z)          district (city) or countryside zone — { id, name } for the HUD
+//   world.waterAt(x, z, margin) Roadmap 2 S7: 'lake' | 'river' | 'sea' | null (boats, waterMap.js)
 
 import * as THREE from 'three';
 import { log, debugLine } from '../core/debug.js';
@@ -19,6 +20,7 @@ import { CityLayout, KIND } from './layout.js';
 import { ChunkManager } from './chunks.js';
 import { CollisionWorld, COLLIDE } from './collision.js';
 import { Water } from './water.js';
+import { makeWaterAt } from './waterMap.js';
 import { Sky } from './sky.js';
 import { RoadNet } from './roads.js';
 import { Ramps } from './ramps.js';
@@ -102,6 +104,8 @@ export class World {
 
     this.sky = new Sky(this.cfg, glow, scene, this.game.renderer);
     this.water = new Water(this.layout, water, this.root, config.get('graphics'), this.terrain?.waterShapes());
+    // Roadmap 2 S7: open water for boats (lakes, river, sea) — waterMap.js.
+    this.waterAt = makeWaterAt(this);
     this.chunks = new ChunkManager(this.layout, this.shared, this.root);
     this.collision = new CollisionWorld();
     this.buildColliders();

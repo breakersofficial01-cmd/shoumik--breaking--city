@@ -1,0 +1,62 @@
+{
+  "_comment": "Roadmap 2 S7: boats you drive (src/features/boats) and the river launch you ride (src/features/ferry). Models: assets/boats/boats.glb (Kenney Watercraft Kit, CC0; tools/boat-kit/boats.json) streamed after start — code-built boats are shown until it arrives. Prices: data/economy.json → prices.boats (the Products tab can override, kind 'boats'). Speeds in metres per second, turns in radians per second, times in seconds.",
+  "types": {
+    "_comment": "model = child mesh in boats.glb; rotY = degrees to turn the model so the bow points forward; length / width = hull (metres, used for collisions and the shape of the code-built boat); seat = [left, up, forward] of the driver (metres from the middle); maxSpeed / reverseSpeed / acceleration / brake; turnRate = full turn speed at turnFullSpeed or faster; drag = water slows it (share per second); grip = how quickly a sideways slide stops; bob / pitch / roll = how much it rocks; camera = chase camera distance × the driving camera; colors = hull, deck, trim of the code-built boat; free = can be taken at any ghat for nothing; horn = horn sound.",
+    "nouka": { "name": { "en": "Country boat", "bn": "নৌকা" }, "model": "nouka", "rotY": 0, "length": 5.5, "width": 1.9, "seat": [0, 0.45, -1.6],
+      "maxSpeed": 4.5, "reverseSpeed": 1.8, "acceleration": 1.4, "brake": 2.5, "turnRate": 0.9, "turnFullSpeed": 2, "drag": 0.35, "grip": 2.5,
+      "bob": 0.07, "pitch": 0.02, "roll": 0.04, "camera": 1.0, "colors": ["#7a4a28", "#a87b4f", "#d9c08a"], "free": true, "horn": "bell" },
+    "speedboat": { "name": { "en": "Speedboat", "bn": "স্পিডবোট" }, "model": "speedboat", "rotY": 0, "length": 6.5, "width": 2.6, "seat": [-0.45, 1.0, -0.9],
+      "maxSpeed": 24, "reverseSpeed": 4, "acceleration": 7, "brake": 9, "turnRate": 1.5, "turnFullSpeed": 6, "drag": 0.25, "grip": 1.4,
+      "bob": 0.06, "pitch": 0.09, "roll": 0.12, "camera": 1.25, "colors": ["#2f63c8", "#f2f2f2", "#1d2a36"], "horn": "beep" },
+    "speedboatGreen": { "name": { "en": "Speedboat (green)", "bn": "স্পিডবোট (সবুজ)" }, "model": "speedboatGreen", "rotY": 0, "length": 7, "width": 2.6, "seat": [-0.45, 0.95, -1.1],
+      "maxSpeed": 26, "reverseSpeed": 4, "acceleration": 7.5, "brake": 9, "turnRate": 1.45, "turnFullSpeed": 6, "drag": 0.25, "grip": 1.4,
+      "bob": 0.06, "pitch": 0.09, "roll": 0.12, "camera": 1.3, "colors": ["#1e8a4c", "#f2f2f2", "#1d2a36"], "horn": "beep" },
+    "yacht": { "name": { "en": "Yacht", "bn": "ইয়ট" }, "model": "yacht", "rotY": 0, "length": 11, "width": 4.2, "seat": [0, 1.45, -3.6],
+      "maxSpeed": 13, "reverseSpeed": 3, "acceleration": 2.6, "brake": 4, "turnRate": 0.75, "turnFullSpeed": 5, "drag": 0.18, "grip": 1.0,
+      "bob": 0.05, "pitch": 0.04, "roll": 0.08, "camera": 1.9, "colors": ["#f4f4f0", "#c9a66b", "#1f4e79"], "horn": "bus" }
+  },
+  "blocked": {
+    "_comment": "Rectangles [x0, z0, x1, z1] in world metres where boats cannot go although it is water: the Sadarghat pontoon with its three moored launches (data/landmarks.json → sadarghat).",
+    "list": [[6, 774, 90, 832]]
+  },
+  "physics": {
+    "_comment": "margin = metres of water a boat keeps from the bank; bounce = share of speed kept (backwards) after hitting the bank; crashSpeed = hitting land faster than this sends boat:crash (a bump); pushRadius = boats push each other apart within this share of (shorter length + wider width).",
+    "margin": 0.8,
+    "bounce": 0.25,
+    "crashSpeed": 7,
+    "pushRadius": 0.4
+  },
+  "wake": { "_comment": "White foam behind a moving boat: count = foam patches per boat, every = seconds between them (at full speed), life = seconds a patch lasts, size = metres.", "count": 36, "every": 0.07, "life": 1.6, "size": 0.9, "color": "#ffffff", "opacity": 0.38 },
+  "enter": { "_comment": "range = metres from Shoumik to a moored boat to get in; exitSearch = metres around the boat searched for dry land to step out to.", "range": 10, "exitSearch": 12 },
+  "docks": {
+    "_comment": "Ghats where boats are moored. near = [col, row] in junction units (data/terrain.json units); the game finds the nearest dry spot next to open water there. free = free boats waiting there. Boats you own wait at whichever ghat you walk to (owned = how many of them fit). showDistance = boats appear when Shoumik is this close.",
+    "showDistance": 160,
+    "owned": 3,
+    "list": [
+      { "id": "ghat-hatirjheel", "name": { "en": "Hatirjheel Boat Ghat", "bn": "হাতিরঝিল নৌকাঘাট" }, "near": [8.0, 7.2], "free": ["nouka"] },
+      { "id": "ghat-gulshan", "name": { "en": "Gulshan Lake Ghat", "bn": "গুলশান লেক ঘাট" }, "near": [13.0, 2.5], "free": ["nouka"] },
+      { "id": "ghat-dhanmondi", "name": { "en": "Dhanmondi Lake Ghat", "bn": "ধানমন্ডি লেক ঘাট" }, "near": [2.0, 4.6], "free": ["nouka"] },
+      { "id": "ghat-buriganga", "name": { "en": "Buriganga Boat Ghat", "bn": "বুড়িগঙ্গা নৌকাঘাট" }, "near": [5.6, 16.1], "free": ["nouka", "nouka"] },
+      { "id": "ghat-beach", "name": { "en": "Coconut Beach Jetty", "bn": "নারকেল সৈকত জেটি" }, "near": [18.9, 6.0], "free": ["nouka"] }
+    ]
+  },
+  "ferry": {
+    "_comment": "The river launch (src/features/ferry): one launch shuttles along the Buriganga between the ghats and you ride it with passengers (like the MRT: walk to the ghat on the bank → E → wait on the pontoon → E to get on). path / ghats in junction units [col, row]. launch = like the trains: carLength/carWidth/carHeight in metres (the model is scaled to them), speed, acceleration, stopSeconds; heightScale = height of the model relative to its width. Fare: data/economy.json → fares.launch.",
+    "id": "buriganga-launch",
+    "name": { "en": "Buriganga Launch", "bn": "বুড়িগঙ্গা লঞ্চ" },
+    "path": [[4.0, 16.45], [5.8, 16.45], [6.5, 17.05], [7.9, 17.05], [8.6, 16.45], [12.0, 16.55], [18.7, 16.55]],
+    "cornerRadius": 40,
+    "pontoon": { "length": 30, "width": 5, "gangwayWidth": 2.4, "colors": { "pontoon": "#4a4a4c", "top": "#8f8a82", "gangway": "#b03a2e", "rail": "#d8d2c4", "roof": "#2f6b4a" } },
+    "ghats": [
+      { "id": "ghat-babubazar", "name": { "en": "Babubazar Launch Ghat", "bn": "বাবুবাজার লঞ্চঘাট" }, "at": [4.4, 16.45] },
+      { "id": "ghat-sadarghat", "name": { "en": "Sadarghat Launch Terminal", "bn": "সদরঘাট লঞ্চ টার্মিনাল" }, "at": [9.2, 16.45] },
+      { "id": "ghat-sea", "name": { "en": "Sea Mouth Ghat", "bn": "মোহনা ঘাট" }, "at": [18.0, 16.55] }
+    ],
+    "launch": {
+      "count": 1, "cars": 1, "carLength": 44, "carWidth": 11, "carHeight": 12, "gap": 0, "trackOffset": 0,
+      "speed": 9, "acceleration": 0.6, "stopSeconds": 16, "visibleDistance": 700,
+      "model": "launch", "heightScale": 0.55, "rotY": 0,
+      "colors": { "hull": "#1f3c66", "band": "#c62828", "deck": "#f2efe6", "upper": "#ffffff", "roof": "#2f6b4a", "window": "#1d2a36", "funnel": "#d9a23a" }
+    }
+  }
+}

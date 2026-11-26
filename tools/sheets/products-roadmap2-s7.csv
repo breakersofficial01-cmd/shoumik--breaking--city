@@ -1,0 +1,5 @@
+product_id,kind,name_en,name_bn,price,image_url,model_url,description,active,notes
+speedboat,boats,Speedboat,স্পিডবোট,60000,,,Fast boat for the river and the sea,TRUE,Roadmap 2 S7
+speedboatGreen,boats,Speedboat (green),স্পিডবোট (সবুজ),75000,,,Fast boat for the river and the sea,TRUE,Roadmap 2 S7
+yacht,boats,Yacht,ইয়ট,250000,,,Sailing yacht,TRUE,Roadmap 2 S7
+launch,fare,Launch ticket,লঞ্চ টিকিট,50,,,One ride on the Buriganga launch,TRUE,Roadmap 2 S7

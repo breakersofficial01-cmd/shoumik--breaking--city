@@ -239,3 +239,15 @@
   freight train with the Kenney cargo wagons, rooftop riders (Dhaka style — only as scenery).
 - Station interiors for the MRT (stairs you really climb, ticket gates) instead of the fade.
 - Passengers chatting / phone idles; a vendor walking through the train selling jhalmuri.
+
+## Ideas from Roadmap 2 · S7 (water)
+- Raise Hatirjheel's bridges (or turn the middle ones into arches you can pass under) so boats can
+  cross the whole lake; now each basin between road bridges is separate.
+- Police boats on the river when wanted at sea (2+ stars); a river patrol speedboat.
+- Swimming / falling in the water (now you cannot walk into water, and you only get out of a boat
+  at a bank).
+- Boats bump into the moving launch (now they pass through it); the launch's wake rocks small boats.
+- A boat garage / "send my boat to this ghat"; fuel; boat races with buoys (the Watercraft Kit has
+  buoys, gates and ramps); fishing from the nouka.
+- More launches (night launch with lights, Barishal-style double-decker) and a ferry across the
+  river to the char lands.

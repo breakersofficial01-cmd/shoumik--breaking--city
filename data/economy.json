@@ -7,7 +7,7 @@
     "rickshaw": 20,
     "cng": 100
   },
-  "fares": { "_comment": "Roadmap 2 S6: fare in Taka for one ride on a bus, the MRT or a train (src/entities/transit/fares.js). The Products tab of the Google Sheet can override them (kind fare, product_id bus / metro / train).", "bus": 20, "metro": 40, "train": 60 },
+  "fares": { "_comment": "Roadmap 2 S6: fare in Taka for one ride on a bus, the MRT or a train (src/entities/transit/fares.js). The Products tab of the Google Sheet can override them (kind fare, product_id bus / metro / train).", "bus": 20, "metro": 40, "train": 60, "launch": 50 },
   "quizClass": {
     "_comment": "Quiz Class (free practice in Class Mode). rewardPerCorrect per right answer; streakBonus is paid every time the streak reaches a multiple of streakLength; firstOfDayBonus once per calendar day (phone's date) for finishing a round; questionsPerRound (fewer if the institute has fewer questions); dailyCap = most Taka one player can earn from Quiz Class per day (0 = no limit).",
     "rewardPerCorrect": 50,
@@ -33,7 +33,7 @@
       "luxury": 120000,
       "truck": 80000
     },
-    "homes": {
+    "boats": {"speedboat": 60000, "speedboatGreen": 75000, "yacht": 250000}, "homes": {
       "old-dhaka-mess": 12000,
       "dhanmondi-flat": 60000,
       "gulshan-house": 200000

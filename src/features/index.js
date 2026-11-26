@@ -29,6 +29,9 @@ const LOADERS = {
   // Roadmap 2 S6: ride buses (bus stops), the MRT (metro, above) and trains with passengers.
   railway: () => import('./railway/index.js'),
   buses: () => import('./buses/index.js'),
+  // Roadmap 2 S7: drive boats on the lakes, river and sea; ride the Buriganga launch.
+  boats: () => import('./boats/index.js'),
+  ferry: () => import('./ferry/index.js'),
   entrances: () => import('./entrances/index.js'),
   classes: () => import('./classes/index.js'),
   shops: () => import('./shops/index.js'),

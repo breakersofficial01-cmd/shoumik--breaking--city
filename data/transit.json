@@ -7,7 +7,7 @@
     "eyeBack": 0.9,
     "lookYaw": 1.6,
     "lookPitch": 0.6,
-    "outsideScale": { "bus": 1.75, "metro": 1.4, "train": 2.0 }
+    "outsideScale": { "bus": 1.75, "metro": 1.4, "train": 2.0, "launch": 3.4 }
   },
   "ride": {
     "_comment": "fadeSeconds = the black fade when getting on/off a train or skipping. skipBefore = after ⏩ the vehicle is put this far before its next stop. holdSeconds = how long a train waits for Shoumik at a station while he stands on its platform.",
@@ -17,7 +17,7 @@
   },
   "passengers": {
     "_comment": "Other people riding (all adults, everyday Dhaka clothes). count = people per bus / train car on each quality (seated first, then standing); units = how many vehicles/cars near Shoumik get passengers at once (the one he rides always does) — only while he rides or waits at that stop / station. nearDistance = only vehicles closer than this get passengers. standShare = share that stand in the aisle. offPerStop / onPerStop = [min, max] people getting off / on at each stop. walkSpeed = walking to and from the door; walkOut = metres they walk away after getting off. archetypes = who rides (names from data/pedestrians.json, weights).",
-    "count": { "low": { "bus": 5, "car": 4 }, "medium": { "bus": 8, "car": 7 }, "high": { "bus": 11, "car": 10 } },
+    "count": { "low": { "bus": 5, "car": 4, "launch": 6 }, "medium": { "bus": 8, "car": 7, "launch": 10 }, "high": { "bus": 11, "car": 10, "launch": 14 } },
     "units": { "low": 1, "medium": 2, "high": 3 },
     "nearDistance": 70,
     "standShare": 0.25,
@@ -43,6 +43,13 @@
       "standing": [[0.35, -5.6], [-0.35, -1.5], [0.3, 0.0], [-0.3, 1.6], [0.35, 5.6], [0, -3.8], [0, 3.8]],
       "doors": [[1, -3.8], [1, 3.8], [-1, -3.8], [-1, 3.8]],
       "colors": { "floor": "#5a5d63", "wall": "#e8ecef", "ceiling": "#f6f7f8", "seat": "#2e7d4f", "seatBack": "#c62828", "pole": "#d0d4d8", "light": "#eaf6ff" }
+    },
+    "launch": {
+      "length": 30.0, "width": 9.0, "floor": 2.4, "height": 2.5, "window": [0.8, 2.1],
+      "seats": { "kind": "rows", "pitch": 1.05, "back": 2.2, "front": 4.0, "seatWidth": 0.55, "aisle": 1.4, "height": 0.46 },
+      "standing": [[0, -6.0], [0, 0.5], [0, 6.0], [3.8, 9.0], [-3.8, 9.0]],
+      "doors": [[1, -7.0], [1, 7.0], [-1, -7.0], [-1, 7.0]],
+      "colors": { "floor": "#7a5a3a", "wall": "#f2efe6", "ceiling": "#f8f6f0", "seat": "#2f5e9e", "seatBack": "#c62828", "pole": "#c9c9c9", "light": "#fff4d6" }
     },
     "train": {
       "length": 15.0, "width": 2.8, "floor": 1.0, "height": 2.2, "window": [0.85, 1.65],
@@ -73,6 +80,12 @@
     "entryRadius": 3.6,
     "icon": "🚇",
     "mapColor": "#36e6ff"
+  },
+  "launch": {
+    "_comment": "River launch (data/boats.json → ferry): entryRadius = stand this close to a launch ghat on the bank.",
+    "entryRadius": 4.5,
+    "icon": "⛴️",
+    "mapColor": "#ffb347"
   },
   "train": {
     "_comment": "Railway (data/landmarks.json → railways). boardRange = how close to the train (on the platform) to get on.",

@@ -34,5 +34,7 @@
   "hotels": true,
   "animals": true,
   "railway": true,
-  "buses": true
+  "buses": true,
+  "boats": true,
+  "ferry": true
 }

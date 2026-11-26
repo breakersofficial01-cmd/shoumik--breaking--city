@@ -43,6 +43,9 @@
   ],
   "afterStart": [
     {
+      "id": "model.boats"
+    },
+    {
       "id": "model.people",
       "qualities": [
         "medium",

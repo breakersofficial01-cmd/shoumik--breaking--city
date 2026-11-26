@@ -9,6 +9,8 @@
 //        --kenney "<Food Kit>/Models/GLB format" --quat "<Ultimate Food Pack>/OBJ" \
 //        [--out assets/food/food.glb] [--shot food.png]
 // Then: node tools/compress-models.js --cli <gltf-transform>   (meshopt, like every GLB)
+// Roadmap 2 S7: also packs the boats — --recipes tools/boat-kit/boats.json --out assets/boats/boats.glb
+// (--quat is optional when the recipes only use Kenney models).
 
 const http = require('http');
 const fs = require('fs');
@@ -22,7 +24,8 @@ const kenneyDir = arg('kenney');
 const quatDir = arg('quat');
 const out = arg('out', path.join(ROOT, 'assets/food/food.glb'));
 const shot = arg('shot', null);
-const recipes = JSON.parse(fs.readFileSync(path.join(__dirname, 'food.json'), 'utf8')).models;
+const recipes = JSON.parse(fs.readFileSync(arg('recipes', path.join(__dirname, 'food.json')), 'utf8')).models;
+const rootName = arg('name', 'food');
 const MIME = { '.js': 'text/javascript', '.glb': 'model/gltf-binary', '.png': 'image/png', '.obj': 'text/plain', '.mtl': 'text/plain' };
 
 const server = http.createServer((req, res) => {
@@ -40,7 +43,7 @@ const server = http.createServer((req, res) => {
 });
 
 (async () => {
-  if (!threeDir || !kenneyDir || !quatDir) { console.log('usage: --three <dir> --kenney <GLB format dir> --quat <OBJ dir>'); process.exit(1); }
+  if (!threeDir || !kenneyDir) { console.log('usage: --three <dir> --kenney <GLB format dir> --quat <OBJ dir>'); process.exit(1); }
   fs.mkdirSync(path.dirname(out), { recursive: true });
   await new Promise((r) => server.listen(0, r));
   const browser = await chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader'] });
@@ -49,7 +52,7 @@ const server = http.createServer((req, res) => {
   page.on('console', (m) => { if (m.type() === 'error') console.log('[console]', m.text()); });
   await page.goto(`http://localhost:${server.address().port}/`);
   await page.addScriptTag({ type: 'importmap', content: JSON.stringify({ imports: { three: '/three/build/three.module.js', 'three/addons/': '/three/examples/jsm/' } }) });
-  const report = await page.evaluate(async ({ recipes, wantShot }) => {
+  const report = await page.evaluate(async ({ recipes, wantShot, rootName }) => {
     const THREE = await import('three');
     const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
     const { OBJLoader } = await import('three/addons/loaders/OBJLoader.js');
@@ -74,7 +77,7 @@ const server = http.createServer((req, res) => {
       return { scene: await new OBJLoader().setMaterials(mtl).setPath('/quat/').loadAsync(`${name}.obj`), flipV: true };
     }
 
-    const root = new THREE.Group(); root.name = 'food';
+    const root = new THREE.Group(); root.name = rootName;
     const report = [];
     for (const r of recipes) {
       const { scene, flipV } = await loadSource(r.src);
@@ -148,7 +151,7 @@ const server = http.createServer((req, res) => {
       await fetch('/shot', { method: 'POST', body: blob });
     }
     return report;
-  }, { recipes, wantShot: !!shot });
+  }, { recipes, wantShot: !!shot, rootName });
   for (const r of report) console.log(JSON.stringify(r));
   console.log('wrote', out, (fs.statSync(out).size / 1024).toFixed(1), 'KB');
   await browser.close(); server.close();

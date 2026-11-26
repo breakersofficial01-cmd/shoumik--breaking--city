@@ -6,7 +6,7 @@
 //   use(shop, id)      -> { ok, msg }      wear an owned outfit / move into an owned home
 //
 // Effects are sent as events so other features do the work (no imports between features):
-//   vehicles → vehicle:grant { type }            outfits → outfit:owned { id } + outfit:set { id }
+//   vehicles → vehicle:grant { type }            boats → boat:grant { type } (Roadmap 2 S7)            outfits → outfit:owned { id } + outfit:set { id }
 //   weapons  → weapon:owned { id }               homes   → home:owned { id }, home:changed, garage:changed
 //   ammo-<w> → weapon:ammo { id: w }  (needs the gun)   armour → player:armour { full: true }
 //   molotov  → weapon:owned { id } every time (each buy = data/weapons.json ammoPack bottles)
@@ -49,6 +49,7 @@ export class Catalog {
     if (over && (over[L] || over.en)) return over[L] || over.en;
     const c = this.game.config;
     if (kind === 'vehicles') return pickName(c.get('vehicles').types[id]?.name) || id;
+    if (kind === 'boats') return pickName(c.get('boats').types[id]?.name) || id; // Roadmap 2 S7
     if (kind === 'outfits') return pickName(c.get('outfits').outfits.find((o) => o.id === id)?.name) || id;
     if (kind === 'homes') return pickName(this.cfg.homes[id]?.name) || id;
     if (kind === 'food') return pickName(this.cfg.food[id]?.name) || id;
@@ -111,6 +112,9 @@ export class Catalog {
     switch (shop.kind) {
       case 'vehicles':
         g.events.emit('vehicle:grant', { type: id });
+        break;
+      case 'boats': // Roadmap 2 S7: it waits at every boat ghat (features/boats)
+        g.events.emit('boat:grant', { type: id });
         break;
       case 'outfits':
         this.owned.outfits.push(id);

@@ -15,7 +15,7 @@ import { t, pickName, formatNumber } from '../../ui/i18n.js';
 import { fontStack } from '../../ui/fonts.js';
 import { getLanguage } from '../../ui/i18n.js';
 
-const GROUPS = ['school', 'hotels', 'weapons', 'food', 'outfits', 'vehicles', 'homes', 'home', 'health', 'healthpack', 'police', 'outskirts', 'transit'];
+const GROUPS = ['school', 'hotels', 'weapons', 'food', 'outfits', 'vehicles', 'homes', 'home', 'health', 'healthpack', 'police', 'outskirts', 'transit', 'boats'];
 
 export class BigMap {
   /**

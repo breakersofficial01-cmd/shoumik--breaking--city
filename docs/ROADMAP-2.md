@@ -55,7 +55,7 @@ flat colours, no big textures), add ids to `data/assets.json`.
   them. Animals: stray dogs, cats, cows, goats, crows, ducks on lakes.
 - [x] **S6 — Ride with other people.** (done 2026-11-26, see CHANGELOG) Board **buses** (at bus stops), the **MRT metro** (at
   stations) and **trains**; passengers sit inside; pick a stop on the map; get off anywhere.
-- [ ] **S7 — Water.** Drivable **speedboat** and **yacht** (river, sea, Hatirjheel); a
+- [x] **S7 — Water.** (done 2026-11-26, see CHANGELOG) Drivable **speedboat** and **yacht** (river, sea, Hatirjheel); a
   **launch / ship** at Sadarghat you can ride with passengers; boat shop.
 - [ ] **S8 — Cantonment and army.** Walled cantonment with gate, barracks, parade ground,
   **tanks** (parked and moving; can chase at 5 stars), army trucks, soldiers.

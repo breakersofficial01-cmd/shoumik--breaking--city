@@ -260,7 +260,7 @@ export function validateRewards(raw) {
 }
 
 // 'drink' (Roadmap 2 S4): hotel drinks; food + drink rows may also have a `heal` column.
-const PRODUCT_KINDS = ['vehicles', 'weapons', 'outfits', 'food', 'drink', 'homes', 'health', 'fare']; // fare: Roadmap 2 S6 (bus / metro / train)
+const PRODUCT_KINDS = ['vehicles', 'weapons', 'outfits', 'food', 'drink', 'homes', 'health', 'fare', 'boats']; // fare: Roadmap 2 S6 (bus / metro / train / launch), boats: S7
 
 /**
  * Validate products (Session 9: the Products tab of the Google Sheet, or data/products.json).

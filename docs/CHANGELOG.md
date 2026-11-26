@@ -1158,3 +1158,43 @@ Known issues
 - Bus lines are random (a line picks a far stop as its end and is extended); stops are named after
   the nearest place, so several share a name with a number ("শাহবাগ ২").
 - Headless tests run ~4× slow-motion: ride-check takes 20–30 minutes.
+
+## 2026-11-26 — Roadmap 2 · Session 7: water — boats, ghats, boat club, the Buriganga launch
+Shoumik can now drive boats on the lakes, the Buriganga river and the sea, and ride a river
+launch with passengers.
+
+Boats
+- **Ghats** (⚓ on the map): Hatirjheel, Gulshan Lake, Dhanmondi Lake, the Buriganga (Old Dhaka)
+  and Coconut Beach. Each has a wooden jetty and boats moored bow-out in a row. Free country boats
+  (নৌকা) wait at every ghat; the boats you own wait at whichever ghat you walk to.
+- **Drive**: stand near a boat → E → at the helm. Stick / W-S throttle and reverse, A-D rudder,
+  Jump brake, H horn; the HUD shows the speed. Boats stay on open water and bounce off the bank,
+  rock on the waves, lift the bow at speed, lean into turns and leave a foam wake. E near a bank
+  or jetty = step onto dry land ("নামতে তীর বা জেটির কাছে যাও" when there is none).
+- **Boat club** (🚤 Hatirjheel Boat Club): speedboat ৳60,000 (blue), speedboat ৳75,000 (green),
+  yacht ৳250,000. Bought boats are saved (`save.data.owned.boats`).
+- Types: country boat 4.5 m/s, speedboats 24–26 m/s, yacht 13 m/s (`data/boats.json`).
+
+The Buriganga launch
+- One river launch shuttles Babubazar Launch Ghat → Sadarghat Launch Terminal → Sea Mouth Ghat
+  (where the river meets the Bay). Walk to a ghat on the bank → E → wait on the floating pontoon
+  (gangway to the bank) → the launch comes alongside → E, ৳50 → sit on the deck with passengers
+  (8 on Medium). Get off at the next ghat (নামো / E / Jump) or pick a ghat on the big map; ⏩ skips.
+  Inside view = the passenger deck; outside = behind the launch.
+
+Models and size
+- New `assets/boats/boats.glb` (80 KB, meshopt): Kenney Watercraft Kit 2.1 (CC0) — speedboats,
+  sail yacht, rowing boat, and the small ocean liner as the river launch; palette baked into
+  vertex colours with `tools/food-kit/pack-food.js` (now takes `--recipes` / `--name`; recipe
+  `tools/boat-kit/boats.json`). Streamed after start (`data/streaming.json → afterStart`);
+  code-built boats / launch until it arrives. Credits: `assets/CREDITS.md`, `data/pages.json`.
+
+Code / data
+- New: `src/world/waterMap.js` (`world.waterAt`), `src/features/boats/` (boat, docks, wake, index),
+  `src/features/ferry/`, `src/entities/boats/models.js`, `data/boats.json`, `tools/boat-check.js`,
+  `tools/boat-kit/boats.json`, `tools/sheets/products-roadmap2-s7.csv`.
+- Changed: shops (kind `boats` → `boat:grant`), `data/shops.json` (boat club), economy
+  (`prices.boats`, `fares.launch`), `data/transit.json` (launch cabin, passengers, camera), save
+  (`owned.boats`), validators (Products kinds `boats`), LineRide (kind-specific prompt strings),
+  Passengers (counts per kind), big map legend (boats), strings `boat.*`, `transit.*.launch`.
+- Products tab: 4 new rows (speedboat, speedboatGreen, yacht; launch fare).
