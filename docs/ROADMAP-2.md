@@ -53,7 +53,7 @@ flat colours, no big textures), add ids to `data/assets.json`.
   Animated men and women (Quaternius CC0) replace the
   code-built crowd on Medium/High (code crowd stays on Low); waiters, soldiers, pilots reuse
   them. Animals: stray dogs, cats, cows, goats, crows, ducks on lakes.
-- [ ] **S6 — Ride with other people.** Board **buses** (at bus stops), the **MRT metro** (at
+- [x] **S6 — Ride with other people.** (done 2026-11-26, see CHANGELOG) Board **buses** (at bus stops), the **MRT metro** (at
   stations) and **trains**; passengers sit inside; pick a stop on the map; get off anywhere.
 - [ ] **S7 — Water.** Drivable **speedboat** and **yacht** (river, sea, Hatirjheel); a
   **launch / ship** at Sadarghat you can ride with passengers; boat shop.

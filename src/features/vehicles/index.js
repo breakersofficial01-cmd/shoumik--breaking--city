@@ -94,12 +94,14 @@ function grant({ type, color }) {
 /** What the Enter button would do right now, and the hint for it. */
 function nearbyVehicle() {
   const p = game.player.position;
-  return fleet.nearest(p.x, p.z, cfg.enterExit.range, (v) => v.state !== 'wreck' && !v.airborne);
+  // Roadmap 2 S6: the bus Shoumik rides / waits for (tags.transit) cannot be taken.
+  return fleet.nearest(p.x, p.z, cfg.enterExit.range, (v) => v.state !== 'wreck' && !v.airborne && !v.tags.transit);
 }
 
 function onAction() {
   if (game.paused || !game.player) return;
   if (!boarding.onFoot) return boarding.requestExit();
+  if (game.transitPrompt || game.ride) return; // Roadmap 2 S6: E belongs to a bus / train prompt
   if (game.player.mode !== 'onFoot') return;
   const v = nearbyVehicle();
   if (!v) return;

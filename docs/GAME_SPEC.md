@@ -645,6 +645,22 @@ weapons (`data/economy.json → wasted`).
   rows (kind food / drink, columns price, heal, active) override the data.
 - No alcohol anywhere (mocktails only); all NPCs are adults; dancing is plain party dancing.
 
+## 10h. Riding buses, the MRT and trains (Roadmap 2, Session 6)
+- **Bus**: stand at a bus-stop shelter (`world.roads.busStops`, 162 stops, named after the nearest
+  place) → a local bus drives up → E at the front door, ৳20 → sit inside; it stops at every stop
+  on its line. **MRT**: stairs under a station → E → platform → E when the train stands there,
+  ৳40. **Railway**: Kamalapur Railway Station (east edge, umbrella roof) → Coconut Coast →
+  Sobujpur (northern fields), walkable platforms, one train (engine + 3 coaches), ৳60.
+- Get off: নামো / E / Jump = next stop; big map (M) → tap a stop → "এখানে নামবো" = the GPS shows it
+  and the ride ends there; ⏩ = jump to just before the next stop. HUD: next stop in Bangla, then
+  English. View: inside the cabin or behind the vehicle (🎥 / C).
+- Passengers (adult Dhaka crowd) sit / stand inside and get off / on at stops; real 3D on
+  Medium/High near Shoumik, code-built on Low; 5/8/11 per bus, 4/7/10 per train car, in 1/2/3
+  vehicles (Low/Medium/High). Wanted stars do not fade while riding; from 2 stars the police stop
+  the bus and push him out.
+- Numbers: `data/transit.json`, fares `data/economy.json → fares` (Products tab kind `fare`),
+  railway line `data/landmarks.json → railways`.
+
 ## 11. Release: app, offline, pages (Session 8)
 - **Installable app** (`manifest.webmanifest`, icons in `assets/icons/`): name Breaking City,
   landscape, fullscreen, purple/sunset "BC" icon. Settings → অ্যাপ → install button when the

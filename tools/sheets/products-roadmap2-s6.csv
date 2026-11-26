@@ -1,0 +1,4 @@
+product_id,kind,name_en,name_bn,price,image_url,model_url,description,active,notes
+bus,fare,Bus fare,বাস ভাড়া,20,,,One ride on a local bus,TRUE,Roadmap 2 S6
+metro,fare,MRT ticket,মেট্রো টিকিট,40,,,One ride on MRT Line 6,TRUE,Roadmap 2 S6
+train,fare,Train ticket,ট্রেন টিকিট,60,,,One ride on the railway,TRUE,Roadmap 2 S6

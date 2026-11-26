@@ -10,6 +10,7 @@
 //
 // Events
 //   listens  crime:committed { type }     police:sight { seen }     wanted:clear {}
+//            wanted:hold { on }   (Roadmap 2 S6: while riding a bus / train stars do not fade)
 //            combat:hit { by, police }    police:killed { by }      ped:killed { by }
 //            vehicle:exploded { by, police }    weapon:fired    player:busted    player:died
 //            wanted:set { stars }         (debug / testing: force a level)
@@ -25,6 +26,7 @@ let heat = 0;
 let stars = 0;
 let seen = false;         // police:sight; a fresh crime counts as seen for seenGraceSeconds
 let unseen = 0;          // seconds out of police sight
+let hold = false;        // wanted:hold — riding a bus / train: stars do not fade
 let grace = 0;           // seconds a fresh crime counts as "seen" (police are on the way)
 let chase = 0;           // seconds of the current chase
 let assaultCooldown = 0;
@@ -102,6 +104,8 @@ export default {
     offs = [
       g.events.on('crime:committed', onCrime),
       g.events.on('wanted:clear', clear),
+      // Roadmap 2 S6: riding a bus / train never clears stars (no fading while riding).
+      g.events.on('wanted:hold', ({ on }) => { hold = !!on; }),
       g.events.on('wanted:amnesty', ({ seconds = 0 } = {}) => { amnesty = Math.max(amnesty, seconds); clear(); }),
       g.events.on('wanted:set', ({ stars: n = 0 }) => setHeat(n > 0 ? W.starAt[Math.min(n, W.starAt.length) - 1] : 0)),
       g.events.on('police:sight', ({ seen: s }) => {
@@ -144,7 +148,7 @@ export default {
       grace -= dt;
       if (grace <= 0 && !seen) publish(); // start blinking
     }
-    if (!seen && grace <= 0) {
+    if (!seen && grace <= 0 && !hold) {
       unseen += dt;
       if (unseen >= W.fadeSeconds) {
         unseen = 0;

@@ -26,6 +26,9 @@ const LOADERS = {
   animals: () => import('./animals/index.js'),
   posters: () => import('./posters/index.js'),
   metro: () => import('./metro/index.js'),
+  // Roadmap 2 S6: ride buses (bus stops), the MRT (metro, above) and trains with passengers.
+  railway: () => import('./railway/index.js'),
+  buses: () => import('./buses/index.js'),
   entrances: () => import('./entrances/index.js'),
   classes: () => import('./classes/index.js'),
   shops: () => import('./shops/index.js'),
