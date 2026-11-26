@@ -1213,3 +1213,56 @@ Known issues
 - No swimming: you only get out of a boat at a bank or jetty; the jetties are decoration (you get
   in from the ghat spot on land, up to 10 m from the boat).
 - Boats cannot reach the countryside ponds; the Buriganga Bridge piers do not stop boats.
+
+## 2026-11-26 — Roadmap 2 · Session 8: the cantonment and the army
+A walled army cantonment now stands north of the city, with soldiers, army trucks and tanks —
+and its own wanted rules.
+
+Cantonment
+- **Dhaka Cantonment** (ঢাকা সেনানিবাস, 🪖 on the map, name on the HUD when he walks in): a flat,
+  walled 280 m square in the Northern Paddy Fields west of the Northern Highway; **Cantonment
+  Road** leads from the highway to the main gate. Boundary wall with posts and a green band, gate
+  pillars with a Bangla + English name board, a red-white barrier that lifts for vehicles, a guard
+  post + sentry box, three watchtowers, three barracks, an office block, the officers' mess, a
+  parade ground with a saluting dais and a flag pole (plain green pennant), a vehicle yard with a
+  shed, roads, trees and lamps that glow at night. Plain olive colours, no real army insignia.
+- Gradual loading: built in code only when Shoumik comes within ~560 m (`data/streaming.json →
+  areas → cantonment`); nothing is downloaded.
+
+Army
+- Soldiers (3D people in olive uniforms with rifles; code-built on Low) guard the gate, stand
+  inside and patrol. Army trucks and tanks are parked in the yard; a truck drives round the ring
+  road and a tank round the parade ground.
+- **Tanks** (code-built, `src/entities/vehicles/modelsMilitary.js`): tracked hull + a turret that
+  turns towards the target; shells fly and explode like a grenade. Shoumik cannot get into a tank.
+- **Visitor pass**: E at the guard-post window, ৳500, 5 minutes inside without trouble.
+- **Wanted rules**: near the gate without a pass the guards shout a warning; inside = **1 star**
+  and the guards come to arrest him. Attacking a soldier or an army vehicle = **5 stars** and the
+  army alert: soldiers shoot, extra soldiers, army trucks (crew jumps out) and tanks chase him and
+  fire. Riding / driving never clears stars. Busted and wasted work as before; then the army
+  stands down (soldiers back to their posts, tanks drive home).
+- Counts per quality (`data/army.json → quality`): Low 3 soldiers + 1 tank, Medium 5 + 2,
+  High 8 + 3; at the army level Low adds 2 soldiers, 1 truck, 1 tank.
+
+Code / data
+- New feature `src/features/army/` (index, base, rules, soldier, drive, tank, shells, units),
+  `src/entities/vehicles/modelsMilitary.js`, `data/army.json`, `tools/army-check.js`.
+- Terrain: new `pads` layer (flat ground for built-up areas; the S10 airport can use one),
+  Cantonment Road; vehicles: type `tank` (style `tank`), `tags.noBoard`; crime: `army:sight`
+  counts like police sight, `army:killed` counts as a kill; economy crimes `trespassArmy` (30) and
+  `attackArmy` (1000); strings `army.*`; credits note (code-built, no new files).
+- The Quaternius Tank Pack (CC0) was tried but Google Drive answered "Quota exceeded" — the tank is
+  code-built for now (docs/NEXT.md says how to swap the model in).
+- Tests (headless, Medium): `tools/army-check.js` — all checks pass (built only when near, flat
+  ground, solid walls + open gate, zone name, map blip; residents; tank + truck drive inside;
+  pass ৳500 → no star; warning → 1 star (trespassArmy) → guards arrest → BUSTED → bail; shooting a
+  soldier → 5 stars, alert, extra soldiers, trucks and a tank chase, the turret aims at him, shells
+  fire and explode; stars stay in a car; WASTED → army stands down; counts Low 3/1/2, Medium 5/2/3,
+  High 8/3/4 match the data; day + night photos; no console errors).
+
+Known issues
+- The tank is code-built (no CC0 model downloaded yet).
+- Soldiers do not drill on the parade ground; buildings are not enterable (S11).
+- The police also come at 5 stars (their helicopter too), so the army level is crowded on High.
+- A tank chasing through the city follows the road grid but can still get stuck on corners for a
+  moment (it backs off and tries again).
