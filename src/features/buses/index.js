@@ -1,7 +1,8 @@
 // Feature: buses (Roadmap 2 S6) — ride a local bus with other passengers.
 //
 //   1. Stand at a bus-stop shelter (world.roads.busStops) → after noticeSeconds a bus is
-//      called: it appears down the road and drives up to your stop (entities/vehicles/driver.js).
+//      called (not while wanted or right after a shot):
+//      it appears down the road and drives up to your stop (entities/vehicles/driver.js).
 //   2. It waits at the stop (people get off / on) → E at the front door → pay the fare
 //      (data/economy.json → fares.bus) → Shoumik sits inside with the passengers.
 //   3. The bus drives its line and pulls up at every bus stop on the way. The HUD shows the next
@@ -53,6 +54,7 @@ let promptKey = null;
 let svc = null;        // the current bus service (see newService)
 let near = { stop: null, t: 0 };
 let cooldown = 0;
+let quiet = 0;          // seconds since a shot / while wanted: no bus is called (nobody stops for that)
 const _a = {};
 const _b = {};
 
@@ -63,7 +65,8 @@ function prompt(key, vars) {
     if (key) game.events.emit('prompt:show', { id: 'ride-bus', key, vars });
     else game.events.emit('prompt:hide', { id: 'ride-bus' });
   }
-  if (key) game.transitPrompt = 'bus';
+  // Only a prompt you can act on (get on) takes the E key from the vehicles feature.
+  if (key === 'transit.boardBus') game.transitPrompt = 'bus';
   else if (game.transitPrompt === 'bus') game.transitPrompt = null;
 }
 
@@ -477,6 +480,7 @@ export default {
       g.events.on('input:jump', () => { if (svc?.state === 'riding' && rider.unit === svc.unit) rider.queueOff(true); }),
       g.events.on('ride:destination', ({ line, id }) => { if (line === 'bus') setDestination(id); }),
       g.events.on('wanted:changed', ({ stars: n = 0 }) => { stars = n; }),
+      g.events.on('weapon:fired', () => { quiet = cfg.quietAfterShot; }),
       g.events.on('player:busted', abort),
       g.events.on('player:died', abort),
       g.events.on('game:ready', blips),
@@ -494,13 +498,14 @@ export default {
   update(dt) {
     if (!game.player || !fleet) return;
     cooldown = Math.max(0, cooldown - dt);
+    quiet = Math.max(0, quiet - dt);
     if (svc) updateService(dt);
     else {
       // Standing at a stop calls a bus.
       const p = game.player;
       const st = p.mode === 'onFoot' && !game.ride && !p.dead ? stopHere() : null;
       if (st && st === near.stop) near.t += dt; else near = { stop: st, t: 0 };
-      if (st && near.t > cfg.noticeSeconds && cooldown <= 0) { cooldown = 3; callBus(st); }
+      if (st && near.t > cfg.noticeSeconds && cooldown <= 0 && quiet <= 0 && stars === 0) { cooldown = 3; callBus(st); }
       else if (game.transitPrompt === 'bus') prompt(null);
     }
     passengers.update(dt);

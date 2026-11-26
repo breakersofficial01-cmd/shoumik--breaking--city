@@ -58,7 +58,7 @@ export class Passengers {
     if (entry.playerSeat) used.add(entry.playerSeat);
     for (const w of this.walkers) if (w.entry === entry && w.spot) used.add(w.spot);
     const seats = entry.unit.cabin.seats.filter((s) => !used.has(s) && !s.nearEye);
-    const stands = entry.unit.cabin.standing.filter((s) => !used.has(s));
+    const stands = entry.unit.cabin.standing.filter((s) => !used.has(s) && !s.nearEye);
     const pick = (list) => list[Math.floor(this.rng.next() * list.length)];
     if ((preferStand || !seats.length) && stands.length) return { spot: pick(stands), seated: false };
     if (seats.length) return { spot: pick(seats), seated: true };

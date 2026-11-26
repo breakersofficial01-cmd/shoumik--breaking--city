@@ -16,7 +16,7 @@
     "holdSeconds": 14
   },
   "passengers": {
-    "_comment": "Other people riding (all adults, everyday Dhaka clothes). count = people per bus / train car on each quality (seated first, then standing); units = how many vehicles/cars near Shoumik get passengers at once (the one he rides always does). nearDistance = only vehicles closer than this get passengers. standShare = share that stand in the aisle. offPerStop / onPerStop = [min, max] people getting off / on at each stop. walkSpeed = walking to and from the door; walkOut = metres they walk away after getting off. archetypes = who rides (names from data/pedestrians.json, weights).",
+    "_comment": "Other people riding (all adults, everyday Dhaka clothes). count = people per bus / train car on each quality (seated first, then standing); units = how many vehicles/cars near Shoumik get passengers at once (the one he rides always does) — only while he rides or waits at that stop / station. nearDistance = only vehicles closer than this get passengers. standShare = share that stand in the aisle. offPerStop / onPerStop = [min, max] people getting off / on at each stop. walkSpeed = walking to and from the door; walkOut = metres they walk away after getting off. archetypes = who rides (names from data/pedestrians.json, weights).",
     "count": { "low": { "bus": 5, "car": 4 }, "medium": { "bus": 8, "car": 7 }, "high": { "bus": 11, "car": 10 } },
     "units": { "low": 1, "medium": 2, "high": 3 },
     "nearDistance": 70,
@@ -47,16 +47,17 @@
     "train": {
       "length": 15.0, "width": 2.8, "floor": 1.0, "height": 2.2, "window": [0.85, 1.65],
       "seats": { "kind": "rows", "pitch": 0.95, "back": 1.4, "front": 1.4, "seatWidth": 0.5, "aisle": 0.6, "height": 0.46 },
-      "standing": [[0, -6.2], [0, 6.2]],
+      "standing": [[0, -4.4], [0, 4.4], [0, 0.4]],
       "doors": [[1, -6.8], [1, 6.8], [-1, -6.8], [-1, 6.8]],
       "colors": { "floor": "#5b4636", "wall": "#cfe0d3", "ceiling": "#eef3ee", "seat": "#2f6b4a", "seatBack": "#3d8a5d", "pole": "#b7b7b7", "light": "#fff1cf" }
     }
   },
   "bus": {
-    "_comment": "stopRadius = stand this close to a bus-stop shelter and a bus is called. noticeSeconds = how long you stand there first. approach = metres back along the road where the bus starts (it drives up to the stop). speedFactor = bus speed × its normal cruise. doorRange = how close to the door to board. waitAtStop = seconds the bus waits for you once it stands at your stop. lineJunctions = [min, max] junctions to the end of a bus line when you have not picked a stop (it then picks a new one). policeStars = from this many wanted stars the police stop the bus after policeStopSeconds (you are pushed out). type = vehicle type from data/vehicles.json.",
+    "_comment": "stopRadius = stand this close to a bus-stop shelter and a bus is called. noticeSeconds = how long you stand there first (no bus comes while you are wanted or for quietAfterShot seconds after a shot). approach = metres back along the road where the bus starts (it drives up to the stop). speedFactor = bus speed × its normal cruise. doorRange = how close to the door to board. waitAtStop = seconds the bus waits for you once it stands at your stop. lineJunctions = [min, max] junctions to the end of a bus line when you have not picked a stop (it then picks a new one). policeStars = from this many wanted stars the police stop the bus after policeStopSeconds (you are pushed out). type = vehicle type from data/vehicles.json.",
     "type": "bus",
-    "stopRadius": 4.5,
-    "noticeSeconds": 1.0,
+    "stopRadius": 3.0,
+    "noticeSeconds": 1.5,
+    "quietAfterShot": 10,
     "approach": 70,
     "speedFactor": 1.25,
     "doorRange": 3.8,

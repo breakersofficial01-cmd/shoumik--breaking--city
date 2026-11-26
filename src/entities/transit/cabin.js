@@ -105,7 +105,7 @@ function build(kind, C, cam) {
   // the direction of travel) stay free, so nobody's head fills the view.
   const eyeZone = L - cam.eyeBack - 1.5;
   for (const st of seats) st.nearEye = Math.abs(st.z) > eyeZone && Math.abs(st.x) < 1.3;
-  const standing = C.standing.map(([x, z]) => ({ x, z, heading: x === 0 ? 0 : x > 0 ? -Math.PI / 2 : Math.PI / 2 }));
+  const standing = C.standing.map(([x, z]) => ({ x, z, heading: x === 0 ? 0 : x > 0 ? -Math.PI / 2 : Math.PI / 2, nearEye: Math.abs(z) > eyeZone }));
   const doors = C.doors.map(([side, z]) => ({ x: side * W, z, side }));
   return {
     kind,

@@ -72,7 +72,8 @@ export class LineRide {
       if (key) this.game.events.emit('prompt:show', { id: `ride-${this.lineId}`, key, vars });
       else this.game.events.emit('prompt:hide', { id: `ride-${this.lineId}` });
     }
-    if (key) this.game.transitPrompt = this.lineId;
+    // Only prompts you can act on with E take it from the vehicles feature (not "next train in…").
+    if (key && key !== 'transit.waitTrainWalk') this.game.transitPrompt = this.lineId;
     else if (this.game.transitPrompt === this.lineId) this.game.transitPrompt = null;
   }
 
@@ -274,6 +275,10 @@ export class LineRide {
     const g = this.game;
     const n = this.cfg.passengers.units[g.qualityName] ?? 1;
     const p = g.player.position;
+    // Only while he rides or waits for this line: passengers in trains he only sees passing by
+    // would take real-3D slots from the people around him (and cost frames).
+    const waiting = this.state !== 'none' || (this.entry === 'walk' && this.stations.some((st) => st.onPlatform(p.x, p.z, 15)));
+    if (!waiting && !mine) return [];
     const near = [];
     for (const tr of this.trains) {
       for (const u of tr.units) {

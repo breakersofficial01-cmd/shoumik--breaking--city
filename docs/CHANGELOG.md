@@ -1085,7 +1085,8 @@ Shoumik can now ride a local bus, MRT Line 6 and a new railway line, sitting ins
 passengers.
 
 Riding
-- **Buses** (`src/features/buses/`): stand at any of the 162 bus-stop shelters → a bus is called,
+- **Buses** (`src/features/buses/`): stand at any of the 162 bus-stop shelters for a moment (not
+  while wanted or right after a shot) → a bus is called,
   drives up the road and stops (people get off and on) → E at the front door → pay ৳20 → he sits
   inside. The bus drives a line and pulls up at every stop on the way. Each stop has a name (the
   nearest place: "শাহবাগ / Shahbag", numbered when two share a place).
@@ -1114,8 +1115,14 @@ Passengers
   stop 0–2 walk out of the door and away, 1–2 walk up and get on. They go through the shared
   crowd with their Animator, so the nearest are real 3D people on Medium/High (sit pose; the bus
   driver uses the drive pose) and code-built on Low.
-- Only the vehicle he rides and the nearest ones get passengers: 5/4 (bus/train car) on Low,
+- Only while he rides or waits at that stop / platform, and only the vehicle he rides plus the
+  nearest ones get passengers: 5/4 (bus/train car) on Low,
   8/7 on Medium, 11/10 on High; 1 / 2 / 3 vehicles.
+
+Fixed
+- MRT trains could roll straight through a station: the next stop was re-picked every frame and a
+  station less than 1 m ahead stopped counting. A train now fixes its target stop when it
+  departs (`LineTrain.target`).
 
 Code / data / tools
 - New shared code `src/entities/transit/`: `lineTrain.js` (the MRT train class, moved out of the
@@ -1133,3 +1140,21 @@ Code / data / tools
   off the railway (`terrain.props.clearAt`).
 - No new model files: the trains reuse the Quaternius Train Pack already in `assets/trains/` (CC0).
 - Test: `node tools/ride-check.js --three <dir> --out <folder> [--only bus,metro,train,counts,night]`.
+- Tests (headless, Medium): `tools/ride-check.js` — all checks pass (bus: called, arrives, E boards,
+  ৳20, 7 passengers, HUD next stop, two stops with ⏩, gets off at the stop, police stop at 2 stars;
+  MRT: stairs → platform at 10.9 m, train stops, ৳40, passengers, map "get off here" + GPS, arrives
+  at Motijheel's stairs; train: Kamalapur platform, ৳60, passengers, Jump → off at Coconut Coast on
+  the platform; passengers per car Low 4 / Medium 7 / High 10, code-built on Low; night photos; no
+  console errors). Smoke test, hotel-check (Breaking Hotel) and crime-check pass. vehicle-shots
+  (ride, traffic): the hired rickshaw ride works, but "the puller is pedalling (1 m)" fails — the same
+  on the previous main (timing in the slow headless browser). people-check: counts pass; gallery 1–2
+  show 6 of 7 real 3D people — also the same on the previous main.
+
+Known issues
+- The MRT stairs are a fade (you do not climb them); the platform wait is a standing pose.
+- Cars on the highways drive over the railway at the two level crossings (no gate, the train does
+  not stop them); a train only knocks down Shoumik on foot.
+- From outside you cannot see passengers through the bus windows (only in the inside view).
+- Bus lines are random (a line picks a far stop as its end and is extended); stops are named after
+  the nearest place, so several share a name with a number ("শাহবাগ ২").
+- Headless tests run ~4× slow-motion: ride-check takes 20–30 minutes.
