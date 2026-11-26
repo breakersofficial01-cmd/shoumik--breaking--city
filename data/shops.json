@@ -11,6 +11,7 @@
     "labelPixels": 256
   },
   "kinds": {
+    "boats": {"color": "#36c6ff", "icon": "🚤", "minimap": "#36c6ff"},
     "vehicles": {
       "color": "#4be3ff",
       "icon": "🚗",
@@ -51,6 +52,7 @@
     }
   },
   "shops": [
+    {"id": "boat-shop", "kind": "boats", "name": {"en": "Hatirjheel Boat Club", "bn": "হাতিরঝিল বোট ক্লাব"}, "col": 10, "row": 6, "corner": "SE", "stock": ["speedboat", "speedboatGreen", "yacht"]},
     {
       "id": "car-showroom",
       "kind": "vehicles",

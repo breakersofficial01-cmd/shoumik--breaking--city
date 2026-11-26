@@ -1,4 +1,4 @@
-# Handoff — how Breaking City is built (v16, after Roadmap 2 · S6 — riding buses, MRT, trains)
+# Handoff — how Breaking City is built (v17, after Roadmap 2 · S7 — boats and the river launch)
 
 For the next Claude session. Read `/CLAUDE.md` first (rules), then this file, then
 `docs/GAME_SPEC.md` (what exists) and `docs/CHANGELOG.md` (what changed last).
@@ -18,6 +18,7 @@ time. Quick map of this file:
 - **S4 hotels: enterable ground floors, waiter + menu + 3D food, bar + dance floor → §12l**
 - **S5 real 3D people (streamed, near the player) + animals (code-built, instanced) → §12m**
 - **S6 riding buses / MRT / railway with passengers → §12n**
+- **S7 boats (lakes, river, sea), ghats, boat club, Buriganga launch → §12o**
 - Roadmap → §14
 
 ## 1. Run and test
@@ -67,6 +68,10 @@ time. Quick map of this file:
   list in index.html; `--check` tells if it is stale — a stale entry is a 404 in the console).
 - **After adding a GLB**: `node tools/compress-models.js --cli <node_modules/.bin/gltf-transform>`
   (meshopt; `npm i @gltf-transform/cli@4` in a scratch folder). Already-compressed files are skipped.
+- Boats (Roadmap 2 S7): `node tools/boat-check.js --three <dir> --out <folder> [--only ghats,drive,buy,ferry,night]`
+  (ghats, drive a country boat on the river and into the bank, buy a speedboat + yacht, sea run,
+  the Sadarghat launch to the Sea Mouth Ghat, night photos). Run it after touching boats, ferry,
+  water, `data/boats.json`.
 - Riding (Roadmap 2 S6): `node tools/ride-check.js --three <dir> --out <folder> [--only bus,metro,train,counts,night]`
   (bus 2 stops + police stop, MRT with a map-picked station, train, fares, passengers per quality,
   night photos). Run it after touching `src/entities/transit/`, buses, metro, railway, the map or
@@ -949,6 +954,36 @@ Settings `data/transit.json` (camera, ride, passengers, cabins, bus, metro, trai
 - **Test**: `node tools/ride-check.js --three <dir> --out <folder> [--quality medium] [--only
   bus,metro,train,counts,night]`. Headless runs ~4× slow-motion (5 fps, 0.05 s frame cap): a full
   run takes ~15–25 minutes.
+
+## 12o. Boats and the river launch (Roadmap 2, Session 7)
+Settings `data/boats.json` (types, physics, blocked, wake, enter, docks, ferry); prices
+`data/economy.json → prices.boats`, `fares.launch`; strings `boat.*`, `transit.*.launch`.
+- **Water map** `src/world/waterMap.js` → `world.waterAt(x, z, margin)` = 'lake' | 'river' | 'sea' |
+  null. Lakes = city WATER pieces (road bridges split them into basins — Hatirjheel is several
+  small basins), river = terrain field river band, sea = east of `field.shoreX(z)`.
+- **boats feature** (`src/features/boats/`): `boat.js` (arcade physics; hull tested at 6 points
+  with `physics.margin`; bounces off land; bob/pitch/roll), `docks.js` (`planDock` finds a dry
+  spot — sidewalk/park first, else the road edge by the water — with open water 4–12 m away, and
+  mooring spots every 12 m along the bank; `findShore` for getting out), `wake.js` (one
+  InstancedMesh of foam discs). Owned boats: `save.data.owned.boats` [{ type }] (new field, default
+  []); each waits at the ghat Shoumik walks to (`docks.owned` at most). The boat he drives is
+  `player.vehicle` (mode 'vehicle'): Boat has x/z/y/heading/speed/vx/vz/position/distanceTo so the
+  camera and police treat it like a vehicle. `cfg.blocked.list` = water rects boats avoid (the
+  Sadarghat pontoon with its static launches).
+- **Models**: `assets/boats/boats.glb` (Kenney Watercraft Kit, packed with
+  `node tools/food-kit/pack-food.js --three <dir> --kenney "<Watercraft Kit>/Models/GLB format"
+  --recipes tools/boat-kit/boats.json --name boats --out assets/boats/boats.glb`, then
+  compress-models). `src/entities/boats/models.js`: code-built boats/launch + `loadBoatKit`. The
+  file is an `afterStart` stream item; features swap models when `streamer.started` says 'done'.
+- **ferry feature** (`src/features/ferry/`): a LineTrain on a river ViaductPath (`ferry.path`),
+  ridden with LineRide 'stairs' entry (ghat on the bank → pontoon). Pontoons sit on the LEFT of
+  the +s direction (north, the city bank) with a gangway to `river.z0`. Real model = boats.glb
+  'launch' scaled to `carLength`/`carWidth`, `heightScale`. LineRide prompts look for
+  `<key>.<kind>` strings first (e.g. `transit.board.launch`).
+- **Shop**: shops kind `boats` → `boat:grant { type }` (catalog.js); `boat-shop` at Hatirjheel.
+- Debug: `BC.boats` (list, docks, driving, spawn(type, at), enter(b), shore()), `BC.ferry`
+  (ride, trains, ghats, passengers), `BC.world.waterAt(x, z)`.
+- **Test**: `node tools/boat-check.js --three <dir> --out <folder> [--only ghats,drive,buy,ferry,night]`.
 
 ## 13. Notes for the next sessions (historical)
 - **Session 4 is done** (the old notes below are kept for reference).

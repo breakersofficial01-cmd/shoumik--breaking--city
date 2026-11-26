@@ -49,7 +49,7 @@ export class Passengers {
 
   wanted(unit) {
     const q = this.cfg.count[this.game.qualityName] || this.cfg.count.medium;
-    return unit.kind === 'bus' ? q.bus : q.car;
+    return q[unit.kind] ?? (unit.kind === 'bus' ? q.bus : q.car); // bus / launch have their own counts
   }
 
   /** Free seat (or standing spot when the seats are full / for a share of people). */

@@ -661,6 +661,22 @@ weapons (`data/economy.json → wasted`).
 - Numbers: `data/transit.json`, fares `data/economy.json → fares` (Products tab kind `fare`),
   railway line `data/landmarks.json → railways`.
 
+## 10i. Boats and the river launch (Roadmap 2, Session 7)
+- **Ghats** (⚓ on the map): Hatirjheel, Gulshan Lake, Dhanmondi Lake, the Buriganga (Old Dhaka)
+  and Coconut Beach. A wooden jetty with boats moored in a row. Free country boats (নৌকা) wait at
+  every ghat; boats you own wait at whichever ghat you walk to.
+- **Drive**: stand near a boat → E → at the helm. Stick / W-S throttle and reverse, A-D rudder,
+  Jump brake, H horn. Boats stay on open water (lakes, the river, the sea) and bounce off the bank;
+  waves rock them, foam trails behind. E near a bank or jetty = step onto dry land.
+- **Boats**: country boat (slow, free), speedboat ৳60,000 (blue) / ৳75,000 (green), yacht
+  ৳250,000 — Hatirjheel Boat Club (🚤 shop). Models: Kenney Watercraft Kit (CC0), code-built on
+  first start until the file arrives.
+- **Buriganga launch** (⛴️): Babubazar → Sadarghat → Sea Mouth Ghat. At a ghat on the bank E →
+  wait on the pontoon → the launch comes alongside → E, ৳50 → sit on deck with passengers; get off
+  at the next ghat or pick one on the map (like the MRT).
+- Numbers: `data/boats.json` (types, physics, docks, ferry), prices `data/economy.json → prices.boats`,
+  `fares.launch` (Products tab: kind `boats` / `fare`).
+
 ## 11. Release: app, offline, pages (Session 8)
 - **Installable app** (`manifest.webmanifest`, icons in `assets/icons/`): name Breaking City,
   landscape, fullscreen, purple/sunset "BC" icon. Settings → অ্যাপ → install button when the

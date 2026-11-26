@@ -440,6 +440,9 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 }
 #ride-fade { position: absolute; inset: 0; z-index: 25; background: #000; opacity: 0; pointer-events: none; transition: opacity 0.4s; }
 #ride-fade.on { opacity: 1; }
+/* Roadmap 2 S7: boat speed panel (features/boats) — like #drive-hud */
+#boat-hud { position: absolute; left: 50%; top: calc(var(--safe-top) + 8px); transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 4px 14px; border: 2px solid var(--ink); border-radius: 999px; background: rgba(20, 12, 40, 0.72); font-size: 16px; font-weight: 700; color: #fff; z-index: 16; }
+#boat-hud .drive-speed { color: var(--gold); min-width: 5.5em; text-align: right; }
 /* Roadmap 2 S6: riding a bus / MRT / train — next stop panel + buttons (src/entities/transit/rider.js) */
 #ride-hud {
   position: absolute; left: 50%; top: calc(var(--safe-top) + 8px); transform: translateX(-50%); z-index: 18;

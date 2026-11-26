@@ -17,7 +17,7 @@ const FILES = [
   'street', 'streaming', 'terrain',
   'hotels', 'menu',
   'people', 'animals',
-  'transit',
+  'transit', 'boats',
 ];
 
 const store = new Map();

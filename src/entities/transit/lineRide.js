@@ -66,6 +66,11 @@ export class LineRide {
   }
 
   prompt(key, vars) {
+    // A line kind can have its own wording: transit.board.launch ("লঞ্চে ওঠো") etc.
+    if (key) {
+      const own = `${key}.${this.kind}`;
+      if (this.game.config.get('strings').strings[own]) key = own;
+    }
     const id = key ? key + JSON.stringify(vars || '') : null;
     if (id !== this.promptKey) {
       this.promptKey = id;
@@ -73,7 +78,7 @@ export class LineRide {
       else this.game.events.emit('prompt:hide', { id: `ride-${this.lineId}` });
     }
     // Only prompts you can act on with E take it from the vehicles feature (not "next train in…").
-    if (key && key !== 'transit.waitTrainWalk') this.game.transitPrompt = this.lineId;
+    if (key && !key.startsWith('transit.waitTrainWalk')) this.game.transitPrompt = this.lineId;
     else if (this.game.transitPrompt === this.lineId) this.game.transitPrompt = null;
   }
 

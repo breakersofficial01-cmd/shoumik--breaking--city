@@ -17,6 +17,10 @@
       "type": "model",
       "url": "assets/food/food.glb"
     },
+    "model.boats": {
+      "type": "model",
+      "url": "assets/boats/boats.glb"
+    },
     "model.city.kitPieces": {
       "type": "model",
       "url": "assets/city/kit-pieces.glb"

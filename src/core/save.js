@@ -65,7 +65,7 @@ function defaults({ startCash = 500, starter = null } = {}) {
     garage: null,                     // { col, row, dir } where owned vehicles park (null = data/vehicles.json → garage)
     lessons: {},                      // lessonId -> { attempts, paid: [questionIds], earned, best, lastAt }
     classes: {},                      // Quiz Class: { lastDay, rounds, earned, bestStreak }
-    owned: { vehicles: [], homes: [], weapons: gun ? [gun] : [], outfits: [] },
+    owned: { vehicles: [], homes: [], weapons: gun ? [gun] : [], outfits: [], boats: [] }, // boats: Roadmap 2 S7 ([{ type }])
     ammo: gun ? { [gun]: starter.ammo || 0 } : {}, // weapon id -> bullets (molotovs: bottles)
     weapon: gun,                     // weapon id in his hand (null = fists)
     armour: 0,                        // body armour points (data/combat.json → player.armourMax)

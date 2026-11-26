@@ -1,0 +1,10 @@
+{
+  "_comment": "Roadmap 2 S7: the CC0 boats in assets/boats/boats.glb (Kenney Watercraft Kit 2.1, 'Models/GLB format'). Packed with tools/food-kit/pack-food.js --recipes tools/boat-kit/boats.json --name boats --out assets/boats/boats.glb (palette texture baked into vertex colours, one child mesh per boat named 'name'). size = metres along the longest side (the boat's length). rotY = degrees to turn the bow to +z. data/boats.json → types.<id>.model names the child mesh.",
+  "models": [
+    { "name": "speedboat", "src": "kenney/boat-speed-a", "size": 6.5 },
+    { "name": "speedboatGreen", "src": "kenney/boat-speed-j", "size": 7 },
+    { "name": "yacht", "src": "kenney/boat-sail-a", "size": 11 },
+    { "name": "nouka", "src": "kenney/boat-row-large", "size": 5.5 },
+    { "name": "launch", "src": "kenney/ship-ocean-liner-small", "size": 46 }
+  ]
+}
