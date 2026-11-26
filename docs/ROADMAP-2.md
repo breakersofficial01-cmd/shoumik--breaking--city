@@ -48,7 +48,9 @@ flat colours, no big textures), add ids to `data/assets.json`.
   kind `food`; eating heals). A **bar / dance lounge** inside one hotel where adults dance (reuse
   hotspots dancing; all NPCs adults; no sexual content — CLAUDE.md). Drinks default to soft
   drinks / mocktails / borhani / lassi unless the owner says otherwise.
-- [ ] **S5 — Real 3D people and animals.** Animated men and women (Quaternius CC0) replace the
+- [x] **S5 — Real 3D people and animals.** (done 2026-11-26, see CHANGELOG; Kenney Animated
+  Characters 3 + Shoumik's Mixamo clips because Google Drive blocked the Quaternius files)
+  Animated men and women (Quaternius CC0) replace the
   code-built crowd on Medium/High (code crowd stays on Low); waiters, soldiers, pilots reuse
   them. Animals: stray dogs, cats, cows, goats, crows, ducks on lakes.
 - [ ] **S6 — Ride with other people.** Board **buses** (at bus stops), the **MRT metro** (at

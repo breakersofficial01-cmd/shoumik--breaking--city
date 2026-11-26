@@ -42,7 +42,7 @@ export class Officer {
     const look = buildLook(arch, palettes, rng);
     this.animator = new Animator(look.dims);
     this.animator.configure({ idle: 'guard', stride: 1, runAt: 5 });
-    this.person = crowd.add(look, this.animator.pose);
+    this.person = crowd.add(look, this.animator.pose, this.animator);
     this.circle = { x, z, r: combat.people.bodyRadius, owner: this };
     game.world.collision.dynamic.add(this.circle);
     this.target = game.targets.add({

@@ -207,3 +207,24 @@
 - Daily "chef's special" on a lobby poster (cheaper, from the Products sheet).
 - Eating sound + "yum" bubble; diners finishing and leaving, new ones arriving.
 - Street food stalls could also show the 3D dish (reuse `DishMaker`).
+
+## Ideas from Roadmap 2 · S5 (3D people and animals)
+- **Quaternius people (first choice, blocked on 2026-11-26)**: Google Drive answered "Quota
+  exceeded" for every file (even License.txt), so Kenney's Animated Characters 3 body is used.
+  When the owner uploads the Quaternius ZIPs (Ultimate Animated Character Pack → glTF folder;
+  Animated Men / Animated Women → FBX), pack them with the same tool: add their bone names to
+  `MAP` in `tools/people-kit/page.js` (their rig already has idle/walk/run/death/sit... clips —
+  keep the Mixamo ones for the same game names), bake a region map from their materials instead
+  of a texture (they use flat material colours: shirt / pants / skin / hair), and pick a body per
+  archetype (`data/people.json` could map archetype → body).
+- Quaternius Ultimate Animated Animals + Farm Animals (dog = ShibaInu/Husky, cow, bull, donkey)
+  could replace the code-built dog / cow (skinned like the people, a few near the player).
+- Real people: blend upper-body actions over walking (aim while walking, like GlbShoumikModel's
+  upper/lower split) — now actions play full-body.
+- Real people: a "phone" idle (Gen-Z looking at the phone) and a sit-on-the-ground pose for
+  tea-stall crowds; a waving clip for hotspot crowds.
+- More body shapes: a slimmer female body, an older man (bent spine via a bone offset).
+- Crows on the ground pecking at rubbish; a crow flock lifting off at a gunshot (now each flies alone).
+- Dogs barking at Shoumik at night (sound + a short chase); cats on boundary walls.
+- Cows and goats on the highway shoulders, a cowherd with a stick walking with them.
+- Ducks: a mother duck with ducklings in a row; ducks also on the river bank and sea shore ponds.

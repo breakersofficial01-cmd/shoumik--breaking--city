@@ -24,7 +24,7 @@ export class Server {
     this.crowd = crowd;
     this.cfg = cfg;
     this.animator = new Animator(look.dims, {});
-    this.person = crowd.add(look, this.animator.pose);
+    this.person = crowd.add(look, this.animator.pose, this.animator);
     this.home = home;
     this.x = home.x; this.z = home.z; this.heading = home.heading; this.y = y;
     this.path = [];
@@ -33,6 +33,9 @@ export class Server {
     this.speed = 0;
     this.tray = new THREE.Group();
     this.tray.name = 'waiter-tray';
+    // Real 3D people (Roadmap 2 S5): the model carries the tray in both hands (carry clips)
+    // and src/entities/people/real/realPeople.js puts the tray between its hands every frame.
+    this.person.carryObject = this.tray;
     this.sync();
   }
 
@@ -90,7 +93,7 @@ export class Server {
 /** Somebody who stays in one place doing one animation (sitting, dancing, standing). */
 function stayer(crowd, look, at, y, action = null, opts = {}) {
   const animator = new Animator(look.dims, { idle: opts.idle || 'idle' });
-  const person = crowd.add(look, animator.pose);
+  const person = crowd.add(look, animator.pose, animator);
   Object.assign(person, { x: at.x, y, z: at.z, heading: at.heading, groundY: y });
   const p = { person, animator, action, opts, start() { if (action) animator.play(action, opts); } };
   p.start();

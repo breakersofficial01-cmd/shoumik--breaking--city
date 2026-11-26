@@ -17,6 +17,8 @@ with real brand logos.
 | `assets/nature/outskirts.glb` (cacti, desert rocks, dry bush, paddy, corn, bamboo, bushes, grass, fence, logs, boulder, crag, pine, beach rock, canoe, tent; recoloured) | Nature Kit, kenney.nl/assets/nature-kit (downloaded 2026-11-21) | Kenney (www.kenney.nl) | CC0 1.0 |
 | `assets/street/street-props.glb` (street lamps, park double lamps, cones, barriers, site fences, waste containers) | City Kit (Roads) 2.2, kenney.nl/assets/city-kit-roads (downloaded 2026-11-21) | Kenney (www.kenney.nl) | CC0 1.0 |
 | `assets/food/food.glb` (burger, pizza, fries, sandwich, noodle box, hot dog, maki, nigiri, salad, sundae, cake, doughnut, pancakes, skewer, tea cup, coffee cup, frappe, cocktail glass) | Food Kit 2.0, kenney.nl/assets/food-kit (downloaded 2026-11-21) | Kenney (www.kenney.nl) | CC0 1.0 |
+| `assets/people/people.glb`, `assets/people/skins.png` (the 3D crowd: body mesh and its skin texture turned into grey shading + body regions for recolouring) | Animated Characters 3 (Retro), kenney.nl/assets/animated-characters-3 (downloaded 2026-11-26) | Kenney (www.kenney.nl) | CC0 1.0 |
+| `assets/people/people.glb` (the animations of the 3D crowd) | Shoumik's Mixamo clips (walk, run, idle, sit, dance, fall, hit, punch, aim, shoot, drive, dismiss, victory) retargeted onto the Kenney body | Adobe Mixamo (via the owner's Shoumik files) | Mixamo animations are free for games |
 | `assets/food/food.glb` (steak, chicken leg, fried egg, cupcake, lettuce) | Ultimate Food Pack, quaternius.com/packs/ultimatefood.html (OBJ, downloaded 2026-11-21) | Quaternius | CC0 1.0 |
 
 Kenney cars: packed by `tools/car-kit/pack-cars.js` (palette colours sorted into Paint / Windows /
@@ -42,3 +44,11 @@ roshogolla, chomchom, jilapi, payesh…) are built in code (`src/features/hotels
 brand names or logos on any drink.
 
 Owner: please keep the original download page / receipt for each pack.
+
+3D people (Roadmap 2 S5): packed by `tools/people-kit/pack-people.js` (recipe `tools/people-kit/people.json`):
+the Kenney body baked to metres, Shoumik's Mixamo clips retargeted onto it, two tray-carrying
+clips and a cower clip made from them. Clothes (panjabi, lungi, saree, kameez, hijab, caps,
+bags...) are recoloured / added in code (`src/entities/people/real/`). No logos.
+Animals (dogs, cats, cows, goats, crows, ducks) are built in code (`src/features/animals/models.js`).
+The Quaternius Ultimate Animated Character Pack, Animated Men/Women and animal packs were the first
+choice, but Google Drive refused every download on 2026-11-26 ("Quota exceeded"); see docs/NEXT.md.

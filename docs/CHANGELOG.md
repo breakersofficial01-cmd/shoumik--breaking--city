@@ -1022,3 +1022,60 @@ Known issues
 - Arms do not hold the tray (it floats in front of the waiter's chest).
 - Street stalls still sell tea / borhani / lassi as kind `food`; the hotel uses kind `drink`
   (two sheet rows if you want to change both prices).
+
+## 2026-11-26 — Roadmap 2 · Session 5: real 3D people and animals (Claude Opus 5.5)
+**People.** On Medium and High the people nearest to Shoumik (10 on Medium, 18 on High, within
+30 / 42 m) are now **rigged, animated 3D people** instead of the code-built shapes; everyone
+further away, and everyone on Low, stays code-built exactly as before. Because the switch happens
+inside the shared crowd renderer, **every** kind of person gets it with no change in behaviour:
+pedestrians (walking, crossing, fleeing, cowering, fighting back, falling, lying dead), hotspot
+dancers, police on foot (cap, gun, aiming, shooting), carjacked drivers, and in the hotels the
+waiter, bartender, receptionist, diners and bar dancers.
+- Body: Kenney "Animated Characters 3" (CC0). Animations: Shoumik's own Mixamo clips retargeted
+  onto it — idle, walk, run, sit, dance (2 kinds), clap, fall down, hit, punch, aim, shoot, drive,
+  shout — plus three made for this game: **cower** (crouched, hands over the head) and
+  **carry idle / carry walk** (both hands forward, palms up).
+- **The waiter holds the tray in his hands** (the tray now follows his hands while he walks).
+- Dhaka clothes: one grey texture is recoloured per person by body region, plus added pieces:
+  shirt-pant, office shirt + tie, **panjabi** (long shirt), **lungi**, **saree** (with the anchal
+  over the shoulder), **salwar-kameez** with orna, **hijab** (hood + cape), long hair / bun,
+  caps and bucket hats, backpacks, hand bags, the hawker's basket, gamcha, gold chains, police
+  uniform + vest + gun, waiter uniform, and Gen-Z street outfits at the hangout spots. Skin tones
+  and black hair from data/pedestrians.json. Everyone is an adult and modestly dressed.
+- Gradual loading: the people model (506 KB) and their texture (96 KB) download right after the
+  start (data/streaming.json → afterStart, Medium/High only); the code-built crowd is shown until
+  they arrive. Nothing extra is downloaded on Low.
+
+**Animals** (code-built, instanced, no download): **stray dogs and cats** on the sidewalks,
+**cows** (Deshi, with the hump) and **Black Bengal goats** in Old Dhaka's lanes and the countryside
+fields, **crows** (grey neck) on the wires and roof edges, **ducks** on the lakes and ponds
+(Dhanmondi, Hatirjheel, Gulshan Lake, the park ponds and the village ponds). They wander, lie
+down, graze, look around, swim and bob; a gunshot, an explosion or a crash makes them run (crows
+and ducks fly away); a car coming at them makes them jump aside — hitting one with a car only
+makes it hop and run off (no gore, no injuries). 9 / 18 / 28 at most on Low / Medium / High.
+
+Code / data / tools
+- New: `src/entities/people/real/` (realPeople.js, skinPainter.js, attachments.js),
+  `src/features/animals/` (index, models, render, spots, brain), `data/people.json`,
+  `data/animals.json`, `assets/people/people.glb` + `skins.png`, `tools/people-kit/`
+  (pack-people.js, page.js, people.json), `tools/people-check.js`.
+- Changed: `crowd.js` (3D tier, `add(look, pose, animator)`), `looks.js` (`look.desc`),
+  `animator.js` (`speed`), pedestrians / hotspots / police officers / hotel staff pass their
+  Animator, hotel `Server` sets `person.carryObject = tray`, `config.js` (people, animals),
+  `features/index.js` + `data/features.json` (animals), `data/assets.json`, `data/streaming.json`,
+  `data/pages.json` + `assets/CREDITS.md` (credits), index.html preload list.
+- Tests: `node tools/people-check.js` — all checks pass (counts per quality, 20 archetypes in 3D,
+  13 animations with the feet on the ground, street day/night, hotel waiter + tray, guests, bar
+  dancers, police on foot, animals per quality and place by day and night, a gunshot scares
+  them, no console errors). Smoke test, hotel-check (all three hotels) and crime-check pass.
+- Cost (headless, Shahbag start): Medium 356 → 360 draw calls with 8 real people, High 436 → 453
+  with 14 (+ shadows); Low unchanged.
+
+Known issues
+- Google Drive refused every Quaternius download on 2026-11-26 ("Quota exceeded"), so the 3D
+  people use Kenney's body (big-headed, slightly cartoony; the head is shrunk to 78 %) and the
+  animals are code-built. See docs/NEXT.md for switching to Quaternius when the ZIPs are uploaded.
+- One body shape for men and women (women differ by face, hair, clothes and height).
+- 3D people play actions full-body (an officer stops his walk animation while aiming).
+- Lungis / sarees are stiff tubes that swing with the thighs (no cloth simulation).
+- Crows on wires can sit a little above or below the wire (wires sag randomly).

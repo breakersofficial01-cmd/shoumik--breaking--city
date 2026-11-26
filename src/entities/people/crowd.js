@@ -11,10 +11,19 @@
 //
 // One crowd is shared by the pedestrians and hotspots features: acquireCrowd(game).
 // Game.frame calls game.crowd.update() once after all features have moved their people.
+//
+// Roadmap 2 S5 — real 3D people: on Medium/High, once the streamed model has arrived
+// (data/streaming.json → model.people + image.people.skins), the nearest people that were added
+// WITH their Animator (add(look, pose, animator)) are drawn by RealPeople (real/realPeople.js)
+// as rigged, animated models; the crowd skips their code-built parts (person.real is set).
+// Settings: data/people.json. People without an Animator (vehicle riders) stay code-built.
 
 import * as THREE from 'three';
 import { makeBones, computeBones, setRoot } from './skeleton.js';
 import { PART_KINDS, PER_PERSON, makePartGeometry } from './partGeometry.js';
+import { RealPeople } from './real/realPeople.js';
+
+const REAL_IDS = ['model.people', 'image.people.skins'];
 
 const _m = new THREE.Matrix4();
 const _root = new THREE.Matrix4();
@@ -27,6 +36,9 @@ export class Crowd {
     this.capacity = cfg.capacity;
     this.people = new Set();
     this.frame = 0;
+    this.real = null;         // RealPeople once the 3D model has streamed in (Medium/High)
+    this.realState = 'wait';  // wait → loading → ready | failed
+    this.last = performance.now();
     this.group = new THREE.Group();
     this.group.name = 'crowd';
     game.scene.add(this.group);
@@ -67,10 +79,14 @@ export class Crowd {
    * Add a person. Keep the returned object and change x/y/z/heading/pose/visible/far freely.
    * @param {{parts:Array, dims:object, scale:number}} look  from looks.js
    * @param {Float32Array} pose  usually animator.pose (kept by reference)
+   * @param {import('./animator.js').Animator} [anim]  pass it so the person can be drawn as a
+   *        real 3D model near the player (S5); its speed / action pick the clip
    */
-  add(look, pose) {
+  add(look, pose, anim = null) {
     const person = {
-      look, pose,
+      look, pose, anim,
+      real: null,          // RealPeople slot while drawn in 3D
+      carryObject: null,   // e.g. a waiter's tray: put between the hands of the 3D model
       x: 0, y: 0, z: 0, heading: 0, groundY: 0,
       visible: true,
       far: false,
@@ -83,13 +99,40 @@ export class Crowd {
   }
 
   remove(person) {
+    if (person.real) this.real?.release(person.real);
     this.people.delete(person);
+  }
+
+  /** Real 3D people: start loading once the streamer has fetched both files (Medium/High). */
+  checkReal() {
+    if (this.realState !== 'wait') return;
+    const game = this.game;
+    const cfg = game.config.has('people') ? game.config.get('people') : null;
+    if (!cfg || !(cfg.count[game.qualityName] > 0)) return;
+    const st = game.streamer?.started;
+    if (!st || !REAL_IDS.every((id) => st.get(id) === 'done')) {
+      if (st && REAL_IDS.some((id) => st.get(id) === 'failed')) this.realState = 'failed';
+      return;
+    }
+    this.realState = 'loading';
+    game.assets.loadMany(REAL_IDS).then(([rig, skins]) => {
+      let ok = false;
+      rig.traverse((o) => { if (o.isSkinnedMesh) ok = true; });
+      if (!ok || !skins?.width) throw new Error('people model or skins missing');
+      this.real = new RealPeople(game, cfg, rig, skins);
+      this.realState = 'ready';
+    }).catch((err) => { this.realState = 'failed'; console.warn('real people:', err.message); });
   }
 
   /** Write all instances for this frame. */
   update() {
     if (!this.shadow) return;
     this.frame++;
+    const now = performance.now();
+    const dt = Math.min(0.1, (now - this.last) / 1000);
+    this.last = now;
+    if (this.frame % 30 === 0) this.checkReal();
+    this.real?.update(dt, this.people);
     const layers = this.layers;
     for (const k in layers) layers[k].n = 0;
     let shadows = 0;
@@ -99,6 +142,11 @@ export class Crowd {
     for (const p of this.people) {
       if (!p.visible) continue;
       const look = p.look;
+      if (p.real) {
+        // Drawn by RealPeople; keep only the soft contact shadow.
+        if (shadows < this.capacity) { _m.makeTranslation(p.x, p.groundY + 0.03, p.z); _m.toArray(sArr, shadows * 16); shadows++; }
+        continue;
+      }
       if (p.fresh || !p.far || (this.frame + p.tick) % farEvery === 0) {
         setRoot(_root, p.x, p.y, p.z, p.heading, look.scale);
         computeBones(p.pose, look.dims, _root, p.bones);
@@ -135,6 +183,8 @@ export class Crowd {
   }
 
   dispose() {
+    this.real?.dispose();
+    this.real = null;
     for (const k in this.layers) this.layers[k].mesh.dispose();
     this.shadow?.dispose();
     this.material.dispose();
