@@ -1,0 +1,156 @@
+{
+  "_comment": "Roadmap 2 S8: the cantonment and the army (src/features/army/). Plain green uniforms and vehicles only — no real Bangladesh Army insignia, crests, flags or logos. The cantonment stands on the terrain pad with the same id (data/terrain.json → pads); its models are built in code when the 'cantonment' group of data/streaming.json → areas is reached (nothing is downloaded before). All positions in base.*, routes, posts and parked are LOCAL metres from the pad centre in the base's own frame (the gate is on its −x side, base.angle turns it: 180 = gate facing east). Counts per quality (low / medium / high). Wanted heat of the crimes is in data/economy.json → wanted.crimes (trespassArmy = 1 star, attackArmy = 5 stars).",
+  "padId": "cantonment",
+  "name": { "en": "Dhaka Cantonment", "bn": "ঢাকা সেনানিবাস" },
+  "mapIcon": "🪖",
+  "wakeDistance": 480,
+  "sleepDistance": 620,
+  "base": {
+    "angle": 180,
+    "_comment": "angle = which way the base is turned (degrees; 0 = the gate on the west wall, 180 = the gate faces east, towards the Northern Highway — the railway of Session 6 runs further east, so the base stands west of the highway). Everything below is in the base's own unturned frame (gate on its −x side). wall: half = half size of the walled square, height, thick. gate: on the west wall, half = half width of the opening (z from -half to +half). Buildings: x0 z0 x1 z1 (local), floors, tile (facade window tile: RESIDENTIAL / OFFICE / PLAIN), roof (flat | gable). ground: flat patches drawn on the pad (roads, parade ground, yard). lamps: every = spacing along the main road and the ring road.",
+    "wall": { "half": 140, "height": 3.2, "thick": 0.6, "color": "#d8d0b6", "band": "#4f5d2f", "postEvery": 12 },
+    "gate": { "half": 7, "pillar": 1.3, "pillarHeight": 4.4, "color": "#cfc6aa", "barrierLength": 12.5, "barrierColor": "#f2f2ee", "barrierStripe": "#c8302a", "openDistance": 16, "openSpeed": 1.6, "signHeight": 5.0 },
+    "guardPost": { "x0": -134, "z0": -16, "x1": -129, "z1": -10.5, "height": 2.9, "color": "#e4dcc4", "roof": "#4f5d2f" },
+    "towers": [ { "x": -134, "z": -134 }, { "x": 134, "z": 134 }, { "x": 134, "z": -134 } ],
+    "towerHeight": 7.5,
+    "buildings": [
+      { "id": "barracks-1", "x0": -112, "z0": -112, "x1": -60, "z1": -100, "floors": 2, "tile": "RESIDENTIAL", "color": "#e3d9bd", "roof": "gable", "roofColor": "#5d6b3a" },
+      { "id": "barracks-2", "x0": -48, "z0": -112, "x1": 4, "z1": -100, "floors": 2, "tile": "RESIDENTIAL", "color": "#e3d9bd", "roof": "gable", "roofColor": "#5d6b3a" },
+      { "id": "barracks-3", "x0": 16, "z0": -112, "x1": 68, "z1": -100, "floors": 2, "tile": "RESIDENTIAL", "color": "#e3d9bd", "roof": "gable", "roofColor": "#5d6b3a" },
+      { "id": "office", "x0": 82, "z0": -44, "x1": 118, "z1": 6, "floors": 3, "tile": "OFFICE", "color": "#d6cfb8", "roof": "flat", "roofColor": "#7a7466" },
+      { "id": "mess", "x0": -112, "z0": 70, "x1": -76, "z1": 92, "floors": 1, "tile": "RESIDENTIAL", "color": "#e8dfc6", "roof": "gable", "roofColor": "#5d6b3a" }
+    ],
+    "shed": { "x0": 58, "z0": 108, "x1": 126, "z1": 126, "height": 5.2, "color": "#6d7550", "postColor": "#8a8a80" },
+    "ground": [
+      { "_comment": "main road from the gate", "x0": -150, "z0": -5, "x1": -60, "z1": 5, "color": "#55565a" },
+      { "_comment": "ring road north", "x0": -128, "z0": -128, "x1": 128, "z1": -120, "color": "#55565a" },
+      { "_comment": "ring road south", "x0": -128, "z0": 120, "x1": 128, "z1": 128, "color": "#55565a" },
+      { "_comment": "ring road west", "x0": -128, "z0": -128, "x1": -120, "z1": 128, "color": "#55565a" },
+      { "_comment": "ring road east", "x0": 120, "z0": -128, "x1": 128, "z1": 128, "color": "#55565a" },
+      { "_comment": "road to the office", "x0": 40, "z0": -24, "x1": 82, "z1": -16, "color": "#55565a" },
+      { "_comment": "parade ground", "x0": -60, "z0": -54, "x1": 40, "z1": 34, "color": "#8c8677", "lines": "#e9e4d4" },
+      { "_comment": "vehicle yard", "x0": 48, "z0": 56, "x1": 128, "z1": 128, "color": "#9a958a" },
+      { "_comment": "path in front of the barracks", "x0": -112, "z0": -98, "x1": 68, "z1": -94, "color": "#b9b09a" }
+    ],
+    "dais": { "x0": -18, "z0": -66, "x1": 2, "z1": -58, "height": 1.1, "color": "#cfc6aa", "roof": "#4f5d2f" },
+    "flagPole": { "x": -8, "z": -70, "height": 12, "color": "#d8d8d8", "pennant": "#3f4f24" },
+    "trees": [
+      [-100, -80], [-80, -80], [-40, -80], [-20, -82], [30, -80], [60, -80],
+      [-100, 40], [-100, 10], [-70, 50], [-30, 52], [10, 52], [60, 30], [100, 40], [100, 80],
+      [-60, 110], [-20, 108], [20, 110], [-110, 110], [100, -90], [70, -60]
+    ],
+    "treeKinds": ["round", "oak", "palm"],
+    "treeSize": [6, 10],
+    "lamps": { "every": 32, "height": 6, "color": "#3b3b38", "glow": "#ffe2a8" }
+  },
+  "routes": {
+    "_comment": "Loops (local x, z) for vehicles driving inside the base (ring = trucks, parade = tanks) and the walks of patrolling soldiers (back and forth).",
+    "ring": [[-124, -124], [124, -124], [124, 124], [-124, 124]],
+    "parade": [[-52, -46], [32, -46], [32, 26], [-52, 26]],
+    "patrols": [
+      [[-124, -60], [-124, 60]],
+      [[-90, -91], [50, -91]],
+      [[70, -30], [70, 40], [110, 40]],
+      [[-40, 60], [40, 60]]
+    ]
+  },
+  "posts": {
+    "_comment": "Where the guards stand (local x, z) and which way they face (degrees: 0 = south, 90 = east, 270 = west).",
+    "gate": [ { "x": -147, "z": -9.5, "heading": 270 }, { "x": -147, "z": 9.5, "heading": 270 } ],
+    "inside": [ { "x": 78, "z": -20, "heading": 270 }, { "x": -8, "z": -56, "heading": 0 } ]
+  },
+  "parked": {
+    "_comment": "Parked vehicles in the yard under the shed (local x, z, heading degrees), used in order, as many as the quality allows.",
+    "trucks": [ { "x": 66, "z": 116, "heading": 180 }, { "x": 76, "z": 116, "heading": 180 }, { "x": 86, "z": 116, "heading": 180 } ],
+    "tanks": [ { "x": 102, "z": 115, "heading": 180 }, { "x": 116, "z": 115, "heading": 180 } ]
+  },
+  "quality": {
+    "_comment": "How many of each at once. gateGuards + insideGuards + patrols = soldiers in the base; parked/moving = vehicles in the base; alert* = extra units sent at the army level (after attacking a soldier). Low keeps the army small: few soldiers and one tank near the player.",
+    "low":    { "gateGuards": 2, "insideGuards": 0, "patrols": 1, "parkedTrucks": 1, "parkedTanks": 0, "movingTrucks": 1, "movingTanks": 1, "alertSoldiers": 2, "alertTrucks": 1, "alertTanks": 1 },
+    "medium": { "gateGuards": 2, "insideGuards": 1, "patrols": 2, "parkedTrucks": 2, "parkedTanks": 1, "movingTrucks": 1, "movingTanks": 1, "alertSoldiers": 4, "alertTrucks": 2, "alertTanks": 1 },
+    "high":   { "gateGuards": 2, "insideGuards": 2, "patrols": 4, "parkedTrucks": 3, "parkedTanks": 2, "movingTrucks": 1, "movingTanks": 1, "alertSoldiers": 6, "alertTrucks": 2, "alertTanks": 2 }
+  },
+  "rules": {
+    "_comment": "warnMargin = metres outside the wall where the guards shout a warning; graceSeconds = seconds inside without permission before the 1 star; repeatSeconds = a new star after this many seconds when he stays inside with no stars. The army stays on the alert (soldiers shoot, trucks and tanks chase) until the stars are gone. pass = visitor pass at the guard post: price in Taka, seconds it lasts, reach = metres from the guard post window. Attacking a soldier or an army vehicle cancels the pass.",
+    "warnMargin": 22,
+    "graceSeconds": 3.5,
+    "repeatSeconds": 8,
+    "pass": { "price": 500, "seconds": 300, "reach": 4.5 }
+  },
+  "soldier": {
+    "_comment": "Soldiers on foot (same brain as police officers, src/features/police/officers.js; these numbers replace data/police.json → officer for them). life = health. walkSpeed for patrols. sightRange = how far they see him (walls block). spawn* = where extra soldiers appear at the army level.",
+    "life": 130,
+    "runSpeed": 5.8,
+    "walkSpeed": 1.5,
+    "sightRange": 80,
+    "shootRange": 40,
+    "keepDistance": 9,
+    "fireEvery": [0.35, 0.8],
+    "swatFireEvery": [0.35, 0.8],
+    "accuracy": 0.45,
+    "damage": 7,
+    "meleeEvery": [0.9, 1.4],
+    "meleePower": 0.9,
+    "spawnMinDistance": 34,
+    "spawnMaxDistance": 70,
+    "spawnEvery": 1.8,
+    "despawnDistance": 200
+  },
+  "truck": {
+    "_comment": "Army trucks chasing at the army level (same driving as police pickups, src/features/police/pursuit.js). crew = soldiers jumping out. type = data/vehicles.json type. loopSpeed = m/s of the truck driving round the base.",
+    "type": "army_truck",
+    "cruise": 20,
+    "ramSpeed": 22,
+    "leadSeconds": 0.6,
+    "exitDistance": 18,
+    "crew": 3,
+    "sirenEvery": 9,
+    "stuckSeconds": 1.6,
+    "reverseSeconds": 1.3,
+    "waypointReach": 10,
+    "directRange": 70,
+    "loopSpeed": 7,
+    "spawnMinDistance": 110,
+    "spawnMaxDistance": 180
+  },
+  "tank": {
+    "_comment": "Tanks (vehicle type 'tank' in data/vehicles.json, code-built). loopSpeed = m/s while driving round inside; chaseSpeed when chasing; keepDistance = it stops this far from him to fire; turretTurn = radians/s; aimTolerance = radians before it fires; fireRange (m); fireEvery (s, random range); shellSpeed (m/s), shellGravity (m/s²); spread = [min, max] metres a shell may land from where it aimed (more when he moves fast); blastRadius (m), blastVehicleDamage like the grenade (data/weapons.json). Colours: plain olive, no markings.",
+    "type": "tank",
+    "loopSpeed": 4,
+    "chaseSpeed": 11,
+    "keepDistance": 30,
+    "turretTurn": 0.9,
+    "aimTolerance": 0.06,
+    "fireRange": 110,
+    "fireEvery": [3.2, 5.0],
+    "firstShotDelay": 2.5,
+    "shellSpeed": 70,
+    "shellGravity": 4,
+    "spread": [1.2, 5.5],
+    "blastRadius": 6.5,
+    "blastVehicleDamage": 260,
+    "spawnMinDistance": 130,
+    "spawnMaxDistance": 200,
+    "turretColor": "#4d5a2a",
+    "barrelColor": "#3d4822",
+    "stuckSeconds": 1.8,
+    "reverseSeconds": 1.6,
+    "waypointReach": 9
+  },
+  "archetypes": {
+    "_comment": "How soldiers look (same format as data/pedestrians.json archetypes). Plain olive greens, no badges.",
+    "soldier": { "sex": "m", "top": "shirt_long", "topColors": "armyShirt", "bottom": "cargo", "bottomColors": "armyPants", "head": { "cap": 1 }, "headColors": "armyCap", "shoes": "shoe", "shoeColors": "armyBoots", "extras": { "gun": 1, "vest": 1 }, "height": [1.70, 1.84], "build": [1.04, 1.16] }
+  },
+  "palettes": {
+    "armyShirt": ["#556b2f", "#5b6b3a", "#4f5f2c"],
+    "armyPants": ["#4b5a2a", "#56643a"],
+    "armyCap": ["#3f4d24", "#46552a"],
+    "armyBoots": ["#1a1712"]
+  },
+  "shouts": {
+    "_comment": "Speech bubbles (keys in data/strings.json).",
+    "warn": ["army.shout.halt", "army.shout.restricted"],
+    "chase": ["army.shout.stop", "army.shout.surrender"],
+    "pain": ["ped.shout.pain1", "ped.shout.pain2"]
+  }
+}

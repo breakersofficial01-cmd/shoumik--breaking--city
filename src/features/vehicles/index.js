@@ -95,7 +95,8 @@ function grant({ type, color }) {
 function nearbyVehicle() {
   const p = game.player.position;
   // Roadmap 2 S6: the bus Shoumik rides / waits for (tags.transit) cannot be taken.
-  return fleet.nearest(p.x, p.z, cfg.enterExit.range, (v) => v.state !== 'wreck' && !v.airborne && !v.tags.transit);
+  // Roadmap 2 S8: nor can a tank or an army vehicle the army is driving (tags.noBoard).
+  return fleet.nearest(p.x, p.z, cfg.enterExit.range, (v) => v.state !== 'wreck' && !v.airborne && !v.tags.transit && !v.tags.noBoard);
 }
 
 function onAction() {

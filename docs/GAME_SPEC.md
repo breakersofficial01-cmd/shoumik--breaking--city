@@ -23,7 +23,15 @@ A free-roam, Vice-City-flavoured open world set in a compressed Dhaka, made for
 
 Money only comes from answering lesson questions. YouTube links open outside the game.
 
-## 2. What you can do today (after Roadmap 2 · Session 5, 2026-11-26)
+## 2. What you can do today (after Roadmap 2 · Session 8, 2026-11-26)
+- **S8 — cantonment and army:** **Dhaka Cantonment** (🪖 on the map) stands in the fields north of
+  the city, west of the Northern Highway (Cantonment Road leads to its gate). Walled base with a
+  gate, barrier and guard post, barracks, office, mess, parade ground, vehicle yard, watchtowers.
+  Soldiers guard the gate and patrol; trucks and a tank drive round inside. Without a visitor pass
+  (৳500 at the guard post) the guards warn him, then entering = 1 star. Attacking a soldier or an
+  army vehicle = 5 stars: soldiers shoot, army trucks and **tanks** chase him and fire shells.
+  Section 10j.
+- **S6 / S7 — riding and water:** buses, the MRT, trains, boats and the river launch (10h, 10i).
 - **S5 — 3D people and animals:** on Medium/High the people near Shoumik are real animated 3D
   people in Dhaka clothes (lungi, panjabi, saree, salwar-kameez, hijab, shirt-pant, uniforms,
   Gen-Z streetwear) who walk, run, flee, cower, fall, dance, sit, fight and aim; the hotel waiter
@@ -591,7 +599,8 @@ switches between the weapons he owns; the badge next to the minimap shows the we
 Crimes add heat (`data/economy.json → wanted.crimes`): punching someone 10, hitting someone with a
 vehicle 30, carjacking 40, shots fired 15, murder 60, molotov 40, destroying a vehicle 50,
 attacking police 45, killing a police officer / destroying a police vehicle 150, stealing a police
-pickup 90. Stars at 30 / 120 / 300 / 600 / 1000 heat. When no police unit has seen him for 14 s
+pickup 90; Roadmap 2 S8: entering the cantonment without a pass 30 (1 star), attacking the army
+1000 (5 stars, section 10j). Stars at 30 / 120 / 300 / 600 / 1000 heat. When no police unit has seen him for 14 s
 the stars blink and one star fades.
 
 | Stars | Police (`data/police.json → levels`) |
@@ -676,6 +685,35 @@ weapons (`data/economy.json → wasted`).
   at the next ghat or pick one on the map (like the MRT).
 - Numbers: `data/boats.json` (types, physics, docks, ferry), prices `data/economy.json → prices.boats`,
   `fares.launch` (Products tab: kind `boats` / `fare`).
+
+## 10j. Cantonment and army (Roadmap 2, Session 8)
+- **Where**: Dhaka Cantonment (ঢাকা সেনানিবাস), a flat walled square of 280 m in the Northern Paddy
+  Fields west of the Northern Highway (`data/terrain.json → pads`; Cantonment Road from the highway
+  to the gate). Shown on the map (🪖) and named on the HUD when he walks in. Built in code only when
+  he comes within ~560 m (`data/streaming.json → areas → cantonment`): nothing is downloaded.
+- **Inside**: boundary wall with posts and a green band, the main gate (pillars, a name board in
+  Bangla + English, a red-white barrier that lifts for vehicles), a guard post and sentry box,
+  three watchtowers, three barracks, an office block, the officers' mess, a parade ground with a
+  saluting dais and a flag pole with a plain green pennant, a vehicle yard with a shed, roads,
+  trees and lamps that glow at night. Plain olive colours only — no real army insignia or crests.
+- **Army**: soldiers (3D people in olive uniforms with rifles; code-built on Low) guard the gate,
+  stand inside and patrol. Trucks (the army truck) and tanks are parked in the yard; one truck
+  drives round the ring road and one tank round the parade ground. Tanks are code-built: tracked
+  hull + a turret that turns towards the target; Shoumik cannot get into a tank.
+- **Visitor pass**: on foot at the guard-post window, E → ৳500 → 5 minutes inside without trouble.
+- **Rules**: near the gate / wall without a pass the guards shout a warning; inside for 3.5 s =
+  **1 star** (trespassArmy) and the nearest guards come to arrest him (BUSTED as usual). Attacking
+  a soldier or an army vehicle (bullets, melee, grenades, running over) = **5 stars** (attackArmy)
+  and the army alert: every soldier shoots, extra soldiers come on foot, army trucks chase (their
+  crew jumps out), tanks chase him (through the gate, along city roads), stop ~30 m away and fire
+  shells that explode like a grenade. The police 5-star response comes too. Riding or driving
+  never clears stars. Busted / wasted work as before; after them the army stands down (soldiers
+  walk back to their posts, tanks drive home).
+- **Counts** (`data/army.json → quality`): Low 3 soldiers, 1 tank (alert: +2 soldiers, 1 truck,
+  1 tank); Medium 5 soldiers, 2 tanks, 3 trucks; High 8 soldiers, 3 tanks, 4 trucks.
+- Numbers: `data/army.json` (base layout, routes, posts, rules, soldier, truck, tank), crimes
+  `data/economy.json → wanted.crimes` (trespassArmy 30, attackArmy 1000), the tank type
+  `data/vehicles.json → types.tank`, strings `army.*`.
 
 ## 11. Release: app, offline, pages (Session 8)
 - **Installable app** (`manifest.webmanifest`, icons in `assets/icons/`): name Breaking City,

@@ -57,7 +57,8 @@ flat colours, no big textures), add ids to `data/assets.json`.
   stations) and **trains**; passengers sit inside; pick a stop on the map; get off anywhere.
 - [x] **S7 — Water.** (done 2026-11-26, see CHANGELOG) Drivable **speedboat** and **yacht** (river, sea, Hatirjheel); a
   **launch / ship** at Sadarghat you can ride with passengers; boat shop.
-- [ ] **S8 — Cantonment and army.** Walled cantonment with gate, barracks, parade ground,
+- [x] **S8 — Cantonment and army.** (done 2026-11-26, see CHANGELOG; tanks code-built because
+  Google Drive blocked the Quaternius Tank Pack) Walled cantonment with gate, barracks, parade ground,
   **tanks** (parked and moving; can chase at 5 stars), army trucks, soldiers.
 - [ ] **S9 — Helicopters you can fly.** **Large buildings with rooftop helipads** where a
   helicopter waits; buy or take one; arcade controls on phone (up/down, turn, forward) and PC;

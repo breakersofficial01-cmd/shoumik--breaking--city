@@ -11,6 +11,8 @@
 // Events
 //   listens  crime:committed { type }     police:sight { seen }     wanted:clear {}
 //            wanted:hold { on }   (Roadmap 2 S6: while riding a bus / train stars do not fade)
+//            army:sight { seen }  (Roadmap 2 S8: soldiers and tanks that see him count like the police)
+//            army:killed { by }   (Roadmap 2 S8: a soldier died — counts in the kills stat)
 //            combat:hit { by, police }    police:killed { by }      ped:killed { by }
 //            vehicle:exploded { by, police }    weapon:fired    player:busted    player:died
 //            wanted:set { stars }         (debug / testing: force a level)
@@ -24,7 +26,9 @@ let game = null;
 let W = null;            // data/economy.json → wanted
 let heat = 0;
 let stars = 0;
-let seen = false;         // police:sight; a fresh crime counts as seen for seenGraceSeconds
+let seen = false;         // police:sight OR army:sight; a fresh crime counts as seen for seenGraceSeconds
+let policeSeen = false;
+let armySeen = false;
 let unseen = 0;          // seconds out of police sight
 let hold = false;        // wanted:hold — riding a bus / train: stars do not fade
 let grace = 0;           // seconds a fresh crime counts as "seen" (police are on the way)
@@ -45,6 +49,15 @@ function starsFor(h) {
   let n = 0;
   for (const at of W.starAt) if (h >= at) n++;
   return Math.min(game.config.get('game').wantedStarsMax, n);
+}
+
+/** Somebody (police or army) started or stopped seeing him. */
+function onSight() {
+  const s = policeSeen || armySeen;
+  if (s === seen) return;
+  seen = s;
+  if (seen) unseen = 0;
+  publish();
 }
 
 function publish() {
@@ -108,12 +121,9 @@ export default {
       g.events.on('wanted:hold', ({ on }) => { hold = !!on; }),
       g.events.on('wanted:amnesty', ({ seconds = 0 } = {}) => { amnesty = Math.max(amnesty, seconds); clear(); }),
       g.events.on('wanted:set', ({ stars: n = 0 }) => setHeat(n > 0 ? W.starAt[Math.min(n, W.starAt.length) - 1] : 0)),
-      g.events.on('police:sight', ({ seen: s }) => {
-        if (s === seen) return;
-        seen = !!s;
-        if (seen) unseen = 0;
-        publish();
-      }),
+      g.events.on('police:sight', ({ seen: s }) => { policeSeen = !!s; onSight(); }),
+      g.events.on('army:sight', ({ seen: s }) => { armySeen = !!s; onSight(); }),
+      g.events.on('army:killed', ({ by }) => { if (by === 'player') bump('kills'); }),
       g.events.on('combat:hit', ({ by, police }) => {
         if (by !== 'player' || !police || assaultCooldown > 0) return;
         assaultCooldown = 2;

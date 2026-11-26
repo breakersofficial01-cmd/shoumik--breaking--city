@@ -251,3 +251,18 @@
   buoys, gates and ramps); fishing from the nouka.
 - More launches (night launch with lights, Barishal-style double-decker) and a ferry across the
   river to the char lands.
+
+## Ideas from Roadmap 2 · S8 (cantonment and army)
+- **Real tank model**: the Quaternius Tank Pack (CC0, quaternius.com/packs/animatedtanks.html →
+  Google Drive "Tank Pack - June 2019") answered "Quota exceeded" on 2026-11-26. When the owner
+  uploads the ZIP (or Drive allows it again): convert one tank's FBX/OBJ → GLB with the hull and the
+  turret as two child meshes (`hull`, `turret`, gun inside the turret), compress it, add
+  `model.army.tank` to data/assets.json + the `cantonment` stream group, and let
+  `src/entities/vehicles/modelsMilitary.js` use it (the turret is already a separate mesh that turns).
+- Soldiers in formation on the parade ground at morning hours (drill march), a salute when he
+  walks past with a pass, a guard who raises the barrier for him by hand.
+- Army jeeps and an army helicopter at the 5-star army level; sandbag posts at the gate when alert.
+- Enterable office (S11 interiors): the visitor-pass desk, a museum room (no real insignia).
+- Tanks: tracks that leave marks, dust behind them on the fields, the turret's machine gun firing
+  when he is close, a crushed-car effect when a tank drives over a car.
+- The pass could be a Products-tab row (kind `pass`) so the owner can change the price from the Sheet.
